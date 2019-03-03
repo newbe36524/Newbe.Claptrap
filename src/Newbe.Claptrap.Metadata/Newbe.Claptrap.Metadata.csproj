@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>Newbe.Claptrap</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

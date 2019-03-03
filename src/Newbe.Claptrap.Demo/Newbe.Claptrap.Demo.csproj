@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.9.0" />
+        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.2.3" />
+        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.2.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Orleans_CodeGenInputs Remove="Impl\AccountImpl\StateDataUpdaters\BalanceChangeEventStateDataUpdater.cs" />
+      <Orleans_CodeGenInputs Remove="Impl\AccountImpl\StateDataUpdaters\LockEventStateDataUpdater.cs" />
+    </ItemGroup>
+    
+
+</Project>

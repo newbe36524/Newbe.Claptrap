@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Newbe.Claptrap.DevTools</PackageId>
+        <PackageVersion>0.1.0-dev01</PackageVersion>
+        <ToolCommandName>newbe.claptrap</ToolCommandName>
+
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <PackAsTool>true</PackAsTool>
+    </PropertyGroup>
+
+</Project>
