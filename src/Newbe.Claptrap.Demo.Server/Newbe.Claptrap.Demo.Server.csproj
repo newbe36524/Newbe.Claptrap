@@ -6,14 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
-      <PackageReference Include="Microsoft.Orleans.Server" Version="2.2.3" />
+      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
+      <PackageReference Include="Microsoft.Orleans.Server" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.EventHub.Memory\Newbe.Claptrap.EventHub.Memory.csproj" />
     </ItemGroup>
 
 </Project>

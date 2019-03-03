@@ -61,6 +61,7 @@ namespace Newbe.Claptrap
                             ClaptrapKind = new ClaptrapKind(claptrapAttribute.ActorType, claptrapAttribute.Catalog),
                             StateDataType = claptrapAttribute.StateDataType,
                             ClaptrapEventMetadata = GetClaptrapEventMetadata(type.GetMethods()),
+                            InterfaceType = type,
                         };
                         yield return claptrapMetadata;
                     }
@@ -99,6 +100,7 @@ namespace Newbe.Claptrap
                             .ToArray();
                         var minionMetadata = new MinionMetadata
                         {
+                            InterfaceType = type,
                             MinionKind = new MinionKind(minionAttribute.ActorType, minionAttribute.Catalog,
                                 minionAttribute.MinionCatalog),
                             StateDataType = minionAttribute.StateDataType,

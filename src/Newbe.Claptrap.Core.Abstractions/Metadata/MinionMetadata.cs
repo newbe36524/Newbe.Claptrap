@@ -15,5 +15,6 @@ namespace Newbe.Claptrap.Metadata
         public IEnumerable<ClaptrapEventMetadata> ClaptrapEventMetadata { get; set; }
 
         public Type StateDataType { get; set; }
+        public Type InterfaceType { get; set; }
     }
 }

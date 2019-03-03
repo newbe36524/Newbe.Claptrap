@@ -15,6 +15,8 @@ namespace Newbe.Claptrap.Autofac
             builder.RegisterModule<StateStoreModule>();
             builder.RegisterModule<EventHandlerModule>();
             builder.RegisterModule<StateInitializerModule>();
+            builder.RegisterModule<EventPublishChannelModule>();
+            builder.RegisterModule<MetadataModule>();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Autofac;
+using Newbe.Claptrap.Assemblies;
 using Newbe.Claptrap.Autofac;
 using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps;
 using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.AddBalanceImpl;
@@ -26,6 +27,10 @@ namespace Newbe.Claptrap.Demo
             var assemblies = new[] {typeof(IAccount).Assembly, typeof(DemoModule).Assembly};
             builder.RegisterDefaultStateDataFactories(assemblies);
             builder.RegisterUpdateStateDataHandlers(assemblies);
+
+            builder.Register(context =>
+                    new ActorAssemblyProvider(assemblies))
+                .As<IActorAssemblyProvider>();
         }
     }
 }

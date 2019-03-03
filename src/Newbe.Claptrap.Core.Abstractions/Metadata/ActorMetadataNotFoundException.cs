@@ -8,6 +8,7 @@ namespace Newbe.Claptrap.Metadata
         public IActorKind ActorKind { get; }
 
         public ActorMetadataNotFoundException(IActorKind actorKind)
+            : base($"actor metadata not found for actor kind : {actorKind}")
         {
             ActorKind = actorKind;
         }
