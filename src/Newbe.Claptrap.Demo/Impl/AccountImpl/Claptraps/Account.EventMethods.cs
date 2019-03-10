@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.AddBalanceImpl;
 using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.LockImpl;
@@ -10,6 +11,7 @@ using Orleans;
 
 namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps
 {
+    [ClaptrapComponent("Account")]
     public partial class Account
     {
         public override async Task OnActivateAsync()

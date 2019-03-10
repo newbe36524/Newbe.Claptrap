@@ -8,9 +8,12 @@ using Orleans;
 namespace Newbe.Claptrap.Demo.Interfaces
 {
     [Minion("Database", "Account", typeof(NoneStateData))]
-    [MinionEvent(nameof(BalanceChangeEventData))]
-    [MinionEvent(nameof(LockEventData))]
     public interface IAccountDatabaseMinion : IMinionGrain
     {
+        [MinionEvent(nameof(BalanceChangeEventData))]
+        Task SaveBalanceChange(IEvent @event);
+
+        [MinionEvent(nameof(LockEventData))]
+        Task Locked(IEvent @event);
     }
 }

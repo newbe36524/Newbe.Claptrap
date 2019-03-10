@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.Autofac.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ActorFactory>()
+            builder.RegisterType<AutofacActorFactory>()
                 .As<IActorFactory>();
             builder.RegisterType<Actor>()
                 .AsSelf();

@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Newbe.Claptrap.Attributes;
+using Newbe.Claptrap.Core;
+using Newbe.Claptrap.EventHandler;
 using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
 {
-    class StateDataUpdaterRegistrationFinder : IStateDataUpdaterRegistrationFinder
+    internal class StateDataUpdaterRegistrationFinder : IStateDataUpdaterRegistrationFinder
     {
         private readonly IActorMetadataProvider _actorMetadataProvider;
 
@@ -16,75 +21,138 @@ namespace Newbe.Claptrap.Autofac
 
         public IEnumerable<StateDataUpdaterRegistration> FindAll(Type[] types)
         {
-            IRegistrationResolver[] finders =
+            IStateDataUpdaterRegistrationFinder[] finders =
             {
-                new BaseTypeRegistrationResolver(_actorMetadataProvider),
+                new NoneStateFactoryFinder(_actorMetadataProvider),
+                new NamespaceFactoryFinder(_actorMetadataProvider),
             };
-            var re = FindAllCore();
+            var re = finders.SelectMany(x => x.FindAll(types));
             return re;
-
-            IEnumerable<StateDataUpdaterRegistration> FindAllCore()
-            {
-                foreach (var type in types)
-                {
-                    foreach (var finder in finders)
-                    {
-                        var registration = finder.Resolve(type);
-                        if (registration != null)
-                        {
-                            yield return (StateDataUpdaterRegistration) registration;
-                        }
-                    }
-                }
-            }
         }
 
-        public interface IRegistrationResolver
-        {
-            StateDataUpdaterRegistration Resolve(Type type);
-        }
-
-        public class BaseTypeRegistrationResolver : IRegistrationResolver
+        private class NoneStateFactoryFinder : IStateDataUpdaterRegistrationFinder
         {
             private readonly IActorMetadataProvider _actorMetadataProvider;
 
-            public BaseTypeRegistrationResolver(
+            public NoneStateFactoryFinder(
                 IActorMetadataProvider actorMetadataProvider)
             {
                 _actorMetadataProvider = actorMetadataProvider;
             }
 
-            public StateDataUpdaterRegistration Resolve(Type type)
+            public IEnumerable<StateDataUpdaterRegistration> FindAll(Type[] types)
             {
                 var actorMetadataCollection = _actorMetadataProvider.GetActorMetadata();
-                var baseTypes = ReflectionHelper.GetBaseType(type);
-                foreach (var baseType in baseTypes)
+                foreach (var minionMetadata in actorMetadataCollection.MinionMetadata)
                 {
-                    if (baseType.IsGenericType
-                        && baseType.GetGenericTypeDefinition() == typeof(StateDataUpdaterBase<,>))
+                    if (minionMetadata.StateDataType == typeof(NoneStateData))
                     {
-                        var stateDataType = baseType.GenericTypeArguments[0];
-                        var eventDataType = baseType.GenericTypeArguments[1];
-                        foreach (var metadata in actorMetadataCollection.ClaptrapMetadata)
+                        foreach (var claptrapEventMetadata in minionMetadata.ClaptrapEventMetadata)
                         {
-                            if (metadata.StateDataType == stateDataType)
-                            {
-                                foreach (var actorEventMetadata in metadata.ClaptrapEventMetadata)
-                                {
-                                    if (actorEventMetadata.EventDataType == eventDataType)
-                                    {
-                                        var key = new StateDataUpdaterRegistrationKey(metadata.ClaptrapKind,
-                                            actorEventMetadata.EventType);
-                                        var re = new StateDataUpdaterRegistration(key, type);
-                                        return re;
-                                    }
-                                }
-                            }
+                            var key = new StateDataUpdaterRegistrationKey(minionMetadata.MinionKind,
+                                claptrapEventMetadata.EventType);
+                            var re = new StateDataUpdaterRegistration(key, typeof(NoneStateDataStateDataUpdater));
+                            yield return re;
                         }
                     }
                 }
 
-                return null;
+                foreach (var claptrapMetadata in actorMetadataCollection.ClaptrapMetadata)
+                {
+                    if (claptrapMetadata.StateDataType == typeof(NoneStateData))
+                    {
+                        foreach (var claptrapEventMetadata in claptrapMetadata.ClaptrapEventMetadata)
+                        {
+                            var key = new StateDataUpdaterRegistrationKey(claptrapMetadata.ClaptrapKind,
+                                claptrapEventMetadata.EventType);
+                            var re = new StateDataUpdaterRegistration(key, typeof(NoneStateDataStateDataUpdater));
+                            yield return re;
+                        }
+                    }
+                }
+            }
+        }
+
+        private class NamespaceFactoryFinder : IStateDataUpdaterRegistrationFinder
+        {
+            private readonly IActorMetadataProvider _actorMetadataProvider;
+
+            public NamespaceFactoryFinder(
+                IActorMetadataProvider actorMetadataProvider)
+            {
+                _actorMetadataProvider = actorMetadataProvider;
+            }
+
+            public IEnumerable<StateDataUpdaterRegistration> FindAll(Type[] types)
+            {
+                var actorMetadataCollection = _actorMetadataProvider.GetActorMetadata();
+
+                var grainImpls = types.Where(ReflectionHelper.IsClaptrapOrMinionGrainImplement);
+                foreach (var grainType in grainImpls)
+                {
+                    var updaterTypeInSubNamespace = types
+                        .Where(x => x.Namespace.StartsWith(grainType.Namespace))
+                        .Where(x => x.GetInterface(nameof(IStateDataUpdater)) != null);
+
+                    var actorKind = ReflectionHelper.GetActorKind(grainType);
+
+                    foreach (var type in updaterTypeInSubNamespace)
+                    {
+                        var baseTypes = ReflectionHelper.GetBaseTypes(type);
+                        foreach (var baseType in baseTypes)
+                        {
+                            if (baseType.IsGenericType
+                                && baseType.GetGenericTypeDefinition() == typeof(StateDataUpdaterBase<,>))
+                            {
+                                // using attribute to check eventType 
+                                string eventType;
+                                switch (actorKind.ActorType)
+                                {
+                                    case ActorType.Claptrap:
+                                        var claptrapEventComponentAttribute =
+                                            type.GetCustomAttribute<ClaptrapEventComponentAttribute>();
+                                        eventType = claptrapEventComponentAttribute?.EventType;
+                                        break;
+                                    case ActorType.Minion:
+                                        var minionEventComponentAttribute =
+                                            type.GetCustomAttribute<MinionEventComponentAttribute>();
+                                        eventType = minionEventComponentAttribute?.EventType;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
+                                // using EventDataType to check eventType
+                                if (string.IsNullOrEmpty(eventType))
+                                {
+                                    var eventDataType = baseType.GenericTypeArguments[1];
+                                    ClaptrapMetadata claptrapMetadata;
+                                    switch (actorKind.ActorType)
+                                    {
+                                        case ActorType.Claptrap:
+                                            claptrapMetadata = actorMetadataCollection[(IClaptrapKind) actorKind];
+
+                                            break;
+                                        case ActorType.Minion:
+                                            claptrapMetadata = actorMetadataCollection[(IMinionKind) actorKind]
+                                                .ClaptrapMetadata;
+                                            break;
+                                        default:
+                                            throw new ArgumentOutOfRangeException();
+                                    }
+
+                                    // todo handle exception if there are not single one
+                                    eventType = claptrapMetadata.ClaptrapEventMetadata
+                                        .Single(x => x.EventDataType == eventDataType).EventType;
+                                }
+
+                                var key = new StateDataUpdaterRegistrationKey(actorKind, eventType);
+                                var re = new StateDataUpdaterRegistration(key, type);
+                                yield return re;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

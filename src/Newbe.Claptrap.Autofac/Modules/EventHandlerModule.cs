@@ -30,9 +30,17 @@ namespace Newbe.Claptrap.Autofac.Modules
                     context.Resolve<IEventLifetimeScope>().EventContext)
                 .As<IEventContext>()
                 .PerEventScope();
-            builder.RegisterType<EventHandlerFactory>()
+            builder.RegisterType<AutofacEventHandlerFactory>()
                 .As<IEventHandlerFactory>();
-            builder.RegisterType<StateDataUpdaterFactory>()
+            builder.RegisterType<AutofacMinionEventHandlerFactory>()
+                .As<IMinionEventHandlerFactory>();
+            builder.RegisterType<NoneStateDataStateDataUpdater>()
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterType<NoneStateDataDefaultStateDataFactory>()
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterType<AutofacStateDataUpdaterFactory>()
                 .As<IStateDataUpdaterFactory>();
         }
     }

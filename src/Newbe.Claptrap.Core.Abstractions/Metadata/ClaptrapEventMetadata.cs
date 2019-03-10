@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Newbe.Claptrap.Metadata
 {
@@ -6,5 +7,6 @@ namespace Newbe.Claptrap.Metadata
     {
         public string EventType { get; set; }
         public Type EventDataType { get; set; }
-    }
+
+     }
 }

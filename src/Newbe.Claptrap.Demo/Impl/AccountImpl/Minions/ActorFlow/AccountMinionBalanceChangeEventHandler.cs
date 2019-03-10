@@ -10,7 +10,7 @@ namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.ActorFlow
     {
         public override Task HandleEventCore(NoneStateData state, BalanceChangeEventData @event)
         {
-            Console.WriteLine(@event.Amount);
+            Console.WriteLine($"actor flow receive event: {@event}");
             return Task.CompletedTask;
         }
     }

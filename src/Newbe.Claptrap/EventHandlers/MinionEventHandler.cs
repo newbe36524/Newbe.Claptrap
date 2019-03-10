@@ -7,14 +7,14 @@ namespace Newbe.Claptrap.EventHandlers
 {
     public class MinionEventHandler : IEventHandler
     {
-        private readonly IStateDataUpdater _stateDataUpdater;
+        private readonly IStateDataUpdaterFactory _stateDataUpdaterFactory;
         private readonly IStateStore _stateStore;
 
         public MinionEventHandler(
-            IStateDataUpdater stateDataUpdater,
+            IStateDataUpdaterFactory stateDataUpdaterFactory,
             IStateStore stateStore)
         {
-            _stateDataUpdater = stateDataUpdater;
+            _stateDataUpdaterFactory = stateDataUpdaterFactory;
             _stateStore = stateStore;
         }
 
@@ -29,7 +29,8 @@ namespace Newbe.Claptrap.EventHandlers
             var @event = eventContext.Event;
             if (@event.Version > state.Version)
             {
-                _stateDataUpdater.UpdateStateData(state.Data, eventContext.Event.Data);
+                var updater = _stateDataUpdaterFactory.Create(state, eventContext.Event);
+                updater.UpdateStateData(state.Data, eventContext.Event.Data);
                 state.IncreaseVersion();
                 await _stateStore.Save(eventContext.ActorContext.State);
             }

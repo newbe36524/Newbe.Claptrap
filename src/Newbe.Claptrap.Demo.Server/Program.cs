@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.Demo.Server
                     var account = grainFactory.GetGrain<IAccount>("666");
                     var balance = await account.GetBalance();
                     Console.WriteLine($"balance now is {balance}");
-                    await Task.WhenAll(Enumerable.Range(0, 1).Select(i => account.AddBalance(2)));
+                    await Task.WhenAll(Enumerable.Range(0, 10).Select(i => account.AddBalance(2)));
                     balance = await account.GetBalance();
                     Console.WriteLine($"balance now is {balance}");
                 })

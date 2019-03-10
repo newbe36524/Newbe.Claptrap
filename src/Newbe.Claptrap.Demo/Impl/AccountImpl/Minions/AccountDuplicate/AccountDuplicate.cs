@@ -1,22 +1,21 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps;
 using Newbe.Claptrap.Demo.Interfaces;
 using Orleans;
 
-namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.ActorFlow
+namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.AccountDuplicate
 {
-    [MinionComponent("ActorFlow", "Account")]
-    public class AccountMinion
-        : Grain, IAccountActorFlowMinion
+    [MinionComponent("AccountDuplicate", "Account")]
+    public class AccountDuplicate
+        : Grain, IAccountDuplicate
     {
         public override async Task OnActivateAsync()
         {
             await base.OnActivateAsync();
             var actorFactory = (IActorFactory) ServiceProvider.GetService(typeof(IActorFactory));
             var identity =
-                new GrainActorIdentity(new MinionKind(ActorType.Minion, "Account", "ActorFlow"),
+                new GrainActorIdentity(new MinionKind(ActorType.Minion, "Account", "AccountDuplicate"),
                     this.GetPrimaryKeyString());
             Actor = actorFactory.Create(identity);
             await Actor.ActivateAsync();
@@ -30,7 +29,7 @@ namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.ActorFlow
             await Actor.DeactivateAsync();
         }
 
-        public Task BalanceChangeNotice(IEvent @event)
+        public Task HandleBalance(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }

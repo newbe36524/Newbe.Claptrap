@@ -27,7 +27,8 @@ namespace Newbe.Claptrap.Demo
             var assemblies = new[] {typeof(IAccount).Assembly, typeof(DemoModule).Assembly};
             builder.RegisterDefaultStateDataFactories(assemblies);
             builder.RegisterUpdateStateDataHandlers(assemblies);
-
+            builder.RegisterMinionEventHandler(assemblies);
+            
             builder.Register(context =>
                     new ActorAssemblyProvider(assemblies))
                 .As<IActorAssemblyProvider>();

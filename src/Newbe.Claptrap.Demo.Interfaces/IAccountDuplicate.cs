@@ -1,16 +1,17 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Demo.Models.EventData;
 using Newbe.Claptrap.Orleans;
-using Orleans;
 
 namespace Newbe.Claptrap.Demo.Interfaces
 {
-    [Minion("ActorFlow", "Account", typeof(NoneStateData))]
-    public interface IAccountActorFlowMinion : IMinionGrain
+    [Minion("AccountDuplicate", "Account", typeof(AccountDuplicateStateData))]
+    public interface IAccountDuplicate
+        : IMinionGrain
     {
         [MinionEvent(nameof(BalanceChangeEventData))]
-        Task BalanceChangeNotice(IEvent @event);
+        Task HandleBalance(IEvent @event);
     }
 }

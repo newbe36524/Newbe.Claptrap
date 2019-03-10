@@ -5,11 +5,11 @@ using Newbe.Claptrap.EventHandler;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class StateDataUpdaterFactory : IStateDataUpdaterFactory
+    public class AutofacStateDataUpdaterFactory : IStateDataUpdaterFactory
     {
         private readonly IComponentContext _componentContext;
 
-        public StateDataUpdaterFactory(
+        public AutofacStateDataUpdaterFactory(
             IComponentContext componentContext)
         {
             _componentContext = componentContext;

@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Newbe.Claptrap.Attributes;
+using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Metadata;
+using Newbe.Claptrap.Orleans;
 using Newbe.Claptrap.StateInitializer;
 
 namespace Newbe.Claptrap.Autofac
@@ -18,73 +22,83 @@ namespace Newbe.Claptrap.Autofac
 
         public IEnumerable<DefaultStateDataFactoryRegistration> FindAll(Type[] types)
         {
-            var factoryTypes = types
-                .Where(x => x.GetInterface(nameof(IDefaultStateDataFactory)) != null)
-                .ToArray();
-
-            IRegistrationResolver[] resolvers =
+            IDefaultStateDataFactoryFinder[] finders =
             {
-                new BaseTypeRegistrationResolver(_actorMetadataProvider)
+                new NoneStateDataFinder(_actorMetadataProvider),
+                new NamespaceFactoryFinder()
             };
 
-            var re = factoryTypes.Select(Resolve).Where(x => x != null).ToArray();
+            var re = finders.SelectMany(x => x.FindAll(types));
             return re;
-
-            DefaultStateDataFactoryRegistration Resolve(Type type)
-            {
-                foreach (var resolver in resolvers)
-                {
-                    var registration = resolver.Resolve(type);
-                    if (registration != null)
-                    {
-                        return registration;
-                    }
-                }
-
-                return null;
-            }
         }
 
-        public interface IRegistrationResolver
-        {
-            DefaultStateDataFactoryRegistration Resolve(Type type);
-        }
 
-        /// <summary>
-        /// if it is implement of DefaultStateDataFactory&lt;TStateData&gt;, then we thick it is the IDefaultStateDataFactory for the actor which has the same StateDataType in actor metadata.
-        /// </summary>
-        public class BaseTypeRegistrationResolver : IRegistrationResolver
+        private class NoneStateDataFinder : IDefaultStateDataFactoryFinder
         {
             private readonly IActorMetadataProvider _actorMetadataProvider;
 
-            public BaseTypeRegistrationResolver(
+            public NoneStateDataFinder(
                 IActorMetadataProvider actorMetadataProvider)
             {
                 _actorMetadataProvider = actorMetadataProvider;
             }
 
-            public DefaultStateDataFactoryRegistration Resolve(Type type)
+            public IEnumerable<DefaultStateDataFactoryRegistration> FindAll(Type[] types)
             {
                 var actorMetadataCollection = _actorMetadataProvider.GetActorMetadata();
-                var baseTypes = ReflectionHelper.GetBaseType(type);
-                foreach (var baseType in baseTypes)
+                foreach (var claptrapMetadata in actorMetadataCollection.ClaptrapMetadata)
                 {
-                    if (baseType.IsGenericType
-                        && baseType.GetGenericTypeDefinition() == typeof(DefaultStateDataFactory<>))
+                    if (claptrapMetadata.StateDataType == typeof(NoneStateData))
                     {
-                        var stateDataType = baseType.GenericTypeArguments[0];
-                        foreach (var metadata in actorMetadataCollection.ClaptrapMetadata)
+                        var key = new DefaultStateDataFactoryRegistrationKey(claptrapMetadata.ClaptrapKind);
+                        yield return new DefaultStateDataFactoryRegistration(
+                            typeof(NoneStateDataDefaultStateDataFactory), key);
+                    }
+                }
+
+                foreach (var minionMetadata in actorMetadataCollection.MinionMetadata)
+                {
+                    if (minionMetadata.StateDataType == typeof(NoneStateData))
+                    {
+                        var key = new DefaultStateDataFactoryRegistrationKey(minionMetadata.MinionKind);
+                        yield return new DefaultStateDataFactoryRegistration(
+                            typeof(NoneStateDataDefaultStateDataFactory), key);
+                    }
+                }
+            }
+        }
+
+        private class NamespaceFactoryFinder : IDefaultStateDataFactoryFinder
+        {
+            public IEnumerable<DefaultStateDataFactoryRegistration> FindAll(Type[] types)
+            {
+                var grainImpls = types.Where(ReflectionHelper.IsClaptrapOrMinionGrainImplement);
+                foreach (var grainType in grainImpls)
+                {
+                    var factorTypesInSubNamespace = types
+                        .Where(x => x.Namespace.StartsWith(grainType.Namespace))
+                        .Where(x => x.GetInterface(nameof(IDefaultStateDataFactory)) != null);
+
+                    var actorKind = ReflectionHelper.GetActorKind(grainType);
+
+                    foreach (var type in factorTypesInSubNamespace)
+                    {
+                        var baseTypes = ReflectionHelper.GetBaseTypes(type);
+                        foreach (var baseType in baseTypes)
                         {
-                            if (metadata.StateDataType == stateDataType)
+                            if (baseType.IsGenericType
+                                && baseType.GetGenericTypeDefinition() == typeof(DefaultStateDataFactory<>))
                             {
-                                var key = new DefaultStateDataFactoryRegistrationKey(metadata.ClaptrapKind);
-                                return new DefaultStateDataFactoryRegistration(type, key);
+                                var stateDataType = baseType.GenericTypeArguments[0];
+                                if (stateDataType != typeof(NoneStateDataStateDataUpdater))
+                                {
+                                    var key = new DefaultStateDataFactoryRegistrationKey(actorKind);
+                                    yield return new DefaultStateDataFactoryRegistration(type, key);
+                                }
                             }
                         }
                     }
                 }
-
-                return null;
             }
         }
     }

@@ -6,6 +6,5 @@ namespace Newbe.Claptrap.Orleans
 {
     public interface IMinionGrain : IGrainWithStringKey
     {
-        Task HandleEvent(IEvent @event);
     }
 }

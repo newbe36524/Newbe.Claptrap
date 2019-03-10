@@ -51,5 +51,28 @@ namespace Newbe.Claptrap.Autofac
                     .Keyed<IDefaultStateDataFactory>(registration.Key);
             }
         }
+
+        public static void RegisterMinionEventHandler(this ContainerBuilder builder,
+            IEnumerable<Assembly> assemblies)
+        {
+            var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
+            var allTypes = assemblyArray.SelectMany(x => x.GetTypes()).ToArray();
+            var provider = new ReflectionActorMetadataProvider(new[] {new ActorAssemblyProvider(assemblyArray),});
+            IMinionEventHandlerFinder finder = new MinionEventHandlerFinder(provider);
+            var registrations = finder.FindAll(allTypes);
+
+            foreach (var registration in registrations)
+            {
+                builder.RegisterType(registration.Type)
+                    .As<IEventHandler>()
+                    .WithMetadata(new List<KeyValuePair<string, object>>
+                    {
+                        new KeyValuePair<string, object>(Constants.MinionEventHandlerMetadataKeys.MinionKind,
+                            registration.Key.MinionKind),
+                        new KeyValuePair<string, object>(Constants.MinionEventHandlerMetadataKeys.EventType,
+                            registration.Key.EventType)
+                    });
+            }
+        }
     }
 }

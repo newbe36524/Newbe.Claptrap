@@ -5,13 +5,13 @@ using Newbe.Claptrap.Core;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class ActorFactory : IActorFactory
+    public class AutofacActorFactory : IActorFactory
     {
         private readonly ILifetimeScope _lifetimeScope;
 
         public delegate Actor Factory(IActorContext actorContext);
 
-        public ActorFactory(
+        public AutofacActorFactory(
             ILifetimeScope lifetimeScope)
         {
             _lifetimeScope = lifetimeScope;

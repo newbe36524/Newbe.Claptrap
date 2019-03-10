@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventChannels;
@@ -31,8 +32,9 @@ namespace Newbe.Claptrap.EventHub.DirectClient
                 var method = methodInfo.MakeGenericMethod(minionMetadata.InterfaceType);
                 var grain =
                     (IMinionGrain) method.Invoke(client, new object[] {claptrapIdentity.Id, string.Empty});
+
                 return grain;
-            }, _clusterClient);
+            }, _clusterClient, minionMetadata.InterfaceType);
             return directClientEventPublishChannel;
         }
     }

@@ -60,7 +60,8 @@ namespace Newbe.Claptrap
                         {
                             ClaptrapKind = new ClaptrapKind(claptrapAttribute.ActorType, claptrapAttribute.Catalog),
                             StateDataType = claptrapAttribute.StateDataType,
-                            ClaptrapEventMetadata = GetClaptrapEventMetadata(type.GetMethods()),
+                            ClaptrapEventMetadata =
+                                GetClaptrapEventMetadata(type.GetMethods()).Distinct(EventTypeComparer),
                             InterfaceType = type,
                         };
                         yield return claptrapMetadata;
@@ -72,7 +73,7 @@ namespace Newbe.Claptrap
                     foreach (var methodInfo in methodInfos)
                     {
                         var claptrapEventMethodAttribute =
-                            methodInfo.GetCustomAttribute<ClaptrapEventMethodAttribute>();
+                            methodInfo.GetCustomAttribute<ClaptrapEventAttribute>();
                         if (claptrapEventMethodAttribute != null)
                         {
                             var claptrapEventMetadata = new ClaptrapEventMetadata
@@ -95,8 +96,7 @@ namespace Newbe.Claptrap
                     if (minionAttribute != null)
                     {
                         var claptrapMetadata = claptraps[new ClaptrapKind(ActorType.Claptrap, minionAttribute.Catalog)];
-                        var eventTypes = type.GetCustomAttributes<MinionEventAttribute>()
-                            .Select(x => x.EventType)
+                        var eventTypes = GetMinionEventMetadata(type.GetMethods())
                             .ToArray();
                         var minionMetadata = new MinionMetadata
                         {
@@ -111,8 +111,41 @@ namespace Newbe.Claptrap
                         yield return minionMetadata;
                     }
                 }
+
+                IEnumerable<string> GetMinionEventMetadata(IEnumerable<MethodInfo> infos)
+                {
+                    foreach (var methodInfo in infos)
+                    {
+                        var claptrapEventMethodAttribute =
+                            methodInfo.GetCustomAttribute<MinionEventAttribute>();
+                        if (claptrapEventMethodAttribute != null)
+                        {
+                            yield return claptrapEventMethodAttribute.EventType;
+                        }
+                    }
+                }
             }
         }
+
+        private sealed class EventTypeEqualityComparer : IEqualityComparer<ClaptrapEventMetadata>
+        {
+            public bool Equals(ClaptrapEventMetadata x, ClaptrapEventMetadata y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return string.Equals(x.EventType, y.EventType);
+            }
+
+            public int GetHashCode(ClaptrapEventMetadata obj)
+            {
+                return (obj.EventType != null ? obj.EventType.GetHashCode() : 0);
+            }
+        }
+
+        private static IEqualityComparer<ClaptrapEventMetadata> EventTypeComparer { get; } =
+            new EventTypeEqualityComparer();
 
         private class ActorMetadataCollection : IActorMetadataCollection
         {

@@ -6,11 +6,6 @@ using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public interface IEventPublishChannelFactory
-    {
-        IEnumerable<IEventPublishChannel> Create(IActorIdentity identity);
-    }
-
     public class EventPublishChannelFactory : IEventPublishChannelFactory
     {
         private readonly IActorMetadataProvider _actorMetadataProvider;

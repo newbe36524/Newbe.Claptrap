@@ -2,7 +2,7 @@ using System;
 
 namespace Newbe.Claptrap.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ClaptrapEventAttribute : Attribute
     {
         public string EventType { get; }

@@ -7,6 +7,7 @@ using Orleans;
 
 namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.Database
 {
+    [MinionComponent("Database", "Account")]
     public class AccountMinion
         : Grain, IAccountDatabaseMinion
     {
@@ -15,7 +16,7 @@ namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.Database
             await base.OnActivateAsync();
             var actorFactory = (IActorFactory) ServiceProvider.GetService(typeof(IActorFactory));
             var identity =
-                new GrainActorIdentity(new MinionKind(ActorType.Minion, nameof(Account), "Database"),
+                new GrainActorIdentity(new MinionKind(ActorType.Minion, "Account", "Database"),
                     this.GetPrimaryKeyString());
             Actor = actorFactory.Create(identity);
             await Actor.ActivateAsync();
@@ -29,7 +30,12 @@ namespace Newbe.Claptrap.Demo.Impl.AccountImpl.Minions.Database
             await Actor.DeactivateAsync();
         }
 
-        public Task HandleEvent(IEvent @event)
+        public Task SaveBalanceChange(IEvent @event)
+        {
+            return Actor.HandleEvent(@event);
+        }
+
+        public Task Locked(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }

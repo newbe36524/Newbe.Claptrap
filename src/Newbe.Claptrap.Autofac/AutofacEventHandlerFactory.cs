@@ -10,7 +10,7 @@ using Newbe.Claptrap.EventHandlers;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class EventHandlerFactory : IEventHandlerFactory
+    public class AutofacEventHandlerFactory : IEventHandlerFactory
     {
         private readonly ILifetimeScope _lifetimeScope;
 
@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Autofac
 
         public delegate ClaptrapEventPublishEventHandler ClaptrapEventHubEventHandlerFactory();
 
-        public EventHandlerFactory(
+        public AutofacEventHandlerFactory(
             ILifetimeScope lifetimeScope)
         {
             _lifetimeScope = lifetimeScope;
@@ -49,11 +49,6 @@ namespace Newbe.Claptrap.Autofac
                     inner = eventHandler;
                     break;
                 case ActorType.Minion:
-                    if (!(eventContext.ActorContext.Identity.Kind is IMinionKind minionKind))
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(eventContext.ActorContext.Identity.Kind));
-                    }
-
                     var stateHandler = eventScope.Resolve<MinionEventHandlerFactory>().Invoke();
                     var minionEventHandlerFactory = eventScope.Resolve<IMinionEventHandlerFactory>();
                     var eventHandlers = minionEventHandlerFactory.Create(eventContext);
@@ -70,7 +65,7 @@ namespace Newbe.Claptrap.Autofac
             return re;
         }
 
-        internal class AutofacEventHandler : IEventHandler
+        private class AutofacEventHandler : IEventHandler
         {
             private readonly ILifetimeScope _lifetimeScope;
             private readonly IEventHandler _eventHandler;
