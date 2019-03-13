@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.Demo.Server
                     containerBuilder.Populate(collection);
 
                     containerBuilder.RegisterModule<DemoModule>();
-                    containerBuilder.RegisterModule<ClaptrapModule>();
+                    containerBuilder.RegisterModule<ClaptrapServerModule>();
 
                     containerBuilder.RegisterType<DirectClientEventPublishChannelProvider>()
                         .As<IEventPublishChannelProvider>();

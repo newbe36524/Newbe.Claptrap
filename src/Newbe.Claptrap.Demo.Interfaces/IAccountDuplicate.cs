@@ -13,5 +13,7 @@ namespace Newbe.Claptrap.Demo.Interfaces
     {
         [MinionEvent(nameof(BalanceChangeEventData))]
         Task HandleBalance(IEvent @event);
+
+        Task<decimal> GetBalance();
     }
 }

@@ -1,37 +1,12 @@
-using Autofac;
-using Newbe.Claptrap.Assemblies;
+using System.Reflection;
 using Newbe.Claptrap.Autofac;
-using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps;
-using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.AddBalanceImpl;
-using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.LockImpl;
-using Newbe.Claptrap.Demo.Impl.AccountImpl.Claptraps.EventMethods.TransferImpl;
 using Newbe.Claptrap.Demo.Interfaces;
 
 namespace Newbe.Claptrap.Demo
 {
-    public class DemoModule : Module
+    public class DemoModule : ClaptrapModuleBase
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            base.Load(builder);
-            builder.RegisterType<Account>()
-                .As<IAccount>();
-
-            builder.RegisterType<AddBalanceMethod>()
-                .As<IAddBalanceMethod>();
-            builder.RegisterType<LockMethod>()
-                .As<ILockMethod>();
-            builder.RegisterType<TransferMethod>()
-                .As<ITransferMethod>();
-
-            var assemblies = new[] {typeof(IAccount).Assembly, typeof(DemoModule).Assembly};
-            builder.RegisterDefaultStateDataFactories(assemblies);
-            builder.RegisterUpdateStateDataHandlers(assemblies);
-            builder.RegisterMinionEventHandler(assemblies);
-            
-            builder.Register(context =>
-                    new ActorAssemblyProvider(assemblies))
-                .As<IActorAssemblyProvider>();
-        }
+        protected override Assembly InterfaceAssembly => typeof(IAccount).Assembly;
+        protected override Assembly ImplementAssembly => typeof(DemoModule).Assembly;
     }
 }
