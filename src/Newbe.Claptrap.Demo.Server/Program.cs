@@ -44,16 +44,6 @@ namespace Newbe.Claptrap.Demo.Server
                     var serviceProvider = new AutofacServiceProvider(container);
                     return serviceProvider;
                 })
-                .AddStartupTask(async (provider, token) =>
-                {
-                    var grainFactory = provider.GetService<IGrainFactory>();
-                    var account = grainFactory.GetGrain<IAccount>("666");
-                    var balance = await account.GetBalance();
-                    Console.WriteLine($"balance now is {balance}");
-                    await Task.WhenAll(Enumerable.Range(0, 10).Select(i => account.AddBalance(2)));
-                    balance = await account.GetBalance();
-                    Console.WriteLine($"balance now is {balance}");
-                })
                 .EnableDirectClient()
                 ;
             var siloHost = hostBuilder.Build();

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Newbe.Claptrap.Attributes;
@@ -17,8 +19,6 @@ namespace Newbe.Claptrap.EventHub.DirectClient
     {
         private readonly Func<IGrainFactory, IMinionGrain> _grainFunc;
         private readonly IGrainFactory _clusterClient;
-        private readonly Type _minionInterfaceType;
-        private readonly BufferBlock<IEvent> _bufferBlock;
 
         public DirectClientEventPublishChannel(
             Func<IGrainFactory, IMinionGrain> grainFunc,
@@ -27,14 +27,27 @@ namespace Newbe.Claptrap.EventHub.DirectClient
         {
             _grainFunc = grainFunc;
             _clusterClient = clusterClient;
-            _minionInterfaceType = minionInterfaceType;
-            _bufferBlock = new BufferBlock<IEvent>();
-            // todo need to keep order 
-            _bufferBlock.LinkTo(new ActionBlock<IEvent>(PublishEvent));
+            _methodInfos = GetMethodInfos(minionInterfaceType);
+            Task.Factory.StartNew(PublishEvent);
         }
 
-        private readonly ConcurrentDictionary<string, MethodInfo>
-            _methodInfos = new ConcurrentDictionary<string, MethodInfo>();
+        private readonly IReadOnlyDictionary<string, MethodInfo> _methodInfos;
+
+        private readonly ConcurrentQueue<IEvent> _queue =
+            new ConcurrentQueue<IEvent>();
+
+        private async Task PublishEvent()
+        {
+            while (true)
+            {
+                while (_queue.TryDequeue(out var @event))
+                {
+                    await PublishEvent(@event);
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
 
         private async Task PublishEvent(IEvent @event)
         {
@@ -42,11 +55,11 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             {
                 try
                 {
-                    var minion = _grainFunc(_clusterClient);
-                    var methodInfo = _methodInfos.GetOrAdd(@event.EventType, GetMethodInfo);
-                    if (methodInfo != null)
+                    if (_methodInfos.TryGetValue(@event.EventType, out var methodInfo))
                     {
-                        var task = (Task) methodInfo.Invoke(minion, new object[] {@event});
+                        var minionGrain = _grainFunc(_clusterClient);
+                        var task = (Task) methodInfo.Invoke(minionGrain, new object[] {@event});
+                        Console.WriteLine($"sent {@event.Version}");
                         await task;
                     }
 
@@ -61,23 +74,25 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             }
         }
 
-        private MethodInfo GetMethodInfo(string eventType)
+        private IReadOnlyDictionary<string, MethodInfo> GetMethodInfos(Type interfaceType)
         {
-            foreach (var methodInfo in _minionInterfaceType.GetMethods())
+            var re = new Dictionary<string, MethodInfo>();
+            foreach (var methodInfo in interfaceType.GetMethods())
             {
                 var minionEventAttribute = methodInfo.GetCustomAttribute<MinionEventAttribute>();
-                if (minionEventAttribute?.EventType == eventType)
+                if (minionEventAttribute.EventType != null)
                 {
-                    return methodInfo;
+                    re[minionEventAttribute.EventType] = methodInfo;
                 }
             }
 
-            return null;
+            return re;
         }
 
         public Task Publish(IEvent @event)
         {
-            return _bufferBlock.SendAsync(@event);
+            _queue.Enqueue(@event);
+            return Task.CompletedTask;
         }
     }
 }

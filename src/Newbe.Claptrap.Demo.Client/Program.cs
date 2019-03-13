@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -36,9 +37,17 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("start to connect");
             await client.Connect(exception => Task.FromResult(true));
             Console.WriteLine("connected");
-            var account = client.GetGrain<IAccount>("student");
-            var @decimal = await account.GetBalance();
-            Console.WriteLine(@decimal);
+            var account = client.GetGrain<IAccount>("666");
+            var balance = await account.GetBalance();
+            Console.WriteLine($"balance now is {balance}");
+            for (int i = 0; i < 10; i++)
+            {
+                await Task.WhenAll(Enumerable.Range(0, 100).Select(_ => account.AddBalance(2)));
+                Console.WriteLine("start to get balance");
+                balance = await account.GetBalance();
+                Console.WriteLine($"balance now is {balance}");
+            }
+      
         }
     }
 }

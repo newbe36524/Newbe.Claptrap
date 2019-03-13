@@ -43,6 +43,7 @@ namespace Newbe.Claptrap
             }
             catch (Exception e)
             {
+                // TODO log error
                 Console.WriteLine(e);
                 throw;
             }
