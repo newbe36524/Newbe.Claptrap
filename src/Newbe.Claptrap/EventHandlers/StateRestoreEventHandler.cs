@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.EventHandlers
             {
                 await _eventHandler.HandleEvent(eventContext);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // todo log
                 await _actorContext.InitializeAsync();

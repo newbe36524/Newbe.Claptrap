@@ -11,6 +11,11 @@ namespace Newbe.Claptrap.Attributes
         public string Catalog { get; }
         public Type StateDataType { get; }
 
+        public MinionAttribute(string minionCatalog, string catalog)
+            : this(minionCatalog, catalog, typeof(NoneStateData))
+        {
+        }
+
         public MinionAttribute(string minionCatalog, string catalog, Type stateDataType)
             : base(ActorType.Minion)
         {

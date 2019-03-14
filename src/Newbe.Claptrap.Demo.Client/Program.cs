@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Newbe.Claptrap.Demo.Interfaces;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
+using Newbe.Claptrap.Demo.Interfaces.DomainService;
 using Orleans;
 
 namespace Newbe.Claptrap.Demo.Client
@@ -37,17 +39,31 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("start to connect");
             await client.Connect(exception => Task.FromResult(true));
             Console.WriteLine("connected");
-            var account = client.GetGrain<IAccount>("666");
-            var balance = await account.GetBalance();
-            Console.WriteLine($"balance now is {balance}");
+            var random = new Random();
+            var sw = Stopwatch.StartNew();
+            var tasks = Enumerable.Range(1, 10000).Select(x =>
+            {
+                var transferAccountBalance = client.GetGrain<ITransferAccountBalance>(x.ToString());
+                return transferAccountBalance.Transfer(GetRandomAccountId(), GetRandomAccountId(), 1);
+            });
+            await Task.WhenAll(tasks);
+
+            Console.WriteLine($"finished in {sw.ElapsedMilliseconds} ms");
+            var sum = 0M;
             for (int i = 0; i < 10; i++)
             {
-                await Task.WhenAll(Enumerable.Range(0, 100).Select(_ => account.AddBalance(2)));
-                Console.WriteLine("start to get balance");
-                balance = await account.GetBalance();
-                Console.WriteLine($"balance now is {balance}");
+                var account = client.GetGrain<IAccount>(i.ToString());
+                var balance = await account.GetBalance();
+                sum += balance;
+                Console.WriteLine($"balance for {i} is : {balance}");
             }
-      
+
+            Console.WriteLine($"total balance : {sum}");
+
+            string GetRandomAccountId()
+            {
+                return random.Next(0, 500).ToString();
+            }
         }
     }
 }

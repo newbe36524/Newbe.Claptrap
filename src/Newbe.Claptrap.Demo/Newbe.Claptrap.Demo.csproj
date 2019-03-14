@@ -19,8 +19,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Orleans_CodeGenInputs Remove="Impl\AccountImpl\StateDataUpdaters\BalanceChangeEventStateDataUpdater.cs" />
-      <Orleans_CodeGenInputs Remove="Impl\AccountImpl\StateDataUpdaters\LockEventStateDataUpdater.cs" />
+      <Folder Include="Domain" />
     </ItemGroup>
     
 

@@ -37,7 +37,7 @@ namespace Newbe.Claptrap
         {
             return new EventMethodResult<TEventData>
             {
-                EventRaising = true,
+                EventRaising = false,
             };
         }
 
@@ -62,7 +62,7 @@ namespace Newbe.Claptrap
             return new EventMethodResult<TEventData, TMethodReturn>
             {
                 MethodReturn = returnValue,
-                EventRaising = true,
+                EventRaising = false,
             };
         }
     }

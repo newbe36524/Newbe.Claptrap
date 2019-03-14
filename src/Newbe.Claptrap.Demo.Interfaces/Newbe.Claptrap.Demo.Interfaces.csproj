@@ -16,4 +16,8 @@
       <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Domain" />
+    </ItemGroup>
+
 </Project>

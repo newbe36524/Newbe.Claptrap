@@ -8,6 +8,7 @@
     <ItemGroup>
       <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
       <PackageReference Include="Microsoft.Orleans.Server" Version="2.2.4" />
+      <PackageReference Include="OrleansDashboard" Version="2.2.5" />
     </ItemGroup>
 
     <ItemGroup>

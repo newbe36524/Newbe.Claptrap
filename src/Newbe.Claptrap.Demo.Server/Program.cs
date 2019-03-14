@@ -44,7 +44,10 @@ namespace Newbe.Claptrap.Demo.Server
                     var serviceProvider = new AutofacServiceProvider(container);
                     return serviceProvider;
                 })
+                .ConfigureApplicationParts(manager =>
+                    manager.AddApplicationPart(typeof(DemoModule).Assembly).WithReferences())
                 .EnableDirectClient()
+                .UseDashboard(options => options.Port = 9999)
                 ;
             var siloHost = hostBuilder.Build();
             Console.WriteLine("server starting");

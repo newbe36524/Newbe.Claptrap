@@ -59,7 +59,6 @@ namespace Newbe.Claptrap.EventHub.DirectClient
                     {
                         var minionGrain = _grainFunc(_clusterClient);
                         var task = (Task) methodInfo.Invoke(minionGrain, new object[] {@event});
-                        Console.WriteLine($"sent {@event.Version}");
                         await task;
                     }
 
@@ -80,7 +79,7 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             foreach (var methodInfo in interfaceType.GetMethods())
             {
                 var minionEventAttribute = methodInfo.GetCustomAttribute<MinionEventAttribute>();
-                if (minionEventAttribute.EventType != null)
+                if (!string.IsNullOrEmpty(minionEventAttribute?.EventType))
                 {
                     re[minionEventAttribute.EventType] = methodInfo;
                 }
