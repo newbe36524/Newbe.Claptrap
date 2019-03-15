@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Metadata", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.EventHub.DirectClient", "Newbe.Claptrap.EventHub.DirectClient\Newbe.Claptrap.EventHub.DirectClient.csproj", "{D80D58F4-E214-4884-9072-CE0EA1CDD3EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Benchmarks", "Newbe.Claptrap.Benchmarks\Newbe.Claptrap.Benchmarks.csproj", "{7067F9F7-0633-43ED-BD69-427F9211C433}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{D80D58F4-E214-4884-9072-CE0EA1CDD3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D80D58F4-E214-4884-9072-CE0EA1CDD3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D80D58F4-E214-4884-9072-CE0EA1CDD3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7067F9F7-0633-43ED-BD69-427F9211C433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7067F9F7-0633-43ED-BD69-427F9211C433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7067F9F7-0633-43ED-BD69-427F9211C433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7067F9F7-0633-43ED-BD69-427F9211C433}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B2BE31A9-1844-4079-8C58-D9BB4628A226} = {B16E99D1-98B2-4FBF-A5FA-DAB45C1D8CEF}
