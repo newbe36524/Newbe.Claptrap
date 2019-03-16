@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var random = new Random();
             var sw = Stopwatch.StartNew();
-            var tasks = Enumerable.Range(1, 10000).Select(x =>
+            var tasks = Enumerable.Range(1, 1000).Select(x =>
             {
                 var transferAccountBalance = client.GetGrain<ITransferAccountBalance>(x.ToString());
                 return transferAccountBalance.Transfer(GetRandomAccountId(), GetRandomAccountId(), 1);

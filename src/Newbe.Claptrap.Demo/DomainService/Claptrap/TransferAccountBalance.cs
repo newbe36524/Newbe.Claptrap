@@ -38,6 +38,7 @@ namespace Newbe.Claptrap.Demo.DomainService.Claptrap
 
         public async Task<TransferResult> Transfer(string fromId, string toId, decimal balance)
         {
+            DeactivateOnIdle();
             if (ActorState.Finished)
             {
                 return new TransferResult

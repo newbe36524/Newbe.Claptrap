@@ -2,6 +2,14 @@
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/native/amd64/KernelTraceControl.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/native/amd64/msdia140.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/native/x86/KernelTraceControl.Win61.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/native/x86/KernelTraceControl.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/native/x86/msdia140.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/netstandard1.6/Dia2Lib.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/netstandard1.6/OSExtensions.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.diagnostics.tracing.traceevent/2.0.34/lib/netstandard1.6/TraceReloggerLib.dll" />
     <content url="file://$MODULE_DIR$/../.." />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

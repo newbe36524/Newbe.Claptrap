@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.Demo.Server
                     return serviceProvider;
                 })
                 .ConfigureApplicationParts(manager =>
-                    manager.AddApplicationPart(typeof(DemoModule).Assembly).WithReferences())
+                    manager.AddFromDependencyContext().WithReferences())
                 .EnableDirectClient()
                 .UseDashboard(options => options.Port = 9999)
                 ;
