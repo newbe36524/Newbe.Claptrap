@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.Autofac
 {
     public class NoneStateDataStateDataUpdater : IStateDataUpdater
     {
-        public void UpdateStateData(IStateData state, IEventData @event)
+        public void Update(IStateData state, IEventData @event)
         {
             // do nothing
         }

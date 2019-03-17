@@ -13,16 +13,9 @@ namespace Newbe.Claptrap.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            var eventMethodTypes = ImplementAssembly.GetTypes()
-                .Where(x => x.Namespace.Contains("EventMethods") && x.IsClass);
-            foreach (var eventMethodType in eventMethodTypes)
-            {
-                builder.RegisterType(eventMethodType)
-                    .AsImplementedInterfaces();
-            }
-
             base.Load(builder);
             var assemblies = new[] {InterfaceAssembly, ImplementAssembly};
+            builder.RegisterEventMethods(assemblies);
             builder.RegisterDefaultStateDataFactories(assemblies);
             builder.RegisterUpdateStateDataHandlers(assemblies);
             builder.RegisterMinionEventHandler(assemblies);

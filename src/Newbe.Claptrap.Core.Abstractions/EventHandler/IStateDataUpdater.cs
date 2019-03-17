@@ -4,6 +4,6 @@ namespace Newbe.Claptrap.EventHandler
 {
     public interface IStateDataUpdater
     {
-        void UpdateStateData(IStateData state, IEventData @event);
+        void Update(IStateData state, IEventData @event);
     }
 }

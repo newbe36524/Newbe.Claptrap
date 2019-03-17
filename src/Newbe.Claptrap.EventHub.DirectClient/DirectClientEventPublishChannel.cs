@@ -49,24 +49,28 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             }
         }
 
-        private async Task PublishEvent(IEvent @event)
+        private Task PublishEvent(IEvent @event)
         {
             while (true)
             {
                 try
                 {
+                    var minionGrain = _grainFunc(_clusterClient);
+                    Task task;
                     if (_methodInfos.TryGetValue(@event.EventType, out var methodInfo))
                     {
-                        var minionGrain = _grainFunc(_clusterClient);
-                        var task = (Task) methodInfo.Invoke(minionGrain, new object[] {@event});
-                        await task;
+                        task = (Task) methodInfo.Invoke(minionGrain, new object[] {@event});
+                    }
+                    else
+                    {
+                        task = minionGrain.HandleOtherEvent(@event);
                     }
 
-                    return;
+                    return task;
                 }
                 catch (Exception e)
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    Thread.Sleep(1000);
                     // todo log error message
                     Console.WriteLine(e);
                 }

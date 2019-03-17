@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.EventHandlers
                     break;
                 case EventSavingResult.Success:
                     var handler = _stateDataUpdaterFactory.Create(state, @event);
-                    handler.UpdateStateData(state.Data, @event.Data);
+                    handler.Update(state.Data, @event.Data);
                     state.IncreaseVersion();
                     // save latest state if event handle success
                     await _stateStore.Save(eventContext.ActorContext.State);

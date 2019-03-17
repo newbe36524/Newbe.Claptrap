@@ -37,7 +37,7 @@ namespace Newbe.Claptrap.Autofac.Modules
             builder.RegisterType<NoneStateDataStateDataUpdater>()
                 .AsSelf()
                 .SingleInstance();
-            builder.RegisterType<NoneStateDataDefaultStateDataFactory>()
+            builder.RegisterType<NoneStateDataStateDataFactory>()
                 .AsSelf()
                 .SingleInstance();
             builder.RegisterType<AutofacStateDataUpdaterFactory>()

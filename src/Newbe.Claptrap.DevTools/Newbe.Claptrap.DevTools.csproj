@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <PackageId>Newbe.Claptrap.DevTools</PackageId>
@@ -9,5 +9,11 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <PackAsTool>true</PackAsTool>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Metadata\Newbe.Claptrap.Metadata.csproj" />
+    </ItemGroup>
 
 </Project>

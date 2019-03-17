@@ -8,6 +8,7 @@ using BenchmarkDotNet.Attributes;
 using Newbe.Claptrap.Autofac;
 using Newbe.Claptrap.Demo;
 using Newbe.Claptrap.Demo.Interfaces.DomainService;
+using Newbe.Claptrap.Demo.Interfaces.DomainService.TransferAccountBalance;
 using Newbe.Claptrap.EventChannels;
 using Newbe.Claptrap.EventHub.DirectClient;
 using Orleans;

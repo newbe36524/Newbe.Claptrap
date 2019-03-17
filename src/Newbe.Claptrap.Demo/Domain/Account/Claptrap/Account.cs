@@ -4,7 +4,7 @@ using Orleans;
 
 namespace Newbe.Claptrap.Demo.Domain.Account.Claptrap
 {
-    public partial class Account : Grain, IAccount
+    public partial class Account
     {
         public Task<decimal> GetBalance()
         {

@@ -22,11 +22,23 @@ namespace Newbe.Claptrap.Autofac
             builder.InstancePerMatchingLifetimeScope(Constants.EventLifetimeScope);
         }
 
+        public static void RegisterEventMethods(this ContainerBuilder builder, IEnumerable<Assembly> assemblies)
+        {
+            var eventMethodRegistrationFinder = new EventMethodRegistrationFinder();
+            var allTypes = assemblies.SelectMany(x => x.GetTypes()).ToArray();
+            var eventMethodRegistrations = eventMethodRegistrationFinder.FindAll(allTypes);
+            foreach (var eventMethodRegistration in eventMethodRegistrations)
+            {
+                builder.RegisterType(eventMethodRegistration.Type)
+                    .AsImplementedInterfaces();
+            }
+        }
+
         public static void RegisterUpdateStateDataHandlers(this ContainerBuilder builder,
             IEnumerable<Assembly> assemblies)
         {
             var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
-            var provider = new ReflectionActorMetadataProvider(new[] {new ActorAssemblyProvider(assemblyArray),});
+            var provider = new ReflectionActorMetadataProvider(new[] {new ActorAssemblyProvider(assemblyArray)});
             IStateDataUpdaterRegistrationFinder finder = new StateDataUpdaterRegistrationFinder(provider);
             var allTypes = assemblyArray.SelectMany(x => x.GetTypes()).ToArray();
             var registrations = finder.FindAll(allTypes);
@@ -43,12 +55,12 @@ namespace Newbe.Claptrap.Autofac
             var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
             var provider = new ReflectionActorMetadataProvider(new[] {new ActorAssemblyProvider(assemblyArray)});
             var allTypes = assemblyArray.SelectMany(x => x.GetTypes()).ToArray();
-            IDefaultStateDataFactoryFinder finder = new DefaultStateDataFactoryFinder(provider);
+            IStateDataFactoryFinder finder = new StateDataFactoryFinder(provider);
             var registrations = finder.FindAll(allTypes);
             foreach (var registration in registrations)
             {
                 builder.RegisterType(registration.Type)
-                    .Keyed<IDefaultStateDataFactory>(registration.Key);
+                    .Keyed<IStateDataFactory>(registration.Key);
             }
         }
 

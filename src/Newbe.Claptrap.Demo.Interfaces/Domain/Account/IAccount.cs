@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Demo.Models.EventData;
+using Newbe.Claptrap.Demo.Models.Domain.Account;
 using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account

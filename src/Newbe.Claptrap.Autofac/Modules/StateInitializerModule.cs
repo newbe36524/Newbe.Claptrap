@@ -16,8 +16,8 @@ namespace Newbe.Claptrap.Autofac.Modules
             builder.Register(context =>
                     context.Resolve<IStateInitializerFactory>().Create(context.Resolve<IActorIdentity>()))
                 .As<IStateInitializer>();
-            builder.RegisterType<AutofacDefaultStateDataFactory>()
-                .As<IDefaultStateDataFactory>();
+            builder.RegisterType<AutofacStateDataFactory>()
+                .As<IStateDataFactory>();
         }
     }
 }

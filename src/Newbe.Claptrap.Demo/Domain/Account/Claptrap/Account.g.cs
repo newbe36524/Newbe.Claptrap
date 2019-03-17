@@ -1,19 +1,19 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Demo.Domain.Account.Claptrap.EventMethods.Lock;
-using Newbe.Claptrap.Demo.Domain.Account.Claptrap.EventMethods.TransferIn;
-using Newbe.Claptrap.Demo.Domain.Account.Claptrap.EventMethods.TransferOut;
+using Newbe.Claptrap.Demo.Domain.Account.Claptrap._20EventMethods.Lock;
+using Newbe.Claptrap.Demo.Domain.Account.Claptrap._20EventMethods.TransferIn;
+using Newbe.Claptrap.Demo.Domain.Account.Claptrap._20EventMethods.TransferOut;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Demo.Models.EventData;
+using Newbe.Claptrap.Demo.Models.Domain.Account;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 
 namespace Newbe.Claptrap.Demo.Domain.Account.Claptrap
 {
     [ClaptrapComponent("Account")]
-    public partial class Account
+    public partial class Account : Grain, IAccount
     {
         public override async Task OnActivateAsync()
         {

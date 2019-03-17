@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Interfaces.DomainService;
+using Newbe.Claptrap.Demo.Interfaces.DomainService.TransferAccountBalance;
 using Orleans;
 
 namespace Newbe.Claptrap.Demo.Client

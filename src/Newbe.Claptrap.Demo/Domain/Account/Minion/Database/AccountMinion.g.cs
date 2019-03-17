@@ -39,5 +39,10 @@ namespace Newbe.Claptrap.Demo.Domain.Account.Minion.Database
         {
             return Actor.HandleEvent(@event);
         }
+
+        public Task HandleOtherEvent(IEvent @event)
+        {
+            return Actor.HandleEvent(@event);
+        }
     }
 }

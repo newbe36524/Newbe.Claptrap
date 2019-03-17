@@ -3,6 +3,7 @@ using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
+using Newbe.Claptrap.Demo.Models.Domain.Account;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 
@@ -33,6 +34,11 @@ namespace Newbe.Claptrap.Demo.Domain.Account.Minion.AccountDuplicate
         }
 
         public Task HandleBalance(IEvent @event)
+        {
+            return Actor.HandleEvent(@event);
+        }
+        
+        public Task HandleOtherEvent(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }

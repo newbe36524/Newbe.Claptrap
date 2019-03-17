@@ -12,7 +12,7 @@ namespace Newbe.Claptrap
         private readonly EventSourcingStateBuilderOptions _options;
         private readonly IEventStore _eventStore;
         private readonly IStateStore _stateStore;
-        private readonly IDefaultStateDataFactory _defaultStateDataFactory;
+        private readonly IStateDataFactory _stateDataFactory;
         private readonly IStateDataUpdaterFactory _stateDataUpdaterFactory;
 
 
@@ -21,14 +21,14 @@ namespace Newbe.Claptrap
             IActorIdentity actorIdentity,
             IEventStore eventStore,
             IStateStore stateStore,
-            IDefaultStateDataFactory defaultStateDataFactory,
+            IStateDataFactory stateDataFactory,
             IStateDataUpdaterFactory stateDataUpdaterFactory)
         {
             _options = options;
             ActorIdentity = actorIdentity;
             _eventStore = eventStore;
             _stateStore = stateStore;
-            _defaultStateDataFactory = defaultStateDataFactory;
+            _stateDataFactory = stateDataFactory;
             _stateDataUpdaterFactory = stateDataUpdaterFactory;
         }
 
@@ -46,7 +46,7 @@ namespace Newbe.Claptrap
             // there is no state from state store, just create a default state from factory 
             if (state == null)
             {
-                var stateData = await _defaultStateDataFactory.Create();
+                var stateData = await _stateDataFactory.CreateInitialState();
                 state = new DataState(identity, (IStateData) stateData, 1);
             }
 
@@ -59,7 +59,7 @@ namespace Newbe.Claptrap
                 foreach (var @event in events)
                 {
                     var handler = _stateDataUpdaterFactory.Create(state, @event);
-                    handler.UpdateStateData(state.Data, @event.Data);
+                    handler.Update(state.Data, @event.Data);
                     count++;
                 }
             } while (count >= _options.RestoreEventVersionCountPerTime);

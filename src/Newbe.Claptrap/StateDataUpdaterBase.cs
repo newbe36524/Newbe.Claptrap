@@ -8,9 +8,9 @@ namespace Newbe.Claptrap
         where TStateData : class, IStateData
         where TEventData : class, IEventData
     {
-        void IStateDataUpdater.UpdateStateData(IStateData state, IEventData @event)
+        void IStateDataUpdater.Update(IStateData stateData, IEventData eventData)
         {
-            UpdateState((TStateData) state, (TEventData) @event);
+            UpdateState((TStateData) stateData, (TEventData) eventData);
         }
 
         public abstract void UpdateState(TStateData stateData, TEventData eventData);

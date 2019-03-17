@@ -20,6 +20,7 @@
     
     <ItemGroup>
       <Folder Include="Domain" />
+      <Folder Include="DomainService\TransferAccountBalance" />
     </ItemGroup>
     
 
