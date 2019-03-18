@@ -24,6 +24,12 @@ namespace Newbe.Claptrap.Demo.DomainService.TransferAccountBalance.Claptrap
             await Actor.ActivateAsync();
         }
 
+        public async override Task OnDeactivateAsync()
+        {
+            await base.OnDeactivateAsync();
+            await Actor.DeactivateAsync();
+        }
+
         public IActor Actor { get; private set; }
 
         public TransferAccountBalanceStateData ActorState => (TransferAccountBalanceStateData) Actor.State.Data;

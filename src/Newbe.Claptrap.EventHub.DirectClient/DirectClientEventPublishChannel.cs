@@ -19,6 +19,7 @@ namespace Newbe.Claptrap.EventHub.DirectClient
     {
         private readonly Func<IGrainFactory, IMinionGrain> _grainFunc;
         private readonly IGrainFactory _clusterClient;
+        private bool _disposed;
 
         public DirectClientEventPublishChannel(
             Func<IGrainFactory, IMinionGrain> grainFunc,
@@ -28,7 +29,16 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             _grainFunc = grainFunc;
             _clusterClient = clusterClient;
             _methodInfos = GetMethodInfos(minionInterfaceType);
-            Task.Factory.StartNew(PublishEvent);
+            Task.Run(PublishEvent);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _disposed = true;
+            while (_queue.TryDequeue(out var @event))
+            {
+                await PublishEvent(@event);
+            }
         }
 
         private readonly IReadOnlyDictionary<string, MethodInfo> _methodInfos;
@@ -42,14 +52,24 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             {
                 while (_queue.TryDequeue(out var @event))
                 {
+                    if (_disposed)
+                    {
+                        return;
+                    }
+
                     await PublishEvent(@event);
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                if (_disposed)
+                {
+                    return;
+                }
+
+                await Task.Delay(1000);
             }
         }
 
-        private Task PublishEvent(IEvent @event)
+        private async Task PublishEvent(IEvent @event)
         {
             while (true)
             {
@@ -66,18 +86,18 @@ namespace Newbe.Claptrap.EventHub.DirectClient
                         task = minionGrain.HandleOtherEvent(@event);
                     }
 
-                    return task;
+                    await task;
                 }
                 catch (Exception e)
                 {
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     // todo log error message
                     Console.WriteLine(e);
                 }
             }
         }
 
-        private IReadOnlyDictionary<string, MethodInfo> GetMethodInfos(Type interfaceType)
+        private static IReadOnlyDictionary<string, MethodInfo> GetMethodInfos(Type interfaceType)
         {
             var re = new Dictionary<string, MethodInfo>();
             foreach (var methodInfo in interfaceType.GetMethods())

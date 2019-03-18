@@ -7,6 +7,7 @@ using Newbe.Claptrap.Orleans;
 namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
 {
     [Claptrap("Account", typeof(AccountStateData))]
+    [TestEventStore]
     public interface IAccount : IClaptrapGrain
     {
         [ClaptrapEvent(nameof(BalanceChangeEventData), typeof(BalanceChangeEventData))]

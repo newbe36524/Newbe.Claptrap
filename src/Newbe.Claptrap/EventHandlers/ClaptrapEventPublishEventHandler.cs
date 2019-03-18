@@ -16,9 +16,12 @@ namespace Newbe.Claptrap.EventHandlers
             _eventPublishChannels = eventPublishChannels;
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return new ValueTask();
+            foreach (var eventPublishChannel in _eventPublishChannels)
+            {
+                await eventPublishChannel.DisposeAsync();
+            }
         }
 
         public Task HandleEvent(IEventContext eventContext)

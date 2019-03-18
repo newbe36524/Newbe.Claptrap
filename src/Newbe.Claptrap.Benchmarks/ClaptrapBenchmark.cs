@@ -18,23 +18,26 @@ namespace Newbe.Claptrap.Benchmarks
 {
     public class ClaptrapBenchmark
     {
-        [Params(1, 10, 100, 1000, 10000)] 
-        public int Times { get; set; }
+//        [Params(1, 10, 100, 1000, 10000)] 
+        [Params(1, 10, 100, 1000)] public int Times { get; set; }
 
         private IClusterClient _clusterClient;
         private ISiloHost _siloHost;
         private readonly byte[] _randomBytes = new byte[20000];
         private ConcurrentDictionary<string, decimal> _balanceDic;
         private const int DefaultBalance = 10000000;
-        
+        private int TransferAccountBalanceIdPrefix = 0;
+
         [IterationSetup]
         public void Setup()
         {
             _balanceDic = new ConcurrentDictionary<string, decimal>();
             for (var i = 0; i < byte.MaxValue; i++)
             {
-                _balanceDic.AddOrUpdate(i.ToString(), DefaultBalance,(s, arg2) => DefaultBalance);
+                _balanceDic.AddOrUpdate(i.ToString(), DefaultBalance, (s, arg2) => DefaultBalance);
             }
+
+            TransferAccountBalanceIdPrefix++;
         }
 
         [GlobalSetup]
@@ -112,7 +115,8 @@ namespace Newbe.Claptrap.Benchmarks
                 var index = x * 2;
                 var fromId = _randomBytes[index].ToString();
                 var toId = _randomBytes[index + 1].ToString();
-                var transferAccountBalance = _clusterClient.GetGrain<ITransferAccountBalance>(x.ToString());
+                var transferAccountBalance =
+                    _clusterClient.GetGrain<ITransferAccountBalance>($"{TransferAccountBalanceIdPrefix}{x}");
                 return transferAccountBalance.Transfer(fromId, toId, 1);
             });
             await Task.WhenAll(tasks).ConfigureAwait(false);

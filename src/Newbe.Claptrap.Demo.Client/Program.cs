@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -42,24 +43,23 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var random = new Random();
             var sw = Stopwatch.StartNew();
-            var tasks = Enumerable.Range(1, 1000).Select(x =>
+            var round = 0;
+            while (true)
             {
-                var transferAccountBalance = client.GetGrain<ITransferAccountBalance>(x.ToString());
-                return transferAccountBalance.Transfer(GetRandomAccountId(), GetRandomAccountId(), 1);
-            });
-            await Task.WhenAll(tasks);
+                round++;
+                Thread.Sleep(500);
+                Console.WriteLine($"round {round} now");
+                sw.Restart();
+                const int count = 1000;
+                var tasks = Enumerable.Range(round * count, count).Select(x =>
+                {
+                    var transferAccountBalance = client.GetGrain<ITransferAccountBalance>(x.ToString());
+                    return transferAccountBalance.Transfer(GetRandomAccountId(), GetRandomAccountId(), 1);
+                });
+                await Task.WhenAll(tasks);
 
-            Console.WriteLine($"finished in {sw.ElapsedMilliseconds} ms");
-            var sum = 0M;
-            for (int i = 0; i < 10; i++)
-            {
-                var account = client.GetGrain<IAccount>(i.ToString());
-                var balance = await account.GetBalance();
-                sum += balance;
-                Console.WriteLine($"balance for {i} is : {balance}");
+                Console.WriteLine($"finished in {sw.ElapsedMilliseconds} ms");
             }
-
-            Console.WriteLine($"total balance : {sum}");
 
             string GetRandomAccountId()
             {

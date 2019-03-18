@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.EventHandler;
 
 namespace Newbe.Claptrap.EventChannels
 {
-    public interface IEventPublishChannel
+    public interface IEventPublishChannel : IAsyncDisposable
     {
         /// <summary>
         /// publish event to minion
