@@ -18,15 +18,16 @@ namespace Newbe.Claptrap.Benchmarks
 {
     public class ClaptrapBenchmark
     {
-//        [Params(1, 10, 100, 1000, 10000)] 
-        [Params(1, 10, 100, 1000)] public int Times { get; set; }
+        private const int RandomIdCount = 10000;
+
+        [Params(1, 10, 100, 1000, 10000)] public int Times { get; set; }
 
         private IClusterClient _clusterClient;
         private ISiloHost _siloHost;
-        private readonly byte[] _randomBytes = new byte[20000];
+        private readonly string[] _randomIds = new string[RandomIdCount];
         private ConcurrentDictionary<string, decimal> _balanceDic;
         private const int DefaultBalance = 10000000;
-        private int TransferAccountBalanceIdPrefix = 0;
+        private int _transferAccountBalanceIdPrefix;
 
         [IterationSetup]
         public void Setup()
@@ -37,13 +38,19 @@ namespace Newbe.Claptrap.Benchmarks
                 _balanceDic.AddOrUpdate(i.ToString(), DefaultBalance, (s, arg2) => DefaultBalance);
             }
 
-            TransferAccountBalanceIdPrefix++;
+            _transferAccountBalanceIdPrefix++;
         }
 
         [GlobalSetup]
         public async Task GlobalSetup()
         {
-            new Random(36524).NextBytes(_randomBytes);
+            var bytes = new byte[RandomIdCount];
+            new Random(36524).NextBytes(bytes);
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                _randomIds[i] = bytes[i].ToString();
+            }
+
             _balanceDic = new ConcurrentDictionary<string, decimal>();
             for (var i = 0; i < byte.MaxValue; i++)
             {
@@ -98,8 +105,8 @@ namespace Newbe.Claptrap.Benchmarks
             var tasks = Enumerable.Range(1, Times).Select(x =>
             {
                 var index = x * 2;
-                var fromId = _randomBytes[index].ToString();
-                var toId = _randomBytes[index + 1].ToString();
+                var fromId = GetIdByIndex(index);
+                var toId = GetIdByIndex(index + 1);
                 _balanceDic.AddOrUpdate(fromId, 1, (id, balance) => balance - 1);
                 _balanceDic.AddOrUpdate(toId, 1, (id, balance) => balance + 1);
                 return Task.CompletedTask;
@@ -113,13 +120,18 @@ namespace Newbe.Claptrap.Benchmarks
             var tasks = Enumerable.Range(1, Times).Select(x =>
             {
                 var index = x * 2;
-                var fromId = _randomBytes[index].ToString();
-                var toId = _randomBytes[index + 1].ToString();
+                var fromId = GetIdByIndex(index);
+                var toId = GetIdByIndex(index + 1);
                 var transferAccountBalance =
-                    _clusterClient.GetGrain<ITransferAccountBalance>($"{TransferAccountBalanceIdPrefix}{x}");
+                    _clusterClient.GetGrain<ITransferAccountBalance>($"{_transferAccountBalanceIdPrefix}{x}");
                 return transferAccountBalance.Transfer(fromId, toId, 1);
             });
             await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+
+        private string GetIdByIndex(int index)
+        {
+            return _randomIds[index % RandomIdCount];
         }
     }
 }

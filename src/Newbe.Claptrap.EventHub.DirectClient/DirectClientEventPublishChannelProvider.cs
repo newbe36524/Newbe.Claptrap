@@ -34,7 +34,7 @@ namespace Newbe.Claptrap.EventHub.DirectClient
                     (IMinionGrain) method.Invoke(client, new object[] {claptrapIdentity.Id, string.Empty});
 
                 return grain;
-            }, _clusterClient, minionMetadata.InterfaceType);
+            }, _clusterClient, minionMetadata.InterfaceType, DirectClient.Instance);
             return directClientEventPublishChannel;
         }
     }
