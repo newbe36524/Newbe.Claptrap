@@ -20,7 +20,8 @@ namespace Newbe.Claptrap.Benchmarks
     {
         private const int RandomIdCount = 10000;
 
-        [Params(1, 10, 100, 1000, 10000)] public int Times { get; set; }
+        [Params(100_000, 10_000, 1000, 100, 10, 1)]
+        public int Times { get; set; }
 
         private IClusterClient _clusterClient;
         private ISiloHost _siloHost;
@@ -102,31 +103,51 @@ namespace Newbe.Claptrap.Benchmarks
         [Benchmark(Baseline = true, Description = "ConcurrentDictionary")]
         public async Task ConcurrentDictionarySimulation()
         {
-            var tasks = Enumerable.Range(1, Times).Select(x =>
+            const int countPerRound = 1000;
+            var round = Times / countPerRound + 1;
+            for (var i = 0; i < round; i++)
             {
-                var index = x * 2;
-                var fromId = GetIdByIndex(index);
-                var toId = GetIdByIndex(index + 1);
-                _balanceDic.AddOrUpdate(fromId, 1, (id, balance) => balance - 1);
-                _balanceDic.AddOrUpdate(toId, 1, (id, balance) => balance + 1);
-                return Task.CompletedTask;
-            });
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+                var left = Times - i * countPerRound;
+                var times = left > countPerRound ? countPerRound : left;
+                if (times > 0)
+                {
+                    var tasks = Enumerable.Range(1, Times).Select(x =>
+                    {
+                        var index = x * 2;
+                        var fromId = GetIdByIndex(index);
+                        var toId = GetIdByIndex(index + 1);
+                        _balanceDic.AddOrUpdate(fromId, 1, (id, balance) => balance - 1);
+                        _balanceDic.AddOrUpdate(toId, 1, (id, balance) => balance + 1);
+                        return Task.CompletedTask;
+                    });
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
+                }
+            }
         }
 
         [Benchmark(Description = "Claptrap")]
         public async Task ClaptrapMethod()
         {
-            var tasks = Enumerable.Range(1, Times).Select(x =>
+            const int countPerRound = 1000;
+            var round = Times / countPerRound + 1;
+            for (var i = 0; i < round; i++)
             {
-                var index = x * 2;
-                var fromId = GetIdByIndex(index);
-                var toId = GetIdByIndex(index + 1);
-                var transferAccountBalance =
-                    _clusterClient.GetGrain<ITransferAccountBalance>($"{_transferAccountBalanceIdPrefix}{x}");
-                return transferAccountBalance.Transfer(fromId, toId, 1);
-            });
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+                var left = Times - i * countPerRound;
+                var times = left > countPerRound ? countPerRound : left;
+                if (times > 0)
+                {
+                    var tasks = Enumerable.Range(1, times).Select(x =>
+                    {
+                        var index = x * 2;
+                        var fromId = GetIdByIndex(index);
+                        var toId = GetIdByIndex(index + 1);
+                        var transferAccountBalance =
+                            _clusterClient.GetGrain<ITransferAccountBalance>($"{_transferAccountBalanceIdPrefix}{x}");
+                        return transferAccountBalance.Transfer(fromId, toId, 1);
+                    });
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
+                }
+            }
         }
 
         private string GetIdByIndex(int index)
