@@ -56,34 +56,50 @@ namespace Newbe.Claptrap
                     var claptrapAttribute = type.GetCustomAttribute<ClaptrapAttribute>();
                     if (claptrapAttribute != null)
                     {
+                        var methodInfos = type.GetMethods();
+                        var noneEventMethodInfos = methodInfos.Where(x => !IsEventMethod(x)).ToArray();
+                        var eventMethodInfos = methodInfos.Except(noneEventMethodInfos).ToArray();
+                        var claptrapEventMethodMetadata = GetClaptrapEventMethodMetadata(eventMethodInfos).ToArray();
                         var claptrapMetadata = new ClaptrapMetadata
                         {
                             ClaptrapKind = new ClaptrapKind(claptrapAttribute.ActorType, claptrapAttribute.Catalog),
                             StateDataType = claptrapAttribute.StateDataType,
-                            ClaptrapEventMetadata =
-                                GetClaptrapEventMetadata(type.GetMethods()).Distinct(EventTypeComparer),
+                            NoneEventMethodInfos = noneEventMethodInfos,
+                            ClaptrapEventMetadata = claptrapEventMethodMetadata.Select(x => x.ClaptrapEventMetadata)
+                                .Distinct(EventTypeComparer),
+                            EventMethodMetadata = claptrapEventMethodMetadata,
                             InterfaceType = type,
                         };
                         yield return claptrapMetadata;
                     }
                 }
 
-                IEnumerable<ClaptrapEventMetadata> GetClaptrapEventMetadata(IEnumerable<MethodInfo> methodInfos)
+                IEnumerable<ClaptrapEventMethodMetadata> GetClaptrapEventMethodMetadata(
+                    IEnumerable<MethodInfo> methodInfos)
                 {
                     foreach (var methodInfo in methodInfos)
                     {
                         var claptrapEventMethodAttribute =
                             methodInfo.GetCustomAttribute<ClaptrapEventAttribute>();
-                        if (claptrapEventMethodAttribute != null)
+                        var claptrapEventMethodMetadata = new ClaptrapEventMethodMetadata
                         {
-                            var claptrapEventMetadata = new ClaptrapEventMetadata
+                            MethodInfo = methodInfo,
+                            // TODO share instance for ClaptrapEventMetadata
+                            ClaptrapEventMetadata = new ClaptrapEventMetadata
                             {
                                 EventType = claptrapEventMethodAttribute.EventType,
                                 EventDataType = claptrapEventMethodAttribute.EventDataType
-                            };
-                            yield return claptrapEventMetadata;
-                        }
+                            }
+                        };
+                        yield return claptrapEventMethodMetadata;
                     }
+                }
+
+                bool IsEventMethod(MemberInfo methodInfo)
+                {
+                    var claptrapEventMethodAttribute =
+                        methodInfo.GetCustomAttribute<ClaptrapEventAttribute>();
+                    return claptrapEventMethodAttribute != null;
                 }
             }
 
@@ -96,33 +112,49 @@ namespace Newbe.Claptrap
                     if (minionAttribute != null)
                     {
                         var claptrapMetadata = claptraps[new ClaptrapKind(ActorType.Claptrap, minionAttribute.Catalog)];
-                        var eventTypes = GetMinionEventMetadata(type.GetMethods())
-                            .ToArray();
+                        var methodInfos = type.GetMethods();
+                        var noneEventMethodInfos = methodInfos.Where(x => !IsMinionEventMethod(x)).ToArray();
+                        var eventMethodInfos = methodInfos.Except(noneEventMethodInfos).ToArray();
+                        var claptrapEventMethodMetadata = claptrapMetadata.ClaptrapEventMetadata.ToArray();
+                        var minionEventMethodMetadata =
+                            GetMinionEventMetadata(eventMethodInfos, claptrapEventMethodMetadata)
+                                .ToArray();
                         var minionMetadata = new MinionMetadata
                         {
                             InterfaceType = type,
                             MinionKind = new MinionKind(minionAttribute.ActorType, minionAttribute.Catalog,
                                 minionAttribute.MinionCatalog),
                             StateDataType = minionAttribute.StateDataType,
+                            NoneEventMethodInfos = noneEventMethodInfos,
                             ClaptrapMetadata = claptrapMetadata,
-                            ClaptrapEventMetadata =
-                                claptrapMetadata.ClaptrapEventMetadata.Where(x => eventTypes.Contains(x.EventType)),
+                            MinionEventMethodMetadata = minionEventMethodMetadata,
+                            ClaptrapEventMetadata = minionEventMethodMetadata.Select(x => x.ClaptrapEventMetadata)
                         };
                         yield return minionMetadata;
                     }
                 }
 
-                IEnumerable<string> GetMinionEventMetadata(IEnumerable<MethodInfo> infos)
+                IEnumerable<MinionEventMethodMetadata> GetMinionEventMetadata(IEnumerable<MethodInfo> infos,
+                    ClaptrapEventMetadata[] claptrapEventMetadata)
                 {
                     foreach (var methodInfo in infos)
                     {
-                        var claptrapEventMethodAttribute =
+                        var minionEventAttribute =
                             methodInfo.GetCustomAttribute<MinionEventAttribute>();
-                        if (claptrapEventMethodAttribute != null)
+                        var eventMetadata =
+                            claptrapEventMetadata.Single(x => x.EventType == minionEventAttribute.EventType);
+                        var minionEventMethodMetadata = new MinionEventMethodMetadata
                         {
-                            yield return claptrapEventMethodAttribute.EventType;
-                        }
+                            MethodInfo = methodInfo,
+                            ClaptrapEventMetadata = eventMetadata
+                        };
+                        yield return minionEventMethodMetadata;
                     }
+                }
+
+                bool IsMinionEventMethod(MethodInfo methodInfo)
+                {
+                    return methodInfo.GetCustomAttribute<MinionEventAttribute>() != null;
                 }
             }
         }

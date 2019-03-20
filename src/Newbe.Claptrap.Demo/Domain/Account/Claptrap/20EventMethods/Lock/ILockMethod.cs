@@ -1,11 +1,12 @@
+using Newbe.Claptrap;
 using System.Threading.Tasks;
-using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Demo.Models.Domain.Account;
+using EventData = Newbe.Claptrap.Demo.Models.Domain.Account.LockEventData;
+using StateData = Newbe.Claptrap.Demo.Models.Domain.Account.AccountStateData;
 
 namespace Newbe.Claptrap.Demo.Domain.Account.Claptrap._20EventMethods.Lock
 {
     public interface ILockMethod
     {
-        Task<EventMethodResult<LockEventData>> Invoke(AccountStateData stateData);
+        Task<EventMethodResult<EventData>> Invoke(StateData stateData);
     }
 }

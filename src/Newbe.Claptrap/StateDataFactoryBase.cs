@@ -4,11 +4,11 @@ using Newbe.Claptrap.StateInitializer;
 
 namespace Newbe.Claptrap
 {
-    public abstract class StateDataFactory<TStateData>
+    public abstract class StateDataFactoryBase<TStateData>
         : IStateDataFactory
         where TStateData : class, IStateData
     {
-        protected StateDataFactory(IActorIdentity actorIdentity)
+        protected StateDataFactoryBase(IActorIdentity actorIdentity)
         {
             ActorIdentity = actorIdentity;
         }

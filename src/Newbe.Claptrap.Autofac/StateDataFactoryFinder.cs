@@ -87,7 +87,7 @@ namespace Newbe.Claptrap.Autofac
                         foreach (var baseType in baseTypes)
                         {
                             if (baseType.IsGenericType
-                                && baseType.GetGenericTypeDefinition() == typeof(StateDataFactory<>))
+                                && baseType.GetGenericTypeDefinition() == typeof(StateDataFactoryBase<>))
                             {
                                 var stateDataType = baseType.GenericTypeArguments[0];
                                 if (stateDataType != typeof(NoneStateDataStateDataUpdater))

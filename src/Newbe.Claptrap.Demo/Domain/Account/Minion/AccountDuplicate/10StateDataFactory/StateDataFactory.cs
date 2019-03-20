@@ -6,7 +6,7 @@ using Newbe.Claptrap.Demo.Models.Domain.Account;
 namespace Newbe.Claptrap.Demo.Domain.Account.Minion.AccountDuplicate._10StateDataFactory
 {
     public class StateDataFactory
-        : StateDataFactory<AccountDuplicateStateData>
+        : StateDataFactoryBase<AccountDuplicateStateData>
     {
         public StateDataFactory(IActorIdentity actorIdentity) : base(actorIdentity)
         {

@@ -7,6 +7,5 @@ namespace Newbe.Claptrap.Metadata
     {
         public string EventType { get; set; }
         public Type EventDataType { get; set; }
-
-     }
+    }
 }

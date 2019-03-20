@@ -6,7 +6,7 @@ using Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance;
 namespace Newbe.Claptrap.Demo.DomainService.TransferAccountBalance.Claptrap._10StateDataFactory
 {
     public class StateDataFactory
-        : StateDataFactory<TransferAccountBalanceStateData>
+        : StateDataFactoryBase<TransferAccountBalanceStateData>
     {
         public StateDataFactory(IActorIdentity actorIdentity) : base(actorIdentity)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Newbe.Claptrap.Core;
 
 namespace Newbe.Claptrap.Metadata
@@ -14,7 +15,16 @@ namespace Newbe.Claptrap.Metadata
         /// </summary>
         public IEnumerable<ClaptrapEventMetadata> ClaptrapEventMetadata { get; set; }
 
+        public IEnumerable<MinionEventMethodMetadata> MinionEventMethodMetadata { get; set; }
+        
+        public IEnumerable<MethodInfo> NoneEventMethodInfos { get; set; }
         public Type StateDataType { get; set; }
         public Type InterfaceType { get; set; }
+    }
+
+    public class MinionEventMethodMetadata
+    {
+        public MethodInfo MethodInfo { get; set; }
+        public ClaptrapEventMetadata ClaptrapEventMetadata { get; set; }
     }
 }

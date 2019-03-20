@@ -17,20 +17,18 @@ namespace Newbe.Claptrap.EventHub.DirectClient
 {
     public class DirectClientEventPublishChannel : IEventPublishChannel
     {
-        private readonly Func<IGrainFactory, IMinionGrain> _grainFunc;
-        private readonly IGrainFactory _clusterClient;
+        private readonly IMinionGrain _minionGrain;
+        private readonly Dictionary<string, MinionEventMethodMetadata> _minionEventMethodMetadataDic;
         private readonly IDirectClient _directClient;
 
         public DirectClientEventPublishChannel(
-            Func<IGrainFactory, IMinionGrain> grainFunc,
-            IGrainFactory clusterClient,
-            Type minionInterfaceType,
+            IMinionGrain minionGrain,
+            Dictionary<string, MinionEventMethodMetadata> minionEventMethodMetadataDic,
             IDirectClient directClient)
         {
-            _grainFunc = grainFunc;
-            _clusterClient = clusterClient;
+            _minionGrain = minionGrain;
+            _minionEventMethodMetadataDic = minionEventMethodMetadataDic;
             _directClient = directClient;
-            _methodInfos = GetMethodInfos(minionInterfaceType);
         }
 
         public ValueTask DisposeAsync()
@@ -38,29 +36,10 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             return new ValueTask();
         }
 
-        private readonly IReadOnlyDictionary<string, MethodInfo> _methodInfos;
-
-
-        private static IReadOnlyDictionary<string, MethodInfo> GetMethodInfos(Type interfaceType)
-        {
-            var re = new Dictionary<string, MethodInfo>();
-            foreach (var methodInfo in interfaceType.GetMethods())
-            {
-                var minionEventAttribute = methodInfo.GetCustomAttribute<MinionEventAttribute>();
-                if (!string.IsNullOrEmpty(minionEventAttribute?.EventType))
-                {
-                    re[minionEventAttribute.EventType] = methodInfo;
-                }
-            }
-
-            return re;
-        }
-
         public Task Publish(IEvent @event)
         {
-            var minionGrain = _grainFunc(_clusterClient);
-            _methodInfos.TryGetValue(@event.EventType, out var methodInfo);
-            return _directClient.PublishEvent(minionGrain, @event, methodInfo);
+            _minionEventMethodMetadataDic.TryGetValue(@event.EventType, out var metadata);
+            return _directClient.PublishEvent(_minionGrain, @event, metadata?.MethodInfo);
         }
     }
 }

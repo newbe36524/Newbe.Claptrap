@@ -18,7 +18,6 @@ namespace Newbe.Claptrap.Demo.Domain.Account.Claptrap
         public override async Task OnActivateAsync()
         {
             await base.OnActivateAsync();
-
             var kind = new ClaptrapKind(ActorType.Claptrap, "Account");
             var identity = new GrainActorIdentity(kind, this.GetPrimaryKeyString());
             var factory = (IActorFactory) ServiceProvider.GetService(typeof(IActorFactory));
@@ -26,19 +25,22 @@ namespace Newbe.Claptrap.Demo.Domain.Account.Claptrap
             await Actor.ActivateAsync();
         }
 
+        public async override Task OnDeactivateAsync()
+        {
+            await base.OnDeactivateAsync();
+            await Actor.DeactivateAsync();
+        }
+
         public IActor Actor { get; private set; }
         public AccountStateData ActorState => (AccountStateData) Actor.State.Data;
 
-        public ITransferInMethod TransferInMethod =>
-            (ITransferInMethod) ServiceProvider.GetService(typeof(ITransferInMethod));
-
-        public async Task TransferIn(decimal amount,string uid)
+        public async Task TransferIn(decimal amount, string uid)
         {
-            var result = await TransferInMethod.Invoke((AccountStateData) Actor.State.Data, amount, uid);
+            var method = (ITransferInMethod) ServiceProvider.GetService(typeof(ITransferInMethod));
+            var result = await method.Invoke((AccountStateData) Actor.State.Data, amount, uid);
             if (result.EventRaising)
             {
-                var @event = new DataEvent(Actor.State.Identity, nameof(BalanceChangeEventData), result.EventData,
-                    result.EventUid);
+                var @event = new DataEvent(Actor.State.Identity, nameof(BalanceChangeEventData), result.EventData,result.EventUid);
                 await Actor.HandleEvent(@event);
             }
         }

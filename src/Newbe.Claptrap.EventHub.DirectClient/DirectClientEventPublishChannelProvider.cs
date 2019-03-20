@@ -1,5 +1,7 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventChannels;
 using Newbe.Claptrap.Metadata;
@@ -21,21 +23,49 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             _actorMetadataProvider = actorMetadataProvider;
         }
 
-        public IEventPublishChannel Create(IActorIdentity claptrapIdentity, IMinionKind minionKind)
+        private readonly ConcurrentDictionary<IMinionKind, CacheItem>
+            _minionEventMethodMetadataCache
+                = new ConcurrentDictionary<IMinionKind, CacheItem>();
+
+        private CacheItem GetMethodDic(IMinionKind minionKind)
         {
+            if (_minionEventMethodMetadataCache.TryGetValue(minionKind, out var value))
+            {
+                return value;
+            }
+
             var actorMetadataCollection = _actorMetadataProvider.GetActorMetadata();
             var minionMetadata = actorMetadataCollection[minionKind];
-            var directClientEventPublishChannel = new DirectClientEventPublishChannel(client =>
+            var minionEventMethodMetadataDic = minionMetadata.MinionEventMethodMetadata
+                .ToDictionary(x => x.ClaptrapEventMetadata.EventType);
+            var cacheItem = new CacheItem
             {
-                var methodInfo = typeof(IGrainFactory).GetMethod(nameof(IGrainFactory.GetGrain),
-                    new[] {typeof(string), typeof(string)});
-                var method = methodInfo.MakeGenericMethod(minionMetadata.InterfaceType);
-                var grain =
-                    (IMinionGrain) method.Invoke(client, new object[] {claptrapIdentity.Id, string.Empty});
+                MinionEventMethodMetadata = minionEventMethodMetadataDic,
+                InterfaceType = minionMetadata.InterfaceType
+            };
+            _minionEventMethodMetadataCache.TryAdd(minionKind, cacheItem);
+            return cacheItem;
+        }
 
-                return grain;
-            }, _clusterClient, minionMetadata.InterfaceType, DirectClient.Instance);
+        public IEventPublishChannel Create(IActorIdentity claptrapIdentity, IMinionKind minionKind)
+        {
+            var cacheItem = GetMethodDic(minionKind);
+            var methodInfo = typeof(IGrainFactory).GetMethod(nameof(IGrainFactory.GetGrain),
+                new[] {typeof(string), typeof(string)});
+            var method = methodInfo.MakeGenericMethod(cacheItem.InterfaceType);
+            var minionGrain =
+                (IMinionGrain) method.Invoke(_clusterClient, new object[] {claptrapIdentity.Id, string.Empty});
+
+            var directClientEventPublishChannel = new DirectClientEventPublishChannel(minionGrain,
+                cacheItem.MinionEventMethodMetadata,
+                DirectClient.Instance);
             return directClientEventPublishChannel;
+        }
+
+        private class CacheItem
+        {
+            public Dictionary<string, MinionEventMethodMetadata> MinionEventMethodMetadata { get; set; }
+            public Type InterfaceType { get; set; }
         }
     }
 }

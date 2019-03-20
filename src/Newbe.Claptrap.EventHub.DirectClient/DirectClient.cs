@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.EventHub.DirectClient
             }
         }
 
-        private async Task PublishEvent(PublishEventContext context)
+        private static async Task PublishEvent(PublishEventContext context)
         {
             while (true)
             {

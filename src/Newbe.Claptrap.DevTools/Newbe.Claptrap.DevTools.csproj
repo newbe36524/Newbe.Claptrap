@@ -14,6 +14,7 @@
       <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Metadata\Newbe.Claptrap.Metadata.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.ScaffoldGenerator\Newbe.Claptrap.ScaffoldGenerator.csproj" />
     </ItemGroup>
 
 </Project>
