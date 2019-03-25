@@ -1,12 +1,26 @@
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators
 {
+    public class ClaptrapCodeGeneratorContext
+    {
+        public ClaptrapMetadata ClaptrapMetadata { get; set; }
+        public CompilationUnitSyntax CompilationUnitSyntax { get; set; }
+
+        public MethodDeclarationSyntax GetMethodDeclarationSyntax(ClaptrapEventMetadata claptrapEventMetadata)
+        {
+            
+        }
+        
+    }
+
     public class ClaptrapGrainEventMethodsPartCodeFileGenerator : ICodeFileGenerator
     {
         private readonly ClaptrapMetadata _metadata;
@@ -54,7 +68,7 @@ using StateData = {_metadata.StateDataType.FullName};");
                     });
 
                     builder.AppendLine("public IActor Actor { get; private set; }");
-                    builder.AppendLine($"public StateData ActorState => (StateData) Actor.State.Data;");
+                    builder.AppendLine("public StateData ActorState => (StateData) Actor.State.Data;");
 
                     foreach (var eventMethodMetadata in _metadata.EventMethodMetadata)
                     {

@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators
@@ -8,30 +10,37 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators
     public class ClaptrapEventMethodCodeInfo
     {
         public ClaptrapEventMethodMetadata Metadata { get; }
+        public MethodDeclarationSyntax MethodDeclarationSyntax { get; }
 
         public ClaptrapEventMethodCodeInfo(
-            ClaptrapEventMethodMetadata metadata)
+            ClaptrapEventMethodMetadata metadata,
+            MethodDeclarationSyntax methodDeclarationSyntax)
         {
             Metadata = metadata;
+            MethodDeclarationSyntax = methodDeclarationSyntax;
         }
 
         public string InterfaceName => $"I{Metadata.MethodInfo.Name}";
-        
+
         public string ImplName => Metadata.MethodInfo.Name;
 
-        public Type ReturnType
+        public string UnwrapTaskReturnType
         {
             get
             {
-                if (Metadata.MethodInfo.ReturnType == typeof(Task))
+                if (MethodDeclarationSyntax.ReturnType is GenericNameSyntax returnType)
                 {
-                    return null;
+                    if (returnType.Identifier.ToString() == "Task")
+                    {
+                        var typeString = returnType.TypeArgumentList.ToString();
+                        // remove '<' and '>'
+                        var re = typeString.Substring(1, typeString.Length - 2);
+                        return re;
+                    }
                 }
-
-                if (Metadata.MethodInfo.ReturnType.IsConstructedGenericType &&
-                    Metadata.MethodInfo.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                else if (MethodDeclarationSyntax.ReturnType.ToString() == "Task")
                 {
-                    return Metadata.MethodInfo.ReturnType.GenericTypeArguments[0];
+                    return string.Empty;
                 }
 
                 throw new NotSupportedException("method must return Task or Task<>");

@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newbe.Claptrap.Metadata;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
 using Xunit;
@@ -10,6 +13,7 @@ using Xunit.Abstractions;
 namespace Newbe.Claptrap.ScaffoldGeneratorTest
 {
     public class EventMethodInterfaceCodeFileGeneratorTests
+        : CodeFileGeneratorTestBase
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
@@ -19,16 +23,35 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             _testOutputHelper = testOutputHelper;
         }
 
-        public Task TestTaskMethod()
+        public interface ITestInterface
         {
-            throw new NotImplementedException();
+            Task TestTaskMethod();
+            Task<int> IntReturnMethod();
+            Task ArgumentMethod(string a, int b, TestEventDataType dataType);
+            Task<int> IntReturnArgumentMethod(string a, int b, TestEventDataType dataType);
+        }
+
+        private static MethodDeclarationSyntax GetMethodDeclarationSyntax(string methodName)
+        {
+            var compilationUnitSyntax = CSharpSyntaxTree.ParseText(@"
+public interface ITestInterface
+{
+    Task TestTaskMethod();
+    Task<int> IntReturnMethod();
+    Task ArgumentMethod(string a, int b, TestEventDataType dataType);
+    Task<int> IntReturnArgumentMethod(string a, int b, TestEventDataType dataType);
+}").GetCompilationUnitRoot();
+            var re = compilationUnitSyntax.DescendantNodes().OfType<MethodDeclarationSyntax>()
+                .Single(x => x.Identifier.ToString() == methodName);
+            return re;
         }
 
         [Fact]
         public async Task TestTaskMethodTest()
         {
-            var methodInfo = typeof(EventMethodInterfaceCodeFileGeneratorTests)
-                .GetMethod(nameof(TestTaskMethod));
+            const string methodName = nameof(ITestInterface.TestTaskMethod);
+            var methodInfo = typeof(ITestInterface)
+                .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
             var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
                 new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
@@ -39,35 +62,19 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                         EventType = "test",
                         EventDataType = typeof(TestEventDataType)
                     }
-                }));
+                }, GetMethodDeclarationSyntax(methodName)));
             var re = await generator.Generate();
             _testOutputHelper.WriteCodePretty(re);
 
-            const string target = @"using Newbe.Claptrap;
-using System.Threading.Tasks;
-using EventData = Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType;
-using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestDataType;
-namespace Claptrap._20EventMethods
-{
-    public interface ITestTaskMethod
-    {
-        Task<EventMethodResult<EventData>> Invoke(StateData stateData);
-    }
-}
-";
-            re.ShouldBe(target);
-        }
-
-        public Task<int> IntReturnMethod()
-        {
-            throw new NotImplementedException();
+            AssertCodeFile(nameof(TestTaskMethodTest), re);
         }
 
         [Fact]
         public async Task IntReturnMethodTest()
         {
-            var methodInfo = typeof(EventMethodInterfaceCodeFileGeneratorTests)
-                .GetMethod(nameof(IntReturnMethod));
+            const string methodName = nameof(ITestInterface.IntReturnMethod);
+            var methodInfo = typeof(ITestInterface)
+                .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
             var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
                 new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
@@ -78,35 +85,18 @@ namespace Claptrap._20EventMethods
                         EventType = "test",
                         EventDataType = typeof(TestEventDataType)
                     }
-                }));
+                }, GetMethodDeclarationSyntax(methodName)));
             var re = await generator.Generate();
             _testOutputHelper.WriteCodePretty(re);
-
-            const string target = @"using Newbe.Claptrap;
-using System.Threading.Tasks;
-using EventData = Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType;
-using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestDataType;
-namespace Claptrap._20EventMethods
-{
-    public interface IIntReturnMethod
-    {
-       Task<EventMethodResult<EventData, System.Int32>> Invoke(StateData stateData);
-    }
-}
-";
-            re.ShouldBe(target);
-        }
-
-        public Task ArgumentMethod(string a, int b, TestEventDataType dataType)
-        {
-            throw new NotImplementedException();
+            AssertCodeFile(nameof(IntReturnMethodTest), re);
         }
 
         [Fact]
         public async Task ArgumentMethodTest()
         {
-            var methodInfo = typeof(EventMethodInterfaceCodeFileGeneratorTests)
-                .GetMethod(nameof(ArgumentMethod));
+            const string methodName = nameof(ITestInterface.ArgumentMethod);
+            var methodInfo = typeof(ITestInterface)
+                .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
             var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
                 new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
@@ -117,35 +107,18 @@ namespace Claptrap._20EventMethods
                         EventType = "test",
                         EventDataType = typeof(TestEventDataType)
                     }
-                }));
+                }, GetMethodDeclarationSyntax(methodName)));
             var re = await generator.Generate();
             _testOutputHelper.WriteCodePretty(re);
-
-            const string target = @"using Newbe.Claptrap;
-using System.Threading.Tasks;
-using EventData = Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType;
-using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestDataType;
-namespace Claptrap._20EventMethods
-{
-    public interface IArgumentMethod
-{
-         Task<EventMethodResult<EventData>> Invoke(StateData stateData, System.String a, System.Int32 b, Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType dataType);
-    }
-}
-";
-            re.ShouldBe(target);
-        }
-
-        public Task<int> IntReturnArgumentMethod(string a, int b, TestEventDataType dataType)
-        {
-            throw new NotImplementedException();
+            AssertCodeFile(nameof(ArgumentMethodTest), re);
         }
 
         [Fact]
         public async Task IntReturnArgumentMethodTest()
         {
-            var methodInfo = typeof(EventMethodInterfaceCodeFileGeneratorTests)
-                .GetMethod(nameof(IntReturnArgumentMethod));
+            const string methodName = nameof(ITestInterface.IntReturnArgumentMethod);
+            var methodInfo = typeof(ITestInterface)
+                .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
             var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
                 new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
@@ -156,23 +129,11 @@ namespace Claptrap._20EventMethods
                         EventType = "test",
                         EventDataType = typeof(TestEventDataType)
                     }
-                }));
+                }, GetMethodDeclarationSyntax(methodName)));
             var re = await generator.Generate();
             _testOutputHelper.WriteCodePretty(re);
 
-            const string target = @"using Newbe.Claptrap;
-using System.Threading.Tasks;
-using EventData = Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType;
-using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestDataType;
-namespace Claptrap._20EventMethods
-{
-    public interface IIntReturnArgumentMethod
-    {
-Task<EventMethodResult<EventData, System.Int32>> Invoke(StateData stateData, System.String a, System.Int32 b, Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType dataType);
-    }
-}
-";
-            re.ShouldBe(target);
+            AssertCodeFile(nameof(IntReturnArgumentMethodTest), re);
         }
     }
 }

@@ -34,22 +34,15 @@ using StateData = {_stateDataType.FullName};");
                 builder.AppendLine($"public interface {_claptrapEventMethodCodeInfo.InterfaceName}");
                 builder.UsingCurlyBraces(() =>
                 {
-                    if (_claptrapEventMethodCodeInfo.ReturnType == null)
-                    {
-                        builder.Append("Task<EventMethodResult<EventData>>");
-                    }
-                    else
-                    {
-                        builder.Append(
-                            $"Task<EventMethodResult<EventData,{_claptrapEventMethodCodeInfo.ReturnType.FullName}>>");
-                    }
+                    builder.Append(string.IsNullOrEmpty(_claptrapEventMethodCodeInfo.UnwrapTaskReturnType)
+                        ? "Task<EventMethodResult<EventData>>"
+                        : $"Task<EventMethodResult<EventData,{_claptrapEventMethodCodeInfo.UnwrapTaskReturnType}>>");
 
                     builder.Append(" Invoke(StateData stateData");
-                    var parameterInfos = _claptrapEventMethodCodeInfo.ParameterInfos;
-                    if (parameterInfos.Length > 0)
+                    var parameterInfos = _claptrapEventMethodCodeInfo.MethodDeclarationSyntax.ParameterList.Parameters;
+                    foreach (var parameterInfo in parameterInfos)
                     {
-                        builder.Append(",");
-                        builder.AppendJoin(",", parameterInfos.Select(x => $"{x.ParameterType} {x.Name}"));
+                        builder.Append($", {parameterInfo.Type.ToString()} {parameterInfo.Identifier.ToString()}");
                     }
 
                     builder.Append(");");

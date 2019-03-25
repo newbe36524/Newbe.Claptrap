@@ -6,6 +6,7 @@ using Xunit.Abstractions;
 namespace Newbe.Claptrap.ScaffoldGeneratorTest
 {
     public class StateDataUpdaterCodeFileGeneratorTests
+        : CodeFileGeneratorTestBase
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
@@ -23,21 +24,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var re = await stateFactoryCodeFileGenerator.Generate();
             _testOutputHelper.WriteCodePretty(re);
 
-            const string target = @"using System;
-using Newbe.Claptrap;
-using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestDataType;
-using EventData = Newbe.Claptrap.ScaffoldGeneratorTest.EventDataType;
-namespace Claptrap._11StateDataUpdaters
-{
-    public class TestDataTypeUpdater : StateDataUpdaterBase<StateData, EventData>
-    {
-        public override void UpdateState(StateData stateData, EventData eventData)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}";
-            re.ShouldBe(target);
+            AssertCodeFile(nameof(Test1), re);
         }
     }
 }

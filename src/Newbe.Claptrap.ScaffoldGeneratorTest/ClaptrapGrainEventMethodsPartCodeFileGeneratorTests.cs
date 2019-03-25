@@ -1,11 +1,9 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Metadata;
-using Newbe.Claptrap.Orleans;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,6 +11,7 @@ using Xunit.Abstractions;
 namespace Newbe.Claptrap.ScaffoldGeneratorTest
 {
     public class ClaptrapGrainEventMethodsPartCodeFileGeneratorTests
+        : CodeFileGeneratorTestBase
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
@@ -30,7 +29,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
         [Fact]
         public async Task Test1()
         {
-            var methodInfo = this.GetType()
+            var methodInfo = GetType()
                 .GetMethod(nameof(TestTaskMethod));
             var claptrapEventMetadata = new ClaptrapEventMetadata
             {
@@ -41,7 +40,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                 new ClaptrapMetadata
                 {
                     ClaptrapKind = new ClaptrapKind(ActorType.Claptrap, "TestCatalog"),
-                    InterfaceType = typeof(ITestClaptrapGrain),
+                    InterfaceType = typeof(ITestClaptrap),
                     MinionMetadata = Enumerable.Empty<MinionMetadata>(),
                     StateDataType = typeof(TestStateDataType),
                     EventMethodMetadata = new[]
@@ -61,12 +60,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var re = await stateFactoryCodeFileGenerator.Generate();
             _testOutputHelper.WriteCodePretty(re);
 
-            var target = await File.ReadAllTextAsync("CodeFiles/ClaptrapGrainEventMethodsPartCodeFileGeneratorTests/Test1.cs");
-            re.ShouldBe(target);
+            AssertCodeFile(nameof(Test1), re);
         }
-    }
-
-    public interface ITestClaptrapGrain : IClaptrapGrain
-    {
     }
 }
