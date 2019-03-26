@@ -4,19 +4,21 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators
+namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.StateFactory
 {
-    public class StateFactoryCodeFileGenerator : ICodeFileGenerator
+    public class CodeFileGenerator
+        : CodeFileGeneratorBase<CodeFileGeneratorContext, CodeFile>
     {
-        private readonly Type _stateDataType;
-
-        public StateFactoryCodeFileGenerator(
-            Type stateDataType)
+        public override CodeFile CreateCodeFileCore(CodeFileGeneratorContext context)
         {
-            _stateDataType = stateDataType;
+            var re = new CodeFile
+            {
+                StateDataTypeFullName = context.ClaptrapMetadata.StateDataType.FullName
+            };
+            return re;
         }
 
-        public Task<SyntaxTree> Generate()
+        public override SyntaxTree GenerateCore(CodeFile file)
         {
             var builder = new StringBuilder();
             builder.AppendLine(@"
@@ -24,7 +26,7 @@ using System;
 using System.Threading.Tasks;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Core;");
-            builder.AppendLine($"using StateData = {_stateDataType.FullName};");
+            builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine($"namespace Claptrap._10StateDataFactory");
             builder.UsingCurlyBraces(() =>
             {
@@ -41,7 +43,7 @@ using Newbe.Claptrap.Core;");
             });
 
             var tree = CSharpSyntaxTree.ParseText(builder.ToString());
-            return Task.FromResult(tree);
+            return tree;
         }
     }
 }

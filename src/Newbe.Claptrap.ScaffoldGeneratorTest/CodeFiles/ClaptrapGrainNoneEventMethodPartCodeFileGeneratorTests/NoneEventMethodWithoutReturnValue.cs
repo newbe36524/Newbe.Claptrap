@@ -3,15 +3,19 @@ namespace Domain.Claptrap
 {
     public partial class TestClaptrap
     {
-        public System.Threading.Tasks.Task NoneEventMethodWithoutReturnValue()
+        public Task NoneEventMethodWithoutReturnValue()
         {
             throw new NotImplementedException();
         }
-        public System.Threading.Tasks.Task`1[[System.DateTime, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]] NoneEventMethodWithReturnValue()
+        public Task<DateTime> NoneEventMethodWithReturnValue()
         {
             throw new NotImplementedException();
         }
-        public System.Threading.Tasks.Task AddBalance(System.Decimal value)
+        public Task AddBalance(decimal value)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<(decimal value, int n)> SomeMethod(TestEventDataType testEventDataType)
         {
             throw new NotImplementedException();
         }

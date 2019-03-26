@@ -1,8 +1,6 @@
-using System;
-using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
-using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.EventMethodImpl;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,81 +17,73 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             _testOutputHelper = testOutputHelper;
         }
 
-        public Task TestTaskMethod()
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
-        public async Task TestTaskMethodTest()
+        public void TestTaskMethodTest()
         {
-            var methodInfo = GetType()
-                .GetMethod(nameof(TestTaskMethod));
-            methodInfo.Should().NotBeNull();
-            var generator = new EventMethodImplCodeFileGenerator(typeof(TestStateDataType),
-                typeof(TestEventDataType),
-                methodInfo);
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var emptyStrings = Enumerable.Empty<string>().ToArray();
+            var re = generator.Generate(new CodeFile
+            {
+                ClassName = "TestTaskMethod",
+                InterfaceName = "ITestTaskMethod",
+                ArgumentTypeAndNames = emptyStrings,
+                EventDataTypeFullName = typeof(TestEventDataType).FullName,
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = string.Empty
+            });
             _testOutputHelper.WriteCodePretty(re);
             AssertCodeFile(nameof(TestTaskMethodTest), re);
         }
 
-        public Task<int> IntReturnMethod()
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
-        public async Task IntReturnMethodTest()
+        public void IntReturnMethodTest()
         {
-            var methodInfo = GetType()
-                .GetMethod(nameof(IntReturnMethod));
-            methodInfo.Should().NotBeNull();
-            var generator = new EventMethodImplCodeFileGenerator(typeof(TestStateDataType),
-                typeof(TestEventDataType),
-                methodInfo);
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var emptyStrings = Enumerable.Empty<string>().ToArray();
+            var re = generator.Generate(new CodeFile
+            {
+                ClassName = "IntReturnMethod",
+                InterfaceName = "IIntReturnMethod",
+                ArgumentTypeAndNames = emptyStrings,
+                EventDataTypeFullName = typeof(TestEventDataType).FullName,
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = "int"
+            });
             _testOutputHelper.WriteCodePretty(re);
             AssertCodeFile(nameof(IntReturnMethodTest), re);
         }
 
-        public Task ArgumentMethod(string a, int b, TestEventDataType dataType)
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
-        public async Task ArgumentMethodTest()
+        public void ArgumentMethodTest()
         {
-            var methodInfo = GetType()
-                .GetMethod(nameof(ArgumentMethod));
-            methodInfo.Should().NotBeNull();
-            var generator = new EventMethodImplCodeFileGenerator(typeof(TestStateDataType),
-                typeof(TestEventDataType),
-                methodInfo);
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                ClassName = "ArgumentMethod",
+                InterfaceName = "IArgumentMethod",
+                ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"},
+                EventDataTypeFullName = typeof(TestEventDataType).FullName,
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = string.Empty
+            });
             _testOutputHelper.WriteCodePretty(re);
-
             AssertCodeFile(nameof(ArgumentMethodTest), re);
         }
 
-        public Task<int> IntReturnArgumentMethod(string a, int b, TestEventDataType dataType)
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
-        public async Task IntReturnArgumentMethodTest()
+        public void IntReturnArgumentMethodTest()
         {
-            var methodInfo = GetType()
-                .GetMethod(nameof(IntReturnArgumentMethod));
-            methodInfo.Should().NotBeNull();
-            var generator = new EventMethodImplCodeFileGenerator(typeof(TestStateDataType),
-                typeof(TestEventDataType),
-                methodInfo);
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                ClassName = "IntReturnArgumentMethod",
+                InterfaceName = "IIntReturnArgumentMethod",
+                ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"},
+                EventDataTypeFullName = typeof(TestEventDataType).FullName,
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = "int"
+            });
             _testOutputHelper.WriteCodePretty(re);
-
             AssertCodeFile(nameof(IntReturnArgumentMethodTest), re);
         }
     }

@@ -6,7 +6,7 @@ namespace Claptrap._20EventMethods
 {
     public class IntReturnMethod : IIntReturnMethod
     {
-        public Task<EventMethodResult<EventData, System.Int32>> Invoke(StateData stateData)
+        public Task<EventMethodResult<EventData, int>> Invoke(StateData stateData)
         {
             throw new NotImplementedException();
         }

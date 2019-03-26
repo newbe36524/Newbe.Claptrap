@@ -6,7 +6,7 @@ namespace Claptrap._20EventMethods
 {
     public class IntReturnArgumentMethod : IIntReturnArgumentMethod
     {
-        public Task<EventMethodResult<EventData, System.Int32>> Invoke(StateData stateData, System.String a, System.Int32 b, Newbe.Claptrap.ScaffoldGeneratorTest.TestEventDataType dataType)
+        public Task<EventMethodResult<EventData, int>> Invoke(StateData stateData, string a, int b, TestEventDataType dataType)
         {
             throw new NotImplementedException();
         }

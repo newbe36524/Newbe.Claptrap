@@ -1,10 +1,11 @@
-using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Metadata;
-using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.ClaptrapGrainEventMethodsPart;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,46 +22,38 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             _testOutputHelper = testOutputHelper;
         }
 
-        public Task TestTaskMethod()
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
-        public async Task Test1()
+        public void CodeFileTest()
         {
-            var methodInfo = GetType()
-                .GetMethod(nameof(TestTaskMethod));
-            var claptrapEventMetadata = new ClaptrapEventMetadata
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
             {
-                EventType = "TestEventType",
-                EventDataType = typeof(TestEventDataType),
-            };
-            var stateFactoryCodeFileGenerator = new ClaptrapGrainEventMethodsPartCodeFileGenerator(
-                new ClaptrapMetadata
+                ClassName = "TestClaptrap",
+                InterfaceName = "ITestClaptrap",
+                ClaptrapCatalog = "TestClaptrap",
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                EventMethods = new[]
                 {
-                    ClaptrapKind = new ClaptrapKind(ActorType.Claptrap, "TestCatalog"),
-                    InterfaceType = typeof(ITestClaptrap),
-                    MinionMetadata = Enumerable.Empty<MinionMetadata>(),
-                    StateDataType = typeof(TestStateDataType),
-                    EventMethodMetadata = new[]
+                    new EventMethod
                     {
-                        new ClaptrapEventMethodMetadata
+                        MethodName = "TestTaskMethod",
+                        ReturnType = "Task",
+                        ArgumentNames = new[]
                         {
-                            MethodInfo = methodInfo,
-                            ClaptrapEventMetadata = claptrapEventMetadata
+                            "a", "b", "c"
                         },
+                        ArgumentTypeAndNames = new[]
+                        {
+                            "int a", "string b", "DateTime c"
+                        },
+                        EventType = typeof(TestEventDataType).FullName,
+                        EventMethodInterfaceName = "ITestTaskMethod",
                     },
-                    ClaptrapEventMetadata = new[]
-                    {
-                        claptrapEventMetadata
-                    },
-                    NoneEventMethodInfos = Enumerable.Empty<MethodInfo>()
-                });
-            var re = await stateFactoryCodeFileGenerator.Generate();
+                }
+            });
             _testOutputHelper.WriteCodePretty(re);
 
-            AssertCodeFile(nameof(Test1), re);
+            AssertCodeFile(nameof(CodeFileTest), re);
         }
     }
 }

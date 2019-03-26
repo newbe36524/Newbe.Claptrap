@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.StateDataUpdater;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,16 +17,18 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
         }
 
         [Fact]
-        public async Task Test1()
+        public void Test1()
         {
-            var stateFactoryCodeFileGenerator = new StateDataUpdaterCodeFileGenerator(typeof(TestStateDataType),
-                typeof(TestEventDataType));
-            var re = await stateFactoryCodeFileGenerator.Generate();
+            var stateFactoryCodeFileGenerator = new CodeFileGenerator();
+            var re = stateFactoryCodeFileGenerator.Generate(new CodeFile
+            {
+                EventDataTypeFullName = typeof(TestEventDataType).FullName,
+                StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                StateDataName = typeof(TestStateDataType).Name
+            });
             _testOutputHelper.WriteCodePretty(re);
 
             AssertCodeFile(nameof(Test1), re);
         }
     }
 }
-
-

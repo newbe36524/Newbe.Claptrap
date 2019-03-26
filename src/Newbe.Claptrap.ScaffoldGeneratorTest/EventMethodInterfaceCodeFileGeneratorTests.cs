@@ -1,12 +1,11 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newbe.Claptrap.Metadata;
-using Newbe.Claptrap.ScaffoldGenerator.CodeFileGenerators;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.EventMethodInterface;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -47,90 +46,82 @@ public interface ITestInterface
         }
 
         [Fact]
-        public async Task TestTaskMethodTest()
+        public void TestTaskMethodTest()
         {
             const string methodName = nameof(ITestInterface.TestTaskMethod);
             var methodInfo = typeof(ITestInterface)
                 .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
-            var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
-                new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
-                {
-                    MethodInfo = methodInfo,
-                    ClaptrapEventMetadata = new ClaptrapEventMetadata
-                    {
-                        EventType = "test",
-                        EventDataType = typeof(TestEventDataType)
-                    }
-                }, GetMethodDeclarationSyntax(methodName)));
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                InterfaceName = $"I{methodInfo.Name}",
+                EventDataFullName = typeof(TestEventDataType).FullName,
+                StateDataFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = string.Empty,
+                ArgumentTypeAndNames = Enumerable.Empty<string>().ToArray()
+            });
             _testOutputHelper.WriteCodePretty(re);
 
             AssertCodeFile(nameof(TestTaskMethodTest), re);
         }
 
         [Fact]
-        public async Task IntReturnMethodTest()
+        public void IntReturnMethodTest()
         {
             const string methodName = nameof(ITestInterface.IntReturnMethod);
             var methodInfo = typeof(ITestInterface)
                 .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
-            var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
-                new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
-                {
-                    MethodInfo = methodInfo,
-                    ClaptrapEventMetadata = new ClaptrapEventMetadata
-                    {
-                        EventType = "test",
-                        EventDataType = typeof(TestEventDataType)
-                    }
-                }, GetMethodDeclarationSyntax(methodName)));
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                InterfaceName = $"I{methodInfo.Name}",
+                EventDataFullName = typeof(TestEventDataType).FullName,
+                StateDataFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = "int",
+                ArgumentTypeAndNames = Enumerable.Empty<string>().ToArray()
+            });
             _testOutputHelper.WriteCodePretty(re);
             AssertCodeFile(nameof(IntReturnMethodTest), re);
         }
 
         [Fact]
-        public async Task ArgumentMethodTest()
+        public void ArgumentMethodTest()
         {
             const string methodName = nameof(ITestInterface.ArgumentMethod);
             var methodInfo = typeof(ITestInterface)
                 .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
-            var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
-                new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
-                {
-                    MethodInfo = methodInfo,
-                    ClaptrapEventMetadata = new ClaptrapEventMetadata
-                    {
-                        EventType = "test",
-                        EventDataType = typeof(TestEventDataType)
-                    }
-                }, GetMethodDeclarationSyntax(methodName)));
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                InterfaceName = $"I{methodInfo.Name}",
+                EventDataFullName = typeof(TestEventDataType).FullName,
+                StateDataFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = string.Empty,
+                ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"}
+            });
             _testOutputHelper.WriteCodePretty(re);
             AssertCodeFile(nameof(ArgumentMethodTest), re);
         }
 
         [Fact]
-        public async Task IntReturnArgumentMethodTest()
+        public void IntReturnArgumentMethodTest()
         {
             const string methodName = nameof(ITestInterface.IntReturnArgumentMethod);
             var methodInfo = typeof(ITestInterface)
                 .GetMethod(methodName);
             methodInfo.Should().NotBeNull();
-            var generator = new EventMethodInterfaceCodeFileGenerator(typeof(TestStateDataType),
-                new ClaptrapEventMethodCodeInfo(new ClaptrapEventMethodMetadata
-                {
-                    MethodInfo = methodInfo,
-                    ClaptrapEventMetadata = new ClaptrapEventMetadata
-                    {
-                        EventType = "test",
-                        EventDataType = typeof(TestEventDataType)
-                    }
-                }, GetMethodDeclarationSyntax(methodName)));
-            var re = await generator.Generate();
+            var generator = new CodeFileGenerator();
+            var re = generator.Generate(new CodeFile
+            {
+                InterfaceName = $"I{methodInfo.Name}",
+                EventDataFullName = typeof(TestEventDataType).FullName,
+                StateDataFullName = typeof(TestStateDataType).FullName,
+                UnwrapTaskReturnTypeName = "int",
+                ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"}
+            });
             _testOutputHelper.WriteCodePretty(re);
 
             AssertCodeFile(nameof(IntReturnArgumentMethodTest), re);
