@@ -7,7 +7,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
     public interface ICodeFileGenerator
     {
         ICodeFile CreateCodeFile(ICodeFileGeneratorContext context);
-        SyntaxTree Generate(ICodeFile codeFile);
+        SyntaxTree GenerateCode(ICodeFile codeFile);
     }
 
     public abstract class CodeFileGeneratorBase<TContext, TCodeFile> : ICodeFileGenerator
@@ -26,7 +26,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 
         public abstract TCodeFile CreateCodeFileCore(TContext context);
 
-        public SyntaxTree Generate(ICodeFile codeFile)
+        public SyntaxTree GenerateCode(ICodeFile codeFile)
         {
             if (!(codeFile is TCodeFile file))
             {
@@ -41,6 +41,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 
     public interface ICodeFile
     {
+        string FileName { get; set; }
     }
 
     public interface ICodeFileGeneratorContext

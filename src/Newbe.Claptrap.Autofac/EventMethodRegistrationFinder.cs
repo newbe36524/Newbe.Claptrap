@@ -21,7 +21,7 @@ namespace Newbe.Claptrap.Autofac
             public IEnumerable<EventMethodRegistration> FindAll(Type[] types)
             {
                 var re = types
-                    .Where(x => x.Namespace.Contains("._20EventMethods."))
+                    .Where(x => x.Namespace.Contains(".N20EventMethods."))
                     .Select(x =>
                         new EventMethodRegistration
                         {

@@ -18,10 +18,4 @@
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
     
-    <ItemGroup>
-      <Folder Include="Domain" />
-      <Folder Include="DomainService\TransferAccountBalance" />
-    </ItemGroup>
-    
-
 </Project>

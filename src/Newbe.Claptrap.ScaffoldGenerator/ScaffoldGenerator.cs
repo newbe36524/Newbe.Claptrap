@@ -3,20 +3,25 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
+using Newbe.Claptrap.ScaffoldGenerator.Logging;
 
 namespace Newbe.Claptrap.ScaffoldGenerator
 {
     public class ScaffoldGenerator : IScaffoldGenerator
     {
+        private readonly IScaffoldFileSystem _scaffoldFileSystem;
         private readonly IClaptrapInterfaceProjectFileProvider _claptrapInterfaceProjectFileProvider;
         private readonly IClaptrapScaffoldGenerator _claptrapScaffoldGenerator;
         private readonly IMinionScaffoldGenerator _minionScaffoldGenerator;
+        private static readonly ILog Logger = LogProvider.For<ScaffoldGenerator>();
 
         public ScaffoldGenerator(
+            IScaffoldFileSystem scaffoldFileSystem,
             IClaptrapInterfaceProjectFileProvider claptrapInterfaceProjectFileProvider,
             IClaptrapScaffoldGenerator claptrapScaffoldGenerator,
             IMinionScaffoldGenerator minionScaffoldGenerator)
         {
+            _scaffoldFileSystem = scaffoldFileSystem;
             _claptrapInterfaceProjectFileProvider = claptrapInterfaceProjectFileProvider;
             _claptrapScaffoldGenerator = claptrapScaffoldGenerator;
             _minionScaffoldGenerator = minionScaffoldGenerator;
@@ -25,19 +30,27 @@ namespace Newbe.Claptrap.ScaffoldGenerator
         public async Task Generate(ScaffoldGenerateContext context)
         {
             // read all source file
-            var sourceFileInfos = await Task.WhenAll(_claptrapInterfaceProjectFileProvider.GetAllFiles().Select(
-                async x =>
-                {
-                    var content = await File.ReadAllTextAsync(x.FullName);
-                    return new
+            var sourceFileInfos = await Task.WhenAll(_claptrapInterfaceProjectFileProvider.GetAllFiles()
+                // get interface files
+                .Where(x => x.Name.StartsWith("I"))
+                .Select(
+                    async x =>
                     {
-                        FileName = x.Name,
-                        InterfaceName = x.Name.Replace(".cs", ""),
-                        Content = content,
-                        CompilationUnitSyntax = CSharpSyntaxTree.ParseText(content).GetCompilationUnitRoot(),
-                    };
-                }));
+                        var content = await File.ReadAllTextAsync(x.FullName);
+                        return new
+                        {
+                            FileName = x.Name,
+                            InterfaceName = x.Name.Replace(".cs", ""),
+                            Content = content,
+                            CompilationUnitSyntax = CSharpSyntaxTree.ParseText(content).GetCompilationUnitRoot(),
+                        };
+                    }));
 
+            Logger.Trace("there are {count} source files found.", sourceFileInfos.Length);
+            
+            // remove all files
+            await _scaffoldFileSystem.RemoveAll();
+            
             // assume all interface name are different
             var sourceFileInfoDic = sourceFileInfos.ToDictionary(x => x.InterfaceName);
 
@@ -48,7 +61,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 {
                     // TODO custom exception maybe
                     throw new Exception(
-                        $"there is no source named {x.InterfaceType.Name}.cs, please check your fullname or interface name in your interface project");
+                        $"there is no source named {x.InterfaceType.Name}.cs, please check your filename or interface name in your interface project");
                 }
 
                 return new
@@ -69,7 +82,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 {
                     // TODO custom exception maybe
                     throw new Exception(
-                        $"there is no source named {x.InterfaceType.Name}.cs, please check your fullname or interface name in your interface project");
+                        $"there is no source named {x.InterfaceType.Name}.cs, please check your filename or interface name in your interface project");
                 }
 
                 return new

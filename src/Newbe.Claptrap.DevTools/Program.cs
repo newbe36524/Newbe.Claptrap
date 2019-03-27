@@ -21,6 +21,21 @@ namespace Newbe.Claptrap.DevTools
                 .As<IActorAssemblyProvider>();
             builder.RegisterType<ScaffoldGenerator.ScaffoldGenerator>()
                 .As<IScaffoldGenerator>();
+
+            builder.RegisterType<ClaptrapScaffoldGenerator>()
+                .As<IClaptrapScaffoldGenerator>();
+            builder.RegisterType<MinionScaffoldGenerator>()
+                .As<IMinionScaffoldGenerator>();
+
+            builder.Register(x =>
+                    new ClaptrapInterfaceProjectFileProvider(
+                        "D:\\Repo\\Newbe.Claptrap\\src\\Newbe.Claptrap.Demo.Interfaces"))
+                .As<IClaptrapInterfaceProjectFileProvider>()
+                .SingleInstance();
+
+            builder.Register(x => new ScaffoldFileSystem("D:\\Repo\\Newbe.Claptrap\\src\\Newbe.Claptrap.Demo.Scaffold"))
+                .As<IScaffoldFileSystem>()
+                .SingleInstance();
             var container = builder.Build();
 
             var scaffoldGenerator = container.Resolve<IScaffoldGenerator>();

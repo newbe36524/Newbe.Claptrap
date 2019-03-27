@@ -8,8 +8,4 @@
       <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="EventData" />
-    </ItemGroup>
-
 </Project>

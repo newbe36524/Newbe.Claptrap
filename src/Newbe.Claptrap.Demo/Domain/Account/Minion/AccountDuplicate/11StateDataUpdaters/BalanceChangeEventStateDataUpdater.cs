@@ -1,7 +1,7 @@
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Demo.Models.Domain.Account;
 
-namespace Newbe.Claptrap.Demo.Domain.Account.Minion.AccountDuplicate._11StateDataUpdaters
+namespace Newbe.Claptrap.Demo.Domain.Account.Minion.AccountDuplicate.N11StateDataUpdaters
 {
     public class BalanceChangeEventStateDataUpdater
         : StateDataUpdaterBase<AccountDuplicateStateData, BalanceChangeEventData>
