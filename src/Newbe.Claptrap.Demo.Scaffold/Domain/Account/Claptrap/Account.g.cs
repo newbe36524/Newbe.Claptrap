@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
+using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Demo.Models.Domain.Account.AccountStateData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap
+namespace Claptrap
 {
     [ClaptrapComponent("Account")]
     public partial class Account : Grain, IAccount

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -23,8 +24,16 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE05StateDataUpdater
         public override SyntaxTree GenerateCore(GE05CodeFile file)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($@"using System;
-using Newbe.Claptrap;
+            var namespaces = file.Namespaces
+                .Concat(new[] {"System;","Newbe.Claptrap;", "System.Threading.Tasks"})
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
+            builder.AppendLine($@"
 using StateData = {file.StateDataTypeFullName};
 using EventData = {file.EventDataTypeFullName};");
             builder.AppendLine("namespace Claptrap.N11StateData" +

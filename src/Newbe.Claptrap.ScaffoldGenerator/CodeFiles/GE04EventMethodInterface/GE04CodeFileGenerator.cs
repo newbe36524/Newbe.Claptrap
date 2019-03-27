@@ -38,9 +38,16 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE04EventMethodInterface
         public override SyntaxTree GenerateCore(GE04CodeFile file)
         {
             var builder = new StringBuilder();
+            var namespaces = file.Namespaces
+                .Concat(new[] {"Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
             builder.AppendLine($@"
-using Newbe.Claptrap;
-using System.Threading.Tasks;
 using EventData = {file.EventDataFullName};
 using StateData = {file.StateDataFullName};");
             builder.AppendLine("namespace Claptrap.N20EventMethods");

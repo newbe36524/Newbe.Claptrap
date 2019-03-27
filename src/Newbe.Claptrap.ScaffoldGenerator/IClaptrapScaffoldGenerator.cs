@@ -6,6 +6,13 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 {
     public interface IClaptrapScaffoldGenerator
     {
-        Task Generate(ClaptrapMetadata claptrapMetadata, CompilationUnitSyntax compilationUnitSyntax);
+        Task Generate(ClaptrapScaffoldGeneratorContext context);
+    }
+
+    public class ClaptrapScaffoldGeneratorContext
+    {
+        public ClaptrapMetadata ClaptrapMetadata { get; set; }
+        public CompilationUnitSyntax CompilationUnitSyntax { get; set; }
+        public bool IsDomainService { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.ActorFlow
+using System.Threading.Tasks;
+namespace Domain.Minion
 {
     public partial class AccountActorFlowMinion
     {

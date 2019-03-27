@@ -1,7 +1,8 @@
 using System;
+using Newbe.Claptrap;
 using StateData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
 using EventData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceFinishedEventData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.TransferAccountBalance.Claptrap.N11StateDataUpdaters
+namespace Claptrap.N11StateDataUpdaters
 {
     public class TransferAccountBalanceFinishedEventDataUpdater : StateDataUpdaterBase<StateData, EventData>
     {

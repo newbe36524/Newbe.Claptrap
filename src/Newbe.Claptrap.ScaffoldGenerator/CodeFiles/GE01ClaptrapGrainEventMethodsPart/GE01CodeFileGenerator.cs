@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newbe.Claptrap.Logging;
 
 namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMethodsPart
 {
@@ -55,13 +56,20 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
         public override SyntaxTree GenerateCore(GE01CodeFile file)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($@"using System.Threading.Tasks;
-using Newbe.Claptrap;
-using Newbe.Claptrap.Attributes;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Orleans;
-using Orleans;
-using StateData = {file.StateDataTypeFullName};");
+            var namespaces = file.Namespaces
+                .Concat(new[]
+                {
+                    "Newbe.Claptrap;", "System.Threading.Tasks;", "Newbe.Claptrap.Attributes;", "Newbe.Claptrap.Core;",
+                    "Newbe.Claptrap.Orleans;", "Orleans;"
+                })
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
+            builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine("namespace Claptrap");
             builder.UsingCurlyBraces(() =>
             {

@@ -1,7 +1,5 @@
-using System;
 using System.Threading.Tasks;
-
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap
+namespace Domain.Claptrap
 {
     public partial class Account
     {

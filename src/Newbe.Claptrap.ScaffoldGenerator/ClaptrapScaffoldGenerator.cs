@@ -23,8 +23,11 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             _scaffoldFileSystem = scaffoldFileSystem;
         }
 
-        public Task Generate(ClaptrapMetadata claptrapMetadata, CompilationUnitSyntax compilationUnitSyntax)
+        public Task Generate(ClaptrapScaffoldGeneratorContext context)
         {
+            var claptrapMetadata = context.ClaptrapMetadata;
+            var compilationUnitSyntax = context.CompilationUnitSyntax;
+            var rootDirectoryName = context.IsDomainService ? "DomainService" : "Domain";
             return Task.WhenAll(RunAll());
 
             IEnumerable<Task> RunAll()
@@ -52,7 +55,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);
                 return _scaffoldFileSystem.SaveFile(
-                    $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/{codeFile.FileName}",
+                    $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/{codeFile.FileName}",
                     formatCode);
             }
 
@@ -68,7 +71,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);
                 return _scaffoldFileSystem.SaveFile(
-                    $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/{codeFile.FileName}",
+                    $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/{codeFile.FileName}",
                     formatCode);
             }
 
@@ -98,7 +101,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
                         yield return _scaffoldFileSystem.SaveFile(
-                            $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N20EventMethods/{claptrapEventMethodMetadata.MethodInfo.Name}/{codeFile.FileName}",
+                            $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N20EventMethods/{claptrapEventMethodMetadata.MethodInfo.Name}/{codeFile.FileName}",
                             formatCode);
                     }
                 }
@@ -130,7 +133,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
                         yield return _scaffoldFileSystem.SaveFile(
-                            $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N20EventMethods/{claptrapEventMethodMetadata.MethodInfo.Name}/{codeFile.FileName}",
+                            $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N20EventMethods/{claptrapEventMethodMetadata.MethodInfo.Name}/{codeFile.FileName}",
                             formatCode);
                     }
                 }
@@ -155,7 +158,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
                         yield return _scaffoldFileSystem.SaveFile(
-                            $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N11StateDataUpdaters/{codeFile.FileName}",
+                            $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N11StateDataUpdaters/{codeFile.FileName}",
                             formatCode);
                     }
                 }
@@ -172,7 +175,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);
                 return _scaffoldFileSystem.SaveFile(
-                    $"Domain/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N10StateDataFactory/{codeFile.FileName}",
+                    $"{rootDirectoryName}/{claptrapMetadata.ClaptrapKind.Catalog}/Claptrap/N10StateDataFactory/{codeFile.FileName}",
                     formatCode);
             }
         }

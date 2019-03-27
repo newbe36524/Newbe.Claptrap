@@ -4,7 +4,7 @@ using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Core.NoneStateData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.ActorFlow
+namespace Minion
 {
     [MinionComponent("Account", "ActorFlow")]
     public partial class AccountActorFlowMinion : Grain, IAccountActorFlowMinion

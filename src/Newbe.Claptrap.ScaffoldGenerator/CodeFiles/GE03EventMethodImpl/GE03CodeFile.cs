@@ -2,6 +2,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE03EventMethodImpl
 {
     public class GE03CodeFile : ICodeFile
     {
+        public string[] Namespaces { get; set; }
         public string EventDataTypeFullName { get; set; }
         public string StateDataTypeFullName { get; set; }
         public string ClassName { get; set; }

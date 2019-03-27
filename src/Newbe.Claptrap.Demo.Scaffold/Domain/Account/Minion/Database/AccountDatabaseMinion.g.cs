@@ -4,7 +4,7 @@ using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Core.NoneStateData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.Database
+namespace Minion
 {
     [MinionComponent("Account", "Database")]
     public partial class AccountDatabaseMinion : Grain, IAccountDatabaseMinion

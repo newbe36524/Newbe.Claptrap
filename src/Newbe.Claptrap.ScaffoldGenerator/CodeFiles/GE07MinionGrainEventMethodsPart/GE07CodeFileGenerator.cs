@@ -31,13 +31,22 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
 
         public override SyntaxTree GenerateCore(GE07CodeFile file)
         {
+            var namespaces = file.Namespaces
+                .Concat(new[]
+                {
+                    "System;", "Newbe.Claptrap;", "Newbe.Claptrap.Core;", "Newbe.Claptrap;",
+                    "Newbe.Claptrap.Attributes;", "System.Threading.Tasks;", "Newbe.Claptrap.Orleans;", "Orleans;"
+                })
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
             var builder = new StringBuilder();
-            builder.AppendLine($@"using System.Threading.Tasks;
-using Newbe.Claptrap.Attributes;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Orleans;
-using Orleans;
-using StateData = {file.StateDataTypeFullName};");
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
+
+            builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine("namespace Minion");
             builder.UsingCurlyBraces(() =>
             {

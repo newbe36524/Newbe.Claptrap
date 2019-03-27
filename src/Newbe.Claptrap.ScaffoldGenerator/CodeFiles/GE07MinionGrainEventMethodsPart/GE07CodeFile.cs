@@ -4,6 +4,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
 {
     public class GE07CodeFile : ICodeFile
     {
+        public string[] Namespaces { get; set; }
         public string StateDataTypeFullName { get; set; }
         public string ClaptrapCatalog { get; set; }
         public string MinionCatalog { get; set; }

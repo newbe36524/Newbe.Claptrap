@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
+using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.TransferAccountBalance.Claptrap
+namespace Claptrap
 {
     [ClaptrapComponent("TransferAccountBalance")]
     public partial class TransferAccountBalance : Grain, ITransferAccountBalance

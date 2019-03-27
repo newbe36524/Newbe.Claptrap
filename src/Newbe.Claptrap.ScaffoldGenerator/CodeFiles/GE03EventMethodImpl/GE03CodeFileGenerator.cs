@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 
 namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE03EventMethodImpl
 {
@@ -40,10 +40,18 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE03EventMethodImpl
 
         public override SyntaxTree GenerateCore(GE03CodeFile file)
         {
+            var namespaces = file.Namespaces
+                .Concat(new[] {"Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
             var builder = new StringBuilder();
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
+
             builder.AppendLine($@"
-using Newbe.Claptrap;
-using System.Threading.Tasks;
 using EventData = {file.EventDataTypeFullName};
 using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine("namespace Claptrap.N20EventMethods");

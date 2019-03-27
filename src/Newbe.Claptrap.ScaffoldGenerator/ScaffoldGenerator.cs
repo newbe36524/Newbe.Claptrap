@@ -40,6 +40,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                         return new
                         {
                             FileName = x.Name,
+                            FullName = x.FullName,
                             InterfaceName = x.Name.Replace(".cs", ""),
                             Content = content,
                             CompilationUnitSyntax = CSharpSyntaxTree.ParseText(content).GetCompilationUnitRoot(),
@@ -47,10 +48,10 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                     }));
 
             Logger.Trace("there are {count} source files found.", sourceFileInfos.Length);
-            
+
             // remove all files
             await _scaffoldFileSystem.RemoveAll();
-            
+
             // assume all interface name are different
             var sourceFileInfoDic = sourceFileInfos.ToDictionary(x => x.InterfaceName);
 
@@ -72,7 +73,12 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             });
 
             await Task.WhenAll(claptrap.Select(x =>
-                _claptrapScaffoldGenerator.Generate(x.ClaptrapMetadata, x.SourceFileInfo.CompilationUnitSyntax)));
+                _claptrapScaffoldGenerator.Generate(new ClaptrapScaffoldGeneratorContext
+                {
+                    ClaptrapMetadata = x.ClaptrapMetadata,
+                    CompilationUnitSyntax = x.SourceFileInfo.CompilationUnitSyntax,
+                    IsDomainService = x.SourceFileInfo.FullName.Contains("DomainService")
+                })));
 
 
             // generate code for minion
@@ -88,12 +94,17 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 return new
                 {
                     SourceFileInfo = sourceFileInfo,
-                    ClaptrapMetadata = x,
+                    MinionMetadata = x,
                 };
             });
 
             await Task.WhenAll(minion.Select(x =>
-                _minionScaffoldGenerator.Generate(x.ClaptrapMetadata, x.SourceFileInfo.CompilationUnitSyntax)));
+                _minionScaffoldGenerator.Generate(new MinionScaffoldGeneratorContext
+                {
+                    MinionMetadata = x.MinionMetadata,
+                    CompilationUnitSyntax = x.SourceFileInfo.CompilationUnitSyntax,
+                    IsDomainService = x.SourceFileInfo.FullName.Contains("DomainService")
+                })));
         }
     }
 }

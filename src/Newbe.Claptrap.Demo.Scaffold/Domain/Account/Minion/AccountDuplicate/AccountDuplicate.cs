@@ -1,8 +1,5 @@
-using System;
 using System.Threading.Tasks;
-
-
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.AccountDuplicate
+namespace Domain.Minion
 {
     public partial class AccountDuplicate
     {

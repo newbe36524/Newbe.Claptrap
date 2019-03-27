@@ -29,11 +29,11 @@ namespace Newbe.Claptrap.DevTools
 
             builder.Register(x =>
                     new ClaptrapInterfaceProjectFileProvider(
-                        "D:\\Repo\\Newbe.Claptrap\\src\\Newbe.Claptrap.Demo.Interfaces"))
+                        "../Newbe.Claptrap.Demo.Interfaces"))
                 .As<IClaptrapInterfaceProjectFileProvider>()
                 .SingleInstance();
 
-            builder.Register(x => new ScaffoldFileSystem("D:\\Repo\\Newbe.Claptrap\\src\\Newbe.Claptrap.Demo.Scaffold"))
+            builder.Register(x => new ScaffoldFileSystem("../Newbe.Claptrap.Demo.Scaffold"))
                 .As<IScaffoldFileSystem>()
                 .SingleInstance();
             var container = builder.Build();

@@ -4,6 +4,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
 {
     public class GE08CodeFile : ICodeFile
     {
+        public string[] Namespaces { get; set; }
         public string ClassName { get; set; }
         public IEnumerable<NoneEventMethod> NoneEventMethods { get; set; }
         public string FileName { get; set; }

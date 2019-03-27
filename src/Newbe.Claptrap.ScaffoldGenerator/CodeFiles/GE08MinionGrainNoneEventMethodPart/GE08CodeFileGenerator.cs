@@ -45,8 +45,20 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
 
         public override SyntaxTree GenerateCore(GE08CodeFile file)
         {
+            var namespaces = file.Namespaces
+                .Concat(new[]
+                {
+                    "System.Threading.Tasks;"
+                })
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
             var builder = new StringBuilder();
-            builder.AppendLine("using System.Threading.Tasks;");
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
+
             builder.AppendLine("namespace Domain.Minion");
             builder.UsingCurlyBraces(() =>
             {

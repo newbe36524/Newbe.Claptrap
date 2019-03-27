@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,12 +20,16 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE06StateFactory
 
         public override SyntaxTree GenerateCore(GE06CodeFile file)
         {
+            var namespaces = file.Namespaces
+                .Concat(new[] {"System;","Newbe.Claptrap;","Newbe.Claptrap.Core;","Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
             var builder = new StringBuilder();
-            builder.AppendLine(@"
-using System;
-using System.Threading.Tasks;
-using Newbe.Claptrap;
-using Newbe.Claptrap.Core;");
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns}");
+            }
             builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine($"namespace Claptrap._10StateDataFactory");
             builder.UsingCurlyBraces(() =>
