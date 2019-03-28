@@ -15,5 +15,8 @@
     </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
+    <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern.
+    This package is one part of that project. Please check the source repository for more details.
+https://github.com/newbe36524/Newbe.Claptrap </Description>
  </PropertyGroup>
 </Project>

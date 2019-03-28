@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Autofac" Version="4.9.2" />
       <PackageReference Include="Microsoft.Orleans.Client" Version="2.3.0" />
     </ItemGroup>
 

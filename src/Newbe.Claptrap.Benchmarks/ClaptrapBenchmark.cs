@@ -70,9 +70,8 @@ namespace Newbe.Claptrap.Benchmarks
 
                     containerBuilder.RegisterModule<DemoModule>();
                     containerBuilder.RegisterModule<ClaptrapServerModule>();
-
-                    containerBuilder.RegisterType<DirectClientEventPublishChannelProvider>()
-                        .As<IEventPublishChannelProvider>();
+                    containerBuilder.RegisterModule<DirectClientEventHubModule>();
+                    
                     var container = containerBuilder.Build();
                     var serviceProvider = new AutofacServiceProvider(container);
                     return serviceProvider;

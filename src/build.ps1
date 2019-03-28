@@ -1,7 +1,8 @@
-﻿properties {
+properties {
     $rootNow = Resolve-Path .
     $deployMode = "Release"
     $releaseDir = "$rootNow/build/"
+    $nugetexe = "$rootNow/buildTools/nuget.exe"
 }
 
 # default task
@@ -36,6 +37,17 @@ Task Test -depends Build -Description "run tests"{
 Task Pack -depends Test -Description "pack" {
     Exec {
         dotnet pack Newbe.Claptrap.sln -o $releaseDir
+    }
+}
+
+Task PackTemplate -depends Init -Description "pack template package" {
+    Exec {
+        Get-ChildItem "Newbe.Claptrap.Template" bin -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" obj -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" ".vs" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" ".idea" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" "*.user" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        . $nugetexe pack "Newbe.Claptrap.Template\Newbe.Claptrap.Template.nuspec" -OutputDirectory $releaseDir
     }
 }
 

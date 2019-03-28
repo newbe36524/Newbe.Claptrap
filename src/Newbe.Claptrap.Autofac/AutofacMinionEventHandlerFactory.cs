@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Features.Metadata;
-using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Autofac.Logging;
 using Newbe.Claptrap.Context;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventHandler;
@@ -14,14 +14,12 @@ namespace Newbe.Claptrap.Autofac
         : IMinionEventHandlerFactory
     {
         private readonly IComponentContext _componentContext;
-        private readonly ILogger<AutofacMinionEventHandlerFactory> _logger;
+        private static readonly ILog Logger = LogProvider.For<AutofacMinionEventHandlerFactory>();
 
         public AutofacMinionEventHandlerFactory(
-            IComponentContext componentContext,
-            ILogger<AutofacMinionEventHandlerFactory> logger)
+            IComponentContext componentContext)
         {
             _componentContext = componentContext;
-            _logger = logger;
         }
 
         public IEnumerable<IEventHandler> Create(IEventContext eventContext)
@@ -38,7 +36,7 @@ namespace Newbe.Claptrap.Autofac
                 return re;
             }
 
-            _logger.LogWarning(
+            Logger.Warn(
                 "there is no IEventHandler for Minion ActorKind : {0} , EventType : {1}. Maybe missing registration. please check you configuration.",
                 eventContext.ActorContext.Identity.Kind,
                 eventContext.Event.EventType);

@@ -33,9 +33,8 @@ namespace Newbe.Claptrap.Demo.Server
 
                     containerBuilder.RegisterModule<DemoModule>();
                     containerBuilder.RegisterModule<ClaptrapServerModule>();
-
-                    containerBuilder.RegisterType<DirectClientEventPublishChannelProvider>()
-                        .As<IEventPublishChannelProvider>();
+                    containerBuilder.RegisterModule<DirectClientEventHubModule>();
+                    
                     // Creating a new AutofacServiceProvider makes the container
                     // available to your app using the Microsoft IServiceProvider
                     // interface so you can use those abstractions rather than

@@ -15,6 +15,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.EventHub.DirectClient\Newbe.Claptrap.EventHub.DirectClient.csproj" />
     </ItemGroup>
 
 </Project>

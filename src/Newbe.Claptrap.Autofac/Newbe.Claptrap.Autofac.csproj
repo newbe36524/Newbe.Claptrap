@@ -6,16 +6,23 @@
 
     <ItemGroup>
       <PackageReference Include="Autofac" Version="4.9.2" />
+      <PackageReference Include="LibLog" Version="5.0.6" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.EventHub.DirectClient\Newbe.Claptrap.EventHub.DirectClient.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.EventStore.Memory\Newbe.Claptrap.EventStore.Memory.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Metadata\Newbe.Claptrap.Metadata.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.StateStore.Memory\Newbe.Claptrap.StateStore.Memory.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da">
+        <HintPath>C:\Users\10200744\.nuget\packages\autofac\4.6.1\lib\netstandard1.1\Autofac.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

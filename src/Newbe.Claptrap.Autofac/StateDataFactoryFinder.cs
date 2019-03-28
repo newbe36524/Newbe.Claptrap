@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Metadata;
-using Newbe.Claptrap.Orleans;
 using Newbe.Claptrap.StateInitializer;
 
 namespace Newbe.Claptrap.Autofac

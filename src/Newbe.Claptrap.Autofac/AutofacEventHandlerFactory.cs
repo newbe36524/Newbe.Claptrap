@@ -54,7 +54,7 @@ namespace Newbe.Claptrap.Autofac
                     var eventHandlers = minionEventHandlerFactory.Create(eventContext);
                     var multipleAsyncEventHandler = new MultipleAsyncEventHandler(eventHandlers);
                     var orderedEventHandler = new OrderedEventHandler(new IEventHandler[]
-                        {stateHandler, multipleAsyncEventHandler});
+                        {multipleAsyncEventHandler, stateHandler});
                     inner = eventScope.Resolve<StateRestoreEventHandlerFactory>().Invoke(orderedEventHandler);
                     break;
                 default:
