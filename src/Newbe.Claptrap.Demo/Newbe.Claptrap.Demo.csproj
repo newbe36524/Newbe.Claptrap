@@ -2,20 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.9.1" />
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.2.4" />
-        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Implement\Newbe.Claptrap.Implement.csproj" />
     </ItemGroup>
     
 </Project>

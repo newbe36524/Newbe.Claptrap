@@ -2,12 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.9.1" />
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.2.4" />
-        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Autofac" Version="4.9.2" />
+        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
+        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.3.0" />
     </ItemGroup>
 
     <ItemGroup>

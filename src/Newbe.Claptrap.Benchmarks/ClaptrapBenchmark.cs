@@ -78,9 +78,7 @@ namespace Newbe.Claptrap.Benchmarks
                     return serviceProvider;
                 })
                 .ConfigureApplicationParts(manager =>
-                    manager.AddApplicationPart(typeof(DemoModule).Assembly).WithReferences())
-                .EnableDirectClient()
-                ;
+                    manager.AddApplicationPart(typeof(DemoModule).Assembly).WithReferences());
             _siloHost = hostBuilder.Build();
             await _siloHost.StartAsync();
 

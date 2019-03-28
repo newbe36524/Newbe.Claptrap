@@ -4,6 +4,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 {
     public interface IScaffoldGenerator
     {
-        Task Generate(ScaffoldGenerateContext context);
+        ScaffoldGenerateContext Context { get; set; }
+        Task Generate();
     }
 }

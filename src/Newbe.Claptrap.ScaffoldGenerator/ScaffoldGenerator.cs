@@ -27,7 +27,9 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             _minionScaffoldGenerator = minionScaffoldGenerator;
         }
 
-        public async Task Generate(ScaffoldGenerateContext context)
+        public ScaffoldGenerateContext Context { get; set; }
+
+        public async Task Generate()
         {
             // read all source file
             var sourceFileInfos = await Task.WhenAll(_claptrapInterfaceProjectFileProvider.GetAllFiles()
@@ -56,7 +58,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             var sourceFileInfoDic = sourceFileInfos.ToDictionary(x => x.InterfaceName);
 
             // generate code for claptrap
-            var claptrap = context.ActorMetadataCollection.ClaptrapMetadata.Select(x =>
+            var claptrap = Context.ActorMetadataCollection.ClaptrapMetadata.Select(x =>
             {
                 if (!sourceFileInfoDic.TryGetValue(x.InterfaceType.Name, out var sourceFileInfo))
                 {
@@ -82,7 +84,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 
 
             // generate code for minion
-            var minion = context.ActorMetadataCollection.MinionMetadata.Select(x =>
+            var minion = Context.ActorMetadataCollection.MinionMetadata.Select(x =>
             {
                 if (!sourceFileInfoDic.TryGetValue(x.InterfaceType.Name, out var sourceFileInfo))
                 {

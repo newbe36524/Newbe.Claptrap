@@ -5,11 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
         <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.3.0" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
+    
 </Project>

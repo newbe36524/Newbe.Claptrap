@@ -1,5 +1,18 @@
 <Project>
  <PropertyGroup>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>dev01</VersionSuffix>
+    <Authors>newbe36524</Authors>
+    <Company>newbe36524</Company>
+    <PackageIconUrl>https://raw.githubusercontent.com/newbe36524/Newbe.Mahua.Framework/master/logo.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://www.newbe.pro</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newbe36524/Newbe.Claptrap</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageOutputPath>../build/</PackageOutputPath>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <NullableContextOptions>enable</NullableContextOptions>
  </PropertyGroup>

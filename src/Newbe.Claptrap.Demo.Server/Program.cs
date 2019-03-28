@@ -46,7 +46,6 @@ namespace Newbe.Claptrap.Demo.Server
                 })
                 .ConfigureApplicationParts(manager =>
                     manager.AddFromDependencyContext().WithReferences())
-                .EnableDirectClient()
                 .UseDashboard(options => options.Port = 9999)
                 ;
             var siloHost = hostBuilder.Build();

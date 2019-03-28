@@ -1,7 +1,7 @@
 ﻿properties {
     $rootNow = Resolve-Path .
     $deployMode = "Release"
-    $releaseDir = "$rootNow/build/$deployMode"
+    $releaseDir = "$rootNow/build/"
 }
 
 # default task
@@ -27,3 +27,23 @@ Task Build -depends Nuget -Description "build sln" {
     }   
 }
 
+Task Test -depends Build -Description "run tests"{
+    Exec {
+        dotnet test -c $deployMode Newbe.Claptrap.sln
+    }  
+}
+
+Task Pack -depends Test -Description "pack" {
+    Exec {
+        dotnet pack Newbe.Claptrap.sln -o $releaseDir
+    }
+}
+
+Task NugetPushNuget -depends Pack -Description "push package to nuget" {
+    Get-ChildItem $releaseDir *.nupkg | ForEach-Object {
+        Exec {
+            dotnet nuget push "$releaseDir$_" -s https://www.nuget.org/
+        }
+    }
+    Write-Output "build completed, now is $( Get-Date )"
+}
