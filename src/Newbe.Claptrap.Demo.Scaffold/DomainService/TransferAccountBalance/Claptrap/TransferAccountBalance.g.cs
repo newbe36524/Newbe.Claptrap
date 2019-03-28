@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
-using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
+using Newbe.Claptrap.Demo.Interfaces.DomainService.TransferAccountBalance;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
-namespace Claptrap
+namespace Newbe.Claptrap.Demo.Scaffold.DomainService.TransferAccountBalance.Claptrap
 {
     [ClaptrapComponent("TransferAccountBalance")]
     public partial class TransferAccountBalance : Grain, ITransferAccountBalance
@@ -28,13 +29,14 @@ namespace Claptrap
         public StateData ActorState => (StateData)Actor.State.Data;
         public async Task<TransferResult> Transfer(string fromId, string toId, decimal balance)
         {
-            var method = (ITransferMethod)ServiceProvider.GetService(typeof(ITransferMethod));
+            var method = (N20EventMethods.Transfer.ITransferMethod)ServiceProvider.GetService(typeof(N20EventMethods.Transfer.ITransferMethod));
             var result = await method.Invoke((StateData)Actor.State.Data, fromId, toId, balance);
             if (result.EventRaising)
             {
                 var @event = new DataEvent(Actor.State.Identity, "TransferAccountBalanceFinishedEventData", result.EventData, result.EventUid);
                 await Actor.HandleEvent(@event);
             }
+            return result.MethodReturn;
         }
     }
 }

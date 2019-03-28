@@ -33,7 +33,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE03EventMethodImpl
                     context.ClaptrapEventMethodMetadata.ClaptrapEventMetadata.EventDataType.FullName,
                 StateDataTypeFullName = context.ClaptrapMetadata.StateDataType.FullName,
                 UnwrapTaskReturnTypeName = unwrapTaskReturnTypeName,
-                FileName = $"{className}.cs"
+                FileName = $"{className}.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -41,14 +42,19 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE03EventMethodImpl
         public override SyntaxTree GenerateCore(GE03CodeFile file)
         {
             var namespaces = file.Namespaces
-                .Concat(new[] {"Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Concat(new[]
+                {
+                    "System",
+                    "Newbe.Claptrap", 
+                    "System.Threading.Tasks"
+                })
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArray();
             var builder = new StringBuilder();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
 
             builder.AppendLine($@"

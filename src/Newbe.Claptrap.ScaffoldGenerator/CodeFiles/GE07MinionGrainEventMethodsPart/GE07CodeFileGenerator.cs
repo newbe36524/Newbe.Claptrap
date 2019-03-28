@@ -24,6 +24,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
                 EventMethods = context.MinionMetadata.MinionEventMethodMetadata.Select(x => x.MethodInfo.Name)
                     .ToArray(),
                 FileName = $"{className}.g.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
 
             return re;
@@ -34,8 +35,14 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
             var namespaces = file.Namespaces
                 .Concat(new[]
                 {
-                    "System;", "Newbe.Claptrap;", "Newbe.Claptrap.Core;", "Newbe.Claptrap;",
-                    "Newbe.Claptrap.Attributes;", "System.Threading.Tasks;", "Newbe.Claptrap.Orleans;", "Orleans;"
+                    "System",
+                    "Newbe.Claptrap",
+                    "Newbe.Claptrap.Core",
+                    "Newbe.Claptrap",
+                    "Newbe.Claptrap.Attributes",
+                    "System.Threading.Tasks",
+                    "Newbe.Claptrap.Orleans",
+                    "Orleans"
                 })
                 .Distinct()
                 .OrderBy(x => x)
@@ -43,7 +50,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
             var builder = new StringBuilder();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
 
             builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
@@ -82,6 +89,9 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
                         builder.AppendLine($"public Task {eventMethod}(IEvent @event)");
                         builder.UsingCurlyBraces(() => { builder.AppendLine("return Actor.HandleEvent(@event);"); });
                     }
+
+                    builder.AppendLine("public Task HandleOtherEvent(IEvent @event)");
+                    builder.UsingCurlyBraces(() => { builder.AppendLine("return Actor.HandleEvent(@event);"); });
                 });
             });
 

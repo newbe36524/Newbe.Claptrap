@@ -1,5 +1,4 @@
-using System.Threading.Tasks;
-namespace Domain.Minion
+namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.Database
 {
     public partial class AccountDatabaseMinion
     {

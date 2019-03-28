@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Demo.Models.Domain.Account.AccountStateData;
-namespace Claptrap
+namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap
 {
     [ClaptrapComponent("Account")]
     public partial class Account : Grain, IAccount
@@ -28,7 +28,7 @@ namespace Claptrap
         public StateData ActorState => (StateData)Actor.State.Data;
         public async Task TransferIn(decimal amount, string uid)
         {
-            var method = (ITransferInMethod)ServiceProvider.GetService(typeof(ITransferInMethod));
+            var method = (N20EventMethods.TransferIn.ITransferInMethod)ServiceProvider.GetService(typeof(N20EventMethods.TransferIn.ITransferInMethod));
             var result = await method.Invoke((StateData)Actor.State.Data, amount, uid);
             if (result.EventRaising)
             {
@@ -38,17 +38,18 @@ namespace Claptrap
         }
         public async Task<TransferResult> TransferOut(decimal amount, string uid)
         {
-            var method = (ITransferOutMethod)ServiceProvider.GetService(typeof(ITransferOutMethod));
+            var method = (N20EventMethods.TransferOut.ITransferOutMethod)ServiceProvider.GetService(typeof(N20EventMethods.TransferOut.ITransferOutMethod));
             var result = await method.Invoke((StateData)Actor.State.Data, amount, uid);
             if (result.EventRaising)
             {
                 var @event = new DataEvent(Actor.State.Identity, "BalanceChangeEventData", result.EventData, result.EventUid);
                 await Actor.HandleEvent(@event);
             }
+            return result.MethodReturn;
         }
         public async Task Lock()
         {
-            var method = (ILockMethod)ServiceProvider.GetService(typeof(ILockMethod));
+            var method = (N20EventMethods.Lock.ILockMethod)ServiceProvider.GetService(typeof(N20EventMethods.Lock.ILockMethod));
             var result = await method.Invoke((StateData)Actor.State.Data);
             if (result.EventRaising)
             {

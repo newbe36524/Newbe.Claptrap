@@ -1,22 +1,23 @@
-using System.Threading.Tasks;
+using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Orleans;
 using Orleans;
-using StateData = Newbe.Claptrap.Core.NoneStateData;
-namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.Database
+using System;
+using System.Threading.Tasks;
+using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestStateDataType;
+namespace Minion
 {
-    [MinionComponent("Account", "Database")]
-    public partial class AccountDatabaseMinion : Grain, IAccountDatabaseMinion
+    [MinionComponent("TestClaptrap", "Database")]
+    public partial class TestClaptrap : Grain, ITestClaptrap
     {
         public override async Task OnActivateAsync()
         {
             await base.OnActivateAsync();
             var actorFactory = (IActorFactory)ServiceProvider.GetService(typeof(IActorFactory));
             var identity =
-                new GrainActorIdentity(new MinionKind(ActorType.Minion, "Account", "Database"),
-            this.GetPrimaryKeyString());
+                new GrainActorIdentity(new MinionKind(ActorType.Minion, "TestClaptrap", "Database"),
+                    this.GetPrimaryKeyString());
             Actor = actorFactory.Create(identity);
             await Actor.ActivateAsync();
         }
@@ -27,11 +28,11 @@ namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.Database
         }
         public IActor Actor { get; private set; }
         public StateData ActorState => (StateData)Actor.State.Data;
-        public Task SaveBalanceChange(IEvent @event)
+        public Task TestTaskEvent(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }
-        public Task Locked(IEvent @event)
+        public Task TestTaskEvent2(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }

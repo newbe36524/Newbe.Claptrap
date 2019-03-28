@@ -33,6 +33,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                 InterfaceName = "ITestClaptrap",
                 ClaptrapCatalog = "TestClaptrap",
                 StateDataTypeFullName = typeof(TestStateDataType).FullName,
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 EventMethods = new[]
                 {
                     new EventMethod
@@ -48,7 +49,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                             "int a", "string b", "DateTime c"
                         },
                         EventType = typeof(TestEventDataType).FullName,
-                        EventMethodInterfaceName = "ITestTaskMethod",
+                        EventMethodInterfaceFullName = "ITestTaskMethod",
                     },
                     new EventMethod
                     {
@@ -57,7 +58,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                         ArgumentNames = emptyStrings,
                         ArgumentTypeAndNames = emptyStrings,
                         EventType = typeof(TestEventDataType).FullName,
-                        EventMethodInterfaceName = "ITestTaskMethod2",
+                        EventMethodInterfaceFullName = "ITestTaskMethod2",
                     },
                 }
             });

@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using StateData = Newbe.Claptrap.Demo.Models.Domain.Account.AccountDuplicateStateData;
-namespace Minion
+namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Minion.AccountDuplicate
 {
     [MinionComponent("Account", "AccountDuplicate")]
     public partial class AccountDuplicate : Grain, IAccountDuplicate
@@ -27,6 +28,10 @@ namespace Minion
         public IActor Actor { get; private set; }
         public StateData ActorState => (StateData)Actor.State.Data;
         public Task HandleBalance(IEvent @event)
+        {
+            return Actor.HandleEvent(@event);
+        }
+        public Task HandleOtherEvent(IEvent @event)
         {
             return Actor.HandleEvent(@event);
         }

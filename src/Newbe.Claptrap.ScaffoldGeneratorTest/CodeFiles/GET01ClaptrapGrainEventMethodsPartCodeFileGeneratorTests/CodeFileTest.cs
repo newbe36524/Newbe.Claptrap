@@ -1,9 +1,10 @@
-using System.Threading.Tasks;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Orleans;
 using Orleans;
+using System;
+using System.Threading.Tasks;
 using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestStateDataType;
 namespace Claptrap
 {

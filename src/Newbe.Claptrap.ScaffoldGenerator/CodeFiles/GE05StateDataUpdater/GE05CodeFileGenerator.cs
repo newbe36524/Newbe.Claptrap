@@ -16,7 +16,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE05StateDataUpdater
                 ClassName = className,
                 EventDataTypeFullName = context.EventDataType.FullName,
                 StateDataTypeFullName = context.StateDataType.FullName,
-                FileName = $"{className}.cs"
+                FileName = $"{className}.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -25,14 +26,20 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE05StateDataUpdater
         {
             var builder = new StringBuilder();
             var namespaces = file.Namespaces
-                .Concat(new[] {"System;","Newbe.Claptrap;", "System.Threading.Tasks"})
+                .Concat(new[]
+                {
+                    "System",
+                    "Newbe.Claptrap",
+                    "System.Threading.Tasks"
+                })
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArray();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
+
             builder.AppendLine($@"
 using StateData = {file.StateDataTypeFullName};
 using EventData = {file.EventDataTypeFullName};");

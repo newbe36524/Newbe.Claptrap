@@ -1,8 +1,8 @@
-using Newbe.Claptrap;
+using System;
 using System.Threading.Tasks;
 using EventData = Newbe.Claptrap.Demo.Models.Domain.Account.LockEventData;
 using StateData = Newbe.Claptrap.Demo.Models.Domain.Account.AccountStateData;
-namespace Claptrap.N20EventMethods
+namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap.N20EventMethods.Lock
 {
     public class LockMethod : ILockMethod
     {

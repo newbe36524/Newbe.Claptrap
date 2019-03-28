@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE05StateDataUpdater;
 using Xunit;
@@ -22,6 +23,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var stateFactoryCodeFileGenerator = new GE05CodeFileGenerator();
             var re = stateFactoryCodeFileGenerator.GenerateCode(new GE05CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 EventDataTypeFullName = typeof(TestEventDataType).FullName,
                 StateDataTypeFullName = typeof(TestStateDataType).FullName,
                 ClassName = $"{typeof(TestStateDataType).Name}Updater",

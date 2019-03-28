@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Newbe.Claptrap.ScaffoldGenerator
@@ -29,6 +31,19 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             }
 
             return (true, unwrapTaskReturnTypeName);
+        }
+
+        public static IEnumerable<string> GetNamespaces(CompilationUnitSyntax compilationUnitSyntax)
+        {
+            foreach (var ns in compilationUnitSyntax.Usings)
+            {
+                yield return ns.Name.ToString();
+            }
+
+            foreach (var ns in compilationUnitSyntax.Members.OfType<NamespaceDeclarationSyntax>())
+            {
+                yield return ns.Name.ToString();
+            }
         }
     }
 }

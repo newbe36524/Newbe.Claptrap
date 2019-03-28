@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-namespace Claptrap
+namespace Domain.Minion
 {
     public partial class TestClaptrap
     {

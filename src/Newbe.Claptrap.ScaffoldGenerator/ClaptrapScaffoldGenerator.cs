@@ -96,7 +96,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                             {
                                 ClaptrapMetadata = claptrapMetadata,
                                 ClaptrapEventMethodMetadata = claptrapEventMethodMetadata,
-                                MethodDeclarationSyntax = methodNode
+                                MethodDeclarationSyntax = methodNode,
+                                CompilationUnitSyntax = compilationUnitSyntax,
                             });
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
@@ -128,7 +129,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                             {
                                 ClaptrapMetadata = claptrapMetadata,
                                 ClaptrapEventMethodMetadata = claptrapEventMethodMetadata,
-                                MethodDeclarationSyntax = methodNode
+                                MethodDeclarationSyntax = methodNode,
+                                CompilationUnitSyntax = compilationUnitSyntax,
                             });
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
@@ -154,6 +156,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                                 EventType = claptrapEventMethodMetadata.EventType,
                                 EventDataType = claptrapEventMethodMetadata.EventDataType,
                                 StateDataType = claptrapMetadata.StateDataType,
+                                CompilationUnitSyntax = compilationUnitSyntax,
                             });
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
@@ -171,6 +174,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                     new GE06CodeFileGeneratorContext
                     {
                         StateDataType = claptrapMetadata.StateDataType,
+                        CompilationUnitSyntax = compilationUnitSyntax,
                     });
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);

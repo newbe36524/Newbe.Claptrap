@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Newbe.Claptrap.ScaffoldGenerator;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFiles;
@@ -25,6 +26,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var stateFactoryCodeFileGenerator = new GE06CodeFileGenerator();
             var re = stateFactoryCodeFileGenerator.GenerateCode(new GE06CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 StateDataTypeFullName = typeof(TestStateDataType).FullName,
             });
             _testOutputHelper.WriteCodePretty(re);

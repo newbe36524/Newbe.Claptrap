@@ -53,7 +53,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                             {
                                 EventType = claptrapEventMethodMetadata.EventType,
                                 EventDataType = claptrapEventMethodMetadata.EventDataType,
-                                StateDataType = minionMetadata.StateDataType
+                                StateDataType = minionMetadata.StateDataType,
+                                CompilationUnitSyntax = compilationUnitSyntax,
                             });
                         var generate = codeFileGenerator.GenerateCode(codeFile);
                         var formatCode = CodeFormatter.FormatCode(generate);
@@ -71,6 +72,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                     new GE06CodeFileGeneratorContext
                     {
                         StateDataType = minionMetadata.StateDataType,
+                        CompilationUnitSyntax = compilationUnitSyntax,
                     });
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);
@@ -86,6 +88,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                     new GE07CodeFileGeneratorContext
                     {
                         MinionMetadata = minionMetadata,
+                        CompilationUnitSyntax = compilationUnitSyntax,
                     });
                 var generate = codeFileGenerator.GenerateCode(codeFile);
                 var formatCode = CodeFormatter.FormatCode(generate);

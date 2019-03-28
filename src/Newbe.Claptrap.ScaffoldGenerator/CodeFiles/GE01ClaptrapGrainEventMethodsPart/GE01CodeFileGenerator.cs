@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,16 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
                 // TODO try to find another way to do this
                 var methodNode =
                     methodNodes.Single(x => x.Identifier.ToString() == eventMethodMetadata.MethodInfo.Name);
-                var interfaceName = $"I{eventMethodMetadata.MethodInfo.Name}Method";
+                var interfaceName =
+                    $"N20EventMethods.{eventMethodMetadata.MethodInfo.Name}.I{eventMethodMetadata.MethodInfo.Name}Method";
+                var (isSupport, unwrapTaskReturnTypeName) =
+                    SyntaxHelper.UnwrapTaskReturnTypeName(methodNode.ReturnType);
+                if (!isSupport)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(context),
+                        $"method return type {methodNode.ReturnType} is not supported, method return must be Task or Task<>");
+
+                }
                 var method = new EventMethod
                 {
                     MethodName = eventMethodMetadata.MethodInfo.Name,
@@ -34,7 +44,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
                     ArgumentTypeAndNames = methodNode.ParameterList.Parameters
                         .Select(x => $"{x.Type} {x.Identifier.ToString()}").ToArray(),
                     EventType = eventMethodMetadata.ClaptrapEventMetadata.EventType,
-                    EventMethodInterfaceName = interfaceName,
+                    EventMethodInterfaceFullName = interfaceName,
+                    UnwrapTaskReturnTypeName = unwrapTaskReturnTypeName,
                 };
                 list.Add(method);
             }
@@ -48,6 +59,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
                 StateDataTypeFullName = context.ClaptrapMetadata.StateDataType.FullName,
                 EventMethods = list,
                 FileName = $"{className}.g.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
 
             return re;
@@ -59,16 +71,22 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
             var namespaces = file.Namespaces
                 .Concat(new[]
                 {
-                    "Newbe.Claptrap;", "System.Threading.Tasks;", "Newbe.Claptrap.Attributes;", "Newbe.Claptrap.Core;",
-                    "Newbe.Claptrap.Orleans;", "Orleans;"
+                    "Newbe.Claptrap",
+                    "System",
+                    "System.Threading.Tasks",
+                    "Newbe.Claptrap.Attributes",
+                    "Newbe.Claptrap.Core",
+                    "Newbe.Claptrap.Orleans",
+                    "Orleans"
                 })
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArray();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
+
             builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
             builder.AppendLine("namespace Claptrap");
             builder.UsingCurlyBraces(() =>
@@ -106,16 +124,20 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE01ClaptrapGrainEventMetho
                         builder.UsingCurlyBraces(() =>
                         {
                             builder.AppendLine(
-                                $"var method = ({eventMethod.EventMethodInterfaceName}) ServiceProvider.GetService(typeof({eventMethod.EventMethodInterfaceName}));");
+                                $"var method = ({eventMethod.EventMethodInterfaceFullName}) ServiceProvider.GetService(typeof({eventMethod.EventMethodInterfaceFullName}));");
                             builder.AppendLine(
                                 $"var result = await method.Invoke((StateData) Actor.State.Data{string.Join(" ", eventMethod.ArgumentNames.Select(x => "," + x))});");
                             builder.AppendLine("if (result.EventRaising)");
                             builder.UsingCurlyBraces(() =>
                             {
                                 builder.AppendLine(
-                                    $@" var @event = new DataEvent(Actor.State.Identity, ""{eventMethod.EventType}"", result.EventData,result.EventUid);");
+                                    $@"var @event = new DataEvent(Actor.State.Identity, ""{eventMethod.EventType}"", result.EventData,result.EventUid);");
                                 builder.AppendLine("await Actor.HandleEvent(@event);");
                             });
+                            if (!string.IsNullOrEmpty(eventMethod.UnwrapTaskReturnTypeName))
+                            {
+                                builder.AppendLine("return result.MethodReturn;");
+                            }
                         });
                     }
                 });

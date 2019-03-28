@@ -13,7 +13,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE06StateFactory
             var re = new GE06CodeFile
             {
                 StateDataTypeFullName = context.StateDataType.FullName,
-                FileName = "StateDataFactory.cs"
+                FileName = "StateDataFactory.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -21,17 +22,25 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE06StateFactory
         public override SyntaxTree GenerateCore(GE06CodeFile file)
         {
             var namespaces = file.Namespaces
-                .Concat(new[] {"System;","Newbe.Claptrap;","Newbe.Claptrap.Core;","Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Concat(new[]
+                {
+                    "System",
+                    "Newbe.Claptrap",
+                    "Newbe.Claptrap.Core",
+                    "Newbe.Claptrap",
+                    "System.Threading.Tasks"
+                })
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArray();
             var builder = new StringBuilder();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
+
             builder.AppendLine($"using StateData = {file.StateDataTypeFullName};");
-            builder.AppendLine($"namespace Claptrap._10StateDataFactory");
+            builder.AppendLine($"namespace Claptrap.N10StateDataFactory");
             builder.UsingCurlyBraces(() =>
             {
                 builder.AppendLine($"public class StateDataFactory: StateDataFactoryBase<StateData>");

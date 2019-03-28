@@ -6,5 +6,6 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethods
     public class GE07CodeFileGeneratorContext : ICodeFileGeneratorContext
     {
         public MinionMetadata MinionMetadata { get; set; }
+        public CompilationUnitSyntax CompilationUnitSyntax { get; set; }
     }
 }

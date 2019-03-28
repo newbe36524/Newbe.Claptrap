@@ -1,8 +1,8 @@
-using Newbe.Claptrap;
 using System.Threading.Tasks;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using EventData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceFinishedEventData;
 using StateData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
-namespace Claptrap.N20EventMethods
+namespace Newbe.Claptrap.Demo.Scaffold.DomainService.TransferAccountBalance.Claptrap.N20EventMethods.Transfer
 {
     public interface ITransferMethod
     {

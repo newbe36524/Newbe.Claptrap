@@ -55,6 +55,7 @@ public interface ITestInterface
             var generator = new GE04CodeFileGenerator();
             var re = generator.GenerateCode(new GE04CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 InterfaceName = $"I{methodInfo.Name}",
                 EventDataFullName = typeof(TestEventDataType).FullName,
                 StateDataFullName = typeof(TestStateDataType).FullName,
@@ -76,6 +77,7 @@ public interface ITestInterface
             var generator = new GE04CodeFileGenerator();
             var re = generator.GenerateCode(new GE04CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 InterfaceName = $"I{methodInfo.Name}",
                 EventDataFullName = typeof(TestEventDataType).FullName,
                 StateDataFullName = typeof(TestStateDataType).FullName,
@@ -96,6 +98,7 @@ public interface ITestInterface
             var generator = new GE04CodeFileGenerator();
             var re = generator.GenerateCode(new GE04CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 InterfaceName = $"I{methodInfo.Name}",
                 EventDataFullName = typeof(TestEventDataType).FullName,
                 StateDataFullName = typeof(TestStateDataType).FullName,
@@ -116,6 +119,7 @@ public interface ITestInterface
             var generator = new GE04CodeFileGenerator();
             var re = generator.GenerateCode(new GE04CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 InterfaceName = $"I{methodInfo.Name}",
                 EventDataFullName = typeof(TestEventDataType).FullName,
                 StateDataFullName = typeof(TestStateDataType).FullName,

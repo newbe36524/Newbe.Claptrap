@@ -38,7 +38,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
             {
                 ClassName = className,
                 NoneEventMethods = list,
-                FileName = $"{className}.cs"
+                FileName = $"{className}.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -48,7 +49,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
             var namespaces = file.Namespaces
                 .Concat(new[]
                 {
-                    "System.Threading.Tasks;"
+                    "System",
+                    "System.Threading.Tasks"
                 })
                 .Distinct()
                 .OrderBy(x => x)
@@ -56,7 +58,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
             var builder = new StringBuilder();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
 
             builder.AppendLine("namespace Domain.Minion");

@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE04EventMethodInterface
 {
     public class GE04CodeFile : ICodeFile

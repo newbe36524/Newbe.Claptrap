@@ -1,9 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Newbe.Claptrap;
 using Newbe.Claptrap.Core;
 using StateData = Newbe.Claptrap.Demo.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
-namespace Claptrap._10StateDataFactory
+namespace Newbe.Claptrap.Demo.Scaffold.DomainService.TransferAccountBalance.Claptrap.N10StateDataFactory
 {
     public class StateDataFactory : StateDataFactoryBase<StateData>
     {

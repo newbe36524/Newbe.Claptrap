@@ -24,6 +24,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var emptyStrings = Enumerable.Empty<string>().ToArray();
             var re = generator.GenerateCode(new GE03CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 ClassName = "TestTaskMethod",
                 InterfaceName = "ITestTaskMethod",
                 ArgumentTypeAndNames = emptyStrings,
@@ -42,6 +43,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var emptyStrings = Enumerable.Empty<string>().ToArray();
             var re = generator.GenerateCode(new GE03CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 ClassName = "IntReturnMethod",
                 InterfaceName = "IIntReturnMethod",
                 ArgumentTypeAndNames = emptyStrings,
@@ -59,6 +61,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var generator = new GE03CodeFileGenerator();
             var re = generator.GenerateCode(new GE03CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 ClassName = "ArgumentMethod",
                 InterfaceName = "IArgumentMethod",
                 ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"},
@@ -76,6 +79,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
             var generator = new GE03CodeFileGenerator();
             var re = generator.GenerateCode(new GE03CodeFile
             {
+                Namespaces = Enumerable.Empty<string>().ToArray(),
                 ClassName = "IntReturnArgumentMethod",
                 InterfaceName = "IIntReturnArgumentMethod",
                 ArgumentTypeAndNames = new[] {"string a", "int b", "TestEventDataType dataType"},

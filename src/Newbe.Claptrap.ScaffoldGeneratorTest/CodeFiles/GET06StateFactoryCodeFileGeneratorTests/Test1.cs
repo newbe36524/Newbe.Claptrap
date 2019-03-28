@@ -1,9 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Core;
+using System;
+using System.Threading.Tasks;
 using StateData = Newbe.Claptrap.ScaffoldGeneratorTest.TestStateDataType;
-namespace Claptrap._10StateDataFactory
+namespace Claptrap.N10StateDataFactory
 {
     public class StateDataFactory : StateDataFactoryBase<StateData>
     {

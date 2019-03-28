@@ -1,30 +1,28 @@
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Newbe.Claptrap.Metadata;
-using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE02ClaptrapGrainNoneEventMethodPart;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMethodPart;
 using Xunit;
 using Xunit.Abstractions;
+using NoneEventMethod = Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMethodPart.NoneEventMethod;
 
 namespace Newbe.Claptrap.ScaffoldGeneratorTest
 {
-    public class GET02ClaptrapGrainNoneEventMethodPartCodeFileGeneratorTests
+    public class GET08MinionGrainNoneEventMethodPartCodeFileGeneratorTests
         : CodeFileGeneratorTestBase
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public GET02ClaptrapGrainNoneEventMethodPartCodeFileGeneratorTests(
+        public GET08MinionGrainNoneEventMethodPartCodeFileGeneratorTests(
             ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
-
+        
         [Fact]
         public void NoneEventMethodWithoutReturnValue()
         {
-            var claptrapGrainNoneEventMethodPartCodeFileGenerator = new GE02CodeFileGenerator();
+            var claptrapGrainNoneEventMethodPartCodeFileGenerator = new GE08CodeFileGenerator();
             var emptyStrings = Enumerable.Empty<string>().ToArray();
-            var re = claptrapGrainNoneEventMethodPartCodeFileGenerator.GenerateCode(new GE02CodeFile
+            var re = claptrapGrainNoneEventMethodPartCodeFileGenerator.GenerateCode(new GE08CodeFile
             {
                 ClassName = "TestClaptrap",
                 Namespaces = Enumerable.Empty<string>().ToArray(),
@@ -54,7 +52,7 @@ namespace Newbe.Claptrap.ScaffoldGeneratorTest
                         ReturnTypeName = "Task<(decimal value, int n)>",
                         ArgumentTypeAndNames = new[] {"TestEventDataType testEventDataType"}
                     },
-                }
+                },
             });
             _testOutputHelper.WriteCodePretty(re);
             AssertCodeFile(nameof(NoneEventMethodWithoutReturnValue), re);

@@ -38,7 +38,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE02ClaptrapGrainNoneEventM
             {
                 ClassName = className,
                 NoneEventMethods = list,
-                FileName = $"{className}.cs"
+                FileName = $"{className}.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -46,8 +47,20 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE02ClaptrapGrainNoneEventM
         public override SyntaxTree GenerateCore(GE02CodeFile file)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("using System.Threading.Tasks;");
-            builder.AppendLine("namespace Domain.Claptrap");
+            var namespaces = file.Namespaces
+                .Concat(new[]
+                {
+                    "System",
+                    "System.Threading.Tasks",
+                })
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
+            foreach (var ns in namespaces)
+            {
+                builder.AppendLine($"using {ns};");
+            }
+            builder.AppendLine("namespace Claptrap");
             builder.UsingCurlyBraces(() =>
             {
                 builder.AppendLine($"public partial class {file.ClassName}");

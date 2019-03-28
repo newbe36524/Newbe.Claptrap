@@ -30,7 +30,8 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE04EventMethodInterface
                 ArgumentTypeAndNames = context.MethodDeclarationSyntax.ParameterList.Parameters
                     .Select(x => $"{x.Type} {x.Identifier}").ToArray(),
                 UnwrapTaskReturnTypeName = unwrapTaskReturnTypeName,
-                FileName = $"{interfaceName}.cs"
+                FileName = $"{interfaceName}.cs",
+                Namespaces = SyntaxHelper.GetNamespaces(context.CompilationUnitSyntax).ToArray(),
             };
             return re;
         }
@@ -39,13 +40,18 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE04EventMethodInterface
         {
             var builder = new StringBuilder();
             var namespaces = file.Namespaces
-                .Concat(new[] {"Newbe.Claptrap;", "System.Threading.Tasks;"})
+                .Concat(new[]
+                {
+                    "System",
+                    "Newbe.Claptrap",
+                    "System.Threading.Tasks"
+                })
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArray();
             foreach (var ns in namespaces)
             {
-                builder.AppendLine($"using {ns}");
+                builder.AppendLine($"using {ns};");
             }
             builder.AppendLine($@"
 using EventData = {file.EventDataFullName};
