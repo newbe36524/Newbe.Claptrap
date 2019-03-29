@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Demo.Models.Domain.Account;
 
-namespace Newbe.Claptrap.Demo.Domain.Account.Minion.ActorFlow._30EventHandlers
+namespace Newbe.Claptrap.Demo.Domain.Account.Minion.ActorFlow.N30EventHandlers
 {
     public class AccountMinionBalanceChangeEventHandler :
         MinionEventHandlerBase<NoneStateData, BalanceChangeEventData>

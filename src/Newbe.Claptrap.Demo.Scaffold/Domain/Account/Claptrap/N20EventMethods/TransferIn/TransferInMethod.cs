@@ -8,6 +8,7 @@ namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap.N20EventMethods.T
     {
         public Task<EventMethodResult<EventData>> Invoke(StateData stateData, decimal amount, string uid)
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

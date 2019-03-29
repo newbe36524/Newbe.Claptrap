@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev02" />
+        <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev03" />
         <PackageReference Include="Autofac" Version="4.9.2" />
         <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
         <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.3.0" />

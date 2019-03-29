@@ -1,5 +1,7 @@
 properties {
     $rootNow = Resolve-Path .
+    $version = "0.1.0-dev03"
+    $templateVersion = "0.1.0"
     $deployMode = "Release"
     $releaseDir = "$rootNow/build/"
     $nugetexe = "$rootNow/buildTools/nuget.exe"
@@ -36,7 +38,7 @@ Task Test -depends Build -Description "run tests"{
 
 Task Pack -depends Test -Description "pack" {
     Exec {
-        dotnet pack Newbe.Claptrap.sln -o $releaseDir
+        dotnet pack Newbe.Claptrap.sln -o $releaseDir /p:Version=$version
     }
 }
 
@@ -47,11 +49,11 @@ Task PackTemplate -depends Init -Description "pack template package" {
         Get-ChildItem "Newbe.Claptrap.Template" ".vs" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
         Get-ChildItem "Newbe.Claptrap.Template" ".idea" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
         Get-ChildItem "Newbe.Claptrap.Template" "*.user" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
-        . $nugetexe pack "Newbe.Claptrap.Template\Newbe.Claptrap.Template.nuspec" -OutputDirectory $releaseDir
+        . $nugetexe pack "Newbe.Claptrap.Template\Newbe.Claptrap.Template.nuspec" -Version $templateVersion -OutputDirectory $releaseDir
     }
 }
 
-Task NugetPushNuget -depends Pack,PackTemplate -Description "push package to nuget" {
+Task NugetPushNuget  -Description "push package to nuget" {
     Get-ChildItem $releaseDir *.nupkg | ForEach-Object {
         Exec {
             dotnet nuget push "$releaseDir$_" -s https://www.nuget.org/

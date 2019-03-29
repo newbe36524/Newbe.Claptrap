@@ -7,6 +7,7 @@ using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE05StateDataUpdater;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE06StateFactory;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE07MinionGrainEventMethodsPart;
 using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMethodPart;
+using Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE09MinionEventHandler;
 
 namespace Newbe.Claptrap.ScaffoldGenerator
 {
@@ -37,6 +38,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator
 
                 yield return GE07();
                 yield return GE08();
+                yield return GE09();
             }
 
             Task GE05()
@@ -111,6 +113,32 @@ namespace Newbe.Claptrap.ScaffoldGenerator
                 return _scaffoldFileSystem.SaveFile(
                     $"{rootDirectoryName}/{minionMetadata.ClaptrapMetadata.ClaptrapKind.Catalog}/Minion/{minionMetadata.MinionKind.MinionCatalog}/{codeFile.FileName}",
                     formatCode);
+            }
+            
+            Task GE09()
+            {
+                return Task.WhenAll(RunForEvent(minionMetadata.ClaptrapEventMetadata));
+
+                IEnumerable<Task> RunForEvent(IEnumerable<ClaptrapEventMetadata> eventMethodMetadata)
+                {
+                    foreach (var claptrapEventMethodMetadata in eventMethodMetadata)
+                    {
+                        ICodeFileGenerator codeFileGenerator = new GE09CodeFileGenerator();
+                        var codeFile = codeFileGenerator.CreateCodeFile(
+                            new GE09CodeFileGeneratorContext
+                            {
+                                EventType = claptrapEventMethodMetadata.EventType,
+                                EventDataType = claptrapEventMethodMetadata.EventDataType,
+                                StateDataType = minionMetadata.StateDataType,
+                                CompilationUnitSyntax = compilationUnitSyntax,
+                            });
+                        var generate = codeFileGenerator.GenerateCode(codeFile);
+                        var formatCode = CodeFormatter.FormatCode(generate);
+                        yield return _scaffoldFileSystem.SaveFile(
+                            $"{rootDirectoryName}/{minionMetadata.ClaptrapMetadata.ClaptrapKind.Catalog}/Minion/{minionMetadata.MinionKind.MinionCatalog}/N30EventHandlers/{codeFile.FileName}",
+                            formatCode);
+                    }
+                }
             }
         }
     }

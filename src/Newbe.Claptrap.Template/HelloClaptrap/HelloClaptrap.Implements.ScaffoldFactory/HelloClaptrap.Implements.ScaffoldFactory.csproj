@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newbe.Claptrap.ScaffoldGenerator" Version="0.1.0-dev02" />
+      <PackageReference Include="Newbe.Claptrap.ScaffoldGenerator" Version="0.1.0-dev03" />
     </ItemGroup>
 
     <ItemGroup>

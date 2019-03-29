@@ -11,6 +11,7 @@ namespace Newbe.Claptrap.Demo.Scaffold.Domain.Account.Claptrap.N10StateDataFacto
         }
         public override Task<StateData> Create()
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }
