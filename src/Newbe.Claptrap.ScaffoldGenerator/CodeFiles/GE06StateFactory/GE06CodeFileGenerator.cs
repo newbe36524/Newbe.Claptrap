@@ -51,7 +51,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE06StateFactory
                     builder.UsingCurlyBraces(() => { });
 
                     builder.AppendLine("public override Task<StateData> Create()");
-                    builder.UsingCurlyBraces(() => { builder.AppendNotImplementedException(); });
+                    builder.UsingCurlyBraces(() => { builder.AppendNotImplemented(); });
                 });
             });
 

@@ -19,10 +19,4 @@
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da">
-        <HintPath>C:\Users\10200744\.nuget\packages\autofac\4.6.1\lib\netstandard1.1\Autofac.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

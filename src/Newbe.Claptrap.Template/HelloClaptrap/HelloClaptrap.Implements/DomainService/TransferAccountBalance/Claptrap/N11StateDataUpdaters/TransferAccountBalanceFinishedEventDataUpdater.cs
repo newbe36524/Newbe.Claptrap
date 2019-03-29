@@ -8,6 +8,7 @@ namespace HelloClaptrap.Implements.DomainService.TransferAccountBalance.Claptrap
     {
         public override void UpdateState(StateData stateData, EventData eventData)
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

@@ -84,7 +84,7 @@ using StateData = {file.StateDataTypeFullName};");
                     }
 
                     builder.Append(")");
-                    builder.UsingCurlyBraces(() => builder.AppendNotImplementedException());
+                    builder.UsingCurlyBraces(() => builder.AppendNotImplemented());
                 });
             });
             var tree = CSharpSyntaxTree.ParseText(builder.ToString());

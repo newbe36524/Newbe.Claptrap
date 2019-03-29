@@ -10,10 +10,10 @@ namespace HelloClaptrap.Interfaces.Domain.Account
     public interface IAccount : IClaptrapGrain
     {
         [ClaptrapEvent(nameof(BalanceChangeEventData), typeof(BalanceChangeEventData))]
-        Task TransferIn(decimal amount, string uid);
+        Task TransferIn(decimal amount);
 
         [ClaptrapEvent(nameof(BalanceChangeEventData), typeof(BalanceChangeEventData))]
-        Task<TransferResult> TransferOut(decimal amount, string uid);
+        Task<bool> TransferOut(decimal amount);
 
         Task<decimal> GetBalance();
     }

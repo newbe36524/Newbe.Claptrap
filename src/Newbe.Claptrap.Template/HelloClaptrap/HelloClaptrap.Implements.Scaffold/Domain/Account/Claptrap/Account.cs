@@ -7,6 +7,7 @@ namespace HelloClaptrap.Implements.Scaffold.Domain.Account.Claptrap
     {
         public Task<decimal> GetBalance()
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

@@ -6,6 +6,6 @@ namespace HelloClaptrap.Implements.Domain.Account.Claptrap.N20EventMethods.Trans
 {
     public interface ITransferInMethod
     {
-        Task<EventMethodResult<EventData>> Invoke(StateData stateData, decimal amount, string uid);
+        Task<EventMethodResult<EventData>> Invoke(StateData stateData, decimal amount);
     }
 }

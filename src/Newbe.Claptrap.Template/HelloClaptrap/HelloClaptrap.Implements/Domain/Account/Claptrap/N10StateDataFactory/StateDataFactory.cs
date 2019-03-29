@@ -12,6 +12,7 @@ namespace HelloClaptrap.Implements.Domain.Account.Claptrap.N10StateDataFactory
         }
         public override Task<StateData> Create()
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

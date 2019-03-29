@@ -11,6 +11,6 @@ namespace HelloClaptrap.Interfaces.DomainService.TransferAccountBalance
         : IClaptrapGrain
     {
         [ClaptrapEvent(nameof(TransferAccountBalanceFinishedEventData), typeof(TransferAccountBalanceFinishedEventData))]
-        Task<TransferResult> Transfer(string fromId, string toId, decimal balance);
+        Task<bool> Transfer(string fromId, string toId, decimal balance);
     }
 }

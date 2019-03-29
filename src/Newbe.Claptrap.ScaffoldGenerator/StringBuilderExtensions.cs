@@ -19,8 +19,9 @@ namespace Newbe.Claptrap.ScaffoldGenerator
             sb.AppendLine("}");
         }
 
-        public static void AppendNotImplementedException(this StringBuilder sb)
+        public static void AppendNotImplemented(this StringBuilder sb)
         {
+            sb.AppendLine("// TODO please add your code here and remove the exception");
             sb.AppendLine("throw new NotImplementedException();");
         }
     }

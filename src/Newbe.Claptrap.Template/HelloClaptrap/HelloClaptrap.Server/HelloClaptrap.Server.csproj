@@ -8,7 +8,7 @@
     <ItemGroup>
       <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
       <PackageReference Include="Microsoft.Orleans.Server" Version="2.3.0" />
-      <PackageReference Include="Newbe.Claptrap.EventHub.DirectClient" Version="0.1.0-dev01" />
+      <PackageReference Include="Newbe.Claptrap.EventHub.DirectClient" Version="0.1.0-dev02" />
       <PackageReference Include="OrleansDashboard" Version="2.3.1" />
     </ItemGroup>
 

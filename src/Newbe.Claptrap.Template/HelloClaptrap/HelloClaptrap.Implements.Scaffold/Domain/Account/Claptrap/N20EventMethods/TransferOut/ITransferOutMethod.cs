@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using HelloClaptrap.Interfaces.Domain.Account;
 using Newbe.Claptrap;
 using EventData = HelloClaptrap.Models.Domain.Account.BalanceChangeEventData;
 using StateData = HelloClaptrap.Models.Domain.Account.AccountStateData;
@@ -7,6 +6,6 @@ namespace HelloClaptrap.Implements.Scaffold.Domain.Account.Claptrap.N20EventMeth
 {
     public interface ITransferOutMethod
     {
-        Task<EventMethodResult<EventData, TransferResult>> Invoke(StateData stateData, decimal amount, string uid);
+        Task<EventMethodResult<EventData, bool>> Invoke(StateData stateData, decimal amount);
     }
 }

@@ -53,7 +53,7 @@ using EventData = {file.EventDataTypeFullName};");
                 {
                     builder.AppendLine(
                         "public override void UpdateState(StateData stateData, EventData eventData)");
-                    builder.UsingCurlyBraces(() => { builder.AppendNotImplementedException(); });
+                    builder.UsingCurlyBraces(() => { builder.AppendNotImplemented(); });
                 });
             });
 

@@ -27,20 +27,20 @@ namespace HelloClaptrap.Implements.Scaffold.Domain.Account.Claptrap
         }
         public IActor Actor { get; private set; }
         public StateData ActorState => (StateData)Actor.State.Data;
-        public async Task TransferIn(decimal amount, string uid)
+        public async Task TransferIn(decimal amount)
         {
             var method = (N20EventMethods.TransferIn.ITransferInMethod)ServiceProvider.GetService(typeof(N20EventMethods.TransferIn.ITransferInMethod));
-            var result = await method.Invoke((StateData)Actor.State.Data, amount, uid);
+            var result = await method.Invoke((StateData)Actor.State.Data, amount);
             if (result.EventRaising)
             {
                 var @event = new DataEvent(Actor.State.Identity, "BalanceChangeEventData", result.EventData, result.EventUid);
                 await Actor.HandleEvent(@event);
             }
         }
-        public async Task<TransferResult> TransferOut(decimal amount, string uid)
+        public async Task<bool> TransferOut(decimal amount)
         {
             var method = (N20EventMethods.TransferOut.ITransferOutMethod)ServiceProvider.GetService(typeof(N20EventMethods.TransferOut.ITransferOutMethod));
-            var result = await method.Invoke((StateData)Actor.State.Data, amount, uid);
+            var result = await method.Invoke((StateData)Actor.State.Data, amount);
             if (result.EventRaising)
             {
                 var @event = new DataEvent(Actor.State.Identity, "BalanceChangeEventData", result.EventData, result.EventUid);

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using HelloClaptrap.Interfaces.Domain.Account;
 using Newbe.Claptrap;
 using EventData = HelloClaptrap.Models.DomainService.TransferAccountBalance.TransferAccountBalanceFinishedEventData;
 using StateData = HelloClaptrap.Models.DomainService.TransferAccountBalance.TransferAccountBalanceStateData;
@@ -8,8 +7,9 @@ namespace HelloClaptrap.Implements.Scaffold.DomainService.TransferAccountBalance
 {
     public class TransferMethod : ITransferMethod
     {
-        public Task<EventMethodResult<EventData, TransferResult>> Invoke(StateData stateData, string fromId, string toId, decimal balance)
+        public Task<EventMethodResult<EventData, bool>> Invoke(StateData stateData, string fromId, string toId, decimal balance)
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

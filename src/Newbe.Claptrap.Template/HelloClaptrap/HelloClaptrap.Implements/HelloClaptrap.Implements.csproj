@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev01" />
+        <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev02" />
         <PackageReference Include="Autofac" Version="4.9.2" />
         <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
         <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.3.0" />
@@ -38,6 +38,46 @@
       <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\30EventHandlers\AccountMinionBalanceChangeEventHandler2.cs" />
       <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\30EventHandlers\LockEventDataEventHandler.cs" />
       <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountMinion.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N10StateDataFactory\StateDataFactory.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N11StateDataUpdaters\BalanceChangeEventDataUpdater.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\ITransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\TransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\ITransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\TransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N10StateDataFactory\StateDataFactory.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N11StateDataUpdaters\BalanceChangeEventDataUpdater.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\ITransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\TransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\ITransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\TransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N10StateDataFactory\StateDataFactory.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N11StateDataUpdaters\BalanceChangeEventDataUpdater.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\ITransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\TransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\ITransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\TransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\Account.g.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N10StateDataFactory\StateDataFactory.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N11StateDataUpdaters\BalanceChangeEventDataUpdater.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\ITransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferIn\TransferInMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\ITransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Claptrap\N20EventMethods\TransferOut\TransferOutMethod.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.cs" />
+      <Orleans_CodeGenInputs Remove="Domain\Account\Minion\Database\AccountDatabaseMinion.g.cs" />
     </ItemGroup>
     
 </Project>

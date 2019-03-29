@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using HelloClaptrap.Interfaces.Domain.Account;
 using HelloClaptrap.Interfaces.DomainService.TransferAccountBalance;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Attributes;
@@ -28,7 +27,7 @@ namespace HelloClaptrap.Implements.DomainService.TransferAccountBalance.Claptrap
         }
         public IActor Actor { get; private set; }
         public StateData ActorState => (StateData)Actor.State.Data;
-        public async Task<TransferResult> Transfer(string fromId, string toId, decimal balance)
+        public async Task<bool> Transfer(string fromId, string toId, decimal balance)
         {
             var method = (N20EventMethods.Transfer.ITransferMethod)ServiceProvider.GetService(typeof(N20EventMethods.Transfer.ITransferMethod));
             var result = await method.Invoke((StateData)Actor.State.Data, fromId, toId, balance);

@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.3.0" />
-        <PackageReference Include="Newbe.Claptrap.Interface" Version="0.1.0-dev01" />
+        <PackageReference Include="Newbe.Claptrap.Interface" Version="0.1.0-dev02" />
     </ItemGroup>
 
     <ItemGroup>

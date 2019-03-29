@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev01" />
+      <PackageReference Include="Newbe.Claptrap.Implement" Version="0.1.0-dev02" />
     </ItemGroup>
 
     <ItemGroup>

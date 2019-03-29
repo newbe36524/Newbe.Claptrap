@@ -16,28 +16,8 @@ namespace HelloClaptrap.Client
             var clusterClient = await ConnectToCluster();
             Console.WriteLine("connect to cluster success");
 
-            var random = new Random();
-            var sw = Stopwatch.StartNew();
-            for (var round = 0; round < int.MaxValue; round++)
-            {
-                Thread.Sleep(500);
-                Console.WriteLine($"round {round} now");
-                sw.Restart();
-                const int count = 1000;
-                var tasks = Enumerable.Range(round * count, count).Select(x =>
-                {
-                    var transferAccountBalance = clusterClient.GetGrain<ITransferAccountBalance>(x.ToString());
-                    return transferAccountBalance.Transfer(GetRandomAccountId(), GetRandomAccountId(), 1);
-                });
-                await Task.WhenAll(tasks);
-
-                Console.WriteLine($"finished in {sw.ElapsedMilliseconds} ms");
-            }
-            
-            string GetRandomAccountId()
-            {
-                return random.Next(0, 500).ToString();
-            }
+            // TODO please add your code here and remove the exception
+            throw new NotImplementedException();
         }
 
         private static async Task<IClusterClient> ConnectToCluster()

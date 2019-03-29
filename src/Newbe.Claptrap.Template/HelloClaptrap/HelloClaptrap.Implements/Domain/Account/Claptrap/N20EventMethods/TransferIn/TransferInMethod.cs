@@ -7,8 +7,9 @@ namespace HelloClaptrap.Implements.Domain.Account.Claptrap.N20EventMethods.Trans
 {
     public class TransferInMethod : ITransferInMethod
     {
-        public Task<EventMethodResult<EventData>> Invoke(StateData stateData, decimal amount, string uid)
+        public Task<EventMethodResult<EventData>> Invoke(StateData stateData, decimal amount)
         {
+            // TODO please add your code here and remove the exception
             throw new NotImplementedException();
         }
     }

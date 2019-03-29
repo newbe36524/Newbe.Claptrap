@@ -71,7 +71,7 @@ namespace Newbe.Claptrap.ScaffoldGenerator.CodeFiles.GE08MinionGrainNoneEventMet
                     {
                         builder.AppendLine(
                             $"public {noneEventMethod.ReturnTypeName} {noneEventMethod.MethodName}({string.Join(",", noneEventMethod.ArgumentTypeAndNames)})");
-                        builder.UsingCurlyBraces(() => { builder.AppendNotImplementedException(); });
+                        builder.UsingCurlyBraces(() => { builder.AppendNotImplemented(); });
                     }
                 });
             });
