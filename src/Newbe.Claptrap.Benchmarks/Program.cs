@@ -6,6 +6,7 @@ using BenchmarkDotNet.Analysers;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Jobs;
@@ -23,9 +24,9 @@ namespace Newbe.Claptrap.Benchmarks
         public static void Main(string[] args)
         {
             var config = new Config();
-//            BenchmarkRunner.Run<MethodInvokeBenchmark>(config);
-//            BenchmarkRunner.Run<SleepBenchmark>(config);
-            BenchmarkRunner.Run<ClaptrapBenchmark>(config);
+            // BenchmarkRunner.Run<MethodInvokeBenchmark>(config);
+            BenchmarkRunner.Run<SleepBenchmark>(config);
+            // BenchmarkRunner.Run<ClaptrapBenchmark>(config);
         }
     }
 
@@ -102,7 +103,7 @@ namespace Newbe.Claptrap.Benchmarks
 
         public IEnumerable<Job> GetJobs()
         {
-            yield return Job.Core;
+            yield return Job.Default.With(CoreRuntime.Core31);
         }
 
         public IEnumerable<BenchmarkLogicalGroupRule> GetLogicalGroupRules()

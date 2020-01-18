@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
 
@@ -25,8 +26,10 @@ namespace Newbe.Claptrap.Benchmarks
         private TestClass _instance;
         private MethodInfo _methodInfo;
         private Func<TestClass> _func;
+        private Func<TestClass> _expressionFunc;
         private IReadOnlyDictionary<string, Func<TestClass, TestClass>> _table;
         private dynamic _dInstance;
+
         private static TestClass StaticInvoke(TestClass testClass)
         {
             return testClass.GetOne();
@@ -44,6 +47,9 @@ namespace Newbe.Claptrap.Benchmarks
                     {
                         {"getOne", StaticInvoke}
                     });
+
+            Expression<Func<TestClass>> ex = () => _instance.GetOne();
+            _expressionFunc = ex.Compile();
             _dInstance = _instance;
         }
 
@@ -95,7 +101,19 @@ namespace Newbe.Claptrap.Benchmarks
 
             return re;
         }
-        
+
+        [Benchmark]
+        public TestClass ExpressionFunc()
+        {
+            TestClass re = null;
+            for (var i = 0; i < Times; i++)
+            {
+                re = _expressionFunc.Invoke();
+            }
+
+            return re;
+        }
+
         [Benchmark]
         public TestClass Dynamic()
         {

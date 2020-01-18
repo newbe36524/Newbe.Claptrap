@@ -1,24 +1,23 @@
-``` ini
+```ini
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18363
+Intel Xeon CPU E5-2678 v3 2.50GHz, 1 CPU, 24 logical and 12 physical cores
+.NET Core SDK=3.1.100
+  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT
+  Job-HGBTAT : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT
 
-BenchmarkDotNet=v0.11.4, OS=Windows 10.0.17763.348 (1809/October2018Update/Redstone5)
-Intel Core i7-4712MQ CPU 2.30GHz (Haswell), 1 CPU, 8 logical and 4 physical cores
-.NET Core SDK=2.2.100
-  [Host] : .NET Core 2.2.0 (CoreCLR 4.6.27110.04, CoreFX 4.6.27110.04), 64bit RyuJIT
-  Core   : .NET Core 2.2.0 (CoreCLR 4.6.27110.04, CoreFX 4.6.27110.04), 64bit RyuJIT
-
-Job=Core  Runtime=Core  
-
+Runtime=.NET Core 3.1  
 ```
-|                  Method | Milliseconds |        Mean |     Error |    StdDev | Ratio | Rank | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
-|------------------------ |------------- |------------:|----------:|----------:|------:|-----:|------------:|------------:|------------:|--------------------:|
-|   **&#39;Sleep by Task.Delay&#39;** |           **10** |    **15.61 ms** | **0.0831 ms** | **0.0778 ms** |  **1.47** |    **2** |           **-** |           **-** |           **-** |               **384 B** |
-| &#39;Sleep by Thread.Sleep&#39; |           10 |    10.60 ms | 0.0669 ms | 0.0626 ms |  1.00 |    1 |           - |           - |           - |                   - |
-|                         |              |             |           |           |       |      |             |             |             |                     |
-|   **&#39;Sleep by Task.Delay&#39;** |          **100** |   **108.70 ms** | **0.5573 ms** | **0.4351 ms** |  **1.08** |    **2** |           **-** |           **-** |           **-** |               **384 B** |
-| &#39;Sleep by Thread.Sleep&#39; |          100 |   100.54 ms | 0.1604 ms | 0.1500 ms |  1.00 |    1 |           - |           - |           - |                   - |
-|                         |              |             |           |           |       |      |             |             |             |                     |
-|   **&#39;Sleep by Task.Delay&#39;** |         **1000** | **1,000.58 ms** | **0.5901 ms** | **0.4928 ms** |  **1.00** |    **1** |           **-** |           **-** |           **-** |               **384 B** |
-| &#39;Sleep by Thread.Sleep&#39; |         1000 | 1,000.41 ms | 0.2781 ms | 0.2601 ms |  1.00 |    1 |           - |           - |           - |                   - |
-|                         |              |             |           |           |       |      |             |             |             |                     |
-|   **&#39;Sleep by Task.Delay&#39;** |         **5000** | **5,007.15 ms** | **6.7455 ms** | **6.3097 ms** |  **1.00** |    **1** |           **-** |           **-** |           **-** |               **384 B** |
-| &#39;Sleep by Thread.Sleep&#39; |         5000 | 5,000.43 ms | 0.3371 ms | 0.3154 ms |  1.00 |    1 |           - |           - |           - |                   - |
+
+|                  Method | Milliseconds |        Mean |    Error |   StdDev | Ratio | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
+|------------------------ |------------- |------------:|---------:|---------:|------:|-----:|------:|------:|------:|----------:|
+|   'Sleep by Task.Delay' |           10 |    15.59 ms | 0.094 ms | 0.084 ms |  1.46 |    2 |     - |     - |     - |     392 B |
+| 'Sleep by Thread.Sleep' |           10 |    10.69 ms | 0.066 ms | 0.062 ms |  1.00 |    1 |     - |     - |     - |      76 B |
+|                         |              |             |          |          |       |      |       |       |       |           |
+|   'Sleep by Task.Delay' |          100 |   108.94 ms | 0.640 ms | 0.599 ms |  1.08 |    2 |     - |     - |     - |     352 B |
+| 'Sleep by Thread.Sleep' |          100 |   100.55 ms | 0.118 ms | 0.110 ms |  1.00 |    1 |     - |     - |     - |     974 B |
+|                         |              |             |          |          |       |      |       |       |       |           |
+|   'Sleep by Task.Delay' |         1000 | 1,000.67 ms | 0.627 ms | 0.490 ms |  1.00 |    1 |     - |     - |     - |    1480 B |
+| 'Sleep by Thread.Sleep' |         1000 | 1,000.56 ms | 0.310 ms | 0.290 ms |  1.00 |    1 |     - |     - |     - |         - |
+|                         |              |             |          |          |       |      |       |       |       |           |
+|   'Sleep by Task.Delay' |         5000 | 5,003.37 ms | 4.442 ms | 4.155 ms |  1.00 |    1 |     - |     - |     - |     680 B |
+| 'Sleep by Thread.Sleep' |         5000 | 5,000.62 ms | 0.328 ms | 0.307 ms |  1.00 |    1 |     - |     - |     - |    1336 B |

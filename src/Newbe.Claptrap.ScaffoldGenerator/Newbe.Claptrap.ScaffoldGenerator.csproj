@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LibLog" Version="5.0.6" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="2.10.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.10.0" />
+        <PackageReference Include="LibLog" Version="5.0.8" />
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.4.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.4.0" />
     </ItemGroup>
     
     <ItemGroup>
