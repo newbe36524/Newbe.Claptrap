@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="LibLog" Version="5.0.8" />
+      <PackageReference Include="System.Reactive" Version="4.4.1" />
     </ItemGroup>
 
 </Project>
