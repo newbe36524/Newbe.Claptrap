@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using BenchmarkDotNet.Analysers;
@@ -94,6 +95,7 @@ namespace Newbe.Claptrap.Benchmarks
 
         public Encoding Encoding => Encoding.ASCII;
 
+        public CultureInfo CultureInfo => CultureInfo.CurrentCulture;
         public ConfigOptions Options => ConfigOptions.Default;
 
         public SummaryStyle SummaryStyle => SummaryStyle.Default;
@@ -103,7 +105,7 @@ namespace Newbe.Claptrap.Benchmarks
 
         public IEnumerable<Job> GetJobs()
         {
-            yield return Job.Default.With(CoreRuntime.Core31);
+            yield return Job.Default.WithRuntime(CoreRuntime.Core31);
         }
 
         public IEnumerable<BenchmarkLogicalGroupRule> GetLogicalGroupRules()

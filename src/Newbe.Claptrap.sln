@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Interface", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Implement", "Newbe.Claptrap.Implement\Newbe.Claptrap.Implement.csproj", "{25086E72-8320-47DC-9D1A-421EA4E22745}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Tests", "Newbe.Claptrap.Tests\Newbe.Claptrap.Tests.csproj", "{C4B16DF2-6321-47EA-A61B-8DCF463B5755}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{25086E72-8320-47DC-9D1A-421EA4E22745}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25086E72-8320-47DC-9D1A-421EA4E22745}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25086E72-8320-47DC-9D1A-421EA4E22745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B16DF2-6321-47EA-A61B-8DCF463B5755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B16DF2-6321-47EA-A61B-8DCF463B5755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B16DF2-6321-47EA-A61B-8DCF463B5755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B16DF2-6321-47EA-A61B-8DCF463B5755}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B2BE31A9-1844-4079-8C58-D9BB4628A226} = {B16E99D1-98B2-4FBF-A5FA-DAB45C1D8CEF}

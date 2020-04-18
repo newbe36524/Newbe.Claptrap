@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="4.9.4" />
+      <PackageReference Include="Autofac" Version="5.1.2" />
       <PackageReference Include="LibLog" Version="5.0.8" />
     </ItemGroup>
 
