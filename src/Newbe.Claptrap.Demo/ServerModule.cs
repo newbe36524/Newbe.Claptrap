@@ -1,5 +1,6 @@
 using Autofac;
 using Newbe.Claptrap.Autofac;
+using Newbe.Claptrap.Demo.Models;
 
 namespace Newbe.Claptrap.Demo
 {

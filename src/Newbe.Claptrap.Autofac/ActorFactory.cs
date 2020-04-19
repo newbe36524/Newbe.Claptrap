@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.Autofac
                     .As<IEventStore>()
                     .SingleInstance();
             });
-            var actor = actorScope.Resolve<ReactiveActor>();
+            var actor = actorScope.Resolve<Actor>();
             return actor;
         }
     }

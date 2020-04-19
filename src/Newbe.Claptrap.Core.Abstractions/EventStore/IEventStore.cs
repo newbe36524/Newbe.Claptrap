@@ -16,6 +16,7 @@ namespace Newbe.Claptrap.EventStore
         /// </summary>
         /// <param name="event"></param>
         /// <returns></returns>
+        /// <exception cref="EventSavingException">throw if save with a exception</exception>
         Task<EventSavingResult> SaveEvent(IEvent @event);
 
         /// <summary>

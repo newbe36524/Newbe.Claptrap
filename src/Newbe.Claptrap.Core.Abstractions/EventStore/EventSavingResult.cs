@@ -15,10 +15,5 @@ namespace Newbe.Claptrap.EventStore
         /// that means the event existed which has contains the same uid 
         /// </summary>
         AlreadyAdded = 1,
-
-        /// <summary>
-        /// throw a exception
-        /// </summary>
-        Exception = 2
     }
 }

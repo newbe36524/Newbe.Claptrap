@@ -6,6 +6,11 @@ namespace Newbe.Claptrap.Core
     {
         IState State { get; }
 
+        /// <summary>
+        /// activate actor
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ActivateFailException">thrown if activated failed</exception>
         Task ActivateAsync();
 
         Task DeactivateAsync();

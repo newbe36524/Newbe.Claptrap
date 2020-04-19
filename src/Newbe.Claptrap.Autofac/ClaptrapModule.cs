@@ -44,7 +44,7 @@ namespace Newbe.Claptrap.Autofac
                 .As<IEventHandlerRegister>()
                 .SingleInstance();
 
-            builder.RegisterType<ReactiveActor>()
+            builder.RegisterType<Actor>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

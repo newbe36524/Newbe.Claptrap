@@ -20,7 +20,10 @@ namespace Newbe.Claptrap.Autofac
 
         public Task<EventSavingResult> SaveEvent(IEvent @event)
         {
-            if (_list.Any(x => x.Uid.Equals(@event.Uid)))
+            if (_list.Any(x =>
+                x.ActorIdentity.TypeCode == @event.ActorIdentity.TypeCode
+                && x.EventType == @event.EventType
+                && x.Uid.Equals(@event.Uid)))
             {
                 return Task.FromResult(EventSavingResult.AlreadyAdded);
             }

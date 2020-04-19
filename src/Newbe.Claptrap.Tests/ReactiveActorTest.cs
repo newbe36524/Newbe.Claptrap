@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.Tests
                 .Setup(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
-            IActor actor = mocker.Create<ReactiveActor>();
+            IActor actor = mocker.Create<Actor>();
             await actor.ActivateAsync();
         }
 
@@ -71,15 +71,11 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(AllEvents())
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
             mocker.Mock<IEventHandlerFactory>()
                 .Setup(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new Handler());
 
-            IActor actor = mocker.Create<ReactiveActor>();
+            IActor actor = mocker.Create<Actor>();
             await actor.ActivateAsync();
 
             state.Version.Should().Be(3);
@@ -115,7 +111,10 @@ namespace Newbe.Claptrap.Tests
             });
             mocker.VerifyAll = true;
 
-            var state = new AccountState();
+            var state = new AccountState
+            {
+                Identity = _testActorIdentity
+            };
             mocker.Mock<IStateStore>()
                 .Setup(x => x.GetStateSnapshot())
                 .ReturnsAsync(state);
@@ -125,10 +124,6 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(AllEvents())
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
             mocker.Mock<IEventHandlerFactory>()
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new Handler())
@@ -136,9 +131,9 @@ namespace Newbe.Claptrap.Tests
                 .Returns(new Handler())
                 ;
 
-            IActor actor = mocker.Create<ReactiveActor>();
+            IActor actor = mocker.Create<Actor>();
 
-            await Assert.ThrowsAsync<VersionErrorException>(async () => await actor.ActivateAsync());
+            await Assert.ThrowsAsync<ActivateFailException>(async () => await actor.ActivateAsync());
 
             state.Version.Should().Be(1);
 
@@ -182,6 +177,10 @@ namespace Newbe.Claptrap.Tests
                 .SetupSequence(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
+            mocker.Mock<IEventStore>()
+                .Setup(x => x.SaveEvent(It.IsAny<IEvent>()))
+                .ReturnsAsync(EventSavingResult.Success);
+
             mocker.Mock<IStateHolder>()
                 .Setup(x => x.DeepCopy(It.IsAny<IState>()))
                 .Returns(state);
@@ -191,7 +190,7 @@ namespace Newbe.Claptrap.Tests
                 .Returns(new Handler())
                 ;
 
-            IActor actor = mocker.Create<ReactiveActor>();
+            IActor actor = mocker.Create<Actor>();
             await actor.ActivateAsync();
 
             await actor.HandleEvent(new AccountEvent());
@@ -203,7 +202,6 @@ namespace Newbe.Claptrap.Tests
             public IActorIdentity Identity { get; set; }
             public IStateData Data { get; set; }
             public ulong Version { get; set; }
-            public ulong NextVersion => Version + 1;
 
             public void IncreaseVersion()
             {
@@ -243,6 +241,38 @@ namespace Newbe.Claptrap.Tests
             public Task<IState> HandleEvent(IEventContext eventContext)
             {
                 throw new Exception();
+            }
+        }
+
+        private readonly IActorIdentity _testActorIdentity = new ActorIdentity("123", "testActor");
+
+        public class ActorIdentity : IActorIdentity
+        {
+            public ActorIdentity(string id, string typeCode)
+            {
+                Id = id;
+                TypeCode = typeCode;
+            }
+
+            public string Id { get; }
+            public string TypeCode { get; }
+
+            public bool Equals(IActorIdentity other)
+            {
+                return Id == other.Id && TypeCode == other.TypeCode;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((ActorIdentity) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Id, TypeCode);
             }
         }
     }

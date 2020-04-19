@@ -1,8 +1,7 @@
 using Newbe.Claptrap.Core;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.Demo.Models
 {
-    // TODO move to demo
     public class AccountStateData : IStateData
     {
         public decimal Balance { get; set; }

@@ -11,7 +11,7 @@ namespace Newbe.Claptrap.Core
         /// </summary>
         ulong Version { get; }
 
-        ulong NextVersion { get; }
+        ulong NextVersion => Version + 1;
 
         void IncreaseVersion();
     }
