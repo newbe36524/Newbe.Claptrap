@@ -9,8 +9,13 @@ namespace Newbe.Claptrap.Core
     public interface IActorIdentity : IEquatable<IActorIdentity>
     {
         /// <summary>
-        ///     id of a actor. it is unique id if the kind is the same.
+        /// id of a actor.
         /// </summary>
         string Id { get; }
+
+        /// <summary>
+        /// type code of actor
+        /// </summary>
+        string TypeCode { get; }
     }
 }

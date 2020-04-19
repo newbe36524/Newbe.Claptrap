@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="5.1.2" />
+        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.1.6" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Implement\Newbe.Claptrap.Implement.csproj" />
+    </ItemGroup>
+    
+</Project>

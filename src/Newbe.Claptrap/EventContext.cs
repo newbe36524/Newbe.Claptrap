@@ -5,13 +5,13 @@ namespace Newbe.Claptrap
 {
     public class EventContext : IEventContext
     {
-        public EventContext(IEvent @event, IActorContext actorContext)
+        public EventContext(IEvent @event, IState actorContext)
         {
             Event = @event;
-            ActorContext = actorContext;
+            State = actorContext;
         }
 
         public IEvent Event { get; }
-        public IActorContext ActorContext { get; }
+        public IState State { get; }
     }
 }
