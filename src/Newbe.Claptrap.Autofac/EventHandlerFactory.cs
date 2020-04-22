@@ -1,7 +1,9 @@
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Context;
+using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventHandler;
+using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
 {
@@ -27,13 +29,13 @@ namespace Newbe.Claptrap.Autofac
             var handlerType =
                 _eventHandlerRegister.FindHandlerType(
                     eventContext.State.Identity.TypeCode,
-                    eventContext.Event.EventType);
+                    eventContext.Event.EventTypeCode);
             if (handlerType == null)
             {
                 _logger.LogError("handlerType not found, event context :@{eventContext}", eventContext);
                 throw new EventHandlerNotFoundException(
                     eventContext.State.Identity.TypeCode,
-                    eventContext.Event.EventType);
+                    eventContext.Event.EventTypeCode);
             }
 
             var handler = (IEventHandler) eventScope.Resolve(handlerType);

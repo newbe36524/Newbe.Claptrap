@@ -2,6 +2,7 @@ using Autofac;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventHandler;
 using Newbe.Claptrap.EventStore;
+using Newbe.Claptrap.Metadata;
 using Newbe.Claptrap.StateStore;
 
 namespace Newbe.Claptrap.Autofac

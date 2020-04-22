@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
 {
@@ -9,8 +10,11 @@ namespace Newbe.Claptrap.Autofac
     {
         private readonly ILogger<StateDataTypeRegister> _logger;
 
-        private readonly Dictionary<string, Type> _actorStateType
+        private readonly Dictionary<string, Type> _codeBaseActorStateType
             = new Dictionary<string, Type>();
+
+        private readonly Dictionary<Type, string> _typeBaseActorStateType
+            = new Dictionary<Type, string>();
 
         public StateDataTypeRegister(
             ILogger<StateDataTypeRegister> logger)
@@ -20,7 +24,7 @@ namespace Newbe.Claptrap.Autofac
 
         public Type FindStateDataType(string actorTypeCode)
         {
-            if (_actorStateType.TryGetValue(actorTypeCode, out var re))
+            if (_codeBaseActorStateType.TryGetValue(actorTypeCode, out var re))
             {
                 _logger.LogDebug(
                     "state data type found for {actorTypeCode} {stateDataType}",
@@ -35,9 +39,23 @@ namespace Newbe.Claptrap.Autofac
             return noneStateDataType;
         }
 
+        public string FindActorTypeCode(Type type)
+        {
+            if (_typeBaseActorStateType.TryGetValue(type, out var re))
+            {
+                _logger.LogDebug(
+                    "state data type found for {actorTypeCode} {stateDataType}",
+                    type,
+                    re);
+                return re;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(type));
+        }
+
         public void RegisterStateDataType(string actorTypeCode, Type stateDataType)
         {
-            if (_actorStateType.TryGetValue(actorTypeCode, out var oldStateDataType))
+            if (_codeBaseActorStateType.TryGetValue(actorTypeCode, out var oldStateDataType))
             {
                 _logger.LogDebug(
                     "state data type for {actorTypeCode} {oldStateDataType} will be replaced by {stateDataType}",
@@ -53,7 +71,8 @@ namespace Newbe.Claptrap.Autofac
                     actorTypeCode);
             }
 
-            _actorStateType[actorTypeCode] = stateDataType;
+            _codeBaseActorStateType[actorTypeCode] = stateDataType;
+            _typeBaseActorStateType[stateDataType] = actorTypeCode;
         }
     }
 }

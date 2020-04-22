@@ -6,6 +6,9 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Autofac;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
+using Newbe.Claptrap.Demo.Models;
+using Newbe.Claptrap.Orleans;
 using Orleans;
 using Orleans.Hosting;
 
@@ -30,8 +33,16 @@ namespace Newbe.Claptrap.Demo.Server
                     // to add them to Autofac.
                     containerBuilder.Populate(collection);
 
-                    containerBuilder.RegisterModule<ClaptrapModule>();
-                    containerBuilder.RegisterModule<ServerModule>();
+                    var buildServiceProvider = collection.BuildServiceProvider();
+                    var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
+                    var claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperFactory(loggerFactory);
+                    var claptrapBootstrapper = claptrapBootstrapperFactory.Create(new[]
+                    {
+                        typeof(AccountGrain).Assembly,
+                        typeof(AccountStateData).Assembly
+                    });
+                    claptrapBootstrapper.RegisterServices(containerBuilder);
+
                     // Creating a new AutofacServiceProvider makes the container
                     // available to your app using the Microsoft IServiceProvider
                     // interface so you can use those abstractions rather than

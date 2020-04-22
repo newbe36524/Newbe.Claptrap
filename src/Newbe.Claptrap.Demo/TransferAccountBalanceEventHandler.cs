@@ -1,12 +1,13 @@
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Context;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.EventHandler;
+using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Demo
 {
+    [ClaptrapEventHandler(typeof(AccountStateData), typeof(AccountBalanceChangeEventData))]
     public class TransferAccountBalanceEventHandler : IEventHandler
     {
         public ValueTask DisposeAsync()

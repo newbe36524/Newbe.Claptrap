@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.Core
         /// <summary>
         /// type of event
         /// </summary>
-        string EventType { get; }
+        string EventTypeCode { get; }
 
         IEventData Data { get; }
     }

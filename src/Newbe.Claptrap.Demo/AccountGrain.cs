@@ -3,18 +3,24 @@ using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
+using Newbe.Claptrap.Metadata;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 
 namespace Newbe.Claptrap.Demo
 {
+    [ClaptrapState(typeof(AccountStateData))]
     public class AccountGrain : Grain, IAccount
     {
         private readonly IActorFactory _actorFactory;
+        private readonly IStateDataTypeRegister _stateDataTypeRegister;
 
-        public AccountGrain(IActorFactory actorFactory)
+        public AccountGrain(
+            IActorFactory actorFactory,
+            IStateDataTypeRegister stateDataTypeRegister)
         {
             _actorFactory = actorFactory;
+            _stateDataTypeRegister = stateDataTypeRegister;
         }
 
         private IActor _actor;
@@ -22,9 +28,8 @@ namespace Newbe.Claptrap.Demo
 
         public override async Task OnActivateAsync()
         {
-            // TODO type code
-            var typeCode = GetType().ToString();
-            _grainActorIdentity = new GrainActorIdentity(this.GetPrimaryKeyString(), typeCode);
+            var actorTypeCode = _stateDataTypeRegister.FindActorTypeCode(typeof(AccountStateData));
+            _grainActorIdentity = new GrainActorIdentity(this.GetPrimaryKeyString(), actorTypeCode);
             _actor = _actorFactory.Create(_grainActorIdentity);
             await _actor.ActivateAsync();
         }
@@ -40,7 +45,9 @@ namespace Newbe.Claptrap.Demo
             {
                 Diff = -amount
             };
-            return _actor.HandleEvent(new DataEvent(_grainActorIdentity, "eventTy", accountBalanceChangeEventData,
+            return _actor.HandleEvent(new DataEvent(_grainActorIdentity,
+                typeof(AccountBalanceChangeEventData).FullName,
+                accountBalanceChangeEventData,
                 new EventUid(Guid.NewGuid().ToString())));
         }
 

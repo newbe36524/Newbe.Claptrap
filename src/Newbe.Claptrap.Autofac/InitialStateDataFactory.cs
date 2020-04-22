@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,12 @@ namespace Newbe.Claptrap.Autofac
 
         public Task<IStateData> Create(IActorIdentity identity)
         {
-            var handler = _handlers[identity.TypeCode];
+            if (!_handlers.TryGetValue(identity.TypeCode, out var handler))
+            {
+                // TODO 
+                throw new Exception($"missing handler for type code : {identity.TypeCode}");
+            }
+
             _logger.LogInformation("custom handler for creating state data found {actorTypeCode} {handler}",
                 identity.TypeCode,
                 handler);

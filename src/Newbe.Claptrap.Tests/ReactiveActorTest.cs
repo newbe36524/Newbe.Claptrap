@@ -214,7 +214,7 @@ namespace Newbe.Claptrap.Tests
             public IActorIdentity ActorIdentity { get; set; }
             public ulong Version { get; set; }
             public IEventUid Uid { get; set; }
-            public string EventType { get; set; }
+            public string EventTypeCode { get; set; }
             public IEventData Data { get; set; }
         }
 

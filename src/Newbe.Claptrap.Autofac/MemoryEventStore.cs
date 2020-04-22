@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Autofac
         {
             if (_list.Any(x =>
                 x.ActorIdentity.TypeCode == @event.ActorIdentity.TypeCode
-                && x.EventType == @event.EventType
+                && x.EventTypeCode == @event.EventTypeCode
                 && x.Uid.Equals(@event.Uid)))
             {
                 return Task.FromResult(EventSavingResult.AlreadyAdded);

@@ -6,7 +6,7 @@ namespace Newbe.Claptrap.EventStore
     public class EventSavingException : Exception
     {
         public EventSavingException(IEvent @event)
-            : this($"failed to save event {@event.ActorIdentity.TypeCode} {@event.ActorIdentity.Id} {@event.EventType}",
+            : this($"failed to save event {@event.ActorIdentity.TypeCode} {@event.ActorIdentity.Id} {@event.EventTypeCode}",
                 @event)
         {
             Event = @event;

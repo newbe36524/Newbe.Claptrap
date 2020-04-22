@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Core
             EventVersion = eventVersion;
         }
 
-        public ulong NowStateVersion { get; set; }
-        public ulong EventVersion { get; set; }
+        public ulong NowStateVersion { get; }
+        public ulong EventVersion { get; }
     }
 }

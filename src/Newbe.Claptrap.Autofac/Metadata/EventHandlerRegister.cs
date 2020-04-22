@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
 {
@@ -17,7 +18,7 @@ namespace Newbe.Claptrap.Autofac
         private readonly Dictionary<string, Dictionary<string, Type>>
             _handlerDic = new Dictionary<string, Dictionary<string, Type>>();
 
-        public void RegisterHandler(string actorTypeCode, string eventType, Type handlerType)
+        public void RegisterHandler(string actorTypeCode, string eventTypeCode, Type handlerType)
         {
             if (!_handlerDic.TryGetValue(actorTypeCode, out var handlerDic))
             {
@@ -25,23 +26,23 @@ namespace Newbe.Claptrap.Autofac
                 _handlerDic[actorTypeCode] = handlerDic;
             }
 
-            if (!handlerDic.TryGetValue(eventType, out var oldHandlerType))
+            if (!handlerDic.TryGetValue(eventTypeCode, out var oldHandlerType))
             {
-                _logger.LogDebug("there is no handler for {eventType}, add {handlerType}", eventType, handlerType);
+                _logger.LogDebug("there is no handler for {eventTypeCode}, add {handlerType}", eventTypeCode, handlerType);
             }
             else
             {
                 _logger.LogDebug(
-                    "there is a old handlerType {oldHandlerType} for {eventType}, replace with {handlerType}",
+                    "there is a old handlerType {oldHandlerType} for {eventTypeCode}, replace with {handlerType}",
                     oldHandlerType,
-                    eventType,
+                    eventTypeCode,
                     handlerType);
             }
 
-            handlerDic[eventType] = handlerType;
+            handlerDic[eventTypeCode] = handlerType;
         }
 
-        public Type? FindHandlerType(string actorTypeCode, string eventType)
+        public Type? FindHandlerType(string actorTypeCode, string eventTypeCode)
         {
             if (!_handlerDic.TryGetValue(actorTypeCode, out var actorHandlers))
             {
@@ -49,19 +50,19 @@ namespace Newbe.Claptrap.Autofac
                 return null;
             }
 
-            if (!actorHandlers.TryGetValue(eventType, out var handlerType))
+            if (!actorHandlers.TryGetValue(eventTypeCode, out var handlerType))
             {
                 _logger.LogError(
-                    "there is no handlerType for {actorTypeCode} {eventType}",
-                    actorHandlers,
-                    eventType);
+                    "there is no handlerType for {actorTypeCode} {eventTypeCode}",
+                    actorTypeCode,
+                    eventTypeCode);
                 return null;
             }
 
-            _logger.LogDebug("handlerType {handlerType} found for {actorTypeCode} {eventType}",
+            _logger.LogDebug("handlerType {handlerType} found for {actorTypeCode} {eventTypeCode}",
                 handlerType,
                 actorTypeCode,
-                eventType);
+                eventTypeCode);
             return handlerType;
         }
     }

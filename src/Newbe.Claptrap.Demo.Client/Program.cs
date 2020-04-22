@@ -70,6 +70,7 @@ namespace Newbe.Claptrap.Demo.Client
             // {
             //     return random.Next(0, 500).ToString();
             // }
+            client.Dispose();
         }
     }
 }
