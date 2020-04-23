@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Context;
@@ -45,23 +48,27 @@ namespace Newbe.Claptrap
         {
             var stateSnapshot = await _stateStore.GetStateSnapshot();
             State = stateSnapshot;
-            var stateSeq = Observable.Return(stateSnapshot);
+            var stateSeq = Observable.Return<Func<IState>>(() => State);
 
             var stateIsRestoreSuccess = true;
             var eventsFromStore = GetEventFromVersion().ToObservable();
-            var restoreStateFlow = stateSeq.CombineLatest(eventsFromStore, (state, evt) => new EventContext(evt, state))
+            var restoreStateFlow = stateSeq
+                .CombineLatest(eventsFromStore, (stateFunc, evt) => new EventContext(evt, stateFunc()))
                 .Select((eventContext, i) =>
                 {
                     var handler = CreateHandler(eventContext);
-                    var handlerSeq = Observable.FromAsync(() => handler.HandleEvent(eventContext));
+                    var handlerSeq =
+                        Observable.FromAsync(async () => (await handler.HandleEvent(eventContext), eventContext));
                     return handlerSeq;
                 })
                 .Concat()
                 .Subscribe(
-                    state =>
+                    tuple =>
                     {
+                        var (state, eventContext) = tuple;
                         _logger.LogDebug("start update to @{state}", state);
                         State = state;
+                        Debug.Assert(state.NextVersion == eventContext.Event.Version);
                         State.IncreaseVersion();
                     },
                     ex =>
@@ -82,7 +89,8 @@ namespace Newbe.Claptrap
 
             _incomingEventsSeq = new Subject<EventItem>();
             _eventHandleFlow = stateSeq
-                .CombineLatest(_incomingEventsSeq, (state, item) => (oldState: _stateHolder.DeepCopy(state), item))
+                .CombineLatest(_incomingEventsSeq,
+                    (stateFunc, item) => (oldState: _stateHolder.DeepCopy(stateFunc()), item))
                 .Where(FilterVersionErrorEvents)
                 .Select((tuple, i) =>
                 {
@@ -96,7 +104,8 @@ namespace Newbe.Claptrap
                         var eventSavingResult = await SaveEvent(@event);
                         if (eventSavingResult == EventSavingResult.Success)
                         {
-                            return (eventSavingResult, await handler.HandleEvent(eventContext));
+                            var newState = await handler.HandleEvent(eventContext);
+                            return (eventSavingResult, newState);
                         }
 
                         return (eventSavingResult, default)!;

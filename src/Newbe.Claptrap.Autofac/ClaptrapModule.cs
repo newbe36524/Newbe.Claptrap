@@ -13,7 +13,10 @@ namespace Newbe.Claptrap.Autofac
         {
             base.Load(builder);
 
-            builder.RegisterType<NoChangeStateHolder>()
+            // builder.RegisterType<NoChangeStateHolder>()
+            //     .As<IStateHolder>()
+            //     .SingleInstance();
+            builder.RegisterType<DeepClonerStateHolder>()
                 .As<IStateHolder>()
                 .SingleInstance();
 
