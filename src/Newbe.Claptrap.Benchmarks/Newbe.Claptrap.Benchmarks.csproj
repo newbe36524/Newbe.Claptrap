@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -15,6 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
     </ItemGroup>
  
 </Project>

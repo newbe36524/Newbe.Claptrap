@@ -9,24 +9,21 @@ namespace Newbe.Claptrap.Autofac
     public class ClaptrapCustomerModule : Module
     {
         private readonly ILogger<ClaptrapCustomerModule> _logger;
-        private readonly IEnumerable<ActorTypeRegistration> _actorTypeRegistrations;
-        private readonly IEnumerable<EventHandlerTypeRegistration> _eventHandlerTypeRegistrations;
+        private readonly ClaptrapRegistration _claptrapRegistration;
 
         public ClaptrapCustomerModule(
             ILogger<ClaptrapCustomerModule> logger,
-            IEnumerable<ActorTypeRegistration> actorTypeRegistrations,
-            IEnumerable<EventHandlerTypeRegistration> eventHandlerTypeRegistrations)
+            ClaptrapRegistration claptrapRegistration)
         {
             _logger = logger;
-            _actorTypeRegistrations = actorTypeRegistrations;
-            _eventHandlerTypeRegistrations = eventHandlerTypeRegistrations;
+            _claptrapRegistration = claptrapRegistration;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
             _logger.LogDebug("start to register actor types ");
-            foreach (var actorTypeRegistration in _actorTypeRegistrations)
+            foreach (var actorTypeRegistration in _claptrapRegistration.ActorTypeRegistrations)
             {
                 var actorTypeCode = actorTypeRegistration.ActorTypeCode;
                 _logger.LogDebug("start to register actor type : {actorTypeCode}", actorTypeCode);
@@ -34,7 +31,7 @@ namespace Newbe.Claptrap.Autofac
                 _logger.LogDebug("actor type registration for '{actorTypeCode}' done", actorTypeCode);
             }
 
-            foreach (var eventHandlerTypeRegistration in _eventHandlerTypeRegistrations)
+            foreach (var eventHandlerTypeRegistration in _claptrapRegistration.EventHandlerTypeRegistrations)
             {
                 var actorTypeCode = eventHandlerTypeRegistration.ActorTypeCode;
                 var eventTypeCode = eventHandlerTypeRegistration.EventTypeCode;
@@ -50,7 +47,7 @@ namespace Newbe.Claptrap.Autofac
             _logger.LogDebug("actor type registration done");
 
             _logger.LogInformation("{count} actorType have been registered into container",
-                _actorTypeRegistrations.Count());
+                _claptrapRegistration.ActorTypeRegistrations.Count());
 
             void RegisterActorType(ActorTypeRegistration actorTypeRegistration)
             {

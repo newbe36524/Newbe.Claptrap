@@ -7,8 +7,17 @@ namespace Newbe.Claptrap.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ActorTypeRegistrationFinder>()
+            builder.RegisterType<ClaptrapRegistrationFinder>()
                 .AsImplementedInterfaces()
+                .SingleInstance();
+
+            builder.RegisterType<AttributeBaseActorTypeRegistrationProvider>()
+                .AsSelf()
+                .As<IActorTypeRegistrationProvider>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<OrderBasedActorTypeRegistrationCombiner>()
+                .As<IActorTypeRegistrationCombiner>()
                 .SingleInstance();
         }
     }

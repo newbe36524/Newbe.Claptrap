@@ -23,39 +23,30 @@ namespace Newbe.Claptrap.Autofac
             var logger = _loggerFactory.CreateLogger(typeof(AutofacClaptrapBootstrapperFactory));
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<AssemblyScanningModule>();
+            containerBuilder.RegisterModule(new LoggingModule(_loggerFactory));
             var container = containerBuilder.Build();
-            var finder = container.Resolve<IActorTypeRegistrationFinder>();
+            var finder = container.Resolve<IClaptrapRegistrationFinder>();
 
             var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
             logger.LogDebug("start to scan {assemblyArrayCount} assemblies, {assemblyNames}",
                 assemblyArray.Length,
                 assemblyArray.Select(x => x.FullName));
 
-            logger.LogDebug("start to find actor type");
-            var actorTypeRegistrations = finder
-                .FindActors(assemblyArray)
-                .ToArray();
-            logger.LogInformation("find {count} actor types : {types}",
-                actorTypeRegistrations.Length,
-                actorTypeRegistrations);
+            logger.LogDebug("start to find claptrap");
 
-            logger.LogDebug("start to find event handlers");
-            var eventHandlerTypeRegistrations =
-                finder
-                    .FindEventHandlers(assemblyArray, actorTypeRegistrations)
-                    .ToArray();
-            logger.LogInformation("find {count} event handlers : {types}",
-                eventHandlerTypeRegistrations.Length,
-                eventHandlerTypeRegistrations);
+            var claptrapRegistration = finder.Find(assemblyArray);
+
+            logger.LogInformation("found {actorCount} actors and {handlerCount} event handlers",
+                claptrapRegistration.ActorTypeRegistrations.Count(),
+                claptrapRegistration.EventHandlerTypeRegistrations.Count());
 
             var claptrapCustomerModuleLogger = _loggerFactory.CreateLogger<ClaptrapCustomerModule>();
 
             var claptrapBootstrapper = new AutofacClaptrapBootstrapper(new Module[]
             {
-                new ClaptrapCustomerModule(claptrapCustomerModuleLogger, actorTypeRegistrations,
-                    eventHandlerTypeRegistrations),
+                new ClaptrapCustomerModule(claptrapCustomerModuleLogger, claptrapRegistration),
                 new ClaptrapModule(),
-                new ClaptrapOrleansModule()
+                new ClaptrapOrleansModule(),
             });
             return claptrapBootstrapper;
         }

@@ -8,9 +8,31 @@ using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class ActorTypeRegistrationFinder : IActorTypeRegistrationFinder
+    public class AttributeBaseActorTypeRegistrationProvider : IActorTypeRegistrationProvider
     {
-        public IEnumerable<ActorTypeRegistration> FindActors(IEnumerable<Assembly> assemblies)
+        public delegate AttributeBaseActorTypeRegistrationProvider Factory(IEnumerable<Assembly> assemblies);
+
+        public AttributeBaseActorTypeRegistrationProvider(
+            IEnumerable<Assembly> assemblies)
+        {
+            var assembliesArray = assemblies as Assembly[] ?? assemblies.ToArray();
+            var actorTypeRegistrations =
+                FindActors(assembliesArray)
+                    .ToArray();
+            var eventHandlerTypeRegistrations =
+                FindEventHandlers(assembliesArray, actorTypeRegistrations)
+                    .ToArray();
+
+            ClaptrapRegistration = new ClaptrapRegistration
+            {
+                ActorTypeRegistrations = actorTypeRegistrations,
+                EventHandlerTypeRegistrations = eventHandlerTypeRegistrations
+            };
+        }
+
+        public ClaptrapRegistration ClaptrapRegistration { get; }
+
+        private static IEnumerable<ActorTypeRegistration> FindActors(IEnumerable<Assembly> assemblies)
         {
             var allClass = assemblies.SelectMany(x => x.ExportedTypes)
                 .Where(x => x.IsClass && !x.IsAbstract)
@@ -37,7 +59,7 @@ namespace Newbe.Claptrap.Autofac
             return actorTypeRegistrations;
         }
 
-        public IEnumerable<EventHandlerTypeRegistration> FindEventHandlers(
+        private IEnumerable<EventHandlerTypeRegistration> FindEventHandlers(
             IEnumerable<Assembly> assemblies, IEnumerable<ActorTypeRegistration> actorTypeRegistrations)
         {
             var allClass = assemblies.SelectMany(x => x.ExportedTypes)
@@ -61,7 +83,8 @@ namespace Newbe.Claptrap.Autofac
                     var eventHandlerTypeRegistration = new EventHandlerTypeRegistration
                     {
                         EventHandlerType = x,
-                        EventTypeCode = eventHandlerAttribute.EventTypeCode ?? eventHandlerAttribute.EventDateType.FullName,
+                        EventTypeCode = eventHandlerAttribute.EventTypeCode ??
+                                        eventHandlerAttribute.EventDateType.FullName,
                         ActorTypeCode = actorTypeRegistration.ActorTypeCode
                     };
                     return eventHandlerTypeRegistration;
