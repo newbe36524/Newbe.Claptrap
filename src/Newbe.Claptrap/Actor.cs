@@ -93,22 +93,40 @@ namespace Newbe.Claptrap
                     var handlerSeq = Observable.FromAsync(async () =>
                     {
                         var @event = eventContext.Event;
-                        await SaveEvent(@event);
-                        return await handler.HandleEvent(eventContext);
+                        var eventSavingResult = await SaveEvent(@event);
+                        if (eventSavingResult == EventSavingResult.Success)
+                        {
+                            return (eventSavingResult, await handler.HandleEvent(eventContext));
+                        }
+
+                        return (eventSavingResult, default)!;
                     });
                     return (item.Event, oldState, handlerSeq, item.TaskCompletionSource);
                 })
                 .Subscribe(tuple =>
                 {
                     var (@event, oldState, handlerSeq, taskCompletionSource) = tuple;
-                    handlerSeq.Subscribe(newState =>
+                    handlerSeq.Subscribe((handlerResult) =>
                         {
-                            _logger.LogInformation("event handled and updating state");
-                            _logger.LogDebug("start update to @{state}", newState);
-                            State = newState;
-                            State.IncreaseVersion();
-                            _logger.LogDebug("state version updated : {version}", State.Version);
-                            taskCompletionSource.SetResult(0);
+                            var (eventSavingResult, newState) = handlerResult;
+                            switch (eventSavingResult)
+                            {
+                                case EventSavingResult.Success:
+                                    _logger.LogInformation("event handled and updating state");
+                                    _logger.LogDebug("start update to @{state}", newState);
+                                    State = newState;
+                                    State.IncreaseVersion();
+                                    _logger.LogDebug("state version updated : {version}", State.Version);
+                                    taskCompletionSource.SetResult(0);
+                                    break;
+                                case EventSavingResult.AlreadyAdded:
+                                    _logger.LogInformation("event already added, nothing would on going");
+                                    taskCompletionSource.SetResult(0);
+                                    break;
+                                default:
+                                    taskCompletionSource.SetException(new ArgumentOutOfRangeException());
+                                    break;
+                            }
                         }, exception =>
                         {
                             State = oldState;
@@ -162,7 +180,7 @@ namespace Newbe.Claptrap
                 throw new VersionErrorException(oldState.Version, item.Event.Version);
             }
 
-            async Task SaveEvent(IEvent @event)
+            async Task<EventSavingResult> SaveEvent(IEvent @event)
             {
                 try
                 {
@@ -172,7 +190,6 @@ namespace Newbe.Claptrap
                     {
                         case EventSavingResult.AlreadyAdded:
                             _logger.LogTrace("event AlreadyAdded before @{event}", @event);
-                            _logger.LogTrace("event saved @{event}", @event);
                             break;
                         case EventSavingResult.Success:
                             _logger.LogTrace("event saved @{event}", @event);
@@ -180,6 +197,8 @@ namespace Newbe.Claptrap
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+
+                    return eventSavingResult;
                 }
                 catch (EventSavingException e)
                 {

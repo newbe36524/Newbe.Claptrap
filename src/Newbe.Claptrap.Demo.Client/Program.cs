@@ -44,7 +44,8 @@ namespace Newbe.Claptrap.Demo.Client
             var balance = await account.GetBalance();
             Console.WriteLine(balance);
 
-            await Task.WhenAll(Enumerable.Range(0, 100).Select(i => account.TransferIn(100, "2345")));
+            await Task.WhenAll(Enumerable.Range(0, 100)
+                .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
             Console.WriteLine(await account.GetBalance());
             // var random = new Random();
             // var sw = Stopwatch.StartNew();

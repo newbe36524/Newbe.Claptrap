@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.Demo
             {
                 Diff = -amount
             };
-            var dataEvent = this.CreateEvent(accountBalanceChangeEventData);
+            var dataEvent = this.CreateEvent(accountBalanceChangeEventData, uid);
             return Actor.HandleEvent(dataEvent);
         }
 
