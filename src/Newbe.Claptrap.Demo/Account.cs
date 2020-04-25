@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
@@ -6,10 +5,11 @@ using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Demo
 {
-    [ClaptrapState(typeof(AccountStateData))]
-    public class AccountGrain : ClaptrapGrain<AccountStateData>, IAccount
+    [ClaptrapStateInitialFactoryHandler]
+    [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), typeof(AccountBalanceChangeEventData))]
+    public class Account : Claptrap<AccountStateData>, IAccount
     {
-        public AccountGrain(IClaptrapGrainCommonService claptrapGrainCommonService)
+        public Account(IClaptrapGrainCommonService claptrapGrainCommonService)
             : base(claptrapGrainCommonService)
         {
         }

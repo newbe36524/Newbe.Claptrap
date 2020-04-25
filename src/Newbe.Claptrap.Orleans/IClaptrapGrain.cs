@@ -1,15 +1,9 @@
-using Newbe.Claptrap.Core;
+using Orleans;
 
 namespace Newbe.Claptrap.Orleans
 {
-    public interface IClaptrapGrain
+    public interface IClaptrapGrain : IGrainWithStringKey
     {
-        IActor Actor { get; }
-    }
-    
-    public interface IClaptrapGrain<out TStateData> : IClaptrapGrain
-        where TStateData : IStateData
-    {
-        TStateData StateData { get; }
+        
     }
 }

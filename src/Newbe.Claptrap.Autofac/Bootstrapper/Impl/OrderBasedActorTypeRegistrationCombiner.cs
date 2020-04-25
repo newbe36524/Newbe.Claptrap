@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Autofac
             var eventHandlerTypeRegistrations = registrationsArray
                 .SelectMany(x => x.EventHandlerTypeRegistrations)
                 .Reverse()
-                .Distinct(EventHandlerTypeRegistration.EventTypeCodeActorTypeCodeComparer)
+                .Distinct(EventTypeHandlerRegistration.EventTypeCodeActorTypeCodeComparer)
                 .ToArray();
 
             _logger.LogInformation(

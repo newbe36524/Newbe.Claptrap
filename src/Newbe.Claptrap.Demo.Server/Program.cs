@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Autofac;
+using Newbe.Claptrap.Demo.Interfaces;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Orleans;
@@ -24,7 +25,11 @@ namespace Newbe.Claptrap.Demo.Server
                 .UseLocalhostClustering()
                 .UseServiceProviderFactory(collection =>
                 {
-                    collection.AddLogging(builder => { builder.AddConsole(); });
+                    collection.AddLogging(builder =>
+                    {
+                        builder.AddConsole();
+                        builder.SetMinimumLevel(LogLevel.Trace);
+                    });
                     var containerBuilder = new ContainerBuilder();
 
                     // Once you've registered everything in the ServiceCollection, call
@@ -38,8 +43,7 @@ namespace Newbe.Claptrap.Demo.Server
                     var claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperFactory(loggerFactory);
                     var claptrapBootstrapper = claptrapBootstrapperFactory.Create(new[]
                     {
-                        typeof(AccountGrain).Assembly,
-                        typeof(AccountStateData).Assembly
+                        typeof(Account).Assembly
                     });
                     claptrapBootstrapper.RegisterServices(containerBuilder);
 

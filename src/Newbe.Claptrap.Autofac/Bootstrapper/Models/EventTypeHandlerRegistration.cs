@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class EventHandlerTypeRegistration
+    public class EventTypeHandlerRegistration
     {
         public string EventTypeCode { get; set; }
         public string ActorTypeCode { get; set; }
+        public Type EventDataType { get; set; }
         public Type EventHandlerType { get; set; }
 
-        private sealed class
-            EventTypeCodeActorTypeCodeEqualityComparer : IEqualityComparer<EventHandlerTypeRegistration>
+        private sealed class EventTypeCodeActorTypeCodeEqualityComparer : IEqualityComparer<EventTypeHandlerRegistration>
         {
-            public bool Equals(EventHandlerTypeRegistration x, EventHandlerTypeRegistration y)
+            public bool Equals(EventTypeHandlerRegistration x, EventTypeHandlerRegistration y)
             {
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
@@ -21,13 +21,12 @@ namespace Newbe.Claptrap.Autofac
                 return x.EventTypeCode == y.EventTypeCode && x.ActorTypeCode == y.ActorTypeCode;
             }
 
-            public int GetHashCode(EventHandlerTypeRegistration obj)
+            public int GetHashCode(EventTypeHandlerRegistration obj)
             {
                 return HashCode.Combine(obj.EventTypeCode, obj.ActorTypeCode);
             }
         }
 
-        public static IEqualityComparer<EventHandlerTypeRegistration> EventTypeCodeActorTypeCodeComparer { get; } =
-            new EventTypeCodeActorTypeCodeEqualityComparer();
+        public static IEqualityComparer<EventTypeHandlerRegistration> EventTypeCodeActorTypeCodeComparer { get; } = new EventTypeCodeActorTypeCodeEqualityComparer();
     }
 }

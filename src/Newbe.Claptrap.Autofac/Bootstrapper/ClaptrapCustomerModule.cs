@@ -62,7 +62,7 @@ namespace Newbe.Claptrap.Autofac
                 });
             }
 
-            void RegisterEventHandlerType(EventHandlerTypeRegistration eventHandlerTypeRegistration)
+            void RegisterEventHandlerType(EventTypeHandlerRegistration eventHandlerTypeRegistration)
             {
                 builder.RegisterType(eventHandlerTypeRegistration.EventHandlerType)
                     .AsSelf()

@@ -4,10 +4,10 @@ namespace Newbe.Claptrap.Core
 {
     public class ActivateFailException : Exception
     {
-        public IActorIdentity ActorIdentity { get; set; }
+        public IActorIdentity ActorIdentity { get; }
 
         public ActivateFailException(IActorIdentity actorIdentity)
-            : this($"failed to activate actor : {actorIdentity.TypeCode} {actorIdentity.Id}", actorIdentity)
+            : this(CreateExceptionMessage(actorIdentity), actorIdentity)
         {
             ActorIdentity = actorIdentity;
         }
@@ -21,6 +21,17 @@ namespace Newbe.Claptrap.Core
             message, innerException)
         {
             ActorIdentity = actorIdentity;
+        }
+
+        public ActivateFailException(Exception innerException, IActorIdentity actorIdentity) : base(
+            CreateExceptionMessage(actorIdentity), innerException)
+        {
+            ActorIdentity = actorIdentity;
+        }
+
+        private static string CreateExceptionMessage(IActorIdentity actorIdentity)
+        {
+            return $"failed to activate actor : {actorIdentity.TypeCode} {actorIdentity.Id}";
         }
     }
 }

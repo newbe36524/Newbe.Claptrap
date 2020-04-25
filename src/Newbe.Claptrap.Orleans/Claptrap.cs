@@ -4,14 +4,14 @@ using Orleans;
 
 namespace Newbe.Claptrap.Orleans
 {
-    public abstract class ClaptrapGrain<TStateData> : Grain, IClaptrapGrain<TStateData>, IGrainWithStringKey
+    public abstract class Claptrap<TStateData> : Grain, IClaptrap<TStateData>, IGrainWithStringKey
         where TStateData : IStateData
     {
         private readonly IClaptrapGrainCommonService _claptrapGrainCommonService;
         public IActor Actor { get; private set; }
         public TStateData StateData => (TStateData) Actor.State.Data;
 
-        protected ClaptrapGrain(
+        protected Claptrap(
             IClaptrapGrainCommonService claptrapGrainCommonService)
         {
             _claptrapGrainCommonService = claptrapGrainCommonService;

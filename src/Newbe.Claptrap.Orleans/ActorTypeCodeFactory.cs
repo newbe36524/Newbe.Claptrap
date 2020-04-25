@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using Newbe.Claptrap.Metadata;
 
@@ -13,9 +14,13 @@ namespace Newbe.Claptrap.Orleans
             _stateDataTypeRegister = stateDataTypeRegister;
         }
 
-        public string GetActorTypeCode(IClaptrapGrain claptrapGrain)
+        public string GetActorTypeCode(IClaptrap claptrap)
         {
-            var claptrapStateAttribute = claptrapGrain.GetType().GetCustomAttribute<ClaptrapStateAttribute>();
+            var claptrapStateAttribute = claptrap
+                .GetType()
+                .GetInterfaces()
+                .Select(x => x.GetCustomAttribute<ClaptrapStateAttribute>())
+                .Single(x => x != null);
             var stateDataType = claptrapStateAttribute.StateDataType;
             var typeCode = _stateDataTypeRegister.FindActorTypeCode(stateDataType);
             return typeCode;

@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Newbe.Claptrap.EventHandler;
 using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Autofac
@@ -16,81 +13,77 @@ namespace Newbe.Claptrap.Autofac
             IEnumerable<Assembly> assemblies)
         {
             var assembliesArray = assemblies as Assembly[] ?? assemblies.ToArray();
-            var actorTypeRegistrations =
-                FindActors(assembliesArray)
-                    .ToArray();
-            var eventHandlerTypeRegistrations =
-                FindEventHandlers(assembliesArray, actorTypeRegistrations)
-                    .ToArray();
+
+            var impls = assembliesArray
+                .SelectMany(x => x.DefinedTypes)
+                .Where(x => x.IsClass && !x.IsAbstract)
+                .Where(x => x.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>() != null)
+                .Select(implType =>
+                {
+                    var interfaceType = implType.GetInterfaces()
+                        .Single(a => a.GetCustomAttribute<ClaptrapStateAttribute>() != null);
+                    return new
+                    {
+                        grainType = implType,
+                        igrainType = interfaceType,
+                        stateAttr = interfaceType.GetCustomAttribute<ClaptrapStateAttribute>(),
+                        eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>(),
+                        stateInitialFactoryHandlerAttr =
+                            implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
+                        eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>()
+                    };
+                })
+                .ToArray();
+
+
+            var actorTypeRegistrations = impls
+                .Select(x => new ActorTypeRegistration
+                {
+                    ActorTypeCode = GetActorTypeCode(x.stateAttr),
+                    ActorStateDataType = x.stateAttr.StateDataType,
+                    StateInitialFactoryHandlerType = x.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType ??
+                                                     typeof(DefaultInitialStateDataFactoryHandler),
+                })
+                .ToArray();
+
+            var eventHandlerTypeRegistrations = impls
+                .SelectMany(x =>
+                {
+                    return x.eventAttrs
+                        .Join(
+                            x.eventHandlerAttrs,
+                            a => a.EventDataType,
+                            a => a.EventDataType,
+                            (a, b) => (eventAttr: a, eventHandlerAttr: b))
+                        .Select(e => new EventTypeHandlerRegistration
+                        {
+                            ActorTypeCode = GetActorTypeCode(x.stateAttr),
+                            EventTypeCode = GetEventTypeCode(e.eventAttr),
+                            EventDataType = e.eventAttr.EventDataType,
+                            EventHandlerType = e.eventHandlerAttr.EventHandlerType
+                        });
+                })
+                .ToArray();
 
             ClaptrapRegistration = new ClaptrapRegistration
             {
                 ActorTypeRegistrations = actorTypeRegistrations,
                 EventHandlerTypeRegistrations = eventHandlerTypeRegistrations
             };
+
+            static string GetActorTypeCode(ClaptrapStateAttribute attr)
+            {
+                return attr.ActorTypeCode ??
+                       attr.StateDataType.FullName;
+            }
+
+            static string GetEventTypeCode(ClaptrapEventAttribute attr)
+            {
+                return attr.EventTypeCode ??
+                       attr.EventDataType.FullName;
+            }
         }
 
         public ClaptrapRegistration ClaptrapRegistration { get; }
-
-        private static IEnumerable<ActorTypeRegistration> FindActors(IEnumerable<Assembly> assemblies)
-        {
-            var allClass = assemblies.SelectMany(x => x.ExportedTypes)
-                .Where(x => x.IsClass && !x.IsAbstract)
-                .ToArray();
-
-            var claptrapGrains = allClass
-                .Where(x => x.GetInterface(typeof(IClaptrapGrain).FullName) != null)
-                .ToArray();
-            var actorTypeRegistrations = claptrapGrains
-                .Select(x =>
-                {
-                    var actorStateDataAttribute = x.GetCustomAttribute<ClaptrapStateAttribute>();
-                    Debug.Assert(actorStateDataAttribute != null, nameof(actorStateDataAttribute) + " != null");
-                    return new ActorTypeRegistration
-                    {
-                        ActorTypeCode = actorStateDataAttribute.ActorTypeCode ??
-                                        actorStateDataAttribute.StateDataType.FullName,
-                        ActorStateDataType = actorStateDataAttribute.StateDataType,
-                        StateInitialFactoryHandlerType = actorStateDataAttribute?.InitialStateDataFactoryHandlerType ??
-                                                         typeof(DefaultInitialStateDataFactoryHandler),
-                    };
-                })
-                .ToArray();
-            return actorTypeRegistrations;
-        }
-
-        private IEnumerable<EventHandlerTypeRegistration> FindEventHandlers(
-            IEnumerable<Assembly> assemblies, IEnumerable<ActorTypeRegistration> actorTypeRegistrations)
-        {
-            var allClass = assemblies.SelectMany(x => x.ExportedTypes)
-                .Where(x => x.IsClass && !x.IsAbstract)
-                .ToArray();
-            var eventHandlerTypes = allClass
-                .Where(x => x.GetInterface(typeof(IEventHandler).FullName) != null)
-                .ToArray();
-            var actorDic = actorTypeRegistrations.ToDictionary(x => x.ActorStateDataType);
-            var eventHandlerTypeRegistrations = eventHandlerTypes
-                .Select(x =>
-                {
-                    var eventHandlerAttribute = x.GetCustomAttribute<ClaptrapEventHandlerAttribute>();
-                    Debug.Assert(eventHandlerAttribute != null, nameof(eventHandlerAttribute) + " != null");
-                    if (!actorDic.TryGetValue(eventHandlerAttribute.ActorStateDataType, out var actorTypeRegistration))
-                    {
-                        // TODO missing Type
-                        throw new Exception("missing actor state type");
-                    }
-
-                    var eventHandlerTypeRegistration = new EventHandlerTypeRegistration
-                    {
-                        EventHandlerType = x,
-                        EventTypeCode = eventHandlerAttribute.EventTypeCode ??
-                                        eventHandlerAttribute.EventDateType.FullName,
-                        ActorTypeCode = actorTypeRegistration.ActorTypeCode
-                    };
-                    return eventHandlerTypeRegistration;
-                })
-                .ToArray();
-            return eventHandlerTypeRegistrations;
-        }
     }
 }

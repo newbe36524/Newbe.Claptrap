@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -37,29 +38,39 @@ namespace Newbe.Claptrap
             _eventStore = eventStore;
             _eventHandlerFactory = eventHandlerFactory;
             _stateHolder = stateHolder;
+            _stateSeq = Observable.Return<Func<IState>>(() => State);
+            _incomingEventsSeq = new Subject<EventItem>();
         }
 
         public IState State { get; private set; }
 
         private IDisposable _eventHandleFlow;
-        private Subject<EventItem> _incomingEventsSeq;
+        private readonly Subject<EventItem> _incomingEventsSeq;
+        private readonly IObservable<Func<IState>> _stateSeq;
 
-        public async Task ActivateAsync()
+        private async Task RestoreState()
         {
             var stateSnapshot = await _stateStore.GetStateSnapshot();
             State = stateSnapshot;
-            var stateSeq = Observable.Return<Func<IState>>(() => State);
-
-            var stateIsRestoreSuccess = true;
             var eventsFromStore = GetEventFromVersion().ToObservable();
-            var restoreStateFlow = stateSeq
-                .CombineLatest(eventsFromStore, (stateFunc, evt) => new EventContext(evt, stateFunc()))
-                .Select((eventContext, i) =>
+            ExceptionDispatchInfo? exceptionDispatchInfo = null;
+            var restoreStateFlow = _stateSeq
+                .CombineLatest(eventsFromStore, (stateFunc, evt) =>
                 {
-                    var handler = CreateHandler(eventContext);
-                    var handlerSeq =
-                        Observable.FromAsync(async () => (await handler.HandleEvent(eventContext), eventContext));
-                    return handlerSeq;
+                    var nowState = stateFunc();
+                    var context = new StateRestoreFlowContext
+                    {
+                        NowState = nowState,
+                        Event = evt,
+                        EventContext = new EventContext(evt, nowState)
+                    };
+                    context.EventHandler = CreateHandler(context.EventContext);
+                    return context;
+                })
+                .Select(context =>
+                {
+                    return Observable.FromAsync(async () =>
+                        (await context.EventHandler.HandleEvent(context.EventContext), context));
                 })
                 .Concat()
                 .Subscribe(
@@ -73,86 +84,12 @@ namespace Newbe.Claptrap
                     },
                     ex =>
                     {
-                        _logger.LogError("error when restore state from event store ");
-                        stateIsRestoreSuccess = false;
+                        _logger.LogError(ex, "error when restore state from event store ");
+                        exceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
                     },
-                    () =>
-                    {
-                        _logger.LogDebug("success restore state from event store");
-                        stateIsRestoreSuccess = true;
-                    });
+                    () => { _logger.LogDebug("success restore state from event store"); });
             restoreStateFlow.Dispose();
-            if (!stateIsRestoreSuccess)
-            {
-                throw new ActivateFailException(stateSnapshot.Identity);
-            }
-
-            _incomingEventsSeq = new Subject<EventItem>();
-            _eventHandleFlow = stateSeq
-                .CombineLatest(_incomingEventsSeq,
-                    (stateFunc, item) => (oldState: _stateHolder.DeepCopy(stateFunc()), item))
-                .Where(FilterVersionErrorEvents)
-                .Select((tuple, i) =>
-                {
-                    var (oldState, item) = tuple;
-                    item.Event.Version = oldState.NextVersion;
-                    var eventContext = new EventContext(item.Event, oldState);
-                    var handler = CreateHandler(eventContext);
-                    var handlerSeq = Observable.FromAsync(async () =>
-                    {
-                        var @event = eventContext.Event;
-                        var eventSavingResult = await SaveEvent(@event);
-                        if (eventSavingResult == EventSavingResult.Success)
-                        {
-                            var newState = await handler.HandleEvent(eventContext);
-                            return (eventSavingResult, newState);
-                        }
-
-                        return (eventSavingResult, default)!;
-                    });
-                    return (item.Event, oldState, handlerSeq, item.TaskCompletionSource);
-                })
-                .Subscribe(tuple =>
-                {
-                    var (@event, oldState, handlerSeq, taskCompletionSource) = tuple;
-                    handlerSeq.Subscribe((handlerResult) =>
-                        {
-                            var (eventSavingResult, newState) = handlerResult;
-                            switch (eventSavingResult)
-                            {
-                                case EventSavingResult.Success:
-                                    _logger.LogInformation("event handled and updating state");
-                                    _logger.LogDebug("start update to @{state}", newState);
-                                    State = newState;
-                                    State.IncreaseVersion();
-                                    _logger.LogDebug("state version updated : {version}", State.Version);
-                                    taskCompletionSource.SetResult(0);
-                                    break;
-                                case EventSavingResult.AlreadyAdded:
-                                    _logger.LogInformation("event already added, nothing would on going");
-                                    taskCompletionSource.SetResult(0);
-                                    break;
-                                default:
-                                    taskCompletionSource.SetException(new ArgumentOutOfRangeException());
-                                    break;
-                            }
-                        }, exception =>
-                        {
-                            State = oldState;
-                            _logger.LogWarning(exception, "there is an exception when handle event : @{event} ",
-                                @event);
-                            taskCompletionSource.SetException(exception);
-                        })
-                        .Dispose();
-                });
-
-            IEventHandler CreateHandler(IEventContext eventContext)
-            {
-                _logger.LogTrace("creating event handler");
-                var handler = _eventHandlerFactory.Create(eventContext);
-                _logger.LogTrace("created event handler : {handler}", handler);
-                return handler;
-            }
+            exceptionDispatchInfo?.Throw();
 
             async IAsyncEnumerable<IEvent> GetEventFromVersion()
             {
@@ -172,22 +109,88 @@ namespace Newbe.Claptrap
                     }
                 } while (stepVersion != nowVersion);
             }
+        }
 
-            static bool FilterVersionErrorEvents((IState oldState, EventItem item) tuple, int i)
+        public async Task ActivateAsync()
+        {
+            try
             {
-                var (oldState, item) = tuple;
-                if (item.Event.Version == 0)
-                {
-                    return true;
-                }
-
-                if (oldState.NextVersion == item.Event.Version)
-                {
-                    return true;
-                }
-
-                throw new VersionErrorException(oldState.Version, item.Event.Version);
+                await RestoreState();
+                CreateEventHandlingFLow();
             }
+            catch (Exception e)
+            {
+                throw new ActivateFailException(e, State.Identity);
+            }
+        }
+
+        private void CreateEventHandlingFLow()
+        {
+            _eventHandleFlow = _stateSeq
+                .CombineLatest(_incomingEventsSeq,
+                    (stateFunc, item) =>
+                    {
+                        var context = new EventHandleFlowContext
+                        {
+                            NowState = _stateHolder.DeepCopy(stateFunc()),
+                            Event = item.Event,
+                            TaskCompletionSource = item.TaskCompletionSource,
+                        };
+                        context.Event.Version = context.NowState.NextVersion;
+                        context.EventContext = new EventContext(context.Event, context.NowState);
+                        context.EventHandler = CreateHandler(context.EventContext);
+                        return context;
+                    })
+                .Select(context =>
+                {
+                    return Observable.FromAsync(async () => (await SaveEvent(context.Event), context));
+                })
+                .Concat()
+                .Select((tuple, i) =>
+                {
+                    var (eventSavingResult, context) = tuple;
+                    return eventSavingResult switch
+                    {
+                        EventSavingResult.Success => (
+                            Observable.FromAsync(() => context.EventHandler.HandleEvent(context.EventContext)),
+                            context),
+                        EventSavingResult.AlreadyAdded => (
+                            Observable.Return(default(IState)),
+                            context),
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                })
+                .Subscribe(tuple =>
+                {
+                    var (eventHandling, context) = tuple;
+                    eventHandling.Subscribe(
+                            nextState =>
+                            {
+                                if (nextState != null)
+                                {
+                                    _logger.LogInformation("event handled and updating state");
+                                    _logger.LogDebug("start update to @{state}", nextState);
+                                    State = nextState;
+                                    State.IncreaseVersion();
+                                    _logger.LogDebug("state version updated : {version}", State.Version);
+                                }
+                                else
+                                {
+                                    _logger.LogInformation("event already added, nothing would on going");
+                                }
+
+                                context.TaskCompletionSource.SetResult(0);
+                            },
+                            exception =>
+                            {
+                                State = context.NowState;
+                                _logger.LogWarning(exception, "there is an exception when handle event : @{event} ",
+                                    context.Event);
+                                context.TaskCompletionSource.SetException(exception);
+                            })
+                        .Dispose();
+                });
+
 
             async Task<EventSavingResult> SaveEvent(IEvent @event)
             {
@@ -218,6 +221,31 @@ namespace Newbe.Claptrap
             }
         }
 
+        private IEventHandler CreateHandler(IEventContext eventContext)
+        {
+            _logger.LogTrace("creating event handler");
+            var handler = _eventHandlerFactory.Create(eventContext);
+            _logger.LogTrace("created event handler : {handler}", handler);
+            return handler;
+        }
+
+        private class EventHandleFlowContext
+        {
+            public IState NowState { get; set; }
+            public IEvent Event { get; set; }
+            public IEventContext EventContext { get; set; }
+            public IEventHandler EventHandler { get; set; }
+            public TaskCompletionSource<int> TaskCompletionSource { get; set; }
+        }
+
+        public class StateRestoreFlowContext
+        {
+            public IState NowState { get; set; }
+            public IEvent Event { get; set; }
+            public EventContext EventContext { get; set; }
+            public IEventHandler EventHandler { get; set; }
+        }
+
         public Task DeactivateAsync()
         {
             _eventHandleFlow?.Dispose();
@@ -231,7 +259,9 @@ namespace Newbe.Claptrap
                 Event = @event,
                 TaskCompletionSource = new TaskCompletionSource<int>()
             };
+
             _incomingEventsSeq.OnNext(eventItem);
+
             var task = eventItem.TaskCompletionSource.Task;
             return task;
         }
