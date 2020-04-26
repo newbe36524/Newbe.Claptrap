@@ -25,7 +25,7 @@ namespace Newbe.Claptrap.Orleans
             var dataEvent = new DataEvent(claptrap.Actor.State.Identity,
                 typeof(TEventDataType).FullName,
                 eventData,
-                new EventUid(uid));
+                uid);
             return dataEvent;
         }
     }

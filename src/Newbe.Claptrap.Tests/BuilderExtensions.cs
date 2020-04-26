@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
@@ -15,6 +16,14 @@ namespace Newbe.Claptrap.Tests
                 .AsImplementedInterfaces();
             builder.RegisterGeneric(typeof(Logger<>))
                 .As(typeof(ILogger<>))
+                .SingleInstance();
+        }
+
+        public static void AddStaticClock(this ContainerBuilder builder,
+            DateTime now)
+        {
+            builder.RegisterInstance(new StaticClock(now))
+                .As<IClock>()
                 .SingleInstance();
         }
     }

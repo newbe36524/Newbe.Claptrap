@@ -25,6 +25,6 @@ namespace Newbe.Claptrap.EventStore
         /// <param name="startVersion"></param>
         /// <param name="endVersion"></param>
         /// <returns></returns>
-        Task<IEnumerable<IEvent>> GetEvents(ulong startVersion, ulong endVersion);
+        Task<IEnumerable<IEvent>> GetEvents(long startVersion, long endVersion);
     }
 }

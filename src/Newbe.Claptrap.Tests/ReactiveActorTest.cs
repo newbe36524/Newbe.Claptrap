@@ -40,7 +40,7 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(state);
 
             mocker.Mock<IEventStore>()
-                .Setup(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
+                .Setup(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
             IActor actor = mocker.Create<Actor>();
@@ -59,7 +59,7 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(state);
 
             mocker.Mock<IEventStore>()
-                .SetupSequence(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
+                .SetupSequence(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(AllEvents())
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
@@ -104,7 +104,7 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(state);
 
             mocker.Mock<IEventStore>()
-                .SetupSequence(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
+                .SetupSequence(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(AllEvents())
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
@@ -150,7 +150,7 @@ namespace Newbe.Claptrap.Tests
                 .ReturnsAsync(state);
 
             mocker.Mock<IEventStore>()
-                .SetupSequence(x => x.GetEvents(It.IsAny<ulong>(), It.IsAny<ulong>()))
+                .SetupSequence(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(Enumerable.Empty<IEvent>());
 
             mocker.Mock<IEventStore>()
@@ -177,7 +177,7 @@ namespace Newbe.Claptrap.Tests
         {
             public IActorIdentity Identity { get; set; }
             public IStateData Data { get; set; }
-            public ulong Version { get; set; }
+            public long Version { get; set; }
 
             public void IncreaseVersion()
             {
@@ -188,8 +188,8 @@ namespace Newbe.Claptrap.Tests
         public class AccountEvent : IEvent
         {
             public IActorIdentity ActorIdentity { get; set; }
-            public ulong Version { get; set; }
-            public IEventUid Uid { get; set; }
+            public long Version { get; set; }
+            public string Uid { get; set; }
             public string EventTypeCode { get; set; }
             public IEventData Data { get; set; }
         }

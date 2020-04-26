@@ -10,12 +10,12 @@ namespace Newbe.Claptrap.Core
         /// <summary>
         /// version of event, this is a increasing number.
         /// </summary>
-        ulong Version { get; set; }
+        long Version { get; set; }
 
         /// <summary>
         /// unique id of event, events with the same uid will be process only once.
         /// </summary>
-        IEventUid Uid { get; }
+        string? Uid { get; }
 
         /// <summary>
         /// type of event

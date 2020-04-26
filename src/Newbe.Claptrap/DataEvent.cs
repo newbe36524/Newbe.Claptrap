@@ -5,7 +5,7 @@ namespace Newbe.Claptrap
 {
     public class DataEvent : IEvent
     {
-        public DataEvent(IActorIdentity actorIdentity, string eventTypeCode, IEventData data, IEventUid uid)
+        public DataEvent(IActorIdentity actorIdentity, string eventTypeCode, IEventData data, string? uid)
         {
             ActorIdentity = actorIdentity;
             Uid = uid;
@@ -14,8 +14,8 @@ namespace Newbe.Claptrap
         }
 
         public IActorIdentity ActorIdentity { get; }
-        public ulong Version { get; set; }
-        public IEventUid Uid { get; }
+        public long Version { get; set; }
+        public string? Uid { get; }
         public string EventTypeCode { get; }
         public IEventData Data { get; }
     }

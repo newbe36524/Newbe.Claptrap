@@ -11,23 +11,23 @@ namespace Newbe.Claptrap.Autofac
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger<EventHandlerFactory> _logger;
-        private readonly IEventHandlerRegister _eventHandlerRegister;
+        private readonly IClaptrapRegistrationAccessor _claptrapRegistrationAccessor;
 
         public EventHandlerFactory(
             ILifetimeScope lifetimeScope,
             ILogger<EventHandlerFactory> logger,
-            IEventHandlerRegister eventHandlerRegister)
+            IClaptrapRegistrationAccessor claptrapRegistrationAccessor)
         {
             _lifetimeScope = lifetimeScope;
             _logger = logger;
-            _eventHandlerRegister = eventHandlerRegister;
+            _claptrapRegistrationAccessor = claptrapRegistrationAccessor;
         }
 
         public IEventHandler Create(IEventContext eventContext)
         {
             var eventScope = _lifetimeScope.BeginLifetimeScope();
             var handlerType =
-                _eventHandlerRegister.FindHandlerType(
+                _claptrapRegistrationAccessor.FindEventHandlerType(
                     eventContext.State.Identity.TypeCode,
                     eventContext.Event.EventTypeCode);
             if (handlerType == null)

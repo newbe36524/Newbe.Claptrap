@@ -22,6 +22,13 @@ namespace Newbe.Claptrap.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+            builder.RegisterInstance(_claptrapRegistration)
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterType<ClaptrapRegistrationAccessor>()
+                .As<IClaptrapRegistrationAccessor>()
+                .SingleInstance();
+            
             _logger.LogDebug("start to register actor types ");
             foreach (var actorTypeRegistration in _claptrapRegistration.ActorTypeRegistrations)
             {
@@ -54,12 +61,6 @@ namespace Newbe.Claptrap.Autofac
                 builder.RegisterType(actorTypeRegistration.StateInitialFactoryHandlerType)
                     .Keyed<IInitialStateDataFactoryHandler>(actorTypeRegistration.ActorTypeCode)
                     .InstancePerLifetimeScope();
-                builder.RegisterBuildCallback(scope =>
-                {
-                    var register = scope.Resolve<IStateDataTypeRegister>();
-                    register.RegisterStateDataType(actorTypeRegistration.ActorTypeCode,
-                        actorTypeRegistration.ActorStateDataType);
-                });
             }
 
             void RegisterEventHandlerType(EventTypeHandlerRegistration eventHandlerTypeRegistration)
@@ -67,13 +68,6 @@ namespace Newbe.Claptrap.Autofac
                 builder.RegisterType(eventHandlerTypeRegistration.EventHandlerType)
                     .AsSelf()
                     .InstancePerLifetimeScope();
-                builder.RegisterBuildCallback(scope =>
-                {
-                    var register = scope.Resolve<IEventHandlerRegister>();
-                    register.RegisterHandler(eventHandlerTypeRegistration.ActorTypeCode,
-                        eventHandlerTypeRegistration.EventTypeCode,
-                        eventHandlerTypeRegistration.EventHandlerType);
-                });
             }
         }
     }

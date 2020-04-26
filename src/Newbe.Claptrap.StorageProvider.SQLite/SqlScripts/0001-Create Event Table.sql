@@ -1,14 +1,14 @@
 -- $ActorTypeCode$ $ActorId$
 create table '$EventTableName$'
 (
-    Version long
+    version       long
         constraint '$EventTableName$_pk'
             primary key,
-    Uid text,
-    EventTypeCode text,
-    EventData text,
-    CreatedTime long not null
+    uid           text,
+    eventtypecode text,
+    eventdata     text,
+    createdtime   datetime not null
 );
 
 create unique index '$EventTableName$_Uid_uindex'
-    on '$EventTableName$' (Uid);
+    on '$EventTableName$' (uid, eventtypecode);

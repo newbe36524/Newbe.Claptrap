@@ -2,8 +2,12 @@ using System;
 
 namespace Newbe.Claptrap.Metadata
 {
-    public interface IStateDataTypeRegister
+    public interface IClaptrapRegistrationAccessor
     {
+        Type FindEventDataType(string actorTypeCode, string eventTypeCode);
+
+        Type? FindEventHandlerType(string actorTypeCode, string eventTypeCode);
+        
         /// <summary>
         /// find state type
         /// </summary>
@@ -16,7 +20,5 @@ namespace Newbe.Claptrap.Metadata
         /// <param name="type"></param>
         /// <returns></returns>
         string FindActorTypeCode(Type type);
-
-        void RegisterStateDataType(string actorTypeCode, Type stateDataType);
     }
 }

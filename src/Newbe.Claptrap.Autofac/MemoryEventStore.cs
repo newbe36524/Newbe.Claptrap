@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.Autofac
             return Task.FromResult(EventSavingResult.Success);
         }
 
-        public Task<IEnumerable<IEvent>> GetEvents(ulong startVersion, ulong endVersion)
+        public Task<IEnumerable<IEvent>> GetEvents(long startVersion, long endVersion)
         {
             var re = _list.Where(x => x.Version > startVersion && x.Version <= endVersion).OrderBy(x => x.Version);
             return Task.FromResult<IEnumerable<IEvent>>(re);

@@ -9,9 +9,9 @@ namespace Newbe.Claptrap.Core
         /// current version of state, this will be increased if a event has been processed successfully.
         /// this is the same as last event version while has been processed successfully.
         /// </summary>
-        ulong Version { get; }
+        long Version { get; }
 
-        ulong NextVersion => Version + 1;
+        long NextVersion => Version + 1;
 
         void IncreaseVersion();
     }

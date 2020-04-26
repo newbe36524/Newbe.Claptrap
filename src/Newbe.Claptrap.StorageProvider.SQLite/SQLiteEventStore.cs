@@ -13,27 +13,32 @@ using DbUp.Engine;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventStore;
-using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     public class SQLiteEventStore : IEventStore
     {
         private readonly ILogger<SQLiteEventStore> _logger;
-        private readonly IEventHandlerRegister _eventHandlerRegister;
+        private readonly IClock _clock;
+        private readonly IEventDataStringSerializer _eventDataStringSerializer;
 
         public delegate SQLiteEventStore Factory(IActorIdentity identity);
 
         private readonly string _connectionString;
         private readonly Lazy<bool> _databaseCreated;
         private readonly Lazy<string> _tableName;
+        private readonly Lazy<string> _insertSql;
+        private readonly Lazy<string> _selectSql;
 
-        public SQLiteEventStore(IActorIdentity identity,
+        public SQLiteEventStore(
+            IActorIdentity identity,
             ILogger<SQLiteEventStore> logger,
-            IEventHandlerRegister eventHandlerRegister)
+            IClock clock,
+            IEventDataStringSerializer eventDataStringSerializer)
         {
             _logger = logger;
-            _eventHandlerRegister = eventHandlerRegister;
+            _clock = clock;
+            _eventDataStringSerializer = eventDataStringSerializer;
             Identity = identity;
             _connectionString = ConnectionString();
             _databaseCreated = new Lazy<bool>(() =>
@@ -42,6 +47,10 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                 return true;
             });
             _tableName = new Lazy<string>(() => $"event_{Identity.TypeCode}_{Identity.Id}");
+            _insertSql = new Lazy<string>(() =>
+                $"INSERT OR IGNORE INTO '{_tableName.Value}' ([version], [uid], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @Uid, @EventTypeCode, @EventData, @CreatedTime)");
+            _selectSql = new Lazy<string>(() =>
+                $"SELECT * FROM '{_tableName.Value}' WHERE version >= @startVersion AND version < @endVersion");
         }
 
         private static string GetDatabaseDirectory()
@@ -135,14 +144,39 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         {
             _ = _databaseCreated.Value;
             await using var db = new SQLiteConnection(_connectionString);
-            throw new NotImplementedException();
+            var eventData = _eventDataStringSerializer.Serialize(Identity.TypeCode, @event.EventTypeCode, @event.Data);
+            var eventEntity = new EventEntity
+            {
+                Version = (long) @event.Version,
+                CreatedTime = _clock.UtcNow,
+                EventData = eventData,
+                EventTypeCode = @event.EventTypeCode,
+                Uid = @event.Uid!,
+            };
+            _logger.LogDebug("start to save event to store @{eventEntity}", eventEntity);
+            var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
+            var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
+            _logger.LogDebug("event savingResult : {eventSavingResult}", re);
+            return re;
         }
 
-        public async Task<IEnumerable<IEvent>> GetEvents(ulong startVersion, ulong endVersion)
+        public async Task<IEnumerable<IEvent>> GetEvents(long startVersion, long endVersion)
         {
             _ = _databaseCreated.Value;
             await using var db = new SQLiteConnection(_connectionString);
-            throw new NotImplementedException();
+            var eventEntities = await db.QueryAsync<EventEntity>(_selectSql.Value,
+                new {startVersion, endVersion});
+
+            var re = eventEntities.Select(x =>
+            {
+                var eventData = _eventDataStringSerializer.Deserialize(Identity.TypeCode, x.EventTypeCode, x.EventData);
+                var dataEvent = new DataEvent(Identity, x.EventTypeCode, eventData, x.Uid)
+                {
+                    Version = x.Version
+                };
+                return dataEvent;
+            }).ToArray();
+            return re;
         }
     }
 
@@ -152,6 +186,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         public string Uid { get; set; }
         public string EventTypeCode { get; set; }
         public string EventData { get; set; }
-        public long CreatedTime { get; set; }
+        public DateTime CreatedTime { get; set; }
     }
 }

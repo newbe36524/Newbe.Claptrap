@@ -6,12 +6,12 @@ namespace Newbe.Claptrap.Orleans
 {
     public class ActorTypeCodeFactory : IActorTypeCodeFactory
     {
-        private readonly IStateDataTypeRegister _stateDataTypeRegister;
+        private readonly IClaptrapRegistrationAccessor _claptrapRegistrationAccessor;
 
         public ActorTypeCodeFactory(
-            IStateDataTypeRegister stateDataTypeRegister)
+            IClaptrapRegistrationAccessor claptrapRegistrationAccessor)
         {
-            _stateDataTypeRegister = stateDataTypeRegister;
+            _claptrapRegistrationAccessor = claptrapRegistrationAccessor;
         }
 
         public string GetActorTypeCode(IClaptrap claptrap)
@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Orleans
                 .Select(x => x.GetCustomAttribute<ClaptrapStateAttribute>())
                 .Single(x => x != null);
             var stateDataType = claptrapStateAttribute.StateDataType;
-            var typeCode = _stateDataTypeRegister.FindActorTypeCode(stateDataType);
+            var typeCode = _claptrapRegistrationAccessor.FindActorTypeCode(stateDataType);
             return typeCode;
         }
     }

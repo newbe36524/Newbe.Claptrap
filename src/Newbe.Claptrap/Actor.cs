@@ -95,8 +95,8 @@ namespace Newbe.Claptrap
             {
                 Debug.Assert(stateSnapshot != null, nameof(stateSnapshot) + " != null");
                 var nowVersion = stateSnapshot.Version;
-                ulong stepVersion;
-                const ulong step = 1000L;
+                long stepVersion;
+                const long step = 1000L;
                 do
                 {
                     stepVersion = nowVersion;

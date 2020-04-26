@@ -7,17 +7,17 @@ namespace Newbe.Claptrap.Autofac
 {
     public class DefaultInitialStateDataFactoryHandler : IInitialStateDataFactoryHandler
     {
-        private readonly IStateDataTypeRegister _stateDataTypeRegister;
+        private readonly IClaptrapRegistrationAccessor _claptrapRegistrationAccessor;
 
         public DefaultInitialStateDataFactoryHandler(
-            IStateDataTypeRegister stateDataTypeRegister)
+            IClaptrapRegistrationAccessor claptrapRegistrationAccessor)
         {
-            _stateDataTypeRegister = stateDataTypeRegister;
+            _claptrapRegistrationAccessor = claptrapRegistrationAccessor;
         }
 
         public Task<IStateData> Create(IActorIdentity identity)
         {
-            var findStateDataType = _stateDataTypeRegister.FindStateDataType(identity.TypeCode);
+            var findStateDataType = _claptrapRegistrationAccessor.FindStateDataType(identity.TypeCode);
             var stateData = (IStateData) Activator.CreateInstance(findStateDataType);
             return Task.FromResult(stateData);
         }
