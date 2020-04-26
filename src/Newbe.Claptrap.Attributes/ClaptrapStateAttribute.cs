@@ -2,6 +2,9 @@ using System;
 
 namespace Newbe.Claptrap
 {
+    /// <summary>
+    /// Mark on IClaptrapGrain specify the state data class
+    /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
     public class ClaptrapStateAttribute : Attribute
     {

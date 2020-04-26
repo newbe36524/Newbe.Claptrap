@@ -2,6 +2,9 @@ using System;
 
 namespace Newbe.Claptrap
 {
+    /// <summary>
+    /// Mark on IClaptrapGrain specify the event data types
+    /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = true, Inherited = false)]
     public class ClaptrapEventAttribute : Attribute
     {

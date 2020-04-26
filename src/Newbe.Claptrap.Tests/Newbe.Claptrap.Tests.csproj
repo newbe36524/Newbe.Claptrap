@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 

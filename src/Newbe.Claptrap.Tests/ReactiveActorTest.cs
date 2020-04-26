@@ -50,15 +50,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task SomeEvents()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                var loggerFactory = new LoggerFactory(new[] {new XunitLoggerProvider(_testOutputHelper)});
-                builder.RegisterInstance(loggerFactory)
-                    .AsImplementedInterfaces();
-                builder.RegisterGeneric(typeof(Logger<>))
-                    .As(typeof(ILogger<>))
-                    .SingleInstance();
-            });
+            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
             var state = new AccountState();
@@ -100,15 +92,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task ThrowException()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                var loggerFactory = new LoggerFactory(new[] {new XunitLoggerProvider(_testOutputHelper)});
-                builder.RegisterInstance(loggerFactory)
-                    .AsImplementedInterfaces();
-                builder.RegisterGeneric(typeof(Logger<>))
-                    .As(typeof(ILogger<>))
-                    .SingleInstance();
-            });
+            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
             var state = new AccountState
@@ -157,15 +141,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task HandleEvent()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                var loggerFactory = new LoggerFactory(new[] {new XunitLoggerProvider(_testOutputHelper)});
-                builder.RegisterInstance(loggerFactory)
-                    .AsImplementedInterfaces();
-                builder.RegisterGeneric(typeof(Logger<>))
-                    .As(typeof(ILogger<>))
-                    .SingleInstance();
-            });
+            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
             var state = new AccountState();
@@ -245,35 +221,5 @@ namespace Newbe.Claptrap.Tests
         }
 
         private readonly IActorIdentity _testActorIdentity = new ActorIdentity("123", "testActor");
-
-        public class ActorIdentity : IActorIdentity
-        {
-            public ActorIdentity(string id, string typeCode)
-            {
-                Id = id;
-                TypeCode = typeCode;
-            }
-
-            public string Id { get; }
-            public string TypeCode { get; }
-
-            public bool Equals(IActorIdentity other)
-            {
-                return Id == other.Id && TypeCode == other.TypeCode;
-            }
-
-            public override bool Equals(object? obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((ActorIdentity) obj);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Id, TypeCode);
-            }
-        }
     }
 }

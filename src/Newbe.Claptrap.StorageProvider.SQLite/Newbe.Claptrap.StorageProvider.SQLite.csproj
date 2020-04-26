@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.0.35" />
+      <PackageReference Include="dbup-sqlite" Version="4.3.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="SqlScripts\*.sql" />
+      <EmbeddedResource Include="SqlScripts\*.sql" />
+    </ItemGroup>
+
+</Project>

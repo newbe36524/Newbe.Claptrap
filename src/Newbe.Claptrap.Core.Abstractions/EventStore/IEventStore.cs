@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.EventStore
         Task<EventSavingResult> SaveEvent(IEvent @event);
 
         /// <summary>
-        /// get events
+        /// get events where version in range [startVersion, endVersion)
         /// </summary>
         /// <param name="startVersion"></param>
         /// <param name="endVersion"></param>

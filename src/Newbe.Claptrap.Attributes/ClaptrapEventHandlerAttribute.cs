@@ -2,6 +2,9 @@ using System;
 
 namespace Newbe.Claptrap
 {
+    /// <summary>
+    /// Mark on IClaptrapGrain implementation class to specify the event handler types
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ClaptrapEventHandlerAttribute : Attribute
     {
