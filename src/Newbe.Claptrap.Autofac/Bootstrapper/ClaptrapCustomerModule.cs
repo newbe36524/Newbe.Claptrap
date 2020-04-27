@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Metadata;
+using Newbe.Claptrap.StateStore;
 
 namespace Newbe.Claptrap.Autofac
 {

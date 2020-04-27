@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Autofac.Features.Indexed;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.StateStore;
 
 namespace Newbe.Claptrap.Autofac
 {

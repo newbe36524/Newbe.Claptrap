@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
@@ -23,17 +24,6 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Fact]
-        public void CreateDatabase()
-        {
-            var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            var factory = mocker.Create<SQLiteEventStore.Factory>();
-            var db = factory.Invoke(new ActorIdentity("123", "testType.Code"));
-            db.DeleteDatabaseIfFound();
-            db.CreateOrUpdateDatabase();
-            db.Should().NotBeNull();
-        }
-
-        [Fact]
         public async Task SaveEvent()
         {
             var now = DateTime.Parse("2020-01-01");
@@ -41,8 +31,11 @@ namespace Newbe.Claptrap.Tests
             {
                 builder.AddLogging(_testOutputHelper);
                 builder.AddStaticClock(now);
+                builder.RegisterType<SQLiteDbManager>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity("123", "testType.Code");
+            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -50,10 +43,13 @@ namespace Newbe.Claptrap.Tests
                 .Setup(x => x.Serialize(actorIdentity.TypeCode, eventTypeCode, testEventData))
                 .Returns("testResult");
 
+            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
+            mocker.Mock<ISQLiteDbFactory>()
+                .Setup(x => x.CreateConnection(actorIdentity))
+                .Returns(()=>DbHelper.CreateInMemoryConnection(actorIdentity));
+
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(actorIdentity);
-            db.DeleteDatabaseIfFound();
-            db.CreateOrUpdateDatabase();
             var eventSavingResult =
                 await db.SaveEvent(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
             eventSavingResult.Should().Be(EventSavingResult.Success);
@@ -67,10 +63,18 @@ namespace Newbe.Claptrap.Tests
             {
                 builder.AddLogging(_testOutputHelper);
                 builder.AddStaticClock(now);
+                builder.RegisterType<SQLiteDbManager>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity("123", "testType.Code");
+            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
+            
+            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
+            mocker.Mock<ISQLiteDbFactory>()
+                .Setup(x => x.CreateConnection(actorIdentity))
+                .Returns(()=>DbHelper.CreateInMemoryConnection(actorIdentity));
 
             mocker.Mock<IEventDataStringSerializer>()
                 .Setup(x => x.Serialize(actorIdentity.TypeCode, eventTypeCode, testEventData))
@@ -78,8 +82,6 @@ namespace Newbe.Claptrap.Tests
 
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(actorIdentity);
-            db.DeleteDatabaseIfFound();
-            db.CreateOrUpdateDatabase();
             var eventSavingResult =
                 await db.SaveEvent(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
             eventSavingResult.Should().Be(EventSavingResult.Success);
@@ -97,8 +99,11 @@ namespace Newbe.Claptrap.Tests
             {
                 builder.AddLogging(_testOutputHelper);
                 builder.AddStaticClock(now);
+                builder.RegisterType<SQLiteDbManager>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity("123", "testType.Code");
+            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -109,11 +114,14 @@ namespace Newbe.Claptrap.Tests
             mocker.Mock<IEventDataStringSerializer>()
                 .Setup(x => x.Deserialize(actorIdentity.TypeCode, eventTypeCode, It.IsAny<string>()))
                 .Returns(testEventData);
+            
+            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
+            mocker.Mock<ISQLiteDbFactory>()
+                .Setup(x => x.CreateConnection(actorIdentity))
+                .Returns(()=>DbHelper.CreateInMemoryConnection(actorIdentity));
 
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(actorIdentity);
-            db.DeleteDatabaseIfFound();
-            db.CreateOrUpdateDatabase();
             var dataEvents = Enumerable.Range(0, 10)
                 .Select(i => new DataEvent(actorIdentity, eventTypeCode, testEventData, Guid.NewGuid().ToString())
                 {

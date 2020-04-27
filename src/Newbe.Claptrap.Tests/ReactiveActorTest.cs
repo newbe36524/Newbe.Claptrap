@@ -29,9 +29,31 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Fact]
+        public async Task NoSnapshot()
+        {
+            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            mocker.VerifyAll = true;
+
+            mocker.Mock<IStateStore>()
+                .Setup(x => x.GetStateSnapshot())
+                .ReturnsAsync(default(IState));
+
+            mocker.Mock<IInitialStateDataFactory>()
+                .Setup(x => x.Create(It.IsAny<IActorIdentity>()))
+                .ReturnsAsync(new NoneStateData());
+
+            mocker.Mock<IEventStore>()
+                .Setup(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(Enumerable.Empty<IEvent>());
+
+            IActor actor = mocker.Create<Actor>();
+            await actor.ActivateAsync();
+        }
+
+        [Fact]
         public async Task EmptyEvents()
         {
-            using var mocker = AutoMock.GetStrict();
+            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
             var state = new AccountState();

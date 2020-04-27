@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 
-namespace Newbe.Claptrap.Autofac
+namespace Newbe.Claptrap.StateStore
 {
     public interface IInitialStateDataFactory
     {

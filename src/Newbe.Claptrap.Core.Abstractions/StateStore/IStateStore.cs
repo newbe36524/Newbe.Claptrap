@@ -14,7 +14,7 @@ namespace Newbe.Claptrap.StateStore
         /// get latest state
         /// </summary>
         /// <returns>return latest state of the actor. return null if there is no data</returns>
-        Task<IState> GetStateSnapshot();
+        Task<IState?> GetStateSnapshot();
 
         /// <summary>
         /// save state

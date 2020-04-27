@@ -20,20 +20,26 @@ namespace Newbe.Claptrap
 {
     public class Actor : IActor
     {
+        private readonly IActorIdentity _actorIdentity;
         private readonly ILogger<Actor> _logger;
+        private readonly IInitialStateDataFactory _initialStateDataFactory;
         private readonly IStateStore _stateStore;
         private readonly IEventStore _eventStore;
         private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly IStateHolder _stateHolder;
 
         public Actor(
+            IActorIdentity actorIdentity,
             ILogger<Actor> logger,
+            IInitialStateDataFactory initialStateDataFactory,
             IStateStore stateStore,
             IEventStore eventStore,
             IEventHandlerFactory eventHandlerFactory,
             IStateHolder stateHolder)
         {
+            _actorIdentity = actorIdentity;
             _logger = logger;
+            _initialStateDataFactory = initialStateDataFactory;
             _stateStore = stateStore;
             _eventStore = eventStore;
             _eventHandlerFactory = eventHandlerFactory;
@@ -51,7 +57,18 @@ namespace Newbe.Claptrap
         private async Task RestoreState()
         {
             var stateSnapshot = await _stateStore.GetStateSnapshot();
-            State = stateSnapshot;
+            if (stateSnapshot == null)
+            {
+                _logger.LogInformation("there is no state snapshot");
+                var stateData = await _initialStateDataFactory.Create(_actorIdentity);
+                State = new DataState(_actorIdentity, stateData, 0);
+            }
+            else
+            {
+                _logger.LogInformation("state snapshot found");
+                State = stateSnapshot;
+            }
+
             var eventsFromStore = GetEventFromVersion().ToObservable();
             ExceptionDispatchInfo? exceptionDispatchInfo = null;
             var restoreStateFlow = _stateSeq
@@ -93,8 +110,7 @@ namespace Newbe.Claptrap
 
             async IAsyncEnumerable<IEvent> GetEventFromVersion()
             {
-                Debug.Assert(stateSnapshot != null, nameof(stateSnapshot) + " != null");
-                var nowVersion = stateSnapshot.Version;
+                var nowVersion = State.Version;
                 long stepVersion;
                 const long step = 1000L;
                 do

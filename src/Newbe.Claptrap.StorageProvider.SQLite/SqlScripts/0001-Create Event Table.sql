@@ -1,4 +1,4 @@
--- $ActorTypeCode$ $ActorId$
+-- $ActorTypeCode$ $ActorId$ $EventTableName$ $StateTableName$
 create table '$EventTableName$'
 (
     version       long
@@ -11,4 +11,4 @@ create table '$EventTableName$'
 );
 
 create unique index '$EventTableName$_Uid_uindex'
-    on '$EventTableName$' (uid, eventtypecode);
+    on '$EventTableName$' ([uid], [eventtypecode]);

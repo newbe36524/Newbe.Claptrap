@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Metadata;
+using Newbe.Claptrap.StateStore;
 
 namespace Newbe.Claptrap.Autofac
 {

@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Autofac
         public IActorIdentity Identity { get; }
         private IState? _state;
 
-        public async Task<IState> GetStateSnapshot()
+        public async Task<IState?> GetStateSnapshot()
         {
             var stateData = await _initialStateDataFactory.Create(Identity);
             _state = new DataState(Identity, stateData, 0);
