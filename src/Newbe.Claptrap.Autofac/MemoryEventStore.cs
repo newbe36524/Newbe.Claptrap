@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
@@ -6,6 +7,7 @@ using Newbe.Claptrap.EventStore;
 
 namespace Newbe.Claptrap.Autofac
 {
+    [ExcludeFromCodeCoverage]
     public class MemoryEventStore : IEventStore
     {
         private readonly IList<IEvent> _list;
@@ -23,7 +25,7 @@ namespace Newbe.Claptrap.Autofac
             if (_list.Any(x =>
                 x.ActorIdentity.TypeCode == @event.ActorIdentity.TypeCode
                 && x.EventTypeCode == @event.EventTypeCode
-                && x.Uid.Equals(@event.Uid)))
+                && x.Uid == @event.Uid))
             {
                 return Task.FromResult(EventSavingResult.AlreadyAdded);
             }

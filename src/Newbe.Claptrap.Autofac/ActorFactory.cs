@@ -31,6 +31,9 @@ namespace Newbe.Claptrap.Autofac
                 builder.Register(context => _eventStoreFactory.Create(identity))
                     .As<IEventStore>()
                     .SingleInstance();
+                builder.Register(context => identity)
+                    .AsSelf()
+                    .SingleInstance();
             });
             var actor = actorScope.Resolve<Actor>();
             return actor;

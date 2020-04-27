@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.StateStore;
 
 namespace Newbe.Claptrap.Autofac
 {
+    [ExcludeFromCodeCoverage]
     public class MemoryStateStore : IStateStore
     {
         public delegate MemoryStateStore Factory(IActorIdentity identity);

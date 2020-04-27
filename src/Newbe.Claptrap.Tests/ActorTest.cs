@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +17,11 @@ using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
 {
-    public class ReactiveActorTest
+    public class ActorTest
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public ReactiveActorTest(
+        public ActorTest(
             ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
@@ -56,7 +55,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
-            var state = new AccountState();
+            var state = new TestState();
             mocker.Mock<IStateStore>()
                 .Setup(x => x.GetStateSnapshot())
                 .ReturnsAsync(state);
@@ -75,7 +74,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
-            var state = new AccountState();
+            var state = new TestState();
             mocker.Mock<IStateStore>()
                 .Setup(x => x.GetStateSnapshot())
                 .ReturnsAsync(state);
@@ -87,7 +86,7 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventHandlerFactory>()
                 .Setup(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new Handler());
+                .Returns(new TestHandler());
 
             IActor actor = mocker.Create<Actor>();
             await actor.ActivateAsync();
@@ -96,15 +95,15 @@ namespace Newbe.Claptrap.Tests
 
             static IEnumerable<IEvent> AllEvents()
             {
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 1,
                 };
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 2,
                 };
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 3,
                 };
@@ -117,7 +116,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
-            var state = new AccountState
+            var state = new TestState
             {
                 Identity = _testActorIdentity
             };
@@ -132,9 +131,9 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventHandlerFactory>()
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new Handler())
+                .Returns(new TestHandler())
                 .Returns(new ExceptionHandler())
-                .Returns(new Handler())
+                .Returns(new TestHandler())
                 ;
 
             IActor actor = mocker.Create<Actor>();
@@ -145,15 +144,15 @@ namespace Newbe.Claptrap.Tests
 
             static IEnumerable<IEvent> AllEvents()
             {
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 1,
                 };
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 2,
                 };
-                yield return new AccountEvent
+                yield return new TestEvent
                 {
                     Version = 3,
                 };
@@ -166,7 +165,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
 
-            var state = new AccountState();
+            var state = new TestState();
             mocker.Mock<IStateStore>()
                 .Setup(x => x.GetStateSnapshot())
                 .ReturnsAsync(state);
@@ -185,63 +184,16 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventHandlerFactory>()
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new Handler())
+                .Returns(new TestHandler())
                 ;
 
             IActor actor = mocker.Create<Actor>();
             await actor.ActivateAsync();
 
-            await actor.HandleEvent(new AccountEvent());
+            await actor.HandleEvent(new TestEvent());
             state.Version.Should().Be(1);
         }
-
-        public class AccountState : IState
-        {
-            public IActorIdentity Identity { get; set; }
-            public IStateData Data { get; set; }
-            public long Version { get; set; }
-
-            public void IncreaseVersion()
-            {
-                Version += 1;
-            }
-        }
-
-        public class AccountEvent : IEvent
-        {
-            public IActorIdentity ActorIdentity { get; set; }
-            public long Version { get; set; }
-            public string Uid { get; set; }
-            public string EventTypeCode { get; set; }
-            public IEventData Data { get; set; }
-        }
-
-        public class Handler : IEventHandler
-        {
-            public ValueTask DisposeAsync()
-            {
-                return new ValueTask();
-            }
-
-            public Task<IState> HandleEvent(IEventContext eventContext)
-            {
-                return Task.FromResult(eventContext.State);
-            }
-        }
-
-        public class ExceptionHandler : IEventHandler
-        {
-            public ValueTask DisposeAsync()
-            {
-                return new ValueTask();
-            }
-
-            public Task<IState> HandleEvent(IEventContext eventContext)
-            {
-                throw new Exception();
-            }
-        }
-
+        
         private readonly IActorIdentity _testActorIdentity = new ActorIdentity("123", "testActor");
     }
 }

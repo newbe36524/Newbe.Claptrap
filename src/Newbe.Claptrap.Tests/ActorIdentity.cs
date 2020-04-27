@@ -31,5 +31,8 @@ namespace Newbe.Claptrap.Tests
         {
             return HashCode.Combine(Id, TypeCode);
         }
+
+        public static ActorIdentity Instance =>
+            new ActorIdentity(Guid.NewGuid().ToString(), typeof(ActorIdentity).FullName!);
     }
 }

@@ -1,7 +1,7 @@
 # Newbe.Claptrap
 
-![build](https://github.com/newbe36524/Newbe.Claptrap/workflows/Claptrap/badge.svg)
-![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)
+[![build](https://github.com/newbe36524/Newbe.Claptrap/workflows/Claptrap/badge.svg)](https://github.com/newbe36524/Newbe.Claptrap/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)](https://codecov.io/gh/newbe36524/Newbe.Claptrap)
 
 以`事件溯源`和`Actor模式`作为基本理论的一套服务端开发框架。于此之上，开发者可以更为简单的开发出“分布式”、“可水平扩展”、“可测试性高”的应用系统。
 
