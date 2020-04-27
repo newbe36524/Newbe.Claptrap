@@ -1,0 +1,50 @@
+name: Claptrap
+
+on:
+  push:
+    branches: 
+      - master
+      - develop
+      - feature/ci
+  pull_request: 
+    branches: 
+      - master
+      - develop
+      - feature/ci
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet restore
+    - name: Build
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet build --configuration Release --no-restore
+    - name: Test
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Codecov
+      uses: codecov/codecov-action@v1.0.6
+      # with:
+      #   # User defined upload name. Visible in Codecov UI
+      #   name: # optional
+      #   # Repository upload token - get it from codecov.io. Required only for private repositories
+      #   token: # optional
+      #   # Path to coverage file to upload
+      #   file: # optional
+      #   # Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)
+      #   flags: # optional
+      #   # Specify whether or not CI build should fail if Codecov runs into an error during upload
+      #   fail_ci_if_error: # optional
