@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.ExceptionServices;
@@ -146,28 +147,37 @@ namespace Newbe.Claptrap.Preview
         private void CreateStateSnapshotSavingFlow()
         {
             _snapshotSavingFlow = _currentStateSeq
+                .Where(state => state != null)
+                .DistinctUntilChanged(state => state.Version)
                 // TODO config
                 .Window(TimeSpan.FromSeconds(10), 1)
-                .Subscribe(observable =>
+                .Select(observable =>
                 {
-                    observable
+                    return observable
                         .LastOrDefaultAsync()
-                        .Select(state => (state, Observable.FromAsync(() => _stateStore.Save(state))))
-                        .Subscribe(tuple =>
+                        .Select(state =>
                         {
-                            var (state, seq) = tuple;
-                            seq.Subscribe(_ =>
-                                {
-                                    _logger.LogInformation("state snapshot save, version : {version}",
-                                        state.Version);
-                                }, ex =>
-                                {
-                                    _logger.LogError(
-                                        "thrown a exception when saving state snapshot, version : {version}",
-                                        state.Version);
-                                })
-                                .Dispose();
+                            return state != null
+                                ? (state, Observable.FromAsync(() => _stateStore.Save(state)))
+                                : (default, Observable.Empty<Unit>())!;
                         });
+                    ;
+                })
+                .Concat()
+                .Subscribe(tuple =>
+                {
+                    var (state, seq) = tuple;
+                    seq.Subscribe(_ =>
+                        {
+                            _logger.LogInformation("state snapshot save, version : {version}",
+                                state.Version);
+                        }, ex =>
+                        {
+                            _logger.LogError(
+                                "thrown a exception when saving state snapshot, version : {version}",
+                                state.Version);
+                        })
+                        .Dispose();
                 });
         }
 
