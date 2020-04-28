@@ -6,5 +6,6 @@ namespace Newbe.Claptrap.Autofac
     {
         public IEnumerable<ActorTypeRegistration> ActorTypeRegistrations { get; set; }
         public IEnumerable<EventTypeHandlerRegistration> EventHandlerTypeRegistrations { get; set; }
+        public IEnumerable<EventStoreRegistration> EventStoreRegistrations { get; set; }
     }
 }

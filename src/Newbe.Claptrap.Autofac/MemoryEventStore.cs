@@ -10,6 +10,8 @@ namespace Newbe.Claptrap.Autofac
     [ExcludeFromCodeCoverage]
     public class MemoryEventStore : IEventStore
     {
+        public delegate MemoryEventStore Factory(IActorIdentity identity);
+
         private readonly IList<IEvent> _list;
 
         public MemoryEventStore(IActorIdentity identity)

@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.Tests
             mocker.Mock<IStateStoreFactory>()
                 .Setup(x => x.Create(actorIdentity))
                 .Returns(new MemoryStateStore(actorIdentity, default!));
-
+            
             mocker.Mock<IEventStoreFactory>()
                 .Setup(x => x.Create(actorIdentity))
                 .Returns(new MemoryEventStore(actorIdentity));

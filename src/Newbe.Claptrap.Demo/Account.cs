@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
+using Newbe.Claptrap.EventStore;
 using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Demo
 {
     [ClaptrapStateInitialFactoryHandler]
+    [EventStore(EventStoreProvider.SQLite)]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), typeof(AccountBalanceChangeEventData))]
     public class Account : Claptrap<AccountStateData>, IAccount
     {

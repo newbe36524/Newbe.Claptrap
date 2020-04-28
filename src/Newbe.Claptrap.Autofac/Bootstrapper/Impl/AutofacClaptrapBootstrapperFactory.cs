@@ -45,8 +45,11 @@ namespace Newbe.Claptrap.Autofac
             var claptrapBootstrapper = new AutofacClaptrapBootstrapper(new Module[]
             {
                 new ClaptrapCustomerModule(claptrapCustomerModuleLogger, claptrapRegistration),
+                new ToolsModule(),
                 new ClaptrapModule(),
                 new ClaptrapOrleansModule(),
+                new MemoryStorageModule(),
+                new SerializerModule(),
             });
             return claptrapBootstrapper;
         }

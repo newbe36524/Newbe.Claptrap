@@ -10,6 +10,7 @@ using Newbe.Claptrap.Demo.Interfaces;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Orleans;
+using Newbe.Claptrap.StorageProvider.SQLite.Module;
 using Orleans;
 using Orleans.Hosting;
 
@@ -25,18 +26,18 @@ namespace Newbe.Claptrap.Demo.Server
                 .UseLocalhostClustering()
                 .UseServiceProviderFactory(collection =>
                 {
-                    collection.AddLogging(builder =>
+                    collection.AddLogging(logging =>
                     {
-                        builder.AddConsole();
-                        builder.SetMinimumLevel(LogLevel.Trace);
+                        logging.AddConsole();
+                        logging.SetMinimumLevel(LogLevel.Debug);
                     });
-                    var containerBuilder = new ContainerBuilder();
+                    var builder = new ContainerBuilder();
 
                     // Once you've registered everything in the ServiceCollection, call
                     // Populate to bring those registrations into Autofac. This is
                     // just like a foreach over the list of things in the collection
                     // to add them to Autofac.
-                    containerBuilder.Populate(collection);
+                    builder.Populate(collection);
 
                     var buildServiceProvider = collection.BuildServiceProvider();
                     var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
@@ -45,13 +46,14 @@ namespace Newbe.Claptrap.Demo.Server
                     {
                         typeof(Account).Assembly
                     });
-                    claptrapBootstrapper.RegisterServices(containerBuilder);
+                    claptrapBootstrapper.RegisterServices(builder);
+                    builder.RegisterModule<SQLiteStorageModule>();
 
                     // Creating a new AutofacServiceProvider makes the container
                     // available to your app using the Microsoft IServiceProvider
                     // interface so you can use those abstractions rather than
                     // binding directly to Autofac.
-                    var container = containerBuilder.Build();
+                    var container = builder.Build();
                     var serviceProvider = new AutofacServiceProvider(container);
                     return serviceProvider;
                 })

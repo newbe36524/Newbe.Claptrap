@@ -3,7 +3,7 @@ using Newbe.Claptrap.EventStore;
 using Newbe.Claptrap.Metadata;
 using Newtonsoft.Json;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.Autofac
 {
     public class JsonStateDataStringSerializer : IStateDataStringSerializer
     {

@@ -1,4 +1,5 @@
 using System;
+using Newbe.Claptrap.EventStore;
 
 namespace Newbe.Claptrap.Metadata
 {
@@ -7,7 +8,7 @@ namespace Newbe.Claptrap.Metadata
         Type FindEventDataType(string actorTypeCode, string eventTypeCode);
 
         Type? FindEventHandlerType(string actorTypeCode, string eventTypeCode);
-        
+
         /// <summary>
         /// find state type
         /// </summary>
@@ -20,5 +21,12 @@ namespace Newbe.Claptrap.Metadata
         /// <param name="type"></param>
         /// <returns></returns>
         string FindActorTypeCode(Type type);
+
+        /// <summary>
+        /// Find event store type
+        /// </summary>
+        /// <param name="actorTypeCode"></param>
+        /// <returns></returns>
+        EventStoreProvider FindEventStoreProvider(string actorTypeCode);
     }
 }

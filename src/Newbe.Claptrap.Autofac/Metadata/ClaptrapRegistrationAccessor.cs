@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.EventStore;
 using Newbe.Claptrap.Metadata;
 
 namespace Newbe.Claptrap.Autofac
@@ -14,6 +15,7 @@ namespace Newbe.Claptrap.Autofac
         private readonly ILookup<string, EventTypeHandlerRegistration> _actorTypeCodeLookup;
         private readonly Dictionary<string, ActorTypeRegistration> _codeBaseActorStateType;
         private readonly Dictionary<Type, ActorTypeRegistration> _typeBaseActorStateType;
+        private readonly Dictionary<string, EventStoreRegistration> _eventStoreRegistrationsDic;
 
         public ClaptrapRegistrationAccessor(
             ILogger<ClaptrapRegistrationAccessor> logger,
@@ -26,6 +28,8 @@ namespace Newbe.Claptrap.Autofac
                 claptrapRegistration.ActorTypeRegistrations.ToDictionary(x => x.ActorTypeCode);
             _typeBaseActorStateType =
                 claptrapRegistration.ActorTypeRegistrations.ToDictionary(x => x.ActorStateDataType);
+            _eventStoreRegistrationsDic =
+                claptrapRegistration.EventStoreRegistrations.ToDictionary(x => x.ActorTypeCode);
         }
 
         public Type FindEventDataType(string actorTypeCode, string eventTypeCode)
@@ -71,6 +75,11 @@ namespace Newbe.Claptrap.Autofac
             }
 
             throw new ArgumentOutOfRangeException(nameof(type));
+        }
+
+        public EventStoreProvider FindEventStoreProvider(string actorTypeCode)
+        {
+            return _eventStoreRegistrationsDic[actorTypeCode].EventStoreProvider;
         }
     }
 }

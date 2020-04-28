@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newbe.Claptrap.Orleans;
 
 namespace Newbe.Claptrap.Autofac
 {
@@ -30,7 +29,8 @@ namespace Newbe.Claptrap.Autofac
                         eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>(),
                         stateInitialFactoryHandlerAttr =
                             implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
-                        eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>()
+                        eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>(),
+                        eventStoreAttr = implType.GetCustomAttribute<EventStoreAttribute>()
                     };
                 })
                 .ToArray();
@@ -65,10 +65,19 @@ namespace Newbe.Claptrap.Autofac
                 })
                 .ToArray();
 
+            var eventStoreRegistrations = impls
+                .Select(x => new EventStoreRegistration
+                {
+                    ActorTypeCode = GetActorTypeCode(x.stateAttr),
+                    EventStoreProvider = x.eventStoreAttr.EventStoreProvider
+                })
+                .ToArray();
+            
             ClaptrapRegistration = new ClaptrapRegistration
             {
                 ActorTypeRegistrations = actorTypeRegistrations,
-                EventHandlerTypeRegistrations = eventHandlerTypeRegistrations
+                EventHandlerTypeRegistrations = eventHandlerTypeRegistrations,
+                EventStoreRegistrations = eventStoreRegistrations
             };
 
             static string GetActorTypeCode(ClaptrapStateAttribute attr)

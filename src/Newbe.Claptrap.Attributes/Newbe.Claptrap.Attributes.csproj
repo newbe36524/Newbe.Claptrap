@@ -9,4 +9,8 @@
       <DocumentationFile>bin\$(Configuration)\Newbe.Claptrap.Attributes.xml</DocumentationFile>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
+    </ItemGroup>
+
 </Project>
