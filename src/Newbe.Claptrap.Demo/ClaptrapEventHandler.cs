@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Newbe.Claptrap.Context;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.EventHandler;
+using Newbe.Claptrap.Preview.Context;
+using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.EventHandler;
 
 namespace Newbe.Claptrap.Demo
 {

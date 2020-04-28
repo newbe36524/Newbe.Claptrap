@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.EventStore;
-using Newbe.Claptrap.Orleans;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Orleans;
 
 namespace Newbe.Claptrap.Demo
 {

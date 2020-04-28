@@ -1,9 +1,9 @@
 using System;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Autofac;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.Metadata;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Metadata;
 using Xunit;
 using Xunit.Abstractions;
 

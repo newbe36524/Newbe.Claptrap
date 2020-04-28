@@ -6,9 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.Core.Abstractions\Newbe.Claptrap.Core.Abstractions.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Preview\Newbe.Claptrap.Preview.csproj" />
     </ItemGroup>
 
 </Project>

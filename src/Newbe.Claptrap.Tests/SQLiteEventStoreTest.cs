@@ -5,9 +5,10 @@ using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.EventStore;
-using Newbe.Claptrap.StorageProvider.SQLite;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.SQLite;
 using Xunit;
 using Xunit.Abstractions;
 

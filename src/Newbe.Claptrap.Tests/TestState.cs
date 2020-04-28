@@ -1,4 +1,4 @@
-using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Preview.Core;
 
 namespace Newbe.Claptrap.Tests
 {

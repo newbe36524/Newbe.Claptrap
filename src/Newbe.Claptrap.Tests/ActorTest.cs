@@ -7,11 +7,12 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
 using Moq;
-using Newbe.Claptrap.Context;
-using Newbe.Claptrap.Core;
-using Newbe.Claptrap.EventHandler;
-using Newbe.Claptrap.EventStore;
-using Newbe.Claptrap.StateStore;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Context;
+using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.EventHandler;
+using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.StateStore;
 using Xunit;
 using Xunit.Abstractions;
 

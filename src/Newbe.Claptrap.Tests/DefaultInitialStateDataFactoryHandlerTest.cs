@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Autofac;
-using Newbe.Claptrap.Metadata;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Metadata;
 using Xunit;
 
 namespace Newbe.Claptrap.Tests

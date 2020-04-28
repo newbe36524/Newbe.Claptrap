@@ -1,9 +1,9 @@
 using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Autofac;
-using Newbe.Claptrap.EventStore;
-using Newbe.Claptrap.StateStore;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.StateStore;
 using Xunit;
 
 namespace Newbe.Claptrap.Tests

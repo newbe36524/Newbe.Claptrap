@@ -2,6 +2,7 @@ using System;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Xunit;
+using Newbe.Claptrap.Preview;
 using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests

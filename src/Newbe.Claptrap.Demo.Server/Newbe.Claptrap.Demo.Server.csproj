@@ -13,9 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Newbe.Claptrap.Autofac\Newbe.Claptrap.Autofac.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     </ItemGroup>
 
 </Project>

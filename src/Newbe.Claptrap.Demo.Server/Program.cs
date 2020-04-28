@@ -5,12 +5,11 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Autofac;
 using Newbe.Claptrap.Demo.Interfaces;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Orleans;
-using Newbe.Claptrap.StorageProvider.SQLite.Module;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.SQLite.Module;
 using Orleans;
 using Orleans.Hosting;
 
@@ -47,7 +46,6 @@ namespace Newbe.Claptrap.Demo.Server
                         typeof(Account).Assembly
                     });
                     claptrapBootstrapper.RegisterServices(builder);
-                    builder.RegisterModule<SQLiteStorageModule>();
 
                     // Creating a new AutofacServiceProvider makes the container
                     // available to your app using the Microsoft IServiceProvider
