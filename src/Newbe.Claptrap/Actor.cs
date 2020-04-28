@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.ExceptionServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Context;
@@ -44,15 +41,16 @@ namespace Newbe.Claptrap
             _eventStore = eventStore;
             _eventHandlerFactory = eventHandlerFactory;
             _stateHolder = stateHolder;
-            _stateSeq = Observable.Return<Func<IState>>(() => State);
             _incomingEventsSeq = new Subject<EventItem>();
+            _currentStateSeq = new Subject<IState>();
         }
 
         public IState State { get; private set; }
 
         private IDisposable _eventHandleFlow;
+        private IDisposable _snapshotSavingFlow;
         private readonly Subject<EventItem> _incomingEventsSeq;
-        private readonly IObservable<Func<IState>> _stateSeq;
+        private readonly Subject<IState> _currentStateSeq;
 
         private async Task RestoreState()
         {
@@ -71,10 +69,10 @@ namespace Newbe.Claptrap
 
             var eventsFromStore = GetEventFromVersion().ToObservable();
             ExceptionDispatchInfo? exceptionDispatchInfo = null;
-            var restoreStateFlow = _stateSeq
-                .CombineLatest(eventsFromStore, (stateFunc, evt) =>
+            var restoreStateFlow = eventsFromStore
+                .Select(evt =>
                 {
-                    var nowState = stateFunc();
+                    var nowState = State;
                     var context = new StateRestoreFlowContext
                     {
                         NowState = nowState,
@@ -95,8 +93,8 @@ namespace Newbe.Claptrap
                     {
                         var (state, eventContext) = tuple;
                         _logger.LogDebug("start update to @{state}", state);
-                        State = state;
                         Debug.Assert(state.NextVersion == eventContext.Event.Version);
+                        State = state;
                         State.IncreaseVersion();
                     },
                     ex =>
@@ -110,20 +108,24 @@ namespace Newbe.Claptrap
 
             async IAsyncEnumerable<IEvent> GetEventFromVersion()
             {
-                var nowVersion = State.Version;
-                long stepVersion;
+                var startVersion = State.NextVersion;
                 const long step = 1000L;
-                do
+
+                var left = startVersion;
+                var right = startVersion + step;
+                var any = true;
+                while (any)
                 {
-                    stepVersion = nowVersion;
-                    var left = stepVersion;
-                    var right = stepVersion + step;
+                    any = false;
                     foreach (var @event in await _eventStore.GetEvents(left, right))
                     {
+                        any = true;
                         yield return @event;
-                        nowVersion = @event.Version;
                     }
-                } while (stepVersion != nowVersion);
+
+                    left = right;
+                    right += step;
+                }
             }
         }
 
@@ -133,6 +135,7 @@ namespace Newbe.Claptrap
             {
                 await RestoreState();
                 CreateEventHandlingFLow();
+                CreateStateSnapshotSavingFlow();
             }
             catch (Exception e)
             {
@@ -140,23 +143,50 @@ namespace Newbe.Claptrap
             }
         }
 
+        private void CreateStateSnapshotSavingFlow()
+        {
+            _snapshotSavingFlow = _currentStateSeq
+                // TODO config
+                .Window(TimeSpan.FromSeconds(10), 1)
+                .Subscribe(observable =>
+                {
+                    observable
+                        .LastOrDefaultAsync()
+                        .Select(state => (state, Observable.FromAsync(() => _stateStore.Save(state))))
+                        .Subscribe(tuple =>
+                        {
+                            var (state, seq) = tuple;
+                            seq.Subscribe(_ =>
+                                {
+                                    _logger.LogInformation("state snapshot save, version : {version}",
+                                        state.Version);
+                                }, ex =>
+                                {
+                                    _logger.LogError(
+                                        "thrown a exception when saving state snapshot, version : {version}",
+                                        state.Version);
+                                })
+                                .Dispose();
+                        });
+                });
+        }
+
         private void CreateEventHandlingFLow()
         {
-            _eventHandleFlow = _stateSeq
-                .CombineLatest(_incomingEventsSeq,
-                    (stateFunc, item) =>
+            _eventHandleFlow = _incomingEventsSeq
+                .Select(item =>
+                {
+                    var context = new EventHandleFlowContext
                     {
-                        var context = new EventHandleFlowContext
-                        {
-                            NowState = _stateHolder.DeepCopy(stateFunc()),
-                            Event = item.Event,
-                            TaskCompletionSource = item.TaskCompletionSource,
-                        };
-                        context.Event.Version = context.NowState.NextVersion;
-                        context.EventContext = new EventContext(context.Event, context.NowState);
-                        context.EventHandler = CreateHandler(context.EventContext);
-                        return context;
-                    })
+                        NowState = _stateHolder.DeepCopy(State),
+                        Event = item.Event,
+                        TaskCompletionSource = item.TaskCompletionSource,
+                    };
+                    context.Event.Version = context.NowState.NextVersion;
+                    context.EventContext = new EventContext(context.Event, context.NowState);
+                    context.EventHandler = CreateHandler(context.EventContext);
+                    return context;
+                })
                 .Select(context =>
                 {
                     return Observable.FromAsync(async () => (await SaveEvent(context.Event), context));
@@ -188,6 +218,7 @@ namespace Newbe.Claptrap
                                     _logger.LogDebug("start update to @{state}", nextState);
                                     State = nextState;
                                     State.IncreaseVersion();
+                                    _currentStateSeq.OnNext(State);
                                     _logger.LogDebug("state version updated : {version}", State.Version);
                                 }
                                 else
@@ -265,6 +296,9 @@ namespace Newbe.Claptrap
         public Task DeactivateAsync()
         {
             _eventHandleFlow?.Dispose();
+            _snapshotSavingFlow?.Dispose();
+            _incomingEventsSeq?.Dispose();
+            _currentStateSeq?.Dispose();
             return Task.CompletedTask;
         }
 

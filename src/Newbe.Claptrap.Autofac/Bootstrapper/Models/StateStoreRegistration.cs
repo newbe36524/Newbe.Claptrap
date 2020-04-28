@@ -1,17 +1,16 @@
-using System;
 using System.Collections.Generic;
 using Newbe.Claptrap.EventStore;
 
 namespace Newbe.Claptrap.Autofac
 {
-    public class EventStoreRegistration
+    public class StateStoreRegistration
     {
         public string ActorTypeCode { get; set; }
-        public EventStoreProvider EventStoreProvider { get; set; }
+        public StateStoreProvider StateStoreProvider { get; set; }
 
-        private sealed class ActorTypeCodeEqualityComparer : IEqualityComparer<EventStoreRegistration>
+        private sealed class ActorTypeCodeEqualityComparer : IEqualityComparer<StateStoreRegistration>
         {
-            public bool Equals(EventStoreRegistration x, EventStoreRegistration y)
+            public bool Equals(StateStoreRegistration x, StateStoreRegistration y)
             {
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
@@ -20,13 +19,13 @@ namespace Newbe.Claptrap.Autofac
                 return x.ActorTypeCode == y.ActorTypeCode;
             }
 
-            public int GetHashCode(EventStoreRegistration obj)
+            public int GetHashCode(StateStoreRegistration obj)
             {
                 return obj.ActorTypeCode.GetHashCode();
             }
         }
 
-        public static IEqualityComparer<EventStoreRegistration> ActorTypeCodeComparer { get; } =
+        public static IEqualityComparer<StateStoreRegistration> ActorTypeCodeComparer { get; } =
             new ActorTypeCodeEqualityComparer();
     }
 }

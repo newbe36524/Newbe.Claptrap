@@ -16,6 +16,7 @@ namespace Newbe.Claptrap.Autofac
         private readonly Dictionary<string, ActorTypeRegistration> _codeBaseActorStateType;
         private readonly Dictionary<Type, ActorTypeRegistration> _typeBaseActorStateType;
         private readonly Dictionary<string, EventStoreRegistration> _eventStoreRegistrationsDic;
+        private readonly Dictionary<string, StateStoreRegistration> _stateStoreRegistrations;
 
         public ClaptrapRegistrationAccessor(
             ILogger<ClaptrapRegistrationAccessor> logger,
@@ -30,6 +31,7 @@ namespace Newbe.Claptrap.Autofac
                 claptrapRegistration.ActorTypeRegistrations.ToDictionary(x => x.ActorStateDataType);
             _eventStoreRegistrationsDic =
                 claptrapRegistration.EventStoreRegistrations.ToDictionary(x => x.ActorTypeCode);
+            _stateStoreRegistrations = claptrapRegistration.StateStoreRegistrations.ToDictionary(x => x.ActorTypeCode);
         }
 
         public Type FindEventDataType(string actorTypeCode, string eventTypeCode)
@@ -80,6 +82,11 @@ namespace Newbe.Claptrap.Autofac
         public EventStoreProvider FindEventStoreProvider(string actorTypeCode)
         {
             return _eventStoreRegistrationsDic[actorTypeCode].EventStoreProvider;
+        }
+
+        public StateStoreProvider FindStateStoreProvider(string actorTypeCode)
+        {
+            return _stateStoreRegistrations[actorTypeCode].StateStoreProvider;
         }
     }
 }

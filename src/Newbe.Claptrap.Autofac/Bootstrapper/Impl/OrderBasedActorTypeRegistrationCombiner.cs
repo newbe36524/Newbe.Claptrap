@@ -51,11 +51,23 @@ namespace Newbe.Claptrap.Autofac
             _logger.LogInformation(
                 "event store registrations combined. {leftCount} registrations left.",
                 eventHandlerTypeRegistrations.Length);
+
+            var stateStoreRegistrations = registrationsArray
+                .SelectMany(x => x.StateStoreRegistrations)
+                .Reverse()
+                .Distinct(StateStoreRegistration.ActorTypeCodeComparer)
+                .ToArray();
+
+            _logger.LogInformation(
+                "event store registrations combined. {leftCount} registrations left.",
+                eventHandlerTypeRegistrations.Length);
+
             var re = new ClaptrapRegistration
             {
                 ActorTypeRegistrations = actorTypeRegistrations,
                 EventHandlerTypeRegistrations = eventHandlerTypeRegistrations,
                 EventStoreRegistrations = eventStoreRegistrations,
+                StateStoreRegistrations = stateStoreRegistrations
             };
             return re;
         }

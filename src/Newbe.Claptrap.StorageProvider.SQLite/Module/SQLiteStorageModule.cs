@@ -6,10 +6,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
     public class SQLiteStorageModule : StorageSupportModule
     {
-        public SQLiteStorageModule() : base(EventStoreProvider.SQLite)
+        public SQLiteStorageModule() : base(
+            EventStoreProvider.SQLite,
+            StateStoreProvider.SQLite)
         {
             EventStoreType = typeof(SQLiteEventStore);
             EventStoreFactoryHandlerType = typeof(SQLiteEventStoreFactoryHandler);
+
+            StateStoreType = typeof(SQLiteStateStore);
+            StateStoreFactoryHandlerType = typeof(SQLiteStateStoreFactoryHandler);
         }
 
         protected override void Load(ContainerBuilder builder)

@@ -30,7 +30,8 @@ namespace Newbe.Claptrap.Autofac
                         stateInitialFactoryHandlerAttr =
                             implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
                         eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>(),
-                        eventStoreAttr = implType.GetCustomAttribute<EventStoreAttribute>()
+                        eventStoreAttr = implType.GetCustomAttribute<EventStoreAttribute>(),
+                        stateStoreAttr = implType.GetCustomAttribute<StateStoreAttribute>(),
                     };
                 })
                 .ToArray();
@@ -72,12 +73,20 @@ namespace Newbe.Claptrap.Autofac
                     EventStoreProvider = x.eventStoreAttr.EventStoreProvider
                 })
                 .ToArray();
+
+            var stateStoreRegistrations = impls
+                .Select(x => new StateStoreRegistration
+                {
+                    ActorTypeCode = GetActorTypeCode(x.stateAttr),
+                    StateStoreProvider = x.stateStoreAttr.StateStoreProvider,
+                });
             
             ClaptrapRegistration = new ClaptrapRegistration
             {
                 ActorTypeRegistrations = actorTypeRegistrations,
                 EventHandlerTypeRegistrations = eventHandlerTypeRegistrations,
-                EventStoreRegistrations = eventStoreRegistrations
+                EventStoreRegistrations = eventStoreRegistrations,
+                StateStoreRegistrations = stateStoreRegistrations
             };
 
             static string GetActorTypeCode(ClaptrapStateAttribute attr)

@@ -28,5 +28,12 @@ namespace Newbe.Claptrap.Metadata
         /// <param name="actorTypeCode"></param>
         /// <returns></returns>
         EventStoreProvider FindEventStoreProvider(string actorTypeCode);
+
+        /// <summary>
+        /// Find state store type
+        /// </summary>
+        /// <param name="actorTypeCode"></param>
+        /// <returns></returns>
+        StateStoreProvider FindStateStoreProvider(string actorTypeCode);
     }
 }

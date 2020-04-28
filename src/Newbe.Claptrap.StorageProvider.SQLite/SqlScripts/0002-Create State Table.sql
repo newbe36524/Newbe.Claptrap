@@ -9,4 +9,4 @@ create table '$StateTableName$'
 );
 
 create unique index '$StateTableName$_id_actorcode_uindex'
-    on '$StateTableName$' ([id], [statedata]);
+    on '$StateTableName$' ([id], [actortypecode]);

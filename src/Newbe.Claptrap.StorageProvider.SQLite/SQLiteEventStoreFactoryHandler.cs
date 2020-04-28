@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.EventStore;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.Module
+namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     [ExcludeFromCodeCoverage]
     public class SQLiteEventStoreFactoryHandler : IIEventStoreFactoryHandler

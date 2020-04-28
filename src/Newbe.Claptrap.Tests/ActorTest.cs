@@ -169,6 +169,10 @@ namespace Newbe.Claptrap.Tests
             mocker.Mock<IStateStore>()
                 .Setup(x => x.GetStateSnapshot())
                 .ReturnsAsync(state);
+            
+            mocker.Mock<IStateStore>()
+                .Setup(x => x.Save(It.IsAny<IState>()))
+                .Returns(Task.CompletedTask);
 
             mocker.Mock<IEventStore>()
                 .SetupSequence(x => x.GetEvents(It.IsAny<long>(), It.IsAny<long>()))
@@ -193,7 +197,7 @@ namespace Newbe.Claptrap.Tests
             await actor.HandleEvent(new TestEvent());
             state.Version.Should().Be(1);
         }
-        
+
         private readonly IActorIdentity _testActorIdentity = new ActorIdentity("123", "testActor");
     }
 }

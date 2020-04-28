@@ -8,6 +8,7 @@ namespace Newbe.Claptrap.Demo
 {
     [ClaptrapStateInitialFactoryHandler]
     [EventStore(EventStoreProvider.SQLite)]
+    [StateStore(StateStoreProvider.SQLite)]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), typeof(AccountBalanceChangeEventData))]
     public class Account : Claptrap<AccountStateData>, IAccount
     {

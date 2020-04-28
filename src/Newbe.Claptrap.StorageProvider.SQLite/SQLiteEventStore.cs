@@ -48,7 +48,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             _insertSql = new Lazy<string>(() =>
                 $"INSERT OR IGNORE INTO [{DbHelper.GetEventTableName(Identity)}] ([version], [uid], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @Uid, @EventTypeCode, @EventData, @CreatedTime)");
             _selectSql = new Lazy<string>(() =>
-                $"SELECT * FROM [{DbHelper.GetEventTableName(Identity)}] WHERE [version] >= @startVersion AND [version] < @endVersion");
+                $"SELECT * FROM [{DbHelper.GetEventTableName(Identity)}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]");
         }
 
         public IActorIdentity Identity { get; }
