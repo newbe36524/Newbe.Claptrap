@@ -1,0 +1,42 @@
+name: Github Dev Nuget Package
+
+on:
+  push:
+    branches: 
+      - develop
+  pull_request: 
+    branches: 
+      - develop
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        source-url: https://nuget.pkg.github.com/newbe36524/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - uses: aarnott/nbgv@v0.3
+      with:
+        setAllVars: true
+
+    - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
+
+    - name: pack
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
+
+    - name: Push generated package to GitHub registry
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet nuget push *.nupkg --skip-duplicate --no-symbols true
