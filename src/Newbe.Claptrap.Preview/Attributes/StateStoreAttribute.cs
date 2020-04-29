@@ -1,16 +1,18 @@
 using System;
-using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Abstractions;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class StateStoreAttribute : Attribute
     {
-        public StateStoreProvider StateStoreProvider { get; }
+        public Type StateSaverFactoryType { get; }
+        public Type StateLoaderFactoryType { get; }
 
-        public StateStoreAttribute(StateStoreProvider stateStoreProvider)
+        public StateStoreAttribute(Type stateSaverFactoryType, Type stateLoaderFactoryType)
         {
-            StateStoreProvider = stateStoreProvider;
+            StateSaverFactoryType = stateSaverFactoryType;
+            StateLoaderFactoryType = stateLoaderFactoryType;
         }
     }
 }

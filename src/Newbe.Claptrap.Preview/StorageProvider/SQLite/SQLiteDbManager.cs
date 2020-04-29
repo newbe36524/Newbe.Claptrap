@@ -8,9 +8,9 @@ using DbUp;
 using DbUp.Engine;
 using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public class SQLiteDbManager : ISQLiteDbManager
     {
@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Preview.SQLite
             _logger = logger;
         }
 
-        public void CreateOrUpdateDatabase(IActorIdentity actorIdentity, IDbConnection dbConnection)
+        public void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity, IDbConnection dbConnection)
         {
             var dir = DbHelper.GetDatabaseDirectory();
             if (!Directory.Exists(dir))
@@ -38,10 +38,10 @@ namespace Newbe.Claptrap.Preview.SQLite
                     .LogToAutodetectedLog()
                     .LogToConsole()
                     .WithVariablesEnabled()
-                    .WithVariable("ActorTypeCode", actorIdentity.TypeCode)
-                    .WithVariable("ActorId", actorIdentity.Id)
-                    .WithVariable("EventTableName", DbHelper.GetEventTableName(actorIdentity))
-                    .WithVariable("StateTableName", DbHelper.GetStateTableName(actorIdentity))
+                    .WithVariable("ActorTypeCode", claptrapIdentity.TypeCode)
+                    .WithVariable("ActorId", claptrapIdentity.Id)
+                    .WithVariable("EventTableName", DbHelper.GetEventTableName(claptrapIdentity))
+                    .WithVariable("StateTableName", DbHelper.GetStateTableName(claptrapIdentity))
                     .Build();
 
             var result = dbMigration.PerformUpgrade();
@@ -49,13 +49,13 @@ namespace Newbe.Claptrap.Preview.SQLite
             if (!result.Successful)
             {
                 throw new Exception(
-                    $"event store create failed for {actorIdentity.TypeCode} {actorIdentity.Id}",
+                    $"event store create failed for {claptrapIdentity.TypeCode} {claptrapIdentity.Id}",
                     result.Error);
             }
 
             if (result.Scripts.Any())
             {
-                var dbFilename = DbHelper.GetDbFilename(actorIdentity);
+                var dbFilename = DbHelper.GetDbFilename(claptrapIdentity);
                 _logger.LogInformation("db migration for {filename} is success.", dbFilename);
             }
             else
@@ -81,9 +81,9 @@ namespace Newbe.Claptrap.Preview.SQLite
             return sb.ToString();
         }
 
-        public void DeleteIfFound(IActorIdentity actorIdentity)
+        public void DeleteIfFound(IClaptrapIdentity claptrapIdentity)
         {
-            var filename = DbHelper.GetDbFilename(actorIdentity);
+            var filename = DbHelper.GetDbFilename(claptrapIdentity);
             if (File.Exists(filename))
             {
                 _logger.LogInformation("db file found, start to delete it. path: {path}", filename);

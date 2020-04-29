@@ -1,76 +1,72 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Metadata;
-using Newbe.Claptrap.Preview.StateStore;
+using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Impl.Metadata;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     /// <summary>
     /// Module for building Claptrap from `your code`
     /// </summary>
-    public class ClaptrapCustomerModule : Autofac.Module
+    public class ClaptrapCustomerModule : Module
     {
         private readonly ILogger<ClaptrapCustomerModule> _logger;
-        private readonly ClaptrapRegistration _claptrapRegistration;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public ClaptrapCustomerModule(
             ILogger<ClaptrapCustomerModule> logger,
-            ClaptrapRegistration claptrapRegistration)
+            IClaptrapDesignStore claptrapDesignStore)
         {
             _logger = logger;
-            _claptrapRegistration = claptrapRegistration;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterInstance(_claptrapRegistration)
-                .AsSelf()
+            builder.RegisterInstance(_claptrapDesignStore)
+                .As<IClaptrapDesignStore>()
                 .SingleInstance();
-            builder.RegisterType<ClaptrapRegistrationAccessor>()
-                .As<IClaptrapRegistrationAccessor>()
+            builder.RegisterType<ClaptrapDesignStoreAccessor>()
+                .As<IClaptrapDesignStoreAccessor>()
                 .SingleInstance();
 
-            _logger.LogDebug("start to register actor types ");
-            foreach (var actorTypeRegistration in _claptrapRegistration.ActorTypeRegistrations)
+            var claptrapDesigns = _claptrapDesignStore.ToArray();
+            foreach (var claptrapDesign in claptrapDesigns)
             {
-                var actorTypeCode = actorTypeRegistration.ActorTypeCode;
+                var actorTypeCode = claptrapDesign.Identity.TypeCode;
                 _logger.LogDebug("start to register actor type : {actorTypeCode}", actorTypeCode);
-                RegisterActorType(actorTypeRegistration);
-                _logger.LogDebug("actor type registration for '{actorTypeCode}' done", actorTypeCode);
-            }
+                foreach (var type in GetTypes(claptrapDesign))
+                {
+                    builder.RegisterType(type)
+                        .AsSelf()
+                        .InstancePerLifetimeScope();
+                }
 
-            foreach (var eventHandlerTypeRegistration in _claptrapRegistration.EventHandlerTypeRegistrations)
-            {
-                var actorTypeCode = eventHandlerTypeRegistration.ActorTypeCode;
-                var eventTypeCode = eventHandlerTypeRegistration.EventTypeCode;
-                _logger.LogDebug("start to register '{eventTypeCode}' event handler for '{actorTypeCode}'",
-                    eventTypeCode,
-                    actorTypeCode);
-                RegisterEventHandlerType(eventHandlerTypeRegistration);
-                _logger.LogDebug("event handler registration for '{eventTypeCode}' with '{actorTypeCode}'",
-                    eventTypeCode,
-                    actorTypeCode);
+                _logger.LogDebug("actor type registration for '{actorTypeCode}' done", actorTypeCode);
             }
 
             _logger.LogDebug("actor type registration done");
 
             _logger.LogInformation("{count} actorType have been registered into container",
-                _claptrapRegistration.ActorTypeRegistrations.Count());
+                claptrapDesigns.Length);
 
-            void RegisterActorType(ActorTypeRegistration actorTypeRegistration)
+            static IEnumerable<Type> GetTypes(IClaptrapDesign design)
             {
-                builder.RegisterType(actorTypeRegistration.StateInitialFactoryHandlerType)
-                    .Keyed<IInitialStateDataFactoryHandler>(actorTypeRegistration.ActorTypeCode)
-                    .InstancePerLifetimeScope();
-            }
-
-            void RegisterEventHandlerType(EventTypeHandlerRegistration eventHandlerTypeRegistration)
-            {
-                builder.RegisterType(eventHandlerTypeRegistration.EventHandlerType)
-                    .AsSelf()
-                    .InstancePerLifetimeScope();
+                yield return design.EventLoaderFactoryType;
+                yield return design.EventSaverFactoryType;
+                yield return design.StateHolderFactoryType;
+                yield return design.StateLoaderFactoryType;
+                yield return design.StateSaverFactoryType;
+                yield return design.EventHandlerFactoryFactoryType;
+                yield return design.InitialStateDataFactoryType;
+                foreach (var designEventHandlerDesign in design.EventHandlerDesigns)
+                {
+                    yield return designEventHandlerDesign.Value.EventHandlerType;
+                }
             }
         }
     }

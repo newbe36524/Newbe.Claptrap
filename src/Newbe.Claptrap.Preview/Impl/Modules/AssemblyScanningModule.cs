@@ -1,27 +1,34 @@
 using Autofac;
+using Newbe.Claptrap.Preview.Impl.Metadata;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     /// <summary>
-    /// Module for building <see cref="IClaptrapRegistrationFinder"/>
+    /// Module for building <see cref="IClaptrapDesignStoreFactory"/>
     /// </summary>
-    public class AssemblyScanningModule : Autofac.Module
+    public class AssemblyScanningModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ClaptrapRegistrationFinder>()
-                .AsImplementedInterfaces()
+
+            builder.RegisterType<ClaptrapDesignStoreValidator>()
+                .As<IClaptrapDesignStoreValidator>()
+                .SingleInstance();
+            builder.RegisterType<ClaptrapDesignStoreFactory>()
+                .As<IClaptrapDesignStoreFactory>()
                 .SingleInstance();
 
-            builder.RegisterType<AttributeBaseActorTypeRegistrationProvider>()
+            builder.RegisterType<AttributeBaseClaptrapDesignStoreProvider>()
                 .AsSelf()
-                .As<IActorTypeRegistrationProvider>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<OrderBasedActorTypeRegistrationCombiner>()
-                .As<IActorTypeRegistrationCombiner>()
                 .SingleInstance();
+
+            builder.RegisterType<ClaptrapDesignStoreCombiner>()
+                .As<IClaptrapDesignStoreCombiner>()
+                .SingleInstance();
+            builder.RegisterType<ClaptrapDesignStore>()
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }

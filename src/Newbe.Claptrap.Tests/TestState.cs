@@ -1,10 +1,10 @@
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Tests
 {
     public class TestState : IState
     {
-        public IActorIdentity Identity { get; set; }
+        public IClaptrapIdentity Identity { get; set; }
         public IStateData Data { get; set; }
         public long Version { get; set; }
 

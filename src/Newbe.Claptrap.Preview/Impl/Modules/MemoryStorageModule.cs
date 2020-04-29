@@ -1,20 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
-using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Abstractions;
+using Newbe.Claptrap.Preview.Impl.MemoryStore;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     [ExcludeFromCodeCoverage]
     public class MemoryStorageModule : StorageSupportModule
     {
-        public MemoryStorageModule() : base(
-            EventStoreProvider.Memory,
-            StateStoreProvider.Memory)
+        public MemoryStorageModule()
         {
             EventStoreType = typeof(MemoryEventStore);
-            EventStoreFactoryHandlerType = typeof(MemoryEventStoreFactoryHandler);
 
             StateStoreType = typeof(MemoryStateStore);
-            StateStoreFactoryHandlerType = typeof(MemoryStateStoreFactoryHandler);
         }
     }
 }

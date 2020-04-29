@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Abstractions
 {
     public interface IClock
     {

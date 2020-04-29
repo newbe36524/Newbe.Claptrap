@@ -9,7 +9,7 @@ using Newbe.Claptrap.Demo.Interfaces;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.SQLite.Module;
+using Newbe.Claptrap.Preview.Impl.Bootstrapper;
 using Orleans;
 using Orleans.Hosting;
 
@@ -29,6 +29,8 @@ namespace Newbe.Claptrap.Demo.Server
                     {
                         logging.AddConsole();
                         logging.SetMinimumLevel(LogLevel.Debug);
+                        logging.AddFilter((s, level) => s.StartsWith("Orleans") && level >= LogLevel.Warning);
+                        logging.AddFilter((s, level) => s.Contains("Claptrap"));
                     });
                     var builder = new ContainerBuilder();
 

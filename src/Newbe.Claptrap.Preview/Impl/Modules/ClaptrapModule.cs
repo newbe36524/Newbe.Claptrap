@@ -1,46 +1,38 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventHandler;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.StateStore;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Impl.MemoryStore;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     [ExcludeFromCodeCoverage]
-    public class ClaptrapModule : Autofac.Module
+    public class ClaptrapModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
 
             builder.RegisterType<DeepClonerStateHolder>()
-                .As<IStateHolder>()
+                .AsSelf()
                 .SingleInstance();
 
-            builder.RegisterType<ActorFactory>()
-                .As<IActorFactory>()
+            builder.RegisterType<ClaptrapFactory>()
+                .As<IClaptrapFactory>()
                 .SingleInstance();
 
-            builder.RegisterType<EventStoreFactory>()
-                .As<IEventStoreFactory>()
-                .SingleInstance();
+            builder.RegisterType<MemoryEventStore>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
 
-            builder.RegisterType<StateStoreFactory>()
-                .As<IStateStoreFactory>()
-                .SingleInstance();
-            builder.RegisterType<InitialStateDataFactory>()
-                .As<IInitialStateDataFactory>()
-                .SingleInstance();
             builder.RegisterType<MemoryStateStore>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<EventHandlerFactory>()
-                .As<IEventHandlerFactory>()
+            builder.RegisterType<DesignBaseEventHandlerFactory>()
+                .AsSelf()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<Actor>()
+            builder.RegisterType<ClaptrapActor>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

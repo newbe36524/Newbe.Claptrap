@@ -1,29 +1,29 @@
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
 using Newtonsoft.Json;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Serializer
 {
     public class JsonStateDataStringSerializer : IStateDataStringSerializer
     {
-        private readonly IClaptrapRegistrationAccessor _claptrapRegistrationAccessor;
+        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
 
         public JsonStateDataStringSerializer(
-            IClaptrapRegistrationAccessor claptrapRegistrationAccessor)
+            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
         {
-            _claptrapRegistrationAccessor = claptrapRegistrationAccessor;
+            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
         }
 
-        public string Serialize(string actorTypeCode, IStateData stateData)
+        public string Serialize(string claptrapTypeCode, IStateData stateData)
         {
             var re = JsonConvert.SerializeObject(stateData);
             return re;
         }
 
-        public IStateData Deserialize(string actorTypeCode, string source)
+        public IStateData Deserialize(string claptrapTypeCode, string source)
         {
-            var stateDataType = _claptrapRegistrationAccessor.FindStateDataType(actorTypeCode);
+            var stateDataType = _claptrapDesignStoreAccessor.FindStateDataType(claptrapTypeCode);
             var re = (IStateData) JsonConvert.DeserializeObject(source, stateDataType)!;
             return re;
         }

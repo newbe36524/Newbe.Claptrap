@@ -2,13 +2,15 @@ using System;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.StateStore;
+using Newbe.Claptrap.Preview.Abstractions;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
+using Newbe.Claptrap.Preview.Impl;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
-    public class SQLiteStateStore : IStateStore
+    public class SQLiteStateStore : IStateLoader, IStateSaver
     {
         private readonly ILogger<SQLiteStateStore> _logger;
         private readonly ISQLiteDbFactory _sqLiteDbFactory;
@@ -18,13 +20,13 @@ namespace Newbe.Claptrap.Preview.SQLite
         private readonly Lazy<string> _upsertSql;
         private readonly Lazy<bool> _dbCreated;
 
-        public delegate SQLiteStateStore Factory(IActorIdentity identity);
+        public delegate SQLiteStateStore Factory(IClaptrapIdentity identity);
 
-        public IActorIdentity Identity { get; }
+        public IClaptrapIdentity Identity { get; }
 
         public SQLiteStateStore(
             ILogger<SQLiteStateStore> logger,
-            IActorIdentity identity,
+            IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteDbManager sqLiteDbManager,
             IClock clock,
@@ -46,7 +48,7 @@ namespace Newbe.Claptrap.Preview.SQLite
                 $"INSERT OR REPLACE INTO [{DbHelper.GetStateTableName(Identity)}] ([id],[version],[actortypecode],[statedata],[updatedtime]) VALUES(@Id, @Version, @ActorTypeCode, @StateData, @UpdatedTime)");
         }
 
-        public async Task<IState?> GetStateSnapshot()
+        public async Task<IState?> GetStateSnapshotAsync()
         {
             _ = _dbCreated.Value;
             await using var db = _sqLiteDbFactory.CreateConnection(Identity);
@@ -62,7 +64,7 @@ namespace Newbe.Claptrap.Preview.SQLite
             return dataState;
         }
 
-        public async Task Save(IState state)
+        public async Task SaveAsync(IState state)
         {
             _ = _dbCreated.Value;
             var stateData = _stateDataStringSerializer.Serialize(Identity.TypeCode, state.Data);
@@ -86,14 +88,5 @@ namespace Newbe.Claptrap.Preview.SQLite
                 _logger.LogError("snapshot upserted failed");
             }
         }
-    }
-
-    public class StateEntity
-    {
-        public string Id { get; set; }
-        public long Version { get; set; }
-        public string ActorTypeCode { get; set; }
-        public string StateData { get; set; }
-        public DateTime UpdatedTime { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 using System.Data;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public interface ISQLiteDbManager
     {
-        void CreateOrUpdateDatabase(IActorIdentity actorIdentity, IDbConnection dbConnection);
-        void DeleteIfFound(IActorIdentity actorIdentity);
+        void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity, IDbConnection dbConnection);
+        void DeleteIfFound(IClaptrapIdentity claptrapIdentity);
     }
 }

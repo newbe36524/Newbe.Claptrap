@@ -1,30 +1,30 @@
 using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public static class DbHelper
     {
-        public static string GetEventTableName(IActorIdentity actorIdentity)
+        public static string GetEventTableName(IClaptrapIdentity claptrapIdentity)
         {
             return "events";
         }
 
-        public static string GetStateTableName(IActorIdentity actorIdentity)
+        public static string GetStateTableName(IClaptrapIdentity claptrapIdentity)
         {
             return "state";
         }
 
-        public static string GetDbFilename(IActorIdentity actorIdentity)
+        public static string GetDbFilename(IClaptrapIdentity claptrapIdentity)
         {
-            return Path.Combine(GetDatabaseDirectory(), $"{actorIdentity.TypeCode}_{actorIdentity.Id}.db");
+            return Path.Combine(GetDatabaseDirectory(), $"{claptrapIdentity.TypeCode}_{claptrapIdentity.Id}.db");
         }
 
-        public static string ConnectionString(IActorIdentity actorIdentity)
+        public static string ConnectionString(IClaptrapIdentity claptrapIdentity)
         {
-            var fileName = GetDbFilename(actorIdentity);
+            var fileName = GetDbFilename(claptrapIdentity);
             var re = $"Data Source={fileName};";
             return re;
         }
@@ -35,9 +35,10 @@ namespace Newbe.Claptrap.Preview.SQLite
             return dir;
         }
 
-        public static SqliteConnection CreateInMemoryConnection(IActorIdentity actorIdentity)
+        public static SqliteConnection CreateInMemoryConnection(IClaptrapIdentity claptrapIdentity)
         {
-            var connectionString = $"Data Source={actorIdentity.TypeCode}_{actorIdentity.Id};Mode=Memory;Cache=Shared";
+            var connectionString =
+                $"Data Source={claptrapIdentity.TypeCode}_{claptrapIdentity.Id};Mode=Memory;Cache=Shared";
             return new SqliteConnection(connectionString);
         }
     }

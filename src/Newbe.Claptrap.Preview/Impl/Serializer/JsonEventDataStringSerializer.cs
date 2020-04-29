@@ -1,29 +1,29 @@
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
 using Newtonsoft.Json;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Serializer
 {
     public class JsonEventDataStringSerializer : IEventDataStringSerializer
     {
-        private readonly IClaptrapRegistrationAccessor _claptrapRegistrationAccessor;
+        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
 
         public JsonEventDataStringSerializer(
-            IClaptrapRegistrationAccessor claptrapRegistrationAccessor)
+            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
         {
-            _claptrapRegistrationAccessor = claptrapRegistrationAccessor;
+            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
         }
 
-        public string Serialize(string actorTypeCode, string eventTypeCode, IEventData eventData)
+        public string Serialize(string claptrapTypeCode, string eventTypeCode, IEventData eventData)
         {
             var re = JsonConvert.SerializeObject(eventData);
             return re;
         }
 
-        public IEventData Deserialize(string actorTypeCode, string eventTypeCode, string source)
+        public IEventData Deserialize(string claptrapTypeCode, string eventTypeCode, string source)
         {
-            var eventDataType = _claptrapRegistrationAccessor.FindEventDataType(actorTypeCode, eventTypeCode);
+            var eventDataType = _claptrapDesignStoreAccessor.FindEventDataType(claptrapTypeCode, eventTypeCode);
             var re = (IEventData) JsonConvert.DeserializeObject(source, eventDataType)!;
             return re;
         }

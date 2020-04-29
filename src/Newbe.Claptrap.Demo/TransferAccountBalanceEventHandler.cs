@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Preview.Context;
+using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Abstractions.Components;
 
 namespace Newbe.Claptrap.Demo
 {

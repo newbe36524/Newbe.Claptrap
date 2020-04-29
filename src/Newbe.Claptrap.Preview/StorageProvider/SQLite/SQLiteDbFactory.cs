@@ -1,13 +1,13 @@
 using Microsoft.Data.Sqlite;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public class SQLiteDbFactory : ISQLiteDbFactory
     {
-        public SqliteConnection CreateConnection(IActorIdentity actorIdentity)
+        public SqliteConnection CreateConnection(IClaptrapIdentity claptrapIdentity)
         {
-            return new SqliteConnection(DbHelper.ConnectionString(actorIdentity));
+            return new SqliteConnection(DbHelper.ConnectionString(claptrapIdentity));
         }
     }
 }

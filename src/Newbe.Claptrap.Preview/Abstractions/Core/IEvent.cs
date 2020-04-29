@@ -1,11 +1,11 @@
-namespace Newbe.Claptrap.Preview.Core
+namespace Newbe.Claptrap.Preview.Abstractions.Core
 {
     public interface IEvent
     {
         /// <summary>
         /// actor identity
         /// </summary>
-        IActorIdentity ActorIdentity { get; }
+        IClaptrapIdentity ClaptrapIdentity { get; }
 
         /// <summary>
         /// version of event, this is a increasing number.

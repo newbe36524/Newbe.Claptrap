@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Moq;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.SQLite;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
+using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Preview.StorageProvider.SQLite;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString(), "testCode");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
                 .Setup(x => x.Serialize(actorIdentity.TypeCode, noneStateData))
@@ -49,7 +49,7 @@ namespace Newbe.Claptrap.Tests
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
             var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.Save(new DataState(actorIdentity, noneStateData, 123));
+            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 123));
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString(), "testCode");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
                 .Setup(x => x.Serialize(actorIdentity.TypeCode, noneStateData))
@@ -77,8 +77,8 @@ namespace Newbe.Claptrap.Tests
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
             var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.Save(new DataState(actorIdentity, noneStateData, 123));
-            await sqLiteStateStore.Save(new DataState(actorIdentity, noneStateData, 124));
+            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 123));
+            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 124));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString(), "testCode");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             const int version = 123;
             var stateDataString = "123";
@@ -112,9 +112,9 @@ namespace Newbe.Claptrap.Tests
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
             var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.Save(new DataState(actorIdentity, noneStateData, version));
+            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, version));
 
-            var stateSnapshot = await sqLiteStateStore.GetStateSnapshot();
+            var stateSnapshot = await sqLiteStateStore.GetStateSnapshotAsync();
             Debug.Assert(stateSnapshot != null, nameof(stateSnapshot) + " != null");
             stateSnapshot.Data.Should().BeOfType<NoneStateData>();
             stateSnapshot.Version.Should().Be(version);
@@ -133,7 +133,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString(), "testCode");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
 
             await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
             mocker.Mock<ISQLiteDbFactory>()
@@ -143,7 +143,7 @@ namespace Newbe.Claptrap.Tests
             var factory = mocker.Create<SQLiteStateStore.Factory>();
             var sqLiteStateStore = factory.Invoke(actorIdentity);
 
-            var stateSnapshot = await sqLiteStateStore.GetStateSnapshot();
+            var stateSnapshot = await sqLiteStateStore.GetStateSnapshotAsync();
             stateSnapshot.Should().BeNull();
         }
     }

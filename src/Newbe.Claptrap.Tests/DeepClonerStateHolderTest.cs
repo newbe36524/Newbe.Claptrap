@@ -3,7 +3,8 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 
 namespace Newbe.Claptrap.Tests
@@ -17,7 +18,7 @@ namespace Newbe.Claptrap.Tests
             {
                 Name = "name"
             };
-            var deepClonerStateHolder = new DeepClonerStateHolder();
+            var deepClonerStateHolder = new DeepClonerStateHolder(ClaptrapIdentity.Instance);
             var re = deepClonerStateHolder.DeepCopy(testData);
             re.Should().NotBe(testData);
             re.Should().BeOfType<TestData>();
@@ -32,7 +33,7 @@ namespace Newbe.Claptrap.Tests
             {
                 List = Enumerable.Range(0, listCount).ToList()
             };
-            var deepClonerStateHolder = new DeepClonerStateHolder();
+            var deepClonerStateHolder = new DeepClonerStateHolder(ClaptrapIdentity.Instance);
             var re = deepClonerStateHolder.DeepCopy(testData);
             re.Should().NotBe(testData);
             re.Should().BeOfType<TestData>();
@@ -44,7 +45,7 @@ namespace Newbe.Claptrap.Tests
         {
             public string Name { get; set; }
             public List<int> List { get; set; }
-            public IActorIdentity Identity { get; }
+            public IClaptrapIdentity Identity { get; }
             public IStateData Data { get; }
             public long Version { get; }
 

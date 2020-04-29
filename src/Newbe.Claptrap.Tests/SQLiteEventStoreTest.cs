@@ -6,9 +6,11 @@ using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.SQLite;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
+using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Preview.StorageProvider.SQLite;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,7 +38,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -52,7 +54,7 @@ namespace Newbe.Claptrap.Tests
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(actorIdentity);
             var eventSavingResult =
-                await db.SaveEvent(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
+                await db.SaveEventAsync(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
             eventSavingResult.Should().Be(EventSavingResult.Success);
         }
 
@@ -68,7 +70,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
             
@@ -84,10 +86,10 @@ namespace Newbe.Claptrap.Tests
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(actorIdentity);
             var eventSavingResult =
-                await db.SaveEvent(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
+                await db.SaveEventAsync(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
             eventSavingResult.Should().Be(EventSavingResult.Success);
             eventSavingResult =
-                await db.SaveEvent(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
+                await db.SaveEventAsync(new DataEvent(actorIdentity, eventTypeCode, testEventData, null));
             eventSavingResult.Should().Be(EventSavingResult.AlreadyAdded);
         }
 
@@ -104,7 +106,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ActorIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -131,10 +133,10 @@ namespace Newbe.Claptrap.Tests
                 .ToArray();
             foreach (var dataEvent in dataEvents)
             {
-                await db.SaveEvent(dataEvent);
+                await db.SaveEventAsync(dataEvent);
             }
 
-            var events = (await db.GetEvents(0, 2)).ToArray();
+            var events = (await db.GetEventsAsync(0, 2)).ToArray();
             var versions = events.Select(x => x.Version).ToArray();
             versions.Contains(0).Should().BeTrue();
             versions.Contains(1).Should().BeTrue();

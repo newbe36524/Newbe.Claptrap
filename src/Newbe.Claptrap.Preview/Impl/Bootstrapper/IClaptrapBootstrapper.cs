@@ -1,6 +1,6 @@
 using Autofac;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
     public interface IClaptrapBootstrapper
     {

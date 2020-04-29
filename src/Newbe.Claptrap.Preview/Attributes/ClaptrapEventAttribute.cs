@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Attributes
 {
     /// <summary>
     /// Mark on IClaptrapGrain specify the event data types
@@ -11,7 +11,7 @@ namespace Newbe.Claptrap.Preview
         public Type EventDataType { get; set; }
         public string? EventTypeCode { get; set; }
 
-        public ClaptrapEventAttribute(Type eventDataType, string eventTypeCode = null)
+        public ClaptrapEventAttribute(Type eventDataType, string? eventTypeCode = null)
         {
             EventDataType = eventDataType;
             EventTypeCode = eventTypeCode;

@@ -1,7 +1,7 @@
-using Newbe.Claptrap.Preview.Context;
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl
 {
     public class EventContext : IEventContext
     {

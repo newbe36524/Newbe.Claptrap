@@ -1,7 +1,7 @@
 using Autofac;
 using Microsoft.Extensions.Logging;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     /// <summary>
     /// enable logging when build a sub container

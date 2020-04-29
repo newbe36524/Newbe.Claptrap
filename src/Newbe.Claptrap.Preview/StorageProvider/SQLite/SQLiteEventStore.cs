@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Abstractions;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Serializer;
+using Newbe.Claptrap.Preview.Impl;
 
-namespace Newbe.Claptrap.Preview.SQLite
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
-    public class SQLiteEventStore : IEventStore
+    public class SQLiteEventStore : IEventSaver, IEventLoader
     {
         private readonly ILogger<SQLiteEventStore> _logger;
         private readonly IClock _clock;
         private readonly ISQLiteDbFactory _sqLiteDbFactory;
-        private readonly ISQLiteDbManager _sqLiteDbManager;
         private readonly IEventDataStringSerializer _eventDataStringSerializer;
 
-        public delegate SQLiteEventStore Factory(IActorIdentity identity);
+        public delegate SQLiteEventStore Factory(IClaptrapIdentity identity);
 
         private readonly Lazy<bool> _databaseCreated;
         private readonly Lazy<string> _insertSql;
         private readonly Lazy<string> _selectSql;
 
         public SQLiteEventStore(
-            IActorIdentity identity,
+            IClaptrapIdentity identity,
             ILogger<SQLiteEventStore> logger,
             IClock clock,
             ISQLiteDbFactory sqLiteDbFactory,
@@ -34,12 +39,11 @@ namespace Newbe.Claptrap.Preview.SQLite
             _logger = logger;
             _clock = clock;
             _sqLiteDbFactory = sqLiteDbFactory;
-            _sqLiteDbManager = sqLiteDbManager;
             _eventDataStringSerializer = eventDataStringSerializer;
             Identity = identity;
             _databaseCreated = new Lazy<bool>(() =>
             {
-                _sqLiteDbManager.CreateOrUpdateDatabase(Identity, _sqLiteDbFactory.CreateConnection(Identity));
+                sqLiteDbManager.CreateOrUpdateDatabase(Identity, _sqLiteDbFactory.CreateConnection(Identity));
                 return true;
             });
             _insertSql = new Lazy<string>(() =>
@@ -48,12 +52,11 @@ namespace Newbe.Claptrap.Preview.SQLite
                 $"SELECT * FROM [{DbHelper.GetEventTableName(Identity)}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]");
         }
 
-        public IActorIdentity Identity { get; }
+        public IClaptrapIdentity Identity { get; }
 
-        public async Task<EventSavingResult> SaveEvent(IEvent @event)
+        public async Task<EventSavingResult> SaveEventAsync(IEvent @event)
         {
             _ = _databaseCreated.Value;
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
             var eventData = _eventDataStringSerializer.Serialize(Identity.TypeCode, @event.EventTypeCode, @event.Data);
             var eventEntity = new EventEntity
             {
@@ -63,21 +66,23 @@ namespace Newbe.Claptrap.Preview.SQLite
                 EventTypeCode = @event.EventTypeCode,
                 Uid = @event.Uid!,
             };
-            _logger.LogDebug("start to save event to store @{eventEntity}", eventEntity);
+            _logger.LogDebug("start to save event to store {@eventEntity}", eventEntity);
+
+            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
             var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
             var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
             _logger.LogDebug("event savingResult : {eventSavingResult}", re);
             return re;
         }
 
-        public async Task<IEnumerable<IEvent>> GetEvents(long startVersion, long endVersion)
+        public async Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
             _ = _databaseCreated.Value;
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
-            var ps = new {startVersion, endVersion};
             _logger.LogDebug("start to get events that version in range [{startVersion}, {endVersion}).",
                 startVersion,
                 endVersion);
+            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
+            var ps = new {startVersion, endVersion};
             var eventEntities = await db.QueryAsync<EventEntity>(_selectSql.Value, ps);
 
             var re = eventEntities.Select(x =>
@@ -94,6 +99,12 @@ namespace Newbe.Claptrap.Preview.SQLite
                 startVersion,
                 endVersion);
             return re;
+        }
+
+        struct SavingItem
+        {
+            public TaskCompletionSource<EventSavingResult> TaskCompletionSource { get; set; }
+            public IEvent Event { get; set; }
         }
     }
 }

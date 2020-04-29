@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Attributes
 {
     /// <summary>
     /// Mark on IClaptrapGrain implementation class to specify the event handler types

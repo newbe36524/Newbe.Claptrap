@@ -1,8 +1,8 @@
-namespace Newbe.Claptrap.Preview.Core
+namespace Newbe.Claptrap.Preview.Abstractions.Core
 {
     public interface IState
     {
-        IActorIdentity Identity { get; }
+        IClaptrapIdentity Identity { get; }
         IStateData Data { get; }
 
         /// <summary>

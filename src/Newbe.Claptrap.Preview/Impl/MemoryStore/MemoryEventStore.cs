@@ -2,30 +2,30 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.MemoryStore
 {
     [ExcludeFromCodeCoverage]
-    public class MemoryEventStore : IEventStore
+    public class MemoryEventStore : IEventLoader, IEventSaver
     {
-        public delegate MemoryEventStore Factory(IActorIdentity identity);
+        public delegate MemoryEventStore Factory(IClaptrapIdentity identity);
 
         private readonly IList<IEvent> _list;
 
-        public MemoryEventStore(IActorIdentity identity)
+        public MemoryEventStore(IClaptrapIdentity identity)
         {
             Identity = identity;
             _list = new List<IEvent>();
         }
 
-        public IActorIdentity Identity { get; }
+        public IClaptrapIdentity Identity { get; }
 
-        public Task<EventSavingResult> SaveEvent(IEvent @event)
+        public Task<EventSavingResult> SaveEventAsync(IEvent @event)
         {
             if (_list.Any(x =>
-                x.ActorIdentity.TypeCode == @event.ActorIdentity.TypeCode
+                x.ClaptrapIdentity.TypeCode == @event.ClaptrapIdentity.TypeCode
                 && x.EventTypeCode == @event.EventTypeCode
                 && x.Uid == @event.Uid))
             {
@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.Preview
             return Task.FromResult(EventSavingResult.Success);
         }
 
-        public Task<IEnumerable<IEvent>> GetEvents(long startVersion, long endVersion)
+        public Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
             var re = _list.Where(x => x.Version > startVersion && x.Version <= endVersion).OrderBy(x => x.Version);
             return Task.FromResult<IEnumerable<IEvent>>(re);

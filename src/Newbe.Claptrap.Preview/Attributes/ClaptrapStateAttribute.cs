@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Attributes
 {
     /// <summary>
     /// Mark on IClaptrapGrain specify the state data class
@@ -11,7 +11,7 @@ namespace Newbe.Claptrap.Preview
         public Type StateDataType { get; set; }
         public string? ActorTypeCode { get; set; }
 
-        public ClaptrapStateAttribute(Type stateDataType, string actorTypeCode = null)
+        public ClaptrapStateAttribute(Type stateDataType, string? actorTypeCode = null)
         {
             StateDataType = stateDataType;
             ActorTypeCode = actorTypeCode;

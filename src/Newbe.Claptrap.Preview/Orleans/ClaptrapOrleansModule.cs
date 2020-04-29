@@ -8,8 +8,8 @@ namespace Newbe.Claptrap.Preview.Orleans
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ActorTypeCodeFactory>()
-                .As<IActorTypeCodeFactory>()
+            builder.RegisterType<ClaptrapTypeCodeFactory>()
+                .As<IClaptrapTypeCodeFactory>()
                 .SingleInstance();
             builder.RegisterAggregateService<IClaptrapGrainCommonService>();
         }

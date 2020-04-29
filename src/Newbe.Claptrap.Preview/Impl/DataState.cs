@@ -1,19 +1,20 @@
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl
 {
     public class DataState : IState
     {
-        public DataState(IActorIdentity identity, IStateData data, long version)
+        public DataState(IClaptrapIdentity identity, IStateData data, long version)
         {
             Identity = identity;
             Data = data;
             Version = version;
         }
 
-        public IActorIdentity Identity { get; }
+        public IClaptrapIdentity Identity { get; }
         public IStateData Data { get; }
         public long Version { get; private set; }
+
         public void IncreaseVersion()
         {
             Version++;

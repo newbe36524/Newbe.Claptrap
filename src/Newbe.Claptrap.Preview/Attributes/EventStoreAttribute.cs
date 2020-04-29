@@ -1,16 +1,19 @@
 using System;
-using Newbe.Claptrap.Preview.EventStore;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class EventStoreAttribute : Attribute
     {
-        public EventStoreProvider EventStoreProvider { get; }
+        public Type EventSaverFactoryType { get; }
+        public Type EventLoaderFactoryType { get; }
 
-        public EventStoreAttribute(EventStoreProvider eventStoreProvider)
+        public EventStoreAttribute(
+            Type eventSaverFactoryType,
+            Type eventLoaderFactoryType)
         {
-            EventStoreProvider = eventStoreProvider;
+            EventSaverFactoryType = eventSaverFactoryType;
+            EventLoaderFactoryType = eventLoaderFactoryType;
         }
     }
 }

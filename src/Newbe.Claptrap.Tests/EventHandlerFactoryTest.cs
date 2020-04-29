@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Exceptions;
+using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,20 +26,32 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMock.GetStrict();
             mocker.VerifyAll = true;
-            var eventContext = new EventContext(new TestEvent
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
+            var testEvent = new TestEvent
             {
                 EventTypeCode = "eventType"
-            }, new TestState
+            };
+            var eventContext = new EventContext(testEvent, new TestState
             {
-                Identity = new ActorIdentity(Guid.NewGuid().ToString(), "typeCode")
+                Identity = actorIdentity
             });
 
-            mocker.Mock<IClaptrapRegistrationAccessor>()
-                .Setup(x => x.FindEventHandlerType(eventContext.State.Identity.TypeCode,
-                    eventContext.Event.EventTypeCode))
-                .Returns(typeof(TestHandler));
+            mocker.Mock<IClaptrapDesignStore>()
+                .Setup(x => x.FindDesign(actorIdentity))
+                .Returns(new ClaptrapDesign
+                {
+                    EventHandlerDesigns = new Dictionary<string, IClaptrapEventHandlerDesign>
+                    {
+                        {
+                            testEvent.EventTypeCode, new ClaptrapEventHandlerDesign
+                            {
+                                EventHandlerType = typeof(TestHandler)
+                            }
+                        }
+                    }
+                });
 
-            var eventHandlerFactory = mocker.Create<EventHandlerFactory>();
+            var eventHandlerFactory = mocker.Create<DesignBaseEventHandlerFactory>();
             var eventHandler = eventHandlerFactory.Create(eventContext);
             eventHandler.Should().NotBeNull();
         }
@@ -47,20 +61,25 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMock.GetStrict(builder => builder.AddLogging(_testOutputHelper));
             mocker.VerifyAll = true;
-            var eventContext = new EventContext(new TestEvent
+            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
+            var testEvent = new TestEvent
             {
                 EventTypeCode = "eventType"
-            }, new TestState
+            };
+            var eventContext = new EventContext(testEvent, new TestState
             {
-                Identity = new ActorIdentity(Guid.NewGuid().ToString(), "typeCode")
+                Identity = actorIdentity
             });
 
-            mocker.Mock<IClaptrapRegistrationAccessor>()
-                .Setup(x => x.FindEventHandlerType(eventContext.State.Identity.TypeCode,
-                    eventContext.Event.EventTypeCode))
-                .Returns(default(Type));
+            mocker.Mock<IClaptrapDesignStore>()
+                .Setup(x => x.FindDesign(actorIdentity))
+                .Returns(new ClaptrapDesign
+                {
+                    EventHandlerDesigns = new Dictionary<string, IClaptrapEventHandlerDesign>()
+                });
 
-            var eventHandlerFactory = mocker.Create<EventHandlerFactory>();
+            var eventHandlerFactory = mocker.Create<DesignBaseEventHandlerFactory>();
             Assert.Throws<EventHandlerNotFoundException>(() => { eventHandlerFactory.Create(eventContext); });
-        } }
+        }
+    }
 }

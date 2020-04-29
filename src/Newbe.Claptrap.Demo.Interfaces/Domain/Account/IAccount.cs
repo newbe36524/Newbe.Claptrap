@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Preview;
+using Newbe.Claptrap.Preview.Attributes;
 using Newbe.Claptrap.Preview.Orleans;
 
 namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account

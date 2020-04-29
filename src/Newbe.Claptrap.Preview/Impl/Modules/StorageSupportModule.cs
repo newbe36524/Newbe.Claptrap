@@ -1,29 +1,16 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
-using Newbe.Claptrap.Preview.EventStore;
-using Newbe.Claptrap.Preview.StateStore;
+using Newbe.Claptrap.Preview.Abstractions;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.Modules
 {
     [ExcludeFromCodeCoverage]
-    public abstract class StorageSupportModule : Autofac.Module
+    public abstract class StorageSupportModule : Module
     {
-        public EventStoreProvider EventStoreProvider { get; }
-        public StateStoreProvider StateStoreProvider { get; }
         public Type? EventStoreType { get; set; }
-        public Type? EventStoreFactoryHandlerType { get; set; }
 
         public Type? StateStoreType { get; set; }
-        public Type? StateStoreFactoryHandlerType { get; set; }
-
-        protected StorageSupportModule(
-            EventStoreProvider eventStoreProvider,
-            StateStoreProvider stateStoreProvider)
-        {
-            EventStoreProvider = eventStoreProvider;
-            StateStoreProvider = stateStoreProvider;
-        }
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -34,25 +21,21 @@ namespace Newbe.Claptrap.Preview
 
         protected virtual void RegisterEventStore(ContainerBuilder builder)
         {
-            if (EventStoreType != null && EventStoreFactoryHandlerType != null)
+            if (EventStoreType != null)
             {
                 builder.RegisterType(EventStoreType)
                     .AsSelf()
                     .InstancePerLifetimeScope();
-                builder.RegisterType(EventStoreFactoryHandlerType)
-                    .Keyed<IIEventStoreFactoryHandler>(EventStoreProvider);
             }
         }
 
         protected virtual void RegisterStateStore(ContainerBuilder builder)
         {
-            if (StateStoreType != null && StateStoreFactoryHandlerType != null)
+            if (StateStoreType != null)
             {
                 builder.RegisterType(StateStoreType)
                     .AsSelf()
                     .InstancePerLifetimeScope();
-                builder.RegisterType(StateStoreFactoryHandlerType)
-                    .Keyed<IStateStoreFactoryHandler>(StateStoreProvider);
             }
         }
     }

@@ -1,18 +1,18 @@
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl
 {
     public class DataEvent : IEvent
     {
-        public DataEvent(IActorIdentity actorIdentity, string eventTypeCode, IEventData data, string? uid)
+        public DataEvent(IClaptrapIdentity claptrapIdentity, string eventTypeCode, IEventData data, string? uid)
         {
-            ActorIdentity = actorIdentity;
+            ClaptrapIdentity = claptrapIdentity;
             Uid = uid;
             EventTypeCode = eventTypeCode;
             Data = data;
         }
 
-        public IActorIdentity ActorIdentity { get; }
+        public IClaptrapIdentity ClaptrapIdentity { get; }
         public long Version { get; set; }
         public string? Uid { get; }
         public string EventTypeCode { get; }

@@ -1,36 +1,36 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Newbe.Claptrap.Preview.Core;
-using Newbe.Claptrap.Preview.StateStore;
+using Newbe.Claptrap.Preview.Abstractions.Components;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview
+namespace Newbe.Claptrap.Preview.Impl.MemoryStore
 {
     [ExcludeFromCodeCoverage]
-    public class MemoryStateStore : IStateStore
+    public class MemoryStateStore : IStateLoader, IStateSaver
     {
-        public delegate MemoryStateStore Factory(IActorIdentity identity);
+        public delegate MemoryStateStore Factory(IClaptrapIdentity identity);
 
         private readonly IInitialStateDataFactory _initialStateDataFactory;
 
         public MemoryStateStore(
-            IActorIdentity identity,
+            IClaptrapIdentity identity,
             IInitialStateDataFactory initialStateDataFactory)
         {
             _initialStateDataFactory = initialStateDataFactory;
             Identity = identity;
         }
 
-        public IActorIdentity Identity { get; }
+        public IClaptrapIdentity Identity { get; }
         private IState? _state;
 
-        public async Task<IState?> GetStateSnapshot()
+        public async Task<IState?> GetStateSnapshotAsync()
         {
             var stateData = await _initialStateDataFactory.Create(Identity);
             _state = new DataState(Identity, stateData, 0);
             return _state;
         }
 
-        public Task Save(IState state)
+        public Task SaveAsync(IState state)
         {
             _state = state;
             return Task.CompletedTask;

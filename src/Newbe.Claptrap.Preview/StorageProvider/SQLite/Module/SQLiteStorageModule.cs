@@ -1,19 +1,15 @@
 using Autofac;
-using Newbe.Claptrap.Preview.EventStore;
+using Newbe.Claptrap.Preview.Abstractions;
+using Newbe.Claptrap.Preview.Impl.Modules;
 
-namespace Newbe.Claptrap.Preview.SQLite.Module
+namespace Newbe.Claptrap.Preview.StorageProvider.SQLite.Module
 {
     public class SQLiteStorageModule : StorageSupportModule
     {
-        public SQLiteStorageModule() : base(
-            EventStoreProvider.SQLite,
-            StateStoreProvider.SQLite)
+        public SQLiteStorageModule()
         {
             EventStoreType = typeof(SQLiteEventStore);
-            EventStoreFactoryHandlerType = typeof(SQLiteEventStoreFactoryHandler);
-
             StateStoreType = typeof(SQLiteStateStore);
-            StateStoreFactoryHandlerType = typeof(SQLiteStateStoreFactoryHandler);
         }
 
         protected override void Load(ContainerBuilder builder)

@@ -1,4 +1,4 @@
-using Newbe.Claptrap.Preview.Core;
+using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Tests
 {
