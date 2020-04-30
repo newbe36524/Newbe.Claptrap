@@ -11,6 +11,12 @@
 
 Claptrap and it`s Minions are coming.
 
+## 项目样例
+
+您可以通过<https://github.com/newbe36524/Newbe.Claptrap.Examples>来获取关于该项目的样例代码，以便您了解如何使用该项目。
+
+如果您无法正常的获取 github 上的代码，也可以通过<https://gitee.com/yks/Newbe.Claptrap.Examples>来获取样例代码。
+
 ## 参与讨论
 
 - 如果你对该项目感兴趣，你可以通过 [github issues](https://github.com/newbe36524/Newbe.Claptrap/issues) 提交您的看法
