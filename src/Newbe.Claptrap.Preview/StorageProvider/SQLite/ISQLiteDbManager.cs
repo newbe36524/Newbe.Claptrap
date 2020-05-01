@@ -5,7 +5,6 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public interface ISQLiteDbManager
     {
-        void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity, IDbConnection dbConnection);
-        void DeleteIfFound(IClaptrapIdentity claptrapIdentity);
+        void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity);
     }
 }

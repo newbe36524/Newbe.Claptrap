@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.ExceptionServices;
@@ -90,26 +89,29 @@ namespace Newbe.Claptrap.Preview.Impl
                     context.EventHandler = CreateHandler(context.EventContext);
                     return context;
                 })
-                .Select(context =>
-                {
-                    return Observable.FromAsync(async () =>
-                        (await context.EventHandler.HandleEvent(context.EventContext), context));
-                })
+                .Select(context => Observable.FromAsync(
+                    async () =>
+                    {
+                        try
+                        {
+                            var newState = await context.EventHandler.HandleEvent(context.EventContext);
+                            _logger.LogDebug("start update to {@state}", newState);
+                            Debug.Assert(newState.NextVersion == context.EventContext.Event.Version);
+                            State = newState;
+                            State.IncreaseVersion();
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(e, "error when restore state from event store ");
+                            exceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
+                            throw;
+                        }
+                    }
+                ))
                 .Concat()
                 .Subscribe(
-                    tuple =>
-                    {
-                        var (state, eventContext) = tuple;
-                        _logger.LogDebug("start update to {@state}", state);
-                        Debug.Assert(state.NextVersion == eventContext.Event.Version);
-                        State = state;
-                        State.IncreaseVersion();
-                    },
-                    ex =>
-                    {
-                        _logger.LogError(ex, "error when restore state from event store ");
-                        exceptionDispatchInfo = ExceptionDispatchInfo.Capture(ex);
-                    },
+                    _ => { },
+                    ex => { },
                     () => { _logger.LogDebug("success restore state from event store"); });
             restoreStateFlow.Dispose();
             exceptionDispatchInfo?.Throw();
@@ -147,6 +149,7 @@ namespace Newbe.Claptrap.Preview.Impl
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "failed to activate claptrap {identity}", _claptrapIdentity);
                 throw new ActivateFailException(e, State.Identity);
             }
         }
@@ -157,60 +160,54 @@ namespace Newbe.Claptrap.Preview.Impl
                 .Where(state => state != null)
                 .DistinctUntilChanged(state => state.Version);
 
-            IObservable<IObservable<IState>> window;
+            IObservable<IList<IState>> stateBuffer;
             var savingWindowTime = _stateSavingOptions.SavingWindowTime;
             var savingWindowVersionLimit = _stateSavingOptions.SavingWindowVersionLimit;
             if (savingWindowTime.HasValue && savingWindowVersionLimit.HasValue)
             {
-                window = dist.Window(savingWindowTime.Value,
+                stateBuffer = dist.Buffer(savingWindowTime.Value,
                     savingWindowVersionLimit.Value);
             }
             else if (savingWindowTime.HasValue)
             {
-                window = dist.Window(savingWindowTime.Value);
+                stateBuffer = dist.Buffer(savingWindowTime.Value);
             }
             else if (savingWindowVersionLimit.HasValue)
             {
-                window = dist.Window(savingWindowVersionLimit.Value);
+                stateBuffer = dist.Buffer(savingWindowVersionLimit.Value);
             }
             else
             {
                 _logger.LogInformation(
                     "there is no state saving window specified, state will not be save by every saving window.");
-                window = dist.Window(100)
+                stateBuffer = dist.Buffer(100)
                     .Where(x => false);
             }
 
-            _snapshotSavingFlow = window
-                .Select(observable =>
+            _snapshotSavingFlow = stateBuffer
+                .Where(x => x.Count > 0)
+                .Select(list =>
                 {
-                    return observable
-                        .LastOrDefaultAsync()
-                        .Select(state =>
+                    var latestState = list.Last();
+                    return Observable.FromAsync(async () =>
+                    {
+                        try
                         {
-                            return state != null
-                                ? (state, Observable.FromAsync(() => SaveStateAsync(state)))
-                                : (default, Observable.Empty<Unit>())!;
-                        });
+                            await SaveStateAsync(latestState);
+                            _logger.LogInformation("state snapshot save, version : {version}",
+                                latestState.Version);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError(
+                                e,
+                                "thrown a exception when saving state snapshot, version : {version}",
+                                latestState.Version);
+                        }
+                    });
                 })
                 .Concat()
-                .Subscribe(tuple =>
-                {
-                    var (state, seq) = tuple;
-                    seq.Subscribe(_ =>
-                        {
-                            Debug.Assert(state != null, nameof(state) + " != null");
-                            _logger.LogInformation("state snapshot save, version : {version}",
-                                state.Version);
-                        }, ex =>
-                        {
-                            Debug.Assert(state != null, nameof(state) + " != null");
-                            _logger.LogError(
-                                "thrown a exception when saving state snapshot, version : {version}",
-                                state.Version);
-                        })
-                        .Dispose();
-                });
+                .Subscribe();
         }
 
         private void CreateEventHandlingFLow()
@@ -229,56 +226,47 @@ namespace Newbe.Claptrap.Preview.Impl
                     context.EventHandler = CreateHandler(context.EventContext);
                     return context;
                 })
-                .Select(context =>
-                {
-                    return Observable.FromAsync(async () => (await SaveEvent(context.Event), context));
-                })
-                .Concat()
-                .Select((tuple, i) =>
-                {
-                    var (eventSavingResult, context) = tuple;
-                    return eventSavingResult switch
+                .Select(context => Observable.FromAsync(
+                    async () =>
                     {
-                        EventSavingResult.Success => (
-                            Observable.FromAsync(() => context.EventHandler.HandleEvent(context.EventContext)),
-                            context),
-                        EventSavingResult.AlreadyAdded => (
-                            Observable.Return(default(IState)),
-                            context),
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-                })
-                .Subscribe(tuple =>
-                {
-                    var (eventHandling, context) = tuple;
-                    eventHandling.Subscribe(
-                            nextState =>
+                        try
+                        {
+                            await HandleEventCoreAsync();
+                        }
+                        catch (Exception e)
+                        {
+                            State = context.NowState;
+                            _logger.LogWarning(e, "there is an exception when handle event : {@event} ",
+                                context.Event);
+                            context.TaskCompletionSource.SetException(e);
+                        }
+
+                        async Task HandleEventCoreAsync()
+                        {
+                            var eventSavingResult = await SaveEvent(context.Event);
+                            switch (eventSavingResult)
                             {
-                                if (nextState != null)
-                                {
+                                case EventSavingResult.Success:
+                                    var nextState = await context.EventHandler.HandleEvent(context.EventContext);
                                     _logger.LogInformation("event handled and updating state");
                                     _logger.LogDebug("start update to {@state}", nextState);
                                     State = nextState;
                                     State.IncreaseVersion();
                                     _nextStateSeq.OnNext(State);
                                     _logger.LogDebug("state version updated : {version}", State.Version);
-                                }
-                                else
-                                {
+                                    context.TaskCompletionSource.SetResult(0);
+                                    break;
+                                case EventSavingResult.AlreadyAdded:
                                     _logger.LogInformation("event already added, nothing would on going");
-                                }
-
-                                context.TaskCompletionSource.SetResult(0);
-                            },
-                            exception =>
-                            {
-                                State = context.NowState;
-                                _logger.LogWarning(exception, "there is an exception when handle event : {@event} ",
-                                    context.Event);
-                                context.TaskCompletionSource.SetException(exception);
-                            })
-                        .Dispose();
-                });
+                                    context.TaskCompletionSource.SetResult(0);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                    }))
+                .Concat()
+                .Subscribe();
 
 
             async Task<EventSavingResult> SaveEvent(IEvent @event)

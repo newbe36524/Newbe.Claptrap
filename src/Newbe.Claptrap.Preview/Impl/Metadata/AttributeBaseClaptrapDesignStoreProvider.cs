@@ -57,7 +57,7 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
                 {
                     var claptrapDesign = new ClaptrapDesign
                     {
-                        Identity = new GrainClaptrapIdentity(string.Empty, GetActorTypeCode(x.stateAttr)),
+                        Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(x.stateAttr)),
                         ActorStateDataType = x.stateAttr.StateDataType,
                         InitialStateDataFactoryType = x.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType
                                                       ?? typeof(DefaultInitialStateDataFactory),

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,20 +13,47 @@ using Newtonsoft.Json;
 
 namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
-    public class AutofacClaptrapBootstrapperFactory : IClaptrapBootstrapperFactory
+    public class AutofacClaptrapBootstrapperBuilder : IClaptrapBootstrapperBuilder
     {
-        private readonly ILoggerFactory _loggerFactory;
+        public ILoggerFactory LoggerFactory { get; }
 
-        public AutofacClaptrapBootstrapperFactory(
+        private readonly List<IClaptrapDesignStoreConfigurator> _configurators;
+        private readonly List<IClaptrapDesignStoreProvider> _providers;
+
+        public AutofacClaptrapBootstrapperBuilder(
             ILoggerFactory loggerFactory)
         {
-            _loggerFactory = loggerFactory;
+            LoggerFactory = loggerFactory;
+            _configurators = new List<IClaptrapDesignStoreConfigurator>();
+            _providers = new List<IClaptrapDesignStoreProvider>();
         }
 
-        public IClaptrapBootstrapper Create(IEnumerable<Assembly> assemblies)
+        private IEnumerable<Assembly>? _assemblies;
+
+
+        public IClaptrapBootstrapperBuilder AddAssemblies(IEnumerable<Assembly> assemblies)
         {
-            var claptrapDesignStore = ScanAssembly(assemblies);
-            var claptrapCustomerModuleLogger = _loggerFactory.CreateLogger<ClaptrapCustomerModule>();
+            _assemblies = assemblies;
+            return this;
+        }
+
+        public IClaptrapBootstrapperBuilder AddClaptrapDesignStoreConfigurator(
+            IClaptrapDesignStoreConfigurator configurator)
+        {
+            _configurators.Add(configurator);
+            return this;
+        }
+
+        public IClaptrapBootstrapperBuilder AddClaptrapDesignStoreProvider(IClaptrapDesignStoreProvider provider)
+        {
+            _providers.Add(provider);
+            return this;
+        }
+
+        public IClaptrapBootstrapper Build()
+        {
+            var claptrapDesignStore = ScanAssembly(_assemblies ?? throw new ArgumentNullException());
+            var claptrapCustomerModuleLogger = LoggerFactory.CreateLogger<ClaptrapCustomerModule>();
             var claptrapBootstrapper = new AutofacClaptrapBootstrapper(new Autofac.Module[]
             {
                 new ClaptrapCustomerModule(claptrapCustomerModuleLogger, claptrapDesignStore),
@@ -41,12 +69,12 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 
         private IClaptrapDesignStore ScanAssembly(IEnumerable<Assembly> assemblies)
         {
-            var logger = _loggerFactory.CreateLogger(typeof(AutofacClaptrapBootstrapperFactory));
+            var logger = LoggerFactory.CreateLogger(typeof(AutofacClaptrapBootstrapperBuilder));
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<AssemblyScanningModule>();
-            containerBuilder.RegisterModule(new LoggingModule(_loggerFactory));
+            containerBuilder.RegisterModule(new LoggingModule(LoggerFactory));
             var container = containerBuilder.Build();
-            var claptrapDesignStoreFactory = container.Resolve<IClaptrapDesignStoreFactory>();
+            var factory = container.Resolve<IClaptrapDesignStoreFactory>();
 
             var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
             logger.LogDebug("start to scan {assemblyArrayCount} assemblies, {assemblyNames}",
@@ -55,7 +83,13 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 
             logger.LogDebug("start to find claptrap");
 
-            var claptrapDesignStore = claptrapDesignStoreFactory.Create(assemblyArray);
+            foreach (var provider in _providers)
+            {
+                logger.LogDebug("add {provider} as claptrap design provider", provider);
+                factory.AddProvider(provider);
+            }
+
+            var claptrapDesignStore = factory.Create(assemblyArray);
 
             logger.LogInformation("found {actorCount} actors",
                 claptrapDesignStore.Count());
@@ -67,6 +101,11 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             if (!isOk)
             {
                 throw new ClaptrapDesignStoreValidationFailException(errorMessage);
+            }
+
+            foreach (var claptrapDesignStoreConfigurator in _configurators)
+            {
+                claptrapDesignStoreConfigurator.Configurate(claptrapDesignStore);
             }
 
             logger.LogInformation("all design validated ok");

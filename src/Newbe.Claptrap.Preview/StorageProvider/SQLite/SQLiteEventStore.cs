@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
@@ -43,7 +40,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             Identity = identity;
             _databaseCreated = new Lazy<bool>(() =>
             {
-                sqLiteDbManager.CreateOrUpdateDatabase(Identity, _sqLiteDbFactory.CreateConnection(Identity));
+                sqLiteDbManager.CreateOrUpdateDatabase(Identity);
                 return true;
             });
             _insertSql = new Lazy<string>(() =>
@@ -68,7 +65,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             };
             _logger.LogDebug("start to save event to store {@eventEntity}", eventEntity);
 
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
+            await using var db = _sqLiteDbFactory.GetEventDbConnection(Identity);
             var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
             var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
             _logger.LogDebug("event savingResult : {eventSavingResult}", re);
@@ -81,7 +78,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             _logger.LogDebug("start to get events that version in range [{startVersion}, {endVersion}).",
                 startVersion,
                 endVersion);
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
+            await using var db = _sqLiteDbFactory.GetEventDbConnection(Identity);
             var ps = new {startVersion, endVersion};
             var eventEntities = await db.QueryAsync<EventEntity>(_selectSql.Value, ps);
 

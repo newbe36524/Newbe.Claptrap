@@ -42,11 +42,13 @@ namespace Newbe.Claptrap.Demo.Server
 
                     var buildServiceProvider = collection.BuildServiceProvider();
                     var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
-                    var claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperFactory(loggerFactory);
-                    var claptrapBootstrapper = claptrapBootstrapperFactory.Create(new[]
-                    {
-                        typeof(Account).Assembly
-                    });
+                    var claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperBuilder(loggerFactory);
+                    var claptrapBootstrapper = claptrapBootstrapperFactory
+                        .AddAssemblies(new[]
+                        {
+                            typeof(Account).Assembly
+                        })
+                        .Build();
                     claptrapBootstrapper.RegisterServices(builder);
 
                     // Creating a new AutofacServiceProvider makes the container

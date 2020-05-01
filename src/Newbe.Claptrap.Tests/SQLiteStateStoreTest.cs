@@ -1,10 +1,10 @@
 using System;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Serializer;
 using Newbe.Claptrap.Preview.Impl;
@@ -36,20 +36,17 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
-                .Setup(x => x.Serialize(actorIdentity.TypeCode, noneStateData))
+                .Setup(x => x.Serialize(identity.TypeCode, noneStateData))
                 .Returns("123");
 
-            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
-            mocker.Mock<ISQLiteDbFactory>()
-                .Setup(x => x.CreateConnection(actorIdentity))
-                .Returns(() => DbHelper.CreateInMemoryConnection(actorIdentity));
+            await using var keepConnection = MockDbInMemory(mocker, identity);
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
-            var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 123));
+            var sqLiteStateStore = factory.Invoke(identity);
+            await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, 123));
         }
 
         [Fact]
@@ -64,21 +61,18 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
-                .Setup(x => x.Serialize(actorIdentity.TypeCode, noneStateData))
+                .Setup(x => x.Serialize(identity.TypeCode, noneStateData))
                 .Returns("123");
 
-            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
-            mocker.Mock<ISQLiteDbFactory>()
-                .Setup(x => x.CreateConnection(actorIdentity))
-                .Returns(() => DbHelper.CreateInMemoryConnection(actorIdentity));
+            await using var keepConnection = MockDbInMemory(mocker, identity);
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
-            var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 123));
-            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, 124));
+            var sqLiteStateStore = factory.Invoke(identity);
+            await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, 123));
+            await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, 124));
         }
 
         [Fact]
@@ -93,34 +87,31 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             const int version = 123;
             var stateDataString = "123";
             mocker.Mock<IStateDataStringSerializer>()
-                .Setup(x => x.Serialize(actorIdentity.TypeCode, noneStateData))
+                .Setup(x => x.Serialize(identity.TypeCode, noneStateData))
                 .Returns(stateDataString);
 
             mocker.Mock<IStateDataStringSerializer>()
-                .Setup(x => x.Deserialize(actorIdentity.TypeCode, stateDataString))
+                .Setup(x => x.Deserialize(identity.TypeCode, stateDataString))
                 .Returns(noneStateData);
 
-            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
-            mocker.Mock<ISQLiteDbFactory>()
-                .Setup(x => x.CreateConnection(actorIdentity))
-                .Returns(() => DbHelper.CreateInMemoryConnection(actorIdentity));
+            await using var keepConnection = MockDbInMemory(mocker, identity);
 
             var factory = mocker.Create<SQLiteStateStore.Factory>();
-            var sqLiteStateStore = factory.Invoke(actorIdentity);
-            await sqLiteStateStore.SaveAsync(new DataState(actorIdentity, noneStateData, version));
+            var sqLiteStateStore = factory.Invoke(identity);
+            await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, version));
 
             var stateSnapshot = await sqLiteStateStore.GetStateSnapshotAsync();
             Debug.Assert(stateSnapshot != null, nameof(stateSnapshot) + " != null");
             stateSnapshot.Data.Should().BeOfType<NoneStateData>();
             stateSnapshot.Version.Should().Be(version);
-            stateSnapshot.Identity.Id.Should().Be(actorIdentity.Id);
+            stateSnapshot.Identity.Id.Should().Be(identity.Id);
         }
-        
+
         [Fact]
         public async Task NoneState()
         {
@@ -133,18 +124,25 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
-
-            await using var keepConnection = DbHelper.CreateInMemoryConnection(actorIdentity);
-            mocker.Mock<ISQLiteDbFactory>()
-                .Setup(x => x.CreateConnection(actorIdentity))
-                .Returns(() => DbHelper.CreateInMemoryConnection(actorIdentity));
-
+            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            await using var keepConnection = MockDbInMemory(mocker, identity);
             var factory = mocker.Create<SQLiteStateStore.Factory>();
-            var sqLiteStateStore = factory.Invoke(actorIdentity);
+            var sqLiteStateStore = factory.Invoke(identity);
 
             var stateSnapshot = await sqLiteStateStore.GetStateSnapshotAsync();
             stateSnapshot.Should().BeNull();
+        }
+
+        private SQLiteConnection MockDbInMemory(AutoMock mocker, IClaptrapIdentity identity)
+        {
+            var keepConnection = DbHelper.CreateInMemoryConnection(identity);
+            mocker.Mock<ISQLiteDbFactory>()
+                .Setup(x => x.GetEventDbConnection(identity))
+                .Returns(() => DbHelper.CreateInMemoryConnection(identity));
+            mocker.Mock<ISQLiteDbFactory>()
+                .Setup(x => x.GetStateDbConnection(identity))
+                .Returns(() => DbHelper.CreateInMemoryConnection(identity));
+            return keepConnection;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             Identity = identity;
             _dbCreated = new Lazy<bool>(() =>
             {
-                sqLiteDbManager.CreateOrUpdateDatabase(Identity, _sqLiteDbFactory.CreateConnection(Identity));
+                sqLiteDbManager.CreateOrUpdateDatabase(Identity);
                 return true;
             });
             _selectSql = new Lazy<string>(() =>
@@ -51,7 +51,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
         public async Task<IState?> GetStateSnapshotAsync()
         {
             _ = _dbCreated.Value;
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
+            await using var db = _sqLiteDbFactory.GetStateDbConnection(Identity);
             var stateEntity = await db.QuerySingleOrDefaultAsync<StateEntity>(_selectSql.Value,
                 new {ActorTypeCode = Identity.TypeCode, Id = Identity.Id});
             if (stateEntity == null)
@@ -76,7 +76,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
                 UpdatedTime = _clock.UtcNow,
                 ActorTypeCode = Identity.TypeCode
             };
-            await using var db = _sqLiteDbFactory.CreateConnection(Identity);
+            await using var db = _sqLiteDbFactory.GetStateDbConnection(Identity);
             var rowCount = await db.ExecuteAsync(_upsertSql.Value, stateEntity);
             if (rowCount > 0)
             {

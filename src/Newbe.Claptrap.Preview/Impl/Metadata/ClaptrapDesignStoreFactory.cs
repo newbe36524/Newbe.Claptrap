@@ -11,6 +11,7 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
         private readonly ILogger<ClaptrapDesignStoreFactory> _logger;
         private readonly AttributeBaseClaptrapDesignStoreProvider.Factory _claptrapDesignStoreProviderFactory;
         private readonly IClaptrapDesignStoreCombiner _combiner;
+        private readonly List<IClaptrapDesignStoreProvider> _providers;
 
         public ClaptrapDesignStoreFactory(
             ILogger<ClaptrapDesignStoreFactory> logger,
@@ -20,6 +21,7 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
             _logger = logger;
             _claptrapDesignStoreProviderFactory = claptrapDesignStoreProviderFactory;
             _combiner = combiner;
+            _providers = new List<IClaptrapDesignStoreProvider>();
         }
 
         public IClaptrapDesignStore Create(IEnumerable<Assembly> assemblies)
@@ -36,7 +38,17 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
             IEnumerable<IClaptrapDesignStoreProvider> GetProviders()
             {
                 yield return _claptrapDesignStoreProviderFactory.Invoke(assemblies.SelectMany(x => x.DefinedTypes));
+                foreach (var claptrapDesignStoreProvider in _providers)
+                {
+                    yield return claptrapDesignStoreProvider;
+                }
             }
+        }
+
+        public IClaptrapDesignStoreFactory AddProvider(IClaptrapDesignStoreProvider designStoreProvider)
+        {
+            _providers.Add(designStoreProvider);
+            return this;
         }
     }
 }

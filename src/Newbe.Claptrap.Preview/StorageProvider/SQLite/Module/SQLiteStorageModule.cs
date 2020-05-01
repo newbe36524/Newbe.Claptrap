@@ -22,6 +22,10 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite.Module
             builder.RegisterType<SQLiteDbManager>()
                 .As<ISQLiteDbManager>()
                 .SingleInstance();
+
+            builder.RegisterType<DbFilePath>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
     }
 }

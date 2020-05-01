@@ -44,10 +44,11 @@ namespace Newbe.Claptrap.Demo.Client
             var balance = await account.GetBalance();
             Console.WriteLine(balance);
             var sw = Stopwatch.StartNew();
-            await Task.WhenAll(Enumerable.Range(0, 100)
+            const int times = 1000;
+            await Task.WhenAll(Enumerable.Range(0, times)
                 .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
             Console.WriteLine(await account.GetBalance());
-            Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms in {times}");
             // var random = new Random();
             // var sw = Stopwatch.StartNew();
             // var round = 0;

@@ -1,6 +1,4 @@
-using System;
-using System.IO;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
@@ -17,29 +15,18 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             return "state";
         }
 
-        public static string GetDbFilename(IClaptrapIdentity claptrapIdentity)
+        public static string ConnectionString(string filename)
         {
-            return Path.Combine(GetDatabaseDirectory(), $"{claptrapIdentity.TypeCode}_{claptrapIdentity.Id}.db");
-        }
-
-        public static string ConnectionString(IClaptrapIdentity claptrapIdentity)
-        {
-            var fileName = GetDbFilename(claptrapIdentity);
-            var re = $"Data Source={fileName};";
+            var re =
+                $"Data Source={filename};Cache Size=5000;Journal Mode=WAL;Pooling=True;Default IsolationLevel=ReadCommitted";
             return re;
         }
 
-        public static string GetDatabaseDirectory()
-        {
-            var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "claptrapStorage");
-            return dir;
-        }
-
-        public static SqliteConnection CreateInMemoryConnection(IClaptrapIdentity claptrapIdentity)
+        public static SQLiteConnection CreateInMemoryConnection(IClaptrapIdentity claptrapIdentity)
         {
             var connectionString =
                 $"Data Source={claptrapIdentity.TypeCode}_{claptrapIdentity.Id};Mode=Memory;Cache=Shared";
-            return new SqliteConnection(connectionString);
+            return new SQLiteConnection(connectionString);
         }
     }
 }

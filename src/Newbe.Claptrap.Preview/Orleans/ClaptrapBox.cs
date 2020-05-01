@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Impl;
 using Orleans;
 
 namespace Newbe.Claptrap.Preview.Orleans
@@ -20,7 +21,7 @@ namespace Newbe.Claptrap.Preview.Orleans
         public override async Task OnActivateAsync()
         {
             var actorTypeCode = _claptrapGrainCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
-            var grainActorIdentity = new GrainClaptrapIdentity(this.GetPrimaryKeyString(), actorTypeCode);
+            var grainActorIdentity = new ClaptrapIdentity(this.GetPrimaryKeyString(), actorTypeCode);
             Claptrap = _claptrapGrainCommonService.ClaptrapFactory.Create(grainActorIdentity);
             await Claptrap.ActivateAsync();
         }

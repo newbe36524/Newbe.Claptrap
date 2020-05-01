@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
@@ -21,9 +23,9 @@ namespace Newbe.Claptrap.Preview.Impl
             new Dictionary<StructClaptrapIdentity, IClaptrapDesign>();
 
         public ClaptrapDesignStore(
-            ILogger<ClaptrapDesignStore> logger)
+            ILogger<ClaptrapDesignStore>? logger = null)
         {
-            _logger = logger;
+            _logger = logger ?? NullLogger<ClaptrapDesignStore>.Instance;
         }
 
         public IClaptrapDesign FindDesign(IClaptrapIdentity claptrapIdentity)
@@ -81,6 +83,25 @@ namespace Newbe.Claptrap.Preview.Impl
                 _logger.LogInformation(
                     "a claptrap design add to id specified store. design: {@design}",
                     design);
+            }
+        }
+
+        public void Remove(Func<IClaptrapDesign, bool> removedSelector)
+        {
+            var needRemoved = this.Where(removedSelector)
+                .ToArray();
+            foreach (var claptrapDesign in needRemoved)
+            {
+                var identity = claptrapDesign.Identity;
+                if (_globalDic.Remove(identity.TypeCode))
+                {
+                    _logger.LogInformation("design for {identity} remove from global design store", identity);
+                }
+
+                if (_idDic.Remove(new StructClaptrapIdentity(identity)))
+                {
+                    _logger.LogInformation("design for {identity} remove from id specified store", identity);
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,56 +14,73 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public class SQLiteDbManager : ISQLiteDbManager
     {
+        private readonly DbFilePath.Factory _factory;
+        private readonly ISQLiteDbFactory _sqLiteDbFactory;
         private readonly ILogger<SQLiteDbManager> _logger;
 
         public SQLiteDbManager(
+            DbFilePath.Factory factory,
+            ISQLiteDbFactory sqLiteDbFactory,
             ILogger<SQLiteDbManager> logger)
         {
+            _factory = factory;
+            _sqLiteDbFactory = sqLiteDbFactory;
             _logger = logger;
         }
 
-        public void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity, IDbConnection dbConnection)
+        public void CreateOrUpdateDatabase(IClaptrapIdentity claptrapIdentity)
         {
-            var dir = DbHelper.GetDatabaseDirectory();
-            if (!Directory.Exists(dir))
+            var dbFilePath = _factory.Invoke(claptrapIdentity);
+            dbFilePath.EnsureDirectoryCreated();
+
+            var ps = new Dictionary<string, string>
             {
-                Directory.CreateDirectory(dir);
-                _logger.LogInformation("directory {databaseDir} for SQLite event store not found, created", dir);
-            }
+                {"ActorTypeCode", claptrapIdentity.TypeCode},
+                {"ActorId", claptrapIdentity.Id},
+                {"EventTableName", DbHelper.GetEventTableName(claptrapIdentity)},
+                {"StateTableName", DbHelper.GetStateTableName(claptrapIdentity)},
+            };
+            MigrationDb(_sqLiteDbFactory.GetEventDbConnection(claptrapIdentity), EventSqlSelector, ps);
+            MigrationDb(_sqLiteDbFactory.GetStateDbConnection(claptrapIdentity), StateSqlSelector, ps);
 
-            var dbMigration =
-                DeployChanges.To
-                    .SQLiteDatabase(new SharedConnection(dbConnection))
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                    .LogToAutodetectedLog()
-                    .LogToConsole()
-                    .WithVariablesEnabled()
-                    .WithVariable("ActorTypeCode", claptrapIdentity.TypeCode)
-                    .WithVariable("ActorId", claptrapIdentity.Id)
-                    .WithVariable("EventTableName", DbHelper.GetEventTableName(claptrapIdentity))
-                    .WithVariable("StateTableName", DbHelper.GetStateTableName(claptrapIdentity))
-                    .Build();
+            static bool EventSqlSelector(string file)
+                => file.EndsWith(".event.sql");
 
-            var result = dbMigration.PerformUpgrade();
+            static bool StateSqlSelector(string file)
+                =>  file.EndsWith(".state.sql");
 
-            if (!result.Successful)
+            void MigrationDb(IDbConnection db, Func<string, bool> sqlSelector, IDictionary<string, string> data)
             {
-                throw new Exception(
-                    $"event store create failed for {claptrapIdentity.TypeCode} {claptrapIdentity.Id}",
-                    result.Error);
-            }
+                var dbMigration =
+                    DeployChanges.To
+                        .SQLiteDatabase(new SharedConnection(db))
+                        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
+                        .LogToAutodetectedLog()
+                        .LogToConsole()
+                        .WithVariablesEnabled()
+                        .WithVariables(data)
+                        .Build();
 
-            if (result.Scripts.Any())
-            {
-                var dbFilename = DbHelper.GetDbFilename(claptrapIdentity);
-                _logger.LogInformation("db migration for {filename} is success.", dbFilename);
-            }
-            else
-            {
-                _logger.LogDebug("db schema is latest, do nothing to migration");
-            }
+                var result = dbMigration.PerformUpgrade();
 
-            _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
+                if (!result.Successful)
+                {
+                    throw new Exception(
+                        $"db migration failed, {claptrapIdentity}",
+                        result.Error);
+                }
+
+                if (result.Scripts.Any())
+                {
+                    _logger.LogInformation("db migration is success.");
+                }
+                else
+                {
+                    _logger.LogDebug("db schema is latest, do nothing to migration");
+                }
+
+                _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
+            }
         }
 
         private static string WriteExecutedScriptsToOctopusTaskSummary(DatabaseUpgradeResult result)
@@ -79,18 +96,6 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 
             sb.AppendLine("##octopus[stdout-default]");
             return sb.ToString();
-        }
-
-        public void DeleteIfFound(IClaptrapIdentity claptrapIdentity)
-        {
-            var filename = DbHelper.GetDbFilename(claptrapIdentity);
-            if (File.Exists(filename))
-            {
-                _logger.LogInformation("db file found, start to delete it. path: {path}", filename);
-                File.Delete(filename);
-            }
-
-            _logger.LogInformation("there is no db file, do nothing. path: {path}", filename);
         }
     }
 }

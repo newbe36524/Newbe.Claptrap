@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
@@ -8,29 +9,45 @@ namespace Newbe.Claptrap.Preview.Impl
 {
     public class ClaptrapFactory : IClaptrapFactory
     {
+        private readonly ILogger<ClaptrapFactory> _logger;
         private readonly IClaptrapDesignStore _claptrapDesignStore;
         private readonly ILifetimeScope _lifetimeScope;
 
         public ClaptrapFactory(
+            ILogger<ClaptrapFactory> logger,
             IClaptrapDesignStore claptrapDesignStore,
             ILifetimeScope lifetimeScope)
         {
+            _logger = logger;
             _claptrapDesignStore = claptrapDesignStore;
             _lifetimeScope = lifetimeScope;
         }
 
         public IClaptrap Create(IClaptrapIdentity identity)
         {
-            var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var actorScope = _lifetimeScope.BeginLifetimeScope(builder =>
+            try
             {
-                builder.Register(context => identity)
-                    .AsSelf()
-                    .SingleInstance();
-                builder.RegisterModule(new ClaptrapDesignModule(claptrapDesign));
-            });
-            var actor = actorScope.Resolve<ClaptrapActor>();
-            return actor;
+                return CreateCore();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "failed to create a claptrap. {identity}", identity);
+                throw;
+            }
+
+            IClaptrap CreateCore()
+            {
+                var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
+                var actorScope = _lifetimeScope.BeginLifetimeScope(builder =>
+                {
+                    builder.Register(context => identity)
+                        .AsSelf()
+                        .SingleInstance();
+                    builder.RegisterModule(new ClaptrapDesignModule(claptrapDesign));
+                });
+                var actor = actorScope.Resolve<ClaptrapActor>();
+                return actor;
+            }
         }
 
         private class ClaptrapDesignModule : Module

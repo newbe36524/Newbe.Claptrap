@@ -1,16 +1,15 @@
 using System;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.Orleans
+namespace Newbe.Claptrap.Preview.Impl
 {
-    public class GrainClaptrapIdentity : IClaptrapIdentity
+    public class ClaptrapIdentity : IClaptrapIdentity
     {
-        public GrainClaptrapIdentity(string id, string typeCode)
+        public ClaptrapIdentity(string id, string typeCode)
         {
             Id = id;
             TypeCode = typeCode;
         }
-
 
         public string Id { get; }
         public string TypeCode { get; }
@@ -25,12 +24,17 @@ namespace Newbe.Claptrap.Preview.Orleans
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((GrainClaptrapIdentity) obj);
+            return Equals((ClaptrapIdentity) obj);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, TypeCode);
+        }
+
+        public override string ToString()
+        {
+            return $"[{TypeCode} : {Id}]";
         }
     }
 }

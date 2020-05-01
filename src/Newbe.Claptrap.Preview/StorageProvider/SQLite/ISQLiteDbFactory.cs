@@ -1,10 +1,11 @@
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 {
     public interface ISQLiteDbFactory
     {
-        SqliteConnection CreateConnection(IClaptrapIdentity claptrapIdentity);
+        SQLiteConnection GetEventDbConnection(IClaptrapIdentity claptrapIdentity);
+        SQLiteConnection GetStateDbConnection(IClaptrapIdentity claptrapIdentity);
     }
 }
