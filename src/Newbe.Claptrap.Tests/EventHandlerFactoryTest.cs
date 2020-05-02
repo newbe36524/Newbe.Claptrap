@@ -26,7 +26,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMock.GetStrict();
             mocker.VerifyAll = true;
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
+            var actorIdentity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
             var testEvent = new TestEvent
             {
                 EventTypeCode = "eventType"
@@ -61,7 +61,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMock.GetStrict(builder => builder.AddLogging(_testOutputHelper));
             mocker.VerifyAll = true;
-            var actorIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
+            var actorIdentity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
             var testEvent = new TestEvent
             {
                 EventTypeCode = "eventType"

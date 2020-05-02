@@ -20,5 +20,15 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             builder.AddClaptrapDesignStoreConfigurator(new FuncClaptrapDesignStoreConfigurator(action));
             return builder;
         }
+
+        public static IClaptrapBootstrapperBuilder ConfigureGlobalClaptrapDesign(
+            this IClaptrapBootstrapperBuilder builder,
+            Action<IGlobalClaptrapDesign> action)
+        {
+            var design = new GlobalClaptrapDesign();
+            action.Invoke(design);
+            builder.AddClaptrapDesignStoreConfigurator(new GlobalClaptrapDesignStoreConfigurator(design));
+            return builder;
+        }
     }
 }

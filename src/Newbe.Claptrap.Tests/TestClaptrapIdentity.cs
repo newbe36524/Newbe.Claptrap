@@ -3,9 +3,9 @@ using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Tests
 {
-    public class ClaptrapIdentity : IClaptrapIdentity
+    public class TestClaptrapIdentity : IClaptrapIdentity
     {
-        public ClaptrapIdentity(string id, string typeCode)
+        public TestClaptrapIdentity(string id, string typeCode)
         {
             Id = id;
             TypeCode = typeCode;
@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Tests
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((ClaptrapIdentity) obj);
+            return Equals((TestClaptrapIdentity) obj);
         }
 
         public override int GetHashCode()
@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.Tests
             return HashCode.Combine(Id, TypeCode);
         }
 
-        public static ClaptrapIdentity Instance =>
-            new ClaptrapIdentity(Guid.NewGuid().ToString(), typeof(ClaptrapIdentity).FullName!);
+        public static TestClaptrapIdentity Instance =>
+            new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testClaptrap_state");
     }
 }

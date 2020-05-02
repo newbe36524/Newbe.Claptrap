@@ -4,7 +4,7 @@ using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
-using Newbe.Claptrap.Preview.Impl.Metadata;
+using Newbe.Claptrap.Preview.Logging;
 
 namespace Newbe.Claptrap.Preview.Impl.Modules
 {
@@ -13,14 +13,12 @@ namespace Newbe.Claptrap.Preview.Impl.Modules
     /// </summary>
     public class ClaptrapCustomerModule : Module
     {
-        private readonly ILogger<ClaptrapCustomerModule> _logger;
+        private static readonly ILog Logger = LogProvider.For<ClaptrapCustomerModule>();
         private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public ClaptrapCustomerModule(
-            ILogger<ClaptrapCustomerModule> logger,
             IClaptrapDesignStore claptrapDesignStore)
         {
-            _logger = logger;
             _claptrapDesignStore = claptrapDesignStore;
         }
 
@@ -30,15 +28,12 @@ namespace Newbe.Claptrap.Preview.Impl.Modules
             builder.RegisterInstance(_claptrapDesignStore)
                 .As<IClaptrapDesignStore>()
                 .SingleInstance();
-            builder.RegisterType<ClaptrapDesignStoreAccessor>()
-                .As<IClaptrapDesignStoreAccessor>()
-                .SingleInstance();
 
             var claptrapDesigns = _claptrapDesignStore.ToArray();
             foreach (var claptrapDesign in claptrapDesigns)
             {
                 var actorTypeCode = claptrapDesign.Identity.TypeCode;
-                _logger.LogDebug("start to register actor type : {actorTypeCode}", actorTypeCode);
+                Logger.Debug("start to register actor type : {actorTypeCode}", actorTypeCode);
                 foreach (var type in GetTypes(claptrapDesign))
                 {
                     builder.RegisterType(type)
@@ -46,12 +41,12 @@ namespace Newbe.Claptrap.Preview.Impl.Modules
                         .InstancePerLifetimeScope();
                 }
 
-                _logger.LogDebug("actor type registration for '{actorTypeCode}' done", actorTypeCode);
+                Logger.Debug("actor type registration for '{actorTypeCode}' done", actorTypeCode);
             }
 
-            _logger.LogDebug("actor type registration done");
+            Logger.Debug("actor type registration done");
 
-            _logger.LogInformation("{count} actorType have been registered into container",
+            Logger.Info("{count} actorType have been registered into container",
                 claptrapDesigns.Length);
 
             static IEnumerable<Type> GetTypes(IClaptrapDesign design)

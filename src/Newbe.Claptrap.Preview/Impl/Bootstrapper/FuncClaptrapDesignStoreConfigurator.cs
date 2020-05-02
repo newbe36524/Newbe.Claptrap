@@ -13,7 +13,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             _action = action;
         }
 
-        public void Configurate(IClaptrapDesignStore designStore)
+        public void Configure(IClaptrapDesignStore designStore)
         {
             _action.Invoke(designStore);
         }

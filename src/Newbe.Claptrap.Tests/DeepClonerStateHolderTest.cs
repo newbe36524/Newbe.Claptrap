@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.Tests
             {
                 Name = "name"
             };
-            var deepClonerStateHolder = new DeepClonerStateHolder(ClaptrapIdentity.Instance);
+            var deepClonerStateHolder = new DeepClonerStateHolder(TestClaptrapIdentity.Instance);
             var re = deepClonerStateHolder.DeepCopy(testData);
             re.Should().NotBe(testData);
             re.Should().BeOfType<TestData>();
@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.Tests
             {
                 List = Enumerable.Range(0, listCount).ToList()
             };
-            var deepClonerStateHolder = new DeepClonerStateHolder(ClaptrapIdentity.Instance);
+            var deepClonerStateHolder = new DeepClonerStateHolder(TestClaptrapIdentity.Instance);
             var re = deepClonerStateHolder.DeepCopy(testData);
             re.Should().NotBe(testData);
             re.Should().BeOfType<TestData>();

@@ -38,6 +38,26 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
 
                 IEnumerable<(bool isOk, string errorMessage)> ValidateTypes()
                 {
+                    yield return ValidateTypeNotNull(design.Identity,
+                        nameof(design.Identity));
+                    yield return ValidateTypeNotNull(design.StateDataType,
+                        nameof(design.StateDataType));
+                    yield return ValidateTypeNotNull(design.EventLoaderFactoryType,
+                        nameof(design.EventLoaderFactoryType));
+                    yield return ValidateTypeNotNull(design.EventSaverFactoryType,
+                        nameof(design.EventSaverFactoryType));
+                    yield return ValidateTypeNotNull(design.StateLoaderFactoryType,
+                        nameof(design.StateLoaderFactoryType));
+                    yield return ValidateTypeNotNull(design.StateSaverFactoryType,
+                        nameof(design.StateSaverFactoryType));
+                    yield return ValidateTypeNotNull(design.InitialStateDataFactoryType,
+                        nameof(design.InitialStateDataFactoryType));
+                    yield return ValidateTypeNotNull(design.StateHolderFactoryType,
+                        nameof(design.StateHolderFactoryType));
+                    yield return ValidateTypeNotNull(design.StateOptions, nameof(design.StateOptions));
+                    yield return ValidateTypeNotNull(design.EventHandlerFactoryFactoryType,
+                        nameof(design.EventHandlerFactoryFactoryType));
+                    yield return ValidateTypeNotNull(design.EventHandlerDesigns, nameof(design.EventHandlerDesigns));
                     yield return ValidateClaptrapComponent<IEventLoader>(design.EventLoaderFactoryType);
                     yield return ValidateClaptrapComponent<IEventSaver>(design.EventSaverFactoryType);
                     yield return ValidateClaptrapComponent<IStateLoader>(design.StateLoaderFactoryType);
@@ -49,6 +69,13 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
                     {
                         return type.GetInterface(typeof(TComponent).FullName) != null
                             ? (false, $"type {type} is not implement {typeof(TComponent)} .")
+                            : (true, string.Empty);
+                    }
+
+                    static (bool isOk, string errorMessage) ValidateTypeNotNull(object type, string name)
+                    {
+                        return type == null
+                            ? (false, $"{name} is required, please set it correctly")
                             : (true, string.Empty);
                     }
                 }

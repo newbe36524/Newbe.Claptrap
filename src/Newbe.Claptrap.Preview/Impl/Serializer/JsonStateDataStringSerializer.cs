@@ -7,12 +7,12 @@ namespace Newbe.Claptrap.Preview.Impl.Serializer
 {
     public class JsonStateDataStringSerializer : IStateDataStringSerializer
     {
-        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public JsonStateDataStringSerializer(
-            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
+            IClaptrapDesignStore claptrapDesignStore)
         {
-            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         public string Serialize(string claptrapTypeCode, IStateData stateData)
@@ -23,7 +23,8 @@ namespace Newbe.Claptrap.Preview.Impl.Serializer
 
         public IStateData Deserialize(string claptrapTypeCode, string source)
         {
-            var stateDataType = _claptrapDesignStoreAccessor.FindStateDataType(claptrapTypeCode);
+            var design = _claptrapDesignStore.FindDesign(new ClaptrapIdentity(default!, claptrapTypeCode));
+            var stateDataType = design.StateDataType;
             var re = (IStateData) JsonConvert.DeserializeObject(source, stateDataType)!;
             return re;
         }

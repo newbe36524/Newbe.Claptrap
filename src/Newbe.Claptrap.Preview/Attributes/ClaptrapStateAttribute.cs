@@ -9,9 +9,9 @@ namespace Newbe.Claptrap.Preview.Attributes
     public class ClaptrapStateAttribute : Attribute
     {
         public Type StateDataType { get; set; }
-        public string? ActorTypeCode { get; set; }
+        public string ActorTypeCode { get; set; }
 
-        public ClaptrapStateAttribute(Type stateDataType, string? actorTypeCode = null)
+        public ClaptrapStateAttribute(Type stateDataType, string actorTypeCode)
         {
             StateDataType = stateDataType;
             ActorTypeCode = actorTypeCode;

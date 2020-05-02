@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
@@ -31,17 +32,30 @@ namespace Newbe.Claptrap.Preview.Impl
 
         public IEventHandler Create(IEventContext eventContext)
         {
-            var eventScope = _lifetimeScope.BeginLifetimeScope();
-            var claptrapDesign = _claptrapDesignStore.FindDesign(eventContext.State.Identity);
-            var eventEventTypeCode = eventContext.Event.EventTypeCode;
-            if (!claptrapDesign.EventHandlerDesigns.TryGetValue(eventEventTypeCode,
-                out var handlerDesign))
+            try
             {
-                throw new EventHandlerNotFoundException(eventContext.State.Identity.TypeCode, eventEventTypeCode);
+                return CreateCore();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "failed to create handler for {@context}", eventContext);
+                throw;
             }
 
-            var handler = (IEventHandler) eventScope.Resolve(handlerDesign.EventHandlerType);
-            return handler;
+            IEventHandler CreateCore()
+            {
+                var eventScope = _lifetimeScope.BeginLifetimeScope();
+                var claptrapDesign = _claptrapDesignStore.FindDesign(eventContext.State.Identity);
+                var eventEventTypeCode = eventContext.Event.EventTypeCode;
+                if (!claptrapDesign.EventHandlerDesigns.TryGetValue(eventEventTypeCode,
+                    out var handlerDesign))
+                {
+                    throw new EventHandlerNotFoundException(eventContext.State.Identity.TypeCode, eventEventTypeCode);
+                }
+
+                var handler = (IEventHandler) eventScope.Resolve(handlerDesign.EventHandlerType);
+                return handler;
+            }
         }
     }
 }

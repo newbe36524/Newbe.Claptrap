@@ -17,10 +17,13 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict();
             mocker.VerifyAll = true;
 
-            var actorIdentity = ClaptrapIdentity.Instance;
-            mocker.Mock<IClaptrapDesignStoreAccessor>()
-                .Setup(x => x.FindStateDataType(actorIdentity.TypeCode))
-                .Returns(typeof(TestStateData));
+            var actorIdentity = TestClaptrapIdentity.Instance;
+            mocker.Mock<IClaptrapDesignStore>()
+                .Setup(x => x.FindDesign(actorIdentity))
+                .Returns(new ClaptrapDesign
+                {
+                    StateDataType = typeof(TestStateData)
+                });
 
             var handler = mocker.Create<DefaultInitialStateDataFactory>();
             var stateData = await handler.Create(actorIdentity);

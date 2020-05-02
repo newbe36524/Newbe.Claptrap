@@ -58,21 +58,14 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
                     var claptrapDesign = new ClaptrapDesign
                     {
                         Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(x.stateAttr)),
-                        ActorStateDataType = x.stateAttr.StateDataType,
-                        InitialStateDataFactoryType = x.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType
-                                                      ?? typeof(DefaultInitialStateDataFactory),
+                        StateDataType = x.stateAttr.StateDataType,
+                        InitialStateDataFactoryType = x.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!,
                         StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
-                        EventLoaderFactoryType = x.eventStoreAttr.EventLoaderFactoryType,
-                        EventSaverFactoryType = x.eventStoreAttr.EventSaverFactoryType,
-                        StateLoaderFactoryType = x.stateStoreAttr.StateLoaderFactoryType,
-                        StateSaverFactoryType = x.stateStoreAttr.StateSaverFactoryType,
+                        EventLoaderFactoryType = x.eventStoreAttr?.EventLoaderFactoryType!,
+                        EventSaverFactoryType = x.eventStoreAttr?.EventSaverFactoryType!,
+                        StateLoaderFactoryType = x.stateStoreAttr?.StateLoaderFactoryType!,
+                        StateSaverFactoryType = x.stateStoreAttr?.StateSaverFactoryType!,
                         EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
-                        StateSavingOptions = new StateSavingOptions
-                        {
-                            SavingWindowTime = TimeSpan.FromSeconds(10),
-                            SaveWhenDeactivateAsync = true,
-                            SavingWindowVersionLimit = 1000
-                        },
                     };
                     var handlerDesigns = x.eventAttrs.Select(e => new ClaptrapEventHandlerDesign
                     {

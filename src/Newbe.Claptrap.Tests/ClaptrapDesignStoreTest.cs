@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
-            var actorIdentity = new ClaptrapIdentity(id, typeCode);
+            var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
             {
                 Identity = actorIdentity
@@ -46,7 +46,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
-            var actorIdentity = new ClaptrapIdentity(id, typeCode);
+            var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
             {
                 Identity = actorIdentity
@@ -67,7 +67,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
             mocker.VerifyAll = true;
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
-            var actorIdentity = new ClaptrapIdentity("123", "testCode");
+            var actorIdentity = new TestClaptrapIdentity("123", "testCode");
             Assert.Throws<ClaptrapDesignNotFoundException>(() =>
                 claptrapDesignStore.FindDesign(actorIdentity));
         }
@@ -79,7 +79,7 @@ namespace Newbe.Claptrap.Tests
             mocker.VerifyAll = true;
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             const string typeCode = "testCode";
-            var actorIdentity = new ClaptrapIdentity("123", typeCode);
+            var actorIdentity = new TestClaptrapIdentity("123", typeCode);
             var idDesign = new ClaptrapDesign
             {
                 Identity = actorIdentity
@@ -87,7 +87,7 @@ namespace Newbe.Claptrap.Tests
             claptrapDesignStore.AddOrReplace(idDesign);
             var globalDesign = new ClaptrapDesign
             {
-                Identity = new ClaptrapIdentity(string.Empty, typeCode),
+                Identity = new TestClaptrapIdentity(string.Empty, typeCode),
             };
             claptrapDesignStore.AddOrReplace(globalDesign);
             var claptrapDesign = claptrapDesignStore.FindDesign(actorIdentity);
@@ -101,7 +101,7 @@ namespace Newbe.Claptrap.Tests
             mocker.VerifyAll = true;
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             const string typeCode = "testCode";
-            var actorIdentity = new ClaptrapIdentity("123", typeCode);
+            var actorIdentity = new TestClaptrapIdentity("123", typeCode);
             var idDesign = new ClaptrapDesign
             {
                 Identity = actorIdentity
@@ -109,10 +109,10 @@ namespace Newbe.Claptrap.Tests
             claptrapDesignStore.AddOrReplace(idDesign);
             var globalDesign = new ClaptrapDesign
             {
-                Identity = new ClaptrapIdentity(string.Empty, typeCode),
+                Identity = new TestClaptrapIdentity(string.Empty, typeCode),
             };
             claptrapDesignStore.AddOrReplace(globalDesign);
-            var claptrapDesign = claptrapDesignStore.FindDesign(new ClaptrapIdentity("456", typeCode));
+            var claptrapDesign = claptrapDesignStore.FindDesign(new TestClaptrapIdentity("456", typeCode));
             claptrapDesign.Should().Be(globalDesign);
         }
     }

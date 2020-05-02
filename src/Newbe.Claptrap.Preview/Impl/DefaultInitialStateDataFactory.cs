@@ -7,17 +7,18 @@ namespace Newbe.Claptrap.Preview.Impl
 {
     public class DefaultInitialStateDataFactory : IInitialStateDataFactory
     {
-        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public DefaultInitialStateDataFactory(
-            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
+            IClaptrapDesignStore claptrapDesignStore)
         {
-            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         public Task<IStateData> Create(IClaptrapIdentity identity)
         {
-            var findStateDataType = _claptrapDesignStoreAccessor.FindStateDataType(identity.TypeCode);
+            var design = _claptrapDesignStore.FindDesign(identity);
+            var findStateDataType = design.StateDataType;
             var stateData = (IStateData) Activator.CreateInstance(findStateDataType);
             return Task.FromResult(stateData);
         }

@@ -1,4 +1,5 @@
 using Autofac;
+using Newbe.Claptrap.Preview.Abstractions.Metadata;
 
 namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
@@ -9,5 +10,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
         /// </summary>
         /// <param name="builder"></param>
         void RegisterServices(ContainerBuilder builder);
+
+        IClaptrapDesignStore DumpDesignStore();
     }
 }

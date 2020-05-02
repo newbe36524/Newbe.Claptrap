@@ -19,16 +19,16 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMock.GetStrict();
             mocker.VerifyAll = true;
 
-            var actorIdentity = ClaptrapIdentity.Instance;
+            var actorIdentity = TestClaptrapIdentity.Instance;
             mocker.Mock<IClaptrapDesignStore>()
                 .Setup(x => x.FindDesign(actorIdentity))
                 .Returns(new ClaptrapDesign
                 {
-                    StateSavingOptions = new StateSavingOptions(),
+                    StateOptions = new StateOptions(),
                     Identity = actorIdentity,
                     EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                     StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
-                    ActorStateDataType = typeof(TestStateData),
+                    StateDataType = typeof(TestStateData),
                     EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
                     EventSaverFactoryType = typeof(MemoryEventStoreFactory),
                     StateLoaderFactoryType = typeof(MemoryStateStoreFactory),

@@ -4,6 +4,6 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
     public interface IClaptrapDesignStoreConfigurator
     {
-        void Configurate(IClaptrapDesignStore designStore);
+        void Configure(IClaptrapDesignStore designStore);
     }
 }

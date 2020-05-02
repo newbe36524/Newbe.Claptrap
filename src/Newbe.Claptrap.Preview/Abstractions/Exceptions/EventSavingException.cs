@@ -18,7 +18,8 @@ namespace Newbe.Claptrap.Preview.Abstractions.Exceptions
             Event = @event;
         }
 
-        public EventSavingException(string message, Exception innerException, IEvent @event) : base(message,
+        public EventSavingException(Exception innerException, IEvent @event) : base(
+            $"failed to save event {@event.ClaptrapIdentity.TypeCode} {@event.ClaptrapIdentity.Id} {@event.EventTypeCode}",
             innerException)
         {
             Event = @event;

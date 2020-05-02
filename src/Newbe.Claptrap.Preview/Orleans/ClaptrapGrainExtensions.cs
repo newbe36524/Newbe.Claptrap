@@ -7,24 +7,25 @@ namespace Newbe.Claptrap.Preview.Orleans
     public static class ClaptrapGrainExtensions
     {
         public static DataEvent CreateEvent<TStateData, TEventDataType>(
-            this IClaptrapBox<TStateData> claptrapBox,
+            this IClaptrapBoxGrain<TStateData> claptrapBox,
             TEventDataType eventData)
             where TStateData : IStateData
             where TEventDataType : IEventData
         {
-            return CreateEvent(claptrapBox, eventData, Guid.NewGuid().ToString());
+            return CreateEvent(claptrapBox, eventData, default);
         }
 
         public static DataEvent CreateEvent<TStateData, TEventDataType>(
-            this IClaptrapBox<TStateData> claptrapBox,
+            this IClaptrapBoxGrain<TStateData> claptrapBox,
             TEventDataType eventData,
-            string uid)
+            string? uid)
             where TStateData : IStateData
             where TEventDataType : IEventData
         {
-            // TODO event Type
+            var eventTypeCode =
+                claptrapBox.ClaptrapGrainCommonService.ClaptrapTypeCodeFactory.FindEventTypeCode(claptrapBox, eventData);
             var dataEvent = new DataEvent(claptrapBox.Claptrap.State.Identity,
-                typeof(TEventDataType).FullName,
+                eventTypeCode,
                 eventData,
                 uid);
             return dataEvent;

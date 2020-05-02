@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.Tests
                 builder.RegisterType<DbFilePath>()
                     .AsSelf();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -72,7 +72,7 @@ namespace Newbe.Claptrap.Tests
                 builder.RegisterType<DbFilePath>()
                     .AsSelf();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 
@@ -107,7 +107,7 @@ namespace Newbe.Claptrap.Tests
                 builder.RegisterType<DbFilePath>()
                     .AsSelf();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
 

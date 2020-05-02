@@ -1,3 +1,4 @@
+using System.Linq;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Abstractions.Serializer;
@@ -7,12 +8,12 @@ namespace Newbe.Claptrap.Preview.Impl.Serializer
 {
     public class JsonEventDataStringSerializer : IEventDataStringSerializer
     {
-        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public JsonEventDataStringSerializer(
-            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
+            IClaptrapDesignStore claptrapDesignStore)
         {
-            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         public string Serialize(string claptrapTypeCode, string eventTypeCode, IEventData eventData)
@@ -23,8 +24,9 @@ namespace Newbe.Claptrap.Preview.Impl.Serializer
 
         public IEventData Deserialize(string claptrapTypeCode, string eventTypeCode, string source)
         {
-            var eventDataType = _claptrapDesignStoreAccessor.FindEventDataType(claptrapTypeCode, eventTypeCode);
-            var re = (IEventData) JsonConvert.DeserializeObject(source, eventDataType)!;
+            var design = _claptrapDesignStore.FindDesign(new ClaptrapIdentity(default!, claptrapTypeCode));
+            var (_, value) = design.EventHandlerDesigns.Single(x => x.Key == eventTypeCode);
+            var re = (IEventData) JsonConvert.DeserializeObject(source, value.EventDataType)!;
             return re;
         }
     }

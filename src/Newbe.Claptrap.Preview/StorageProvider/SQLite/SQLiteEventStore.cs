@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Abstractions.Serializer;
 using Newbe.Claptrap.Preview.Impl;
 
@@ -53,23 +54,36 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
 
         public async Task<EventSavingResult> SaveEventAsync(IEvent @event)
         {
-            _ = _databaseCreated.Value;
-            var eventData = _eventDataStringSerializer.Serialize(Identity.TypeCode, @event.EventTypeCode, @event.Data);
-            var eventEntity = new EventEntity
+            try
             {
-                Version = @event.Version,
-                CreatedTime = _clock.UtcNow,
-                EventData = eventData,
-                EventTypeCode = @event.EventTypeCode,
-                Uid = @event.Uid!,
-            };
-            _logger.LogDebug("start to save event to store {@eventEntity}", eventEntity);
+                return await SaveEventAsyncCore();
+            }
+            catch (Exception e)
+            {
+                throw new EventSavingException(e, @event);
+            }
 
-            await using var db = _sqLiteDbFactory.GetEventDbConnection(Identity);
-            var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
-            var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
-            _logger.LogDebug("event savingResult : {eventSavingResult}", re);
-            return re;
+            async Task<EventSavingResult> SaveEventAsyncCore()
+            {
+                _ = _databaseCreated.Value;
+                var eventData =
+                    _eventDataStringSerializer.Serialize(Identity.TypeCode, @event.EventTypeCode, @event.Data);
+                var eventEntity = new EventEntity
+                {
+                    Version = @event.Version,
+                    CreatedTime = _clock.UtcNow,
+                    EventData = eventData,
+                    EventTypeCode = @event.EventTypeCode,
+                    Uid = @event.Uid!,
+                };
+                _logger.LogDebug("start to save event to store {@eventEntity}", eventEntity);
+
+                await using var db = _sqLiteDbFactory.GetEventDbConnection(Identity);
+                var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
+                var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
+                _logger.LogDebug("event savingResult : {eventSavingResult}", re);
+                return re;
+            }
         }
 
         public async Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
@@ -98,7 +112,7 @@ namespace Newbe.Claptrap.Preview.StorageProvider.SQLite
             return re;
         }
 
-        struct SavingItem
+        private struct SavingItem
         {
             public TaskCompletionSource<EventSavingResult> TaskCompletionSource { get; set; }
             public IEvent Event { get; set; }

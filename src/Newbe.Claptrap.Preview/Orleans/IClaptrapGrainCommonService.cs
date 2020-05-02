@@ -1,10 +1,10 @@
-using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Box;
 
 namespace Newbe.Claptrap.Preview.Orleans
 {
     public interface IClaptrapGrainCommonService
     {
-        IClaptrapFactory ClaptrapFactory { get; }
+        IClaptrapBoxFactory BoxFactory { get; }
         IClaptrapTypeCodeFactory ClaptrapTypeCodeFactory { get; }
     }
 }

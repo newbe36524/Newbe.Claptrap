@@ -9,9 +9,9 @@ namespace Newbe.Claptrap.Preview.Attributes
     public class ClaptrapEventAttribute : Attribute
     {
         public Type EventDataType { get; set; }
-        public string? EventTypeCode { get; set; }
+        public string EventTypeCode { get; set; }
 
-        public ClaptrapEventAttribute(Type eventDataType, string? eventTypeCode = null)
+        public ClaptrapEventAttribute(Type eventDataType, string eventTypeCode)
         {
             EventDataType = eventDataType;
             EventTypeCode = eventTypeCode;

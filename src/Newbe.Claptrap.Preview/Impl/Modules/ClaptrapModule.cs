@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Impl.Box;
 using Newbe.Claptrap.Preview.Impl.MemoryStore;
 
 namespace Newbe.Claptrap.Preview.Impl.Modules
@@ -19,14 +20,6 @@ namespace Newbe.Claptrap.Preview.Impl.Modules
             builder.RegisterType<ClaptrapFactory>()
                 .As<IClaptrapFactory>()
                 .SingleInstance();
-
-            builder.RegisterType<MemoryEventStore>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<MemoryStateStore>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
 
             builder.RegisterType<DesignBaseEventHandlerFactory>()
                 .AsSelf()

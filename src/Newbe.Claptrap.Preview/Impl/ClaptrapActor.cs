@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IEventLoader _eventLoader;
         private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly IStateHolder _stateHolder;
-        private readonly StateSavingOptions _stateSavingOptions;
+        private readonly StateOptions _stateOptions;
 
         public ClaptrapActor(
             IClaptrapIdentity claptrapIdentity,
@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.Preview.Impl
             IEventLoader eventLoader,
             IEventHandlerFactory eventHandlerFactory,
             IStateHolder stateHolder,
-            StateSavingOptions stateSavingOptions)
+            StateOptions stateOptions)
         {
             _claptrapIdentity = claptrapIdentity;
             _logger = logger;
@@ -47,19 +47,19 @@ namespace Newbe.Claptrap.Preview.Impl
             _eventLoader = eventLoader;
             _eventHandlerFactory = eventHandlerFactory;
             _stateHolder = stateHolder;
-            _stateSavingOptions = stateSavingOptions;
+            _stateOptions = stateOptions;
             _incomingEventsSeq = new Subject<EventItem>();
             _nextStateSeq = new Subject<IState>();
         }
 
-        public IState State { get; private set; } = null!;
+        public IState State { get; set; } = null!;
 
         private IDisposable _eventHandleFlow = null!;
         private IDisposable _snapshotSavingFlow = null!;
         private readonly Subject<EventItem> _incomingEventsSeq;
         private readonly Subject<IState> _nextStateSeq;
 
-        private async Task RestoreStateAsync()
+        public async Task RestoreStateAsync()
         {
             var stateSnapshot = await _stateLoader.GetStateSnapshotAsync();
             if (stateSnapshot == null)
@@ -77,26 +77,17 @@ namespace Newbe.Claptrap.Preview.Impl
             var eventsFromStore = GetEventFromVersion().ToObservable();
             ExceptionDispatchInfo? exceptionDispatchInfo = null;
             var restoreStateFlow = eventsFromStore
-                .Select(evt =>
-                {
-                    var nowState = State;
-                    var context = new StateRestoreFlowContext
-                    {
-                        NowState = nowState,
-                        Event = evt,
-                        EventContext = new EventContext(evt, nowState)
-                    };
-                    context.EventHandler = CreateHandler(context.EventContext);
-                    return context;
-                })
-                .Select(context => Observable.FromAsync(
+                .Select(evt => Observable.FromAsync(
                     async () =>
                     {
                         try
                         {
-                            var newState = await context.EventHandler.HandleEvent(context.EventContext);
+                            var nowState = State;
+                            var eventContext = new EventContext(evt, nowState);
+                            var handler = CreateHandler(eventContext);
+                            var newState = await handler.HandleEvent(eventContext);
                             _logger.LogDebug("start update to {@state}", newState);
-                            Debug.Assert(newState.NextVersion == context.EventContext.Event.Version);
+                            Debug.Assert(newState.NextVersion == eventContext.Event.Version);
                             State = newState;
                             State.IncreaseVersion();
                         }
@@ -144,14 +135,19 @@ namespace Newbe.Claptrap.Preview.Impl
             try
             {
                 await RestoreStateAsync();
-                CreateEventHandlingFLow();
-                CreateStateSnapshotSavingFlow();
+                CreateFlows();
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "failed to activate claptrap {identity}", _claptrapIdentity);
                 throw new ActivateFailException(e, State.Identity);
             }
+        }
+
+        public void CreateFlows()
+        {
+            CreateEventHandlingFLow();
+            CreateStateSnapshotSavingFlow();
         }
 
         private void CreateStateSnapshotSavingFlow()
@@ -161,8 +157,8 @@ namespace Newbe.Claptrap.Preview.Impl
                 .DistinctUntilChanged(state => state.Version);
 
             IObservable<IList<IState>> stateBuffer;
-            var savingWindowTime = _stateSavingOptions.SavingWindowTime;
-            var savingWindowVersionLimit = _stateSavingOptions.SavingWindowVersionLimit;
+            var savingWindowTime = _stateOptions.SavingWindowTime;
+            var savingWindowVersionLimit = _stateOptions.SavingWindowVersionLimit;
             if (savingWindowTime.HasValue && savingWindowVersionLimit.HasValue)
             {
                 stateBuffer = dist.Buffer(savingWindowTime.Value,
@@ -232,12 +228,12 @@ namespace Newbe.Claptrap.Preview.Impl
                         try
                         {
                             await HandleEventCoreAsync();
+                            context.TaskCompletionSource.SetResult(0);
                         }
                         catch (Exception e)
                         {
-                            State = context.NowState;
-                            _logger.LogWarning(e, "there is an exception when handle event : {@event} ",
-                                context.Event);
+                            await HandleException(e);
+
                             context.TaskCompletionSource.SetException(e);
                         }
 
@@ -254,11 +250,28 @@ namespace Newbe.Claptrap.Preview.Impl
                                     State.IncreaseVersion();
                                     _nextStateSeq.OnNext(State);
                                     _logger.LogDebug("state version updated : {version}", State.Version);
-                                    context.TaskCompletionSource.SetResult(0);
                                     break;
                                 case EventSavingResult.AlreadyAdded:
                                     _logger.LogInformation("event already added, nothing would on going");
-                                    context.TaskCompletionSource.SetResult(0);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+
+                        async Task HandleException(Exception e)
+                        {
+                            _logger.LogWarning(e,
+                                "there is an exception when handle event : {@event} . start to recover state as strategy : {strategy}",
+                                context.Event,
+                                _stateOptions.StateRecoveryStrategy);
+                            switch (_stateOptions.StateRecoveryStrategy)
+                            {
+                                case StateRecoveryStrategy.FromStateHolder:
+                                    State = context.NowState;
+                                    break;
+                                case StateRecoveryStrategy.FromStore:
+                                    await RestoreStateAsync();
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
@@ -322,17 +335,9 @@ namespace Newbe.Claptrap.Preview.Impl
             public TaskCompletionSource<int> TaskCompletionSource { get; set; } = null!;
         }
 
-        public class StateRestoreFlowContext
-        {
-            public IState NowState { get; set; } = null!;
-            public IEvent Event { get; set; } = null!;
-            public EventContext EventContext { get; set; } = null!;
-            public IEventHandler EventHandler { get; set; } = null!;
-        }
-
         public async Task DeactivateAsync()
         {
-            if (_stateSavingOptions.SaveWhenDeactivateAsync)
+            if (_stateOptions.SaveWhenDeactivateAsync)
             {
                 await SaveStateAsync(State);
             }

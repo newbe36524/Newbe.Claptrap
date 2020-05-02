@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using Newbe.Claptrap.Preview.Abstractions.Box;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Attributes;
 
@@ -7,24 +8,33 @@ namespace Newbe.Claptrap.Preview.Orleans
 {
     public class ClaptrapTypeCodeFactory : IClaptrapTypeCodeFactory
     {
-        private readonly IClaptrapDesignStoreAccessor _claptrapDesignStoreAccessor;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public ClaptrapTypeCodeFactory(
-            IClaptrapDesignStoreAccessor claptrapDesignStoreAccessor)
+            IClaptrapDesignStore claptrapDesignStore)
         {
-            _claptrapDesignStoreAccessor = claptrapDesignStoreAccessor;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         public string GetClaptrapTypeCode(IClaptrapBox claptrapBox)
         {
+            // to find type code from attribute as this method is invoke before claptrap activated
             var claptrapStateAttribute = claptrapBox
                 .GetType()
                 .GetInterfaces()
                 .Select(x => x.GetCustomAttribute<ClaptrapStateAttribute>())
                 .Single(x => x != null);
-            var stateDataType = claptrapStateAttribute.StateDataType;
-            var typeCode = _claptrapDesignStoreAccessor.FindActorTypeCode(stateDataType);
+            var typeCode = claptrapStateAttribute.ActorTypeCode;
             return typeCode;
+        }
+
+        public string FindEventTypeCode<TEventDataType>(IClaptrapBox claptrapBox, TEventDataType eventDataType)
+        {
+            var claptrapDesign = _claptrapDesignStore.FindDesign(claptrapBox.Claptrap.State.Identity);
+            var (key, _) =
+                claptrapDesign.EventHandlerDesigns.SingleOrDefault(x =>
+                    x.Value.EventDataType == typeof(TEventDataType));
+            return key;
         }
     }
 }

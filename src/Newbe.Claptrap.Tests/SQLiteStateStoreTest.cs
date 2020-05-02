@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
                 .Setup(x => x.Serialize(identity.TypeCode, noneStateData))
@@ -61,7 +61,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
                 .Setup(x => x.Serialize(identity.TypeCode, noneStateData))
@@ -87,7 +87,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             const int version = 123;
             var stateDataString = "123";
@@ -124,7 +124,7 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
+            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             await using var keepConnection = MockDbInMemory(mocker, identity);
             var factory = mocker.Create<SQLiteStateStore.Factory>();
             var sqLiteStateStore = factory.Invoke(identity);

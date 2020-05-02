@@ -1,21 +1,16 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions;
 using Newbe.Claptrap.Preview.Attributes;
 using Newbe.Claptrap.Preview.Orleans;
-using Newbe.Claptrap.Preview.StorageProvider.SQLite;
 
 namespace Newbe.Claptrap.Demo
 {
     [ClaptrapStateInitialFactoryHandler]
-    [EventStore(typeof(SQLiteEventStoreFactory), typeof(SQLiteEventStoreFactory))]
-    [StateStore(typeof(SQLiteStateStoreFactory), typeof(SQLiteStateStoreFactory))]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), typeof(AccountBalanceChangeEventData))]
-    public class Account : ClaptrapBox<AccountStateData>, IAccount
+    public class Account : ClaptrapBoxGrain<AccountStateData>, IAccount
     {
-        public Account(IClaptrapGrainCommonService claptrapGrainCommonService)
+        public Account(IClaptrapGrainCommonService claptrapGrainCommonService) 
             : base(claptrapGrainCommonService)
         {
         }
@@ -35,5 +30,6 @@ namespace Newbe.Claptrap.Demo
             var re = StateData.Balance;
             return Task.FromResult(re);
         }
+       
     }
 }

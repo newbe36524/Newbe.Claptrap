@@ -11,15 +11,15 @@ namespace Newbe.Claptrap.Preview.Abstractions.Metadata
         /// </summary>
         IClaptrapIdentity Identity { get; }
 
-        Type ActorStateDataType { get; }
-        Type EventLoaderFactoryType { get; }
-        Type EventSaverFactoryType { get; }
-        Type StateLoaderFactoryType { get; }
-        Type StateSaverFactoryType { get; }
-        Type InitialStateDataFactoryType { get; }
-        Type StateHolderFactoryType { get; }
+        Type StateDataType { get; }
+        Type EventLoaderFactoryType { get; set; }
+        Type EventSaverFactoryType { get; set; }
+        Type StateLoaderFactoryType { get; set; }
+        Type StateSaverFactoryType { get; set; }
+        Type InitialStateDataFactoryType { get; set; }
+        Type StateHolderFactoryType { get; set; }
+        StateOptions StateOptions { get; set; }
         Type EventHandlerFactoryFactoryType { get; }
-        StateSavingOptions StateSavingOptions { get; }
         IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -10,6 +11,8 @@ using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Impl.Bootstrapper;
+using Newbe.Claptrap.Preview.StorageProvider.SQLite;
+using Newtonsoft.Json;
 using Orleans;
 using Orleans.Hosting;
 
@@ -42,14 +45,24 @@ namespace Newbe.Claptrap.Demo.Server
 
                     var buildServiceProvider = collection.BuildServiceProvider();
                     var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
-                    var claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperBuilder(loggerFactory);
+                    IClaptrapBootstrapperBuilder claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperBuilder();
                     var claptrapBootstrapper = claptrapBootstrapperFactory
                         .AddAssemblies(new[]
                         {
                             typeof(Account).Assembly
                         })
+                        .ConfigureGlobalClaptrapDesign(design =>
+                        {
+                            design.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory);
+                            design.EventSaverFactoryType = typeof(SQLiteEventStoreFactory);
+                            design.StateLoaderFactoryType = typeof(SQLiteStateStoreFactory);
+                            design.StateSaverFactoryType = typeof(SQLiteStateStoreFactory);
+                        })
                         .Build();
                     claptrapBootstrapper.RegisterServices(builder);
+
+                    var store = claptrapBootstrapper.DumpDesignStore();
+                    File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));
 
                     // Creating a new AutofacServiceProvider makes the container
                     // available to your app using the Microsoft IServiceProvider

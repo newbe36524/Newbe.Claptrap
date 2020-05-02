@@ -73,7 +73,7 @@ namespace Newbe.Claptrap.Preview.Impl
                 builder.Register(t => t.Resolve(_claptrapDesign.InitialStateDataFactoryType))
                     .As<IInitialStateDataFactory>()
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StateSavingOptions);
+                builder.RegisterInstance(_claptrapDesign.StateOptions);
 
                 void RegisterComponent<TComponent>(Type factoryType)
                     where TComponent : class, IClaptrapComponent
