@@ -44,7 +44,7 @@ namespace Newbe.Claptrap.Demo.Client
             var balance = await account.GetBalance();
             Console.WriteLine(balance);
             var sw = Stopwatch.StartNew();
-            const int times = 1000;
+            const int times = 10;
             await Task.WhenAll(Enumerable.Range(0, times)
                 .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
             Console.WriteLine(await account.GetBalance());

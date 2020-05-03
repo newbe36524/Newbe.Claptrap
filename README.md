@@ -7,9 +7,45 @@
 
 ## 当前项目状态
 
-项目规划中，现所有开发在 develop 分支上进行，如对项目感兴趣或愿意参与项目开发，欢迎通过issue与项目组联系。
+项目规划中，现所有开发在 develop 分支上进行，如对项目感兴趣或愿意参与项目开发，欢迎通过issue与项目组联系。以下是当前的主要情况
 
 Claptrap and it`s Minions are coming.
+
+- 核心功能
+  - [ ] 时间处理与状态管理
+  - 事件存储支持
+    - [x] 内存
+    - [x] SQLite
+    - [ ] Mysql
+    - [ ] MSSQL
+    - [ ] Postgresql
+  - 状态存储支持
+    - [x] 内存
+    - [x] SQLite
+    - [ ] Mysql
+    - [ ] MSSQL
+    - [ ] Postgresql
+  - 全球化与本地化
+    - [X] 框架
+    - [ ] 替换现有所有
+    - [ ] 支持启动时配置
+  - [ ] Minions
+  - [ ] 事件处理广播器与接收器
+  - 事件与状态序列化
+    - [X] Json
+  - Claptrap Design
+    - [X] 全局 Design
+    - [X] 特定 Identity 自定义 Design
+    - [X] 启动时变更 Design
+    - [X] 导出
+    - [ ] 配置文件式设计 Design
+  - [ ] 组件化
+- 开发工具
+  - [ ] 项目模板
+  - 代码样例
+    - [X] [单体式运行](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.OutofOrleans)
+    - [X] [Orleans 结合](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.ArticleManager)
+    - [ ] Minions
 
 ## 项目样例
 

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
+using Newbe.Claptrap.Preview.Impl.Localization;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
@@ -25,6 +26,7 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly IStateHolder _stateHolder;
         private readonly StateOptions _stateOptions;
+        private readonly IL _l;
 
         public ClaptrapActor(
             IClaptrapIdentity claptrapIdentity,
@@ -36,7 +38,8 @@ namespace Newbe.Claptrap.Preview.Impl
             IEventLoader eventLoader,
             IEventHandlerFactory eventHandlerFactory,
             IStateHolder stateHolder,
-            StateOptions stateOptions)
+            StateOptions stateOptions,
+            IL l)
         {
             _claptrapIdentity = claptrapIdentity;
             _logger = logger;
@@ -48,6 +51,7 @@ namespace Newbe.Claptrap.Preview.Impl
             _eventHandlerFactory = eventHandlerFactory;
             _stateHolder = stateHolder;
             _stateOptions = stateOptions;
+            _l = l;
             _incomingEventsSeq = new Subject<EventItem>();
             _nextStateSeq = new Subject<IState>();
         }
@@ -64,13 +68,15 @@ namespace Newbe.Claptrap.Preview.Impl
             var stateSnapshot = await _stateLoader.GetStateSnapshotAsync();
             if (stateSnapshot == null)
             {
-                _logger.LogInformation("there is no state snapshot");
+                var localizedString = _l[LK.L0002ClaptrapActor.L001LogThereIsNoStateSnapshot];
+                _logger.LogInformation(localizedString);
                 var stateData = await _initialStateDataFactory.Create(_claptrapIdentity);
                 State = new DataState(_claptrapIdentity, stateData, 0);
             }
             else
             {
-                _logger.LogInformation("state snapshot found");
+                var localizedString = _l[LK.L0002ClaptrapActor.L002LogStateSnapshotFound];
+                _logger.LogInformation(localizedString);
                 State = stateSnapshot;
             }
 

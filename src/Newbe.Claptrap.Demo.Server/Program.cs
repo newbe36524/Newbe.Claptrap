@@ -1,15 +1,11 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Demo.Interfaces;
-using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
-using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Impl.Bootstrapper;
 using Newbe.Claptrap.Preview.StorageProvider.SQLite;
 using Newtonsoft.Json;
@@ -22,6 +18,7 @@ namespace Newbe.Claptrap.Demo.Server
     {
         static async Task Main(string[] args)
         {
+            CultureInfo.CurrentCulture = new CultureInfo("cn");
             var hostBuilder = new SiloHostBuilder();
 
             hostBuilder

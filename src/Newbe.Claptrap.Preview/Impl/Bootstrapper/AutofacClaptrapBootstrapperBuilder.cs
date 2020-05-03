@@ -5,23 +5,28 @@ using System.Reflection;
 using Autofac;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Impl.Localization;
 using Newbe.Claptrap.Preview.Impl.Metadata;
 using Newbe.Claptrap.Preview.Impl.Modules;
 using Newbe.Claptrap.Preview.Logging;
 using Newbe.Claptrap.Preview.Orleans;
 using Newbe.Claptrap.Preview.StorageProvider.SQLite.Module;
 using Newtonsoft.Json;
+using LK = Newbe.Claptrap.Preview.Impl.Localization.LK.L0001AutofacClaptrapBootstrapperBuilder;
 
 namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
     public class AutofacClaptrapBootstrapperBuilder : IClaptrapBootstrapperBuilder
     {
+        private readonly IL _l;
         private static readonly ILog Logger = LogProvider.For<AutofacClaptrapBootstrapperBuilder>();
         private readonly List<IClaptrapDesignStoreConfigurator> _configurators;
         private readonly List<IClaptrapDesignStoreProvider> _providers;
 
-        public AutofacClaptrapBootstrapperBuilder()
+        public AutofacClaptrapBootstrapperBuilder(
+            IL l = default)
         {
+            _l = l ?? L.Instance;
             _configurators = new List<IClaptrapDesignStoreConfigurator>
             {
                 new GlobalClaptrapDesignStoreConfigurator(new GlobalClaptrapDesign
@@ -68,7 +73,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             }
             catch (Exception e)
             {
-                Logger.ErrorException("failed to build {name}", e, nameof(IClaptrapBootstrapperBuilder));
+                Logger.ErrorException(_l[LK.L001BuildException], e);
                 throw;
             }
 
@@ -85,6 +90,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                     new MemoryStorageModule(),
                     new SQLiteStorageModule(),
                     new SerializerModule(),
+                    new LocalizationModule(),
                 }, claptrapDesignStore);
                 return claptrapBootstrapper;
             }
@@ -94,37 +100,38 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<AssemblyScanningModule>();
+            containerBuilder.RegisterModule<LocalizationModule>();
             var container = containerBuilder.Build();
 
             var factory = container.Resolve<IClaptrapDesignStoreFactory>();
             foreach (var provider in _providers)
             {
-                Logger.Debug("add {provider} as claptrap design provider", provider);
+                Logger.Debug(_l[LK.L002AddProviderAsClaptrapDesignProvider], provider);
                 factory.AddProvider(provider);
             }
 
             var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
-            Logger.Debug("start to scan {assemblyArrayCount} assemblies, {assemblyNames}",
+            Logger.Debug(_l[LK.L003StartToScan],
                 assemblyArray.Length,
                 assemblyArray.Select(x => x.FullName));
-            Logger.Debug("start to find claptrap");
+            Logger.Debug(_l[LK.L004StartToCreateClaptrapDesign]);
             var claptrapDesignStore = factory.Create(assemblyArray);
 
-            Logger.Info("claptrap design store create, start to configure it");
-            Logger.Debug("all designs : {designs}", JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
+            Logger.Info(_l[LK.L005ClaptrapStoreCreated]);
+            Logger.Debug(_l[LK.L006ShowAllDesign], JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
 
             foreach (var configurator in _configurators)
             {
-                Logger.Debug("start to configure claptrap design store by {configurator}", configurator);
+                Logger.Debug(_l[LK.L007StartToConfigureDesignStore], configurator);
                 configurator.Configure(claptrapDesignStore);
             }
 
-            Logger.Info("found {actorCount} actors",
+            Logger.Info(_l[LK.L008CountDesigns],
                 claptrapDesignStore.Count());
-            Logger.Debug("all designs after configuration: {designs}",
+            Logger.Debug(_l[LK.L009ShowDesignsAfterConfiguration],
                 JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
 
-            Logger.Debug("start to validate all design in claptrap design store");
+            Logger.Debug(_l[LK.L010StartToValidateDesigns]);
             var validator = container.Resolve<IClaptrapDesignStoreValidator>();
             var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
             if (!isOk)
@@ -132,7 +139,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 throw new ClaptrapDesignStoreValidationFailException(errorMessage);
             }
 
-            Logger.Info("all design validated ok");
+            Logger.Info(_l[LK.L011DesignValidationSuccess]);
             return claptrapDesignStore;
         }
     }

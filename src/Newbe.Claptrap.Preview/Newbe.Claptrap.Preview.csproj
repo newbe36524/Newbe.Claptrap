@@ -7,7 +7,10 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.1.4" />
         <PackageReference Include="DeepCloner" Version="0.10.2" />
+        <PackageReference Include="Lexical.Localization" Version="0.28.1" />
         <PackageReference Include="LibLog" Version="5.0.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.3" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.2" />
@@ -21,36 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Docs\L-cn.ini" />
+      <EmbeddedResource Include="Docs\L.ini" />
       <EmbeddedResource Include="StorageProvider\SQLite\SqlScripts\*.sql" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Orleans_CodeGenInputs Remove="Impl\Bootstrapper\Models\ActorTypeRegistration.cs" />
-      <Orleans_CodeGenInputs Remove="Impl\Bootstrapper\Models\ClaptrapRegistration.cs" />
-      <Orleans_CodeGenInputs Remove="Impl\Bootstrapper\Models\EventStoreRegistration.cs" />
-      <Orleans_CodeGenInputs Remove="Impl\Bootstrapper\Models\EventTypeHandlerRegistration.cs" />
-      <Orleans_CodeGenInputs Remove="Impl\Bootstrapper\Models\StateStoreRegistration.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Core\Exceptions\ActivateFailException.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Core\Exceptions\EventHandlerNotFoundException.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Core\Exceptions\VersionErrorException.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IActorComponent.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IActorComponentFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventHandlerFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventHandlerFactoryFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventLoader.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventLoaderFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventSaver.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IEventSaverFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateHolder.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateHolderFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateLoader.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateLoaderFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateSaver.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\Metadata\Components\IStateSaverFactory.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\EventChannels\IEventHubPublisher.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\EventChannels\IEventHubReceiver.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\EventChannels\IEventPublishChannel.cs" />
-      <Orleans_CodeGenInputs Remove="Abstractions\EventChannels\IEventReceiveChannel.cs" />
-    </ItemGroup>
-
 </Project>

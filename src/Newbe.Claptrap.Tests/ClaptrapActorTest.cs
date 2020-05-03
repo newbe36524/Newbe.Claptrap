@@ -11,6 +11,7 @@ using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Preview.Impl.Modules;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -31,7 +32,11 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task NoSnapshot()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            using var mocker = AutoMock.GetStrict(builder =>
+            {
+                builder.AddLogging(_testOutputHelper);
+                builder.RegisterModule<LocalizationModule>();
+            });
             mocker.VerifyAll = true;
 
             mocker.Mock<IStateLoader>()
@@ -53,7 +58,11 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreStateWithEmptyEvents()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            using var mocker = AutoMock.GetStrict(builder =>
+            {
+                builder.AddLogging(_testOutputHelper);
+                builder.RegisterModule<LocalizationModule>();
+            });
             mocker.VerifyAll = true;
 
             var state = new TestState();
@@ -72,7 +81,11 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreStateWithSomeEvents()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            using var mocker = AutoMock.GetStrict(builder =>
+            {
+                builder.AddLogging(_testOutputHelper);
+                builder.RegisterModule<LocalizationModule>();
+            });
             mocker.VerifyAll = true;
 
             var state = new TestState();
@@ -114,7 +127,12 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreWithThrowException()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            using var mocker = AutoMock.GetStrict(builder =>
+            {
+                builder.AddLogging(_testOutputHelper); 
+                builder.RegisterModule<LocalizationModule>();
+
+            });
             mocker.VerifyAll = true;
 
             var state = new TestState
@@ -165,7 +183,11 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task DeactivateAsync()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
+            using var mocker = AutoMock.GetStrict(builder =>
+            {
+                builder.AddLogging(_testOutputHelper); 
+                builder.RegisterModule<LocalizationModule>();
+            });
             mocker.VerifyAll = true;
 
             var state = new TestState();
@@ -193,6 +215,7 @@ namespace Newbe.Claptrap.Tests
                 {
                     SaveWhenDeactivateAsync = true
                 });
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
@@ -230,6 +253,7 @@ namespace Newbe.Claptrap.Tests
                         SavingWindowVersionLimit = int.MaxValue
                     })
                     .SingleInstance();
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
@@ -266,6 +290,7 @@ namespace Newbe.Claptrap.Tests
                         SavingWindowVersionLimit = int.MaxValue
                     })
                     .SingleInstance();
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
@@ -302,6 +327,7 @@ namespace Newbe.Claptrap.Tests
                         SavingWindowVersionLimit = int.MaxValue
                     })
                     .SingleInstance();
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
@@ -346,6 +372,7 @@ namespace Newbe.Claptrap.Tests
                         StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder,
                     })
                     .SingleInstance();
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
@@ -383,6 +410,7 @@ namespace Newbe.Claptrap.Tests
                         StateRecoveryStrategy = StateRecoveryStrategy.FromStore,
                     })
                     .SingleInstance();
+                builder.RegisterModule<LocalizationModule>();
             });
             mocker.VerifyAll = true;
 
