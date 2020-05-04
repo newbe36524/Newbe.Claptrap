@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extras.Moq;
-using FluentAssertions;
-using Moq;
-using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Impl;
-using Newbe.Claptrap.Preview.Impl.Modules;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,156 +19,55 @@ namespace Newbe.Claptrap.Tests
             _testOutputHelper = testOutputHelper;
         }
 
-        #region RestoreState
-
         [Fact]
-        public async Task NoSnapshot()
+        public async Task ActivateAsync()
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper);
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(default(IState));
-
-            mocker.Mock<IInitialStateDataFactory>()
-                .Setup(x => x.Create(It.IsAny<IClaptrapIdentity>()))
-                .ReturnsAsync(new NoneStateData());
-
-            mocker.Mock<IEventLoader>()
-                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            await claptrap.RestoreStateAsync();
+            mocker.Mock<IEventHandledNotificationFlow>()
+                .Setup(x => x.Activate());
+            mocker.Mock<IStateSavingFlow>()
+                .Setup(x => x.Activate());
+            mocker.Mock<IEventHandlerFLow>()
+                .Setup(x => x.Activate());
+            mocker.Mock<IStateRestorer>()
+                .Setup(x => x.RestoreAsync())
+                .Returns(Task.CompletedTask);
+            IClaptrap claptrap = mocker.Create<ClaptrapActor>();
+            await claptrap.ActivateAsync();
         }
 
         [Fact]
-        public async Task RestoreStateWithEmptyEvents()
+        public async Task ActivateAsyncWithException()
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper);
-
-            var state = new TestState();
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            await claptrap.RestoreStateAsync();
+            mocker.Mock<IEventHandledNotificationFlow>()
+                .Setup(x => x.Activate());
+            mocker.Mock<IStateRestorer>()
+                .Setup(x => x.RestoreAsync())
+                .Returns(() => throw new Exception("some exception"));
+            mocker.Mock<IStateAccessor>()
+                .SetupGet(x => x.State)
+                .Returns(new TestState
+                {
+                    Identity = TestClaptrapIdentity.Instance
+                });
+            IClaptrap claptrap = mocker.Create<ClaptrapActor>();
+            await Assert.ThrowsAsync<ActivateFailException>(() => claptrap.ActivateAsync());
         }
-
-        [Fact]
-        public async Task RestoreStateWithSomeEvents()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
-
-            var state = new TestState();
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .SetupSequence(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(AllEvents())
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            mocker.Mock<IEventHandlerFactory>()
-                .Setup(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            await claptrap.RestoreStateAsync();
-
-            state.Version.Should().Be(3);
-
-            static IEnumerable<IEvent> AllEvents()
-            {
-                yield return new TestEvent
-                {
-                    Version = 1,
-                };
-                yield return new TestEvent
-                {
-                    Version = 2,
-                };
-                yield return new TestEvent
-                {
-                    Version = 3,
-                };
-            }
-        }
-
-        [Fact]
-        public async Task RestoreWithThrowException()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
-
-            var state = new TestState
-            {
-                Identity = _testClaptrapIdentity
-            };
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .SetupSequence(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(AllEvents())
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler())
-                .Returns(new ExceptionHandler())
-                .Returns(new TestHandler())
-                ;
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-
-            await Assert.ThrowsAsync<ActivateFailException>(async () => await claptrap.ActivateAsync());
-
-            static IEnumerable<IEvent> AllEvents()
-            {
-                yield return new TestEvent
-                {
-                    Version = 1,
-                };
-                yield return new TestEvent
-                {
-                    Version = 2,
-                };
-                yield return new TestEvent
-                {
-                    Version = 3,
-                };
-            }
-        }
-
-        #endregion
-
-        #region Deactivate
 
         [Fact]
         public async Task DeactivateAsync()
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper);
-
-            var state = new TestState();
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
+            mocker.Mock<IEventHandledNotificationFlow>()
+                .Setup(x => x.Deactivate());
+            mocker.Mock<IStateSavingFlow>()
+                .Setup(x => x.Deactivate());
+            mocker.Mock<IEventHandlerFLow>()
+                .Setup(x => x.Deactivate());
             IClaptrap claptrap = mocker.Create<ClaptrapActor>();
-            await claptrap.ActivateAsync();
             await claptrap.DeactivateAsync();
         }
-
 
         [Fact]
         public async Task DeactivateAndSavingState()
@@ -188,220 +80,23 @@ namespace Newbe.Claptrap.Tests
                         SaveWhenDeactivateAsync = true
                     });
                 });
+            mocker.Mock<IEventHandledNotificationFlow>()
+                .Setup(x => x.Deactivate());
+            mocker.Mock<IStateSavingFlow>()
+                .Setup(x => x.Deactivate());
+            mocker.Mock<IEventHandlerFLow>()
+                .Setup(x => x.Deactivate());
 
-            var state = new TestState();
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            mocker.Mock<IStateSaver>()
-                .Setup(x => x.SaveAsync(It.IsAny<IState>()))
+            var testState = new TestState();
+            mocker.Mock<IStateAccessor>()
+                .SetupGet(x => x.State)
+                .Returns(testState);
+            mocker.Mock<IStateSavingFlow>()
+                .Setup(x => x.SaveStateAsync(testState))
                 .Returns(Task.CompletedTask);
 
             IClaptrap claptrap = mocker.Create<ClaptrapActor>();
-            await claptrap.ActivateAsync();
             await claptrap.DeactivateAsync();
         }
-
-        #endregion
-
-
-        #region HandleEvent
-
-        [Fact]
-        public async Task HandleEvent()
-        {
-            
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateOptions
-                    {
-                        SavingWindowVersionLimit = int.MaxValue
-                    });
-                });
-
-            var state = new TestState();
-
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            claptrap.State = state;
-            claptrap.CreateFlows();
-
-            await claptrap.HandleEvent(new TestEvent());
-            state.Version.Should().Be(1);
-        }
-
-        [Fact]
-        public async Task EventSavingResultAlreadyAdded()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateOptions
-                    {
-                        SavingWindowVersionLimit = int.MaxValue
-                    });
-                });
-
-            var state = new TestState();
-
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.AlreadyAdded);
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            claptrap.State = state;
-            claptrap.CreateFlows();
-
-            await claptrap.HandleEvent(new TestEvent());
-            state.Version.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task ThrownExceptionAsSavingEvent()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateOptions
-                    {
-                        SavingWindowVersionLimit = int.MaxValue
-                    });
-                });
-
-            var state = new TestState();
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .Returns<IEvent>(@event =>
-                {
-                    var ex = new EventSavingException(new Exception("saving with exception"), @event);
-                    throw ex;
-                });
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            claptrap.State = state;
-            claptrap.CreateFlows();
-
-            await Assert.ThrowsAsync<EventSavingException>(() => claptrap.HandleEvent(new TestEvent
-            {
-                ClaptrapIdentity = TestClaptrapIdentity.Instance
-            }));
-            state.Version.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorks()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateOptions
-                    {
-                        SavingWindowVersionLimit = int.MaxValue,
-                        StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder,
-                    });
-                });
-
-            var state = new TestState();
-
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new ExceptionHandler());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            claptrap.State = state;
-            claptrap.CreateFlows();
-
-            await Assert.ThrowsAsync<Exception>(() => claptrap.HandleEvent(new TestEvent()));
-            state.Version.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorksAndRestoreFromStore()
-        {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateOptions
-                    {
-                        SavingWindowVersionLimit = int.MaxValue,
-                        StateRecoveryStrategy = StateRecoveryStrategy.FromStore,
-                    });
-                });
-
-            var state = new TestState();
-
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new ExceptionHandler());
-
-            mocker.Mock<IStateLoader>()
-                .Setup(x => x.GetStateSnapshotAsync())
-                .ReturnsAsync(state);
-
-            mocker.Mock<IEventLoader>()
-                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
-                .ReturnsAsync(Enumerable.Empty<IEvent>());
-
-            var claptrap = mocker.Create<ClaptrapActor>();
-            claptrap.State = state;
-            claptrap.CreateFlows();
-
-            await Assert.ThrowsAsync<Exception>(() => claptrap.HandleEvent(new TestEvent()));
-            state.Version.Should().Be(0);
-        }
-
-        #endregion
-
-        private readonly IClaptrapIdentity _testClaptrapIdentity = new TestClaptrapIdentity("123", "testActor");
     }
 }

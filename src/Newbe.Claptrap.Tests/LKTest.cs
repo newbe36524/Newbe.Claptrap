@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Newbe.Claptrap.Preview.Impl.Localization;
 using Xunit;
+using static Newbe.Claptrap.Preview.Impl.Localization.LK.L0001AutofacClaptrapBootstrapperBuilder;
 
 namespace Newbe.Claptrap.Tests
 {
@@ -10,7 +11,7 @@ namespace Newbe.Claptrap.Tests
         public void Init()
         {
             LK.Init();
-            LK.L0002ClaptrapActor.L002LogStateSnapshotFound.Should().Be(LK.L0002ClaptrapActor.Prefix + "002");
+            L001BuildException.Should().Be(Prefix + "001");
         }
     }
 }

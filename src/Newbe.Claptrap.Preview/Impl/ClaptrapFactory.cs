@@ -65,7 +65,6 @@ namespace Newbe.Claptrap.Preview.Impl
                 base.Load(builder);
                 RegisterComponent<IStateSaver>(_claptrapDesign.StateSaverFactoryType);
                 RegisterComponent<IStateLoader>(_claptrapDesign.StateLoaderFactoryType);
-
                 RegisterComponent<IEventLoader>(_claptrapDesign.EventLoaderFactoryType);
                 RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
                 RegisterComponent<IEventHandlerFactory>(_claptrapDesign.EventHandlerFactoryFactoryType);
@@ -82,6 +81,7 @@ namespace Newbe.Claptrap.Preview.Impl
                     .As<IInitialStateDataFactory>()
                     .SingleInstance();
                 builder.RegisterInstance(_claptrapDesign.StateOptions);
+                builder.RegisterModule<ClaptrapActorModule>();
 
                 void RegisterComponent<TComponent>(Type factoryType)
                     where TComponent : class, IClaptrapComponent
@@ -92,6 +92,34 @@ namespace Newbe.Claptrap.Preview.Impl
                                 t.Resolve<IClaptrapIdentity>()))
                         .As<TComponent>()
                         .SingleInstance();
+                }
+            }
+
+            public class ClaptrapActorModule : Module
+            {
+                protected override void Load(ContainerBuilder builder)
+                {
+                    base.Load(builder);
+                    builder.RegisterType<EventHandlerFLow>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance()
+                        .ExternallyOwned();
+                    builder.RegisterType<EventHandledNotificationFlow>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance()
+                        .ExternallyOwned();
+                    builder.RegisterType<StateAccessor>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance()
+                        .ExternallyOwned();
+                    builder.RegisterType<StateRestorer>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance()
+                        .ExternallyOwned();
+                    builder.RegisterType<StateSavingFlow>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance()
+                        .ExternallyOwned();
                 }
             }
         }

@@ -81,26 +81,11 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
         public static class L0002ClaptrapActor
         {
             public const string Prefix = nameof(LK) + ".L0002.";
-
+            
             /// <summary>
-            /// there is no state snapshot found from state loader
+            /// failed to activate claptrap {identity}
             /// </summary>
-            public static string L001LogThereIsNoStateSnapshot { get; internal set; }
-
-            /// <summary>
-            /// found state snapshot from state loader
-            /// </summary>
-            public static string L002LogStateSnapshotFound { get; internal set; }
-
-            /// <summary>
-            /// failed to notify about event be handled. event version : {version}
-            /// </summary>
-            public static string L003FailToNotify { get; internal set; }
-
-            /// <summary>
-            /// success to notify about event be handled. event version : {version}
-            /// </summary>
-            public static string L004SuccessToNotify { get; internal set; }
+            public static string L001FailedToActivate { get; internal set; }
         }
 
         #endregion
@@ -115,6 +100,44 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
             /// Event handled notification received at empty notifier. identity {identity}, event version: {version}, event type code : {eventTypeCode}
             /// </summary>
             public static string L001EventHandled { get; internal set; }
+        }
+
+        #endregion
+
+        #region L0004EventHandledNotificationFlow
+
+        public static class L0004EventHandledNotificationFlow
+        {
+            public const string Prefix = nameof(LK) + ".L0004.";
+
+            /// <summary>
+            /// success to notify about event be handled. event version : {version}
+            /// </summary>
+            public static string L001SuccessToNotify { get; internal set; }
+
+            /// <summary>
+            /// failed to notify about event be handled. event version : {version}
+            /// </summary>
+            public static string L002FailToNotify { get; internal set; }
+        }
+
+        #endregion
+
+        #region L0005StateRestorer
+
+        public static class L0005StateRestorer
+        {
+            public const string Prefix = nameof(LK) + ".L0005.";
+
+            /// <summary>
+            /// there is no state snapshot found from state loader
+            /// </summary>
+            public static string L001LogThereIsNoStateSnapshot { get; internal set; }
+
+            /// <summary>
+            /// found state snapshot from state loader
+            /// </summary>
+            public static string L002LogStateSnapshotFound { get; internal set; }
         }
 
         #endregion
