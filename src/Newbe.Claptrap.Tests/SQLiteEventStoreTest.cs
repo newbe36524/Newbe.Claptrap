@@ -31,16 +31,17 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveEvent()
         {
             var now = DateTime.Parse("2020-01-01");
-            var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-                builder.RegisterType<DbFilePath>()
-                    .AsSelf();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                    builder.RegisterType<DbFilePath>()
+                        .AsSelf();
+                });
+
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
@@ -62,16 +63,16 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveEventTwice()
         {
             var now = DateTime.Parse("2020-01-01");
-            var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-                builder.RegisterType<DbFilePath>()
-                    .AsSelf();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                    builder.RegisterType<DbFilePath>()
+                        .AsSelf();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();
@@ -97,16 +98,16 @@ namespace Newbe.Claptrap.Tests
         public async Task GetEvents()
         {
             var now = DateTime.Parse("2020-01-01");
-            var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-                builder.RegisterType<DbFilePath>()
-                    .AsSelf();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                    builder.RegisterType<DbFilePath>()
+                        .AsSelf();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
             var eventTypeCode = "eventType";
             var testEventData = new TestEventData();

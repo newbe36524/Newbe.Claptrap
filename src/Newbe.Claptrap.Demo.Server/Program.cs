@@ -18,7 +18,11 @@ namespace Newbe.Claptrap.Demo.Server
     {
         static async Task Main(string[] args)
         {
-            CultureInfo.CurrentCulture = new CultureInfo("cn");
+            var loggingCollection = new ServiceCollection();
+            loggingCollection.AddLogging(logging => { logging.AddConsole(); });
+            var provider = loggingCollection.BuildServiceProvider();
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+
             var hostBuilder = new SiloHostBuilder();
 
             hostBuilder
@@ -40,9 +44,8 @@ namespace Newbe.Claptrap.Demo.Server
                     // to add them to Autofac.
                     builder.Populate(collection);
 
-                    var buildServiceProvider = collection.BuildServiceProvider();
-                    var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
-                    IClaptrapBootstrapperBuilder claptrapBootstrapperFactory = new AutofacClaptrapBootstrapperBuilder();
+                    IClaptrapBootstrapperBuilder claptrapBootstrapperFactory =
+                        new AutofacClaptrapBootstrapperBuilder(loggerFactory);
                     var claptrapBootstrapper = claptrapBootstrapperFactory
                         .AddAssemblies(new[]
                         {
@@ -55,7 +58,9 @@ namespace Newbe.Claptrap.Demo.Server
                             design.StateLoaderFactoryType = typeof(SQLiteStateStoreFactory);
                             design.StateSaverFactoryType = typeof(SQLiteStateStoreFactory);
                         })
+                        .SetCultureInfo(new CultureInfo("cn"))
                         .Build();
+                    
                     claptrapBootstrapper.RegisterServices(builder);
 
                     var store = claptrapBootstrapper.DumpDesignStore();

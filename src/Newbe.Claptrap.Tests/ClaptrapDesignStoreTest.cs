@@ -4,6 +4,7 @@ using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Preview.Impl.Metadata;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,8 +26,7 @@ namespace Newbe.Claptrap.Tests
         [InlineData(null, "testCode")]
         public void Add(string id, string typeCode)
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
@@ -43,8 +43,7 @@ namespace Newbe.Claptrap.Tests
         [InlineData(null, "testCode")]
         public void Replace(string id, string typeCode)
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
@@ -64,8 +63,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public void NotFound()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             var actorIdentity = new TestClaptrapIdentity("123", "testCode");
             Assert.Throws<ClaptrapDesignNotFoundException>(() =>
@@ -75,8 +73,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public void IdSpecificFirstFound()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             const string typeCode = "testCode";
             var actorIdentity = new TestClaptrapIdentity("123", typeCode);
@@ -97,8 +94,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public void GlobalDesignFound()
         {
-            using var mocker = AutoMock.GetStrict(builder => { builder.AddLogging(_testOutputHelper); });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             const string typeCode = "testCode";
             var actorIdentity = new TestClaptrapIdentity("123", typeCode);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
@@ -10,34 +11,24 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
     {
         public (bool isOk, string errorMessage) Validate(IClaptrapDesignStore claptrapDesignStore)
         {
-            var sb = new StringBuilder();
-            var isOk = true;
-            foreach (var design in claptrapDesignStore)
-            {
-                if (!ValidateOne(design))
-                {
-                    isOk = false;
-                }
-            }
+            var errors = claptrapDesignStore.SelectMany(ValidateOne)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray();
+            var errorMessage = string.Join(",", errors);
 
-            return (isOk, sb.ToString());
+            return (errors.Any(), errorMessage);
 
-            bool ValidateOne(IClaptrapDesign design)
+            static IEnumerable<string> ValidateOne(IClaptrapDesign design)
             {
-                var oneIsAllOk = true;
-                foreach (var (isComponentOk, errorMessage) in ValidateTypes())
+                foreach (var error in ValidateTypes())
                 {
-                    if (!isComponentOk)
-                    {
-                        sb!.AppendLine(errorMessage);
-                        oneIsAllOk = false;
-                    }
+                    yield return error;
                 }
 
-                return oneIsAllOk;
-
-                IEnumerable<(bool isOk, string errorMessage)> ValidateTypes()
+                IEnumerable<string> ValidateTypes()
                 {
+                    yield return ValidateTypeNotNull(design.Identity.TypeCode,
+                        nameof(design.Identity.TypeCode));
                     yield return ValidateTypeNotNull(design.Identity,
                         nameof(design.Identity));
                     yield return ValidateTypeNotNull(design.StateDataType,
@@ -65,18 +56,18 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
                     yield return ValidateClaptrapComponent<IStateHolder>(design.StateHolderFactoryType);
                     yield return ValidateClaptrapComponent<IEventHandlerFactory>(design.EventHandlerFactoryFactoryType);
 
-                    static (bool isOk, string errorMessage) ValidateClaptrapComponent<TComponent>(Type type)
+                    static string ValidateClaptrapComponent<TComponent>(Type type)
                     {
                         return type.GetInterface(typeof(TComponent).FullName) != null
-                            ? (false, $"type {type} is not implement {typeof(TComponent)} .")
-                            : (true, string.Empty);
+                            ? $"type {type} is not implement {typeof(TComponent)} ."
+                            : string.Empty;
                     }
 
-                    static (bool isOk, string errorMessage) ValidateTypeNotNull(object type, string name)
+                    static string ValidateTypeNotNull(object type, string name)
                     {
                         return type == null
-                            ? (false, $"{name} is required, please set it correctly")
-                            : (true, string.Empty);
+                            ? $"{name} is required, please set it correctly"
+                            : string.Empty;
                     }
                 }
             }

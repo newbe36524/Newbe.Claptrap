@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Impl.Metadata;
 
@@ -9,7 +13,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
         public static IClaptrapBootstrapperBuilder AddOrReplaceDesign(this IClaptrapBootstrapperBuilder builder,
             params IClaptrapDesign[] claptrapDesigns)
         {
-            builder.AddClaptrapDesignStoreProvider(new StaticClaptrapDesignStoreProvider(claptrapDesigns));
+            builder.Options.ClaptrapDesignStoreProviders.Add(new StaticClaptrapDesignStoreProvider(claptrapDesigns));
             return builder;
         }
 
@@ -17,7 +21,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             this IClaptrapBootstrapperBuilder builder,
             Action<IClaptrapDesignStore> action)
         {
-            builder.AddClaptrapDesignStoreConfigurator(new FuncClaptrapDesignStoreConfigurator(action));
+            builder.Options.ClaptrapDesignStoreConfigurators.Add(new FuncClaptrapDesignStoreConfigurator(action));
             return builder;
         }
 
@@ -27,7 +31,31 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
         {
             var design = new GlobalClaptrapDesign();
             action.Invoke(design);
-            builder.AddClaptrapDesignStoreConfigurator(new GlobalClaptrapDesignStoreConfigurator(design));
+            builder.Options.ClaptrapDesignStoreConfigurators.Add(new GlobalClaptrapDesignStoreConfigurator(design));
+            return builder;
+        }
+
+        public static IClaptrapBootstrapperBuilder AddAssemblies(
+            this IClaptrapBootstrapperBuilder builder,
+            IEnumerable<Assembly> assemblies)
+        {
+            builder.Options.ScanningAssemblies = builder.Options.ScanningAssemblies.Concat(assemblies);
+            return builder;
+        }
+
+        public static IClaptrapBootstrapperBuilder SetCultureInfo(
+            this IClaptrapBootstrapperBuilder builder,
+            CultureInfo cultureInfo)
+        {
+            builder.Options.CultureInfo = cultureInfo;
+            return builder;
+        }
+
+        public static IClaptrapBootstrapperBuilder ConfigureOptions(
+            this IClaptrapBootstrapperBuilder builder,
+            Action<ClaptrapBootstrapperBuilderOptions> configAction)
+        {
+            configAction(builder.Options);
             return builder;
         }
     }

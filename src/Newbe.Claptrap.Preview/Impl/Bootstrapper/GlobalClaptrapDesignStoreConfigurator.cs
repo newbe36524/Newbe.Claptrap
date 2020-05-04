@@ -1,17 +1,19 @@
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
-using Newbe.Claptrap.Preview.Logging;
 
 namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {
     public class GlobalClaptrapDesignStoreConfigurator : IClaptrapDesignStoreConfigurator
     {
-        private static readonly ILog Logger = LogProvider.For<GlobalClaptrapDesignStoreConfigurator>();
         private readonly IGlobalClaptrapDesign _globalClaptrapDesign;
+        private readonly ILogger<GlobalClaptrapDesignStoreConfigurator> _logger;
 
         public GlobalClaptrapDesignStoreConfigurator(
-            IGlobalClaptrapDesign globalClaptrapDesign)
+            IGlobalClaptrapDesign globalClaptrapDesign,
+            ILogger<GlobalClaptrapDesignStoreConfigurator>? logger = null)
         {
             _globalClaptrapDesign = globalClaptrapDesign;
+            _logger = logger ?? LoggerFactoryHolder.Instance.CreateLogger<GlobalClaptrapDesignStoreConfigurator>();
         }
 
         public void Configure(IClaptrapDesignStore designStore)
@@ -21,7 +23,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.EventLoaderFactoryType == null)
                 {
                     claptrapDesign.EventLoaderFactoryType = _globalClaptrapDesign.EventLoaderFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.EventLoaderFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.EventLoaderFactoryType);
                 }
@@ -29,7 +31,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.EventSaverFactoryType == null)
                 {
                     claptrapDesign.EventSaverFactoryType = _globalClaptrapDesign.EventSaverFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.EventSaverFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.EventSaverFactoryType);
                 }
@@ -37,7 +39,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.StateLoaderFactoryType == null)
                 {
                     claptrapDesign.StateLoaderFactoryType = _globalClaptrapDesign.StateLoaderFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.StateLoaderFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.StateLoaderFactoryType);
                 }
@@ -45,7 +47,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.StateSaverFactoryType == null)
                 {
                     claptrapDesign.StateSaverFactoryType = _globalClaptrapDesign.StateSaverFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.StateSaverFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.StateSaverFactoryType);
                 }
@@ -53,7 +55,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.InitialStateDataFactoryType == null)
                 {
                     claptrapDesign.InitialStateDataFactoryType = _globalClaptrapDesign.InitialStateDataFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.InitialStateDataFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.InitialStateDataFactoryType);
                 }
@@ -61,7 +63,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.StateHolderFactoryType == null)
                 {
                     claptrapDesign.StateHolderFactoryType = _globalClaptrapDesign.StateHolderFactoryType;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.StateHolderFactoryType), claptrapDesign.Identity,
                         _globalClaptrapDesign.StateHolderFactoryType);
                 }
@@ -69,7 +71,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 if (claptrapDesign.StateOptions == null)
                 {
                     claptrapDesign.StateOptions = _globalClaptrapDesign.StateOptions;
-                    Logger.Debug("{type} in {designIdentity} is null, will use {globalType} from global config",
+                    _logger.LogDebug("{type} in {designIdentity} is null, will use {globalType} from global config",
                         nameof(claptrapDesign.StateOptions), claptrapDesign.Identity,
                         _globalClaptrapDesign.StateOptions);
                 }

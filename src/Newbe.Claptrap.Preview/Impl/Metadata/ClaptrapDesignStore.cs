@@ -2,18 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Abstractions.Metadata;
-using Newbe.Claptrap.Preview.Logging;
+using Newbe.Claptrap.Preview.Impl.Bootstrapper;
 
-namespace Newbe.Claptrap.Preview.Impl
+namespace Newbe.Claptrap.Preview.Impl.Metadata
 {
     public class ClaptrapDesignStore : IClaptrapDesignStore
     {
-        public delegate ClaptrapDesignStore Factory();
+        private readonly ILogger<ClaptrapDesignStore> _logger;
 
-        private static readonly ILog Logger = LogProvider.For<ClaptrapDesignStore>(); 
+        public delegate ClaptrapDesignStore Factory();
 
         private readonly IDictionary<string, IClaptrapDesign> _globalDic
             = new Dictionary<string, IClaptrapDesign>();
@@ -21,6 +22,11 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IDictionary<StructClaptrapIdentity, IClaptrapDesign> _idDic =
             new Dictionary<StructClaptrapIdentity, IClaptrapDesign>();
 
+        public ClaptrapDesignStore(
+            ILogger<ClaptrapDesignStore>? logger = null)
+        {
+            _logger = logger ?? LoggerFactoryHolder.Instance.CreateLogger<ClaptrapDesignStore>();
+        }
 
         public IClaptrapDesign FindDesign(IClaptrapIdentity claptrapIdentity)
         {
@@ -44,37 +50,37 @@ namespace Newbe.Claptrap.Preview.Impl
         {
             var typeCode = design.Identity.TypeCode;
             var id = design.Identity.Id;
-            Logger.Debug("start to add or replace a claptrap design [{typeCode} : {id}]",
+            _logger.LogDebug("start to add or replace a claptrap design [{typeCode} : {id}]",
                 typeCode,
                 id);
             if (string.IsNullOrEmpty(id))
             {
-                Logger.Debug("id is null and the claptrap design will be add to global store");
+                _logger.LogDebug("id is null and the claptrap design will be add to global store");
                 if (_globalDic.TryGetValue(typeCode, out var old))
                 {
-                    Logger.Info(
+                    _logger.LogInformation(
                         "found a old claptrap design in global store and it will be replaced. old: {@design}",
                         old);
                 }
 
                 _globalDic[typeCode] = design;
-                Logger.Info(
+                _logger.LogInformation(
                     "a claptrap design add to global store. design: {@design}",
                     design);
             }
             else
             {
-                Logger.Debug("id is {id} and the claptrap design will be add to id specified store", id);
+                _logger.LogDebug("id is {id} and the claptrap design will be add to id specified store", id);
                 var key = new StructClaptrapIdentity(design.Identity);
                 if (_idDic.TryGetValue(key, out var old))
                 {
-                    Logger.Info(
+                    _logger.LogInformation(
                         "found a old claptrap design in id specified store and it will be replaced. old: {@design}",
                         old);
                 }
 
                 _idDic[key] = design;
-                Logger.Info(
+                _logger.LogInformation(
                     "a claptrap design add to id specified store. design: {@design}",
                     design);
             }
@@ -89,12 +95,12 @@ namespace Newbe.Claptrap.Preview.Impl
                 var identity = claptrapDesign.Identity;
                 if (_globalDic.Remove(identity.TypeCode))
                 {
-                    Logger.Info("design for {identity} remove from global design store", identity);
+                    _logger.LogInformation("design for {identity} remove from global design store", identity);
                 }
 
                 if (_idDic.Remove(new StructClaptrapIdentity(identity)))
                 {
-                    Logger.Info("design for {identity} remove from id specified store", identity);
+                    _logger.LogInformation("design for {identity} remove from id specified store", identity);
                 }
             }
         }

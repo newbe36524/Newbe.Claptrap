@@ -28,14 +28,14 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
@@ -53,14 +53,14 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveStateTwice()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             mocker.Mock<IStateDataStringSerializer>()
@@ -79,14 +79,14 @@ namespace Newbe.Claptrap.Tests
         public async Task GetState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             var noneStateData = new NoneStateData();
             const int version = 123;
@@ -116,14 +116,14 @@ namespace Newbe.Claptrap.Tests
         public async Task NoneState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.AddStaticClock(now);
-                builder.RegisterType<SQLiteDbManager>()
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-            });
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                nowTime: now,
+                builderAction: builder =>
+                {
+                    builder.RegisterType<SQLiteDbManager>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                });
             var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "testCode");
             await using var keepConnection = MockDbInMemory(mocker, identity);
             var factory = mocker.Create<SQLiteStateStore.Factory>();

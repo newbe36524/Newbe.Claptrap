@@ -6,7 +6,6 @@ using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
@@ -32,13 +31,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task NoSnapshot()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
-
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
             mocker.Mock<IStateLoader>()
                 .Setup(x => x.GetStateSnapshotAsync())
                 .ReturnsAsync(default(IState));
@@ -58,12 +51,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreStateWithEmptyEvents()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -81,12 +69,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreStateWithSomeEvents()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -127,13 +110,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task RestoreWithThrowException()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper); 
-                builder.RegisterModule<LocalizationModule>();
-
-            });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
 
             var state = new TestState
             {
@@ -183,12 +160,7 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task DeactivateAsync()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper); 
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -208,16 +180,14 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task DeactivateAndSavingState()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
                 {
-                    SaveWhenDeactivateAsync = true
+                    builder.RegisterInstance(new StateOptions
+                    {
+                        SaveWhenDeactivateAsync = true
+                    });
                 });
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -245,17 +215,15 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task HandleEvent()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
+                {
+                    builder.RegisterInstance(new StateOptions
                     {
                         SavingWindowVersionLimit = int.MaxValue
-                    })
-                    .SingleInstance();
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+                    });
+                });
 
             var state = new TestState();
 
@@ -282,17 +250,14 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task EventSavingResultAlreadyAdded()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
+                {
+                    builder.RegisterInstance(new StateOptions
                     {
                         SavingWindowVersionLimit = int.MaxValue
-                    })
-                    .SingleInstance();
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+                    });
+                });
 
             var state = new TestState();
 
@@ -319,17 +284,14 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task ThrownExceptionAsSavingEvent()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
+                {
+                    builder.RegisterInstance(new StateOptions
                     {
                         SavingWindowVersionLimit = int.MaxValue
-                    })
-                    .SingleInstance();
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+                    });
+                });
 
             var state = new TestState();
 
@@ -363,18 +325,15 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task ThrowExceptionAsHandlerWorks()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
+                {
+                    builder.RegisterInstance(new StateOptions
                     {
                         SavingWindowVersionLimit = int.MaxValue,
                         StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder,
-                    })
-                    .SingleInstance();
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+                    });
+                });
 
             var state = new TestState();
 
@@ -401,18 +360,15 @@ namespace Newbe.Claptrap.Tests
         [Fact]
         public async Task ThrowExceptionAsHandlerWorksAndRestoreFromStore()
         {
-            using var mocker = AutoMock.GetStrict(builder =>
-            {
-                builder.AddLogging(_testOutputHelper);
-                builder.RegisterInstance(new StateOptions
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+                builderAction: builder =>
+                {
+                    builder.RegisterInstance(new StateOptions
                     {
                         SavingWindowVersionLimit = int.MaxValue,
                         StateRecoveryStrategy = StateRecoveryStrategy.FromStore,
-                    })
-                    .SingleInstance();
-                builder.RegisterModule<LocalizationModule>();
-            });
-            mocker.VerifyAll = true;
+                    });
+                });
 
             var state = new TestState();
 

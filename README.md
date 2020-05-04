@@ -12,7 +12,10 @@
 Claptrap and it`s Minions are coming.
 
 - 核心功能
-  - [ ] 时间处理与状态管理
+  - 时间处理与状态管理
+    - [ ] 定期保存快照
+    - [X] 事件处理异常时恢复状态
+    - [ ] 支持事件UID的单独检查
   - 事件存储支持
     - [x] 内存
     - [x] SQLite
@@ -27,8 +30,8 @@ Claptrap and it`s Minions are coming.
     - [ ] Postgresql
   - 全球化与本地化
     - [X] 框架
-    - [ ] 替换现有所有
-    - [ ] 支持启动时配置
+    - [ ] 替换现有所有文本
+    - [X] 支持启动时配置
   - [ ] Minions
   - [ ] 事件处理广播器与接收器
   - 事件与状态序列化

@@ -8,16 +8,24 @@ using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Impl;
 using Newbe.Claptrap.Preview.Impl.MemoryStore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
 {
     public class ClaptrapFactoryTest
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public ClaptrapFactoryTest(
+            ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void Create()
         {
-            using var mocker = AutoMock.GetStrict();
-            mocker.VerifyAll = true;
+            using var mocker = AutoMockHelper.Create(_testOutputHelper);
 
             var actorIdentity = TestClaptrapIdentity.Instance;
             mocker.Mock<IClaptrapDesignStore>()
