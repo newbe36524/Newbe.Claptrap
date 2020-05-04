@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview.Impl.Metadata
+namespace Newbe.Claptrap.Preview.Impl.Design
 {
     public class ClaptrapDesignStoreValidationFailException : Exception
     {

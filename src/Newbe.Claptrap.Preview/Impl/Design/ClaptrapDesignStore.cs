@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
 using Newbe.Claptrap.Preview.Impl.Bootstrapper;
 
-namespace Newbe.Claptrap.Preview.Impl.Metadata
+namespace Newbe.Claptrap.Preview.Impl.Design
 {
     public class ClaptrapDesignStore : IClaptrapDesignStore
     {

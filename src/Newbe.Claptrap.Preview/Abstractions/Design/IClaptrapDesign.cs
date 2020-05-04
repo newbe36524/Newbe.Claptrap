@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 
-namespace Newbe.Claptrap.Preview.Abstractions.Metadata
+namespace Newbe.Claptrap.Preview.Abstractions.Design
 {
     public interface IClaptrapDesign
     {

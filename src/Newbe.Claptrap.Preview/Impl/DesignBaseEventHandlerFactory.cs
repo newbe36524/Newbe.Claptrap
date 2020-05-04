@@ -3,8 +3,8 @@ using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
 
 namespace Newbe.Claptrap.Preview.Impl
 {

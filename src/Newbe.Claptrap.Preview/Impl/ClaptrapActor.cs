@@ -11,6 +11,7 @@ using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 using Newbe.Claptrap.Preview.Impl.Localization;
+using LK = Newbe.Claptrap.Preview.Impl.Localization.LK.L0002ClaptrapActor;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
@@ -26,6 +27,7 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly IStateHolder _stateHolder;
         private readonly StateOptions _stateOptions;
+        private readonly IEventHandledNotifier _eventHandledNotifier;
         private readonly IL _l;
 
         public ClaptrapActor(
@@ -39,6 +41,7 @@ namespace Newbe.Claptrap.Preview.Impl
             IEventHandlerFactory eventHandlerFactory,
             IStateHolder stateHolder,
             StateOptions stateOptions,
+            IEventHandledNotifier eventHandledNotifier,
             IL l)
         {
             _claptrapIdentity = claptrapIdentity;
@@ -51,31 +54,56 @@ namespace Newbe.Claptrap.Preview.Impl
             _eventHandlerFactory = eventHandlerFactory;
             _stateHolder = stateHolder;
             _stateOptions = stateOptions;
+            _eventHandledNotifier = eventHandledNotifier;
             _l = l;
             _incomingEventsSeq = new Subject<EventItem>();
             _nextStateSeq = new Subject<IState>();
+            _eventHandledNotifierContextSeq = new Subject<IEventHandledNotifierContext>();
         }
 
         public IState State { get; set; } = null!;
 
         private IDisposable _eventHandleFlow = null!;
         private IDisposable _snapshotSavingFlow = null!;
+        private IDisposable _eventHandledNotifierFlow = null!;
         private readonly Subject<EventItem> _incomingEventsSeq;
         private readonly Subject<IState> _nextStateSeq;
+        private readonly Subject<IEventHandledNotifierContext> _eventHandledNotifierContextSeq;
+
+        public async Task ActivateAsync()
+        {
+            try
+            {
+                CreateEventHandledNotifierFlow();
+                await RestoreStateAsync();
+                CreateFlows();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "failed to activate claptrap {identity}", _claptrapIdentity);
+                throw new ActivateFailException(e, State.Identity);
+            }
+        }
+
+        public void CreateFlows()
+        {
+            CreateEventHandlingFLow();
+            CreateStateSnapshotSavingFlow();
+        }
 
         public async Task RestoreStateAsync()
         {
             var stateSnapshot = await _stateLoader.GetStateSnapshotAsync();
             if (stateSnapshot == null)
             {
-                var localizedString = _l[LK.L0002ClaptrapActor.L001LogThereIsNoStateSnapshot];
+                var localizedString = _l[LK.L001LogThereIsNoStateSnapshot];
                 _logger.LogInformation(localizedString);
                 var stateData = await _initialStateDataFactory.Create(_claptrapIdentity);
                 State = new DataState(_claptrapIdentity, stateData, 0);
             }
             else
             {
-                var localizedString = _l[LK.L0002ClaptrapActor.L002LogStateSnapshotFound];
+                var localizedString = _l[LK.L002LogStateSnapshotFound];
                 _logger.LogInformation(localizedString);
                 State = stateSnapshot;
             }
@@ -136,24 +164,24 @@ namespace Newbe.Claptrap.Preview.Impl
             }
         }
 
-        public async Task ActivateAsync()
+        private void CreateEventHandledNotifierFlow()
         {
-            try
-            {
-                await RestoreStateAsync();
-                CreateFlows();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "failed to activate claptrap {identity}", _claptrapIdentity);
-                throw new ActivateFailException(e, State.Identity);
-            }
-        }
-
-        public void CreateFlows()
-        {
-            CreateEventHandlingFLow();
-            CreateStateSnapshotSavingFlow();
+            _eventHandledNotifierFlow = _eventHandledNotifierContextSeq
+                .Select(context => Observable.FromAsync(async () =>
+                {
+                    var version = context.Event.Version;
+                    try
+                    {
+                        await _eventHandledNotifier.Notify(context);
+                        _logger.LogDebug(_l[LK.L004SuccessToNotify], version);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, _l[LK.L003FailToNotify], version);
+                    }
+                }))
+                .Concat()
+                .Subscribe();
         }
 
         private void CreateStateSnapshotSavingFlow()
@@ -239,7 +267,6 @@ namespace Newbe.Claptrap.Preview.Impl
                         catch (Exception e)
                         {
                             await HandleException(e);
-
                             context.TaskCompletionSource.SetException(e);
                         }
 
@@ -255,6 +282,12 @@ namespace Newbe.Claptrap.Preview.Impl
                                     State = nextState;
                                     State.IncreaseVersion();
                                     _nextStateSeq.OnNext(State);
+                                    _eventHandledNotifierContextSeq.OnNext(new EventHandledNotifierContext
+                                    {
+                                        Event = context.Event,
+                                        CurrentState = nextState,
+                                        EarlierState = context.NowState
+                                    });
                                     _logger.LogDebug("state version updated : {version}", State.Version);
                                     break;
                                 case EventSavingResult.AlreadyAdded:
@@ -352,6 +385,8 @@ namespace Newbe.Claptrap.Preview.Impl
             _snapshotSavingFlow?.Dispose();
             _incomingEventsSeq?.Dispose();
             _nextStateSeq?.Dispose();
+            _eventHandledNotifierFlow?.Dispose();
+            _eventHandledNotifierContextSeq.Dispose();
         }
 
         public Task HandleEvent(IEvent @event)

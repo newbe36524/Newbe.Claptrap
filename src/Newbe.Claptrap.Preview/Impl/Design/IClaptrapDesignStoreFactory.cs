@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 
-namespace Newbe.Claptrap.Preview.Impl.Metadata
+namespace Newbe.Claptrap.Preview.Impl.Design
 {
     public interface IClaptrapDesignStoreFactory
     {

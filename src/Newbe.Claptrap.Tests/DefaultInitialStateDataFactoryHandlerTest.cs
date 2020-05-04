@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 using Xunit.Abstractions;

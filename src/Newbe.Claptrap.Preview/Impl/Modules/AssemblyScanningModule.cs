@@ -1,5 +1,5 @@
 using Autofac;
-using Newbe.Claptrap.Preview.Impl.Metadata;
+using Newbe.Claptrap.Preview.Impl.Design;
 
 namespace Newbe.Claptrap.Preview.Impl.Modules
 {

@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Attributes;
-using Newbe.Claptrap.Preview.Orleans;
 
-namespace Newbe.Claptrap.Preview.Impl.Metadata
+namespace Newbe.Claptrap.Preview.Impl.Design
 {
     public class AttributeBaseClaptrapDesignStoreProvider : IClaptrapDesignStoreProvider
     {

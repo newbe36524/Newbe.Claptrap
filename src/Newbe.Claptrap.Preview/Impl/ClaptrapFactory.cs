@@ -3,7 +3,7 @@ using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
@@ -70,6 +70,14 @@ namespace Newbe.Claptrap.Preview.Impl
                 RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
                 RegisterComponent<IEventHandlerFactory>(_claptrapDesign.EventHandlerFactoryFactoryType);
                 RegisterComponent<IStateHolder>(_claptrapDesign.StateHolderFactoryType);
+                // TODO move notifier
+                builder.RegisterType<EmptyEventHandledNotifier>()
+                    .AsSelf()
+                    .SingleInstance();
+                builder.RegisterType<EmptyEventHandledNotifierFactory>()
+                    .AsSelf()
+                    .SingleInstance();
+                RegisterComponent<IEventHandledNotifier>(typeof(EmptyEventHandledNotifierFactory));
                 builder.Register(t => t.Resolve(_claptrapDesign.InitialStateDataFactoryType))
                     .As<IInitialStateDataFactory>()
                     .SingleInstance();

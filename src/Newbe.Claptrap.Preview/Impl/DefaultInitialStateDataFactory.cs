@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 
 namespace Newbe.Claptrap.Preview.Impl
 {

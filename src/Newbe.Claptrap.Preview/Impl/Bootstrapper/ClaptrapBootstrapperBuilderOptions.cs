@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using Newbe.Claptrap.Preview.Impl.Metadata;
+using Newbe.Claptrap.Preview.Impl.Design;
 
 namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
 {

@@ -1,5 +1,5 @@
 using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Abstractions.Serializer;
 using Newtonsoft.Json;
 

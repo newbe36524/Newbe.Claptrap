@@ -12,6 +12,8 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
     /// </summary>
     public static partial class LK
     {
+        #region L0001AutofacClaptrapBootstrapperBuilder
+
         public static class L0001AutofacClaptrapBootstrapperBuilder
         {
             public const string Prefix = nameof(LK) + ".L0001.";
@@ -72,6 +74,10 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
             public static string L011DesignValidationSuccess { get; internal set; }
         }
 
+        #endregion
+
+        #region L0002ClaptrapActor
+
         public static class L0002ClaptrapActor
         {
             public const string Prefix = nameof(LK) + ".L0002.";
@@ -85,6 +91,32 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
             /// found state snapshot from state loader
             /// </summary>
             public static string L002LogStateSnapshotFound { get; internal set; }
+
+            /// <summary>
+            /// failed to notify about event be handled. event version : {version}
+            /// </summary>
+            public static string L003FailToNotify { get; internal set; }
+
+            /// <summary>
+            /// success to notify about event be handled. event version : {version}
+            /// </summary>
+            public static string L004SuccessToNotify { get; internal set; }
         }
+
+        #endregion
+
+        #region L0003EmptyEventHandledNotifier
+
+        public static class L0003EmptyEventHandledNotifier
+        {
+            public const string Prefix = nameof(LK) + ".L0003.";
+
+            /// <summary>
+            /// Event handled notification received at empty notifier. identity {identity}, event version: {version}, event type code : {eventTypeCode}
+            /// </summary>
+            public static string L001EventHandled { get; internal set; }
+        }
+
+        #endregion
     }
 }

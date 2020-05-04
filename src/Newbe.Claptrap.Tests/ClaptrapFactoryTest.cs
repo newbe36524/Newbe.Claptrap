@@ -4,7 +4,7 @@ using Autofac.Extras.Moq;
 using FluentAssertions;
 using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Impl;
 using Newbe.Claptrap.Preview.Impl.MemoryStore;
 using Xunit;

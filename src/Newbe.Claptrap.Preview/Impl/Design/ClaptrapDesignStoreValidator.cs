@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newbe.Claptrap.Preview.Abstractions.Components;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 
-namespace Newbe.Claptrap.Preview.Impl.Metadata
+namespace Newbe.Claptrap.Preview.Impl.Design
 {
     public class ClaptrapDesignStoreValidator : IClaptrapDesignStoreValidator
     {
@@ -16,7 +15,7 @@ namespace Newbe.Claptrap.Preview.Impl.Metadata
                 .ToArray();
             var errorMessage = string.Join(",", errors);
 
-            return (errors.Any(), errorMessage);
+            return (!errors.Any(), errorMessage);
 
             static IEnumerable<string> ValidateOne(IClaptrapDesign design)
             {

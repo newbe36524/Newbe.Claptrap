@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Impl.Bootstrapper;
 
 namespace Newbe.Claptrap.Preview.Impl.Modules

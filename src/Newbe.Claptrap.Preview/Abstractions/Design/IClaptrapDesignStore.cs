@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 
-namespace Newbe.Claptrap.Preview.Abstractions.Metadata
+namespace Newbe.Claptrap.Preview.Abstractions.Design
 {
     public interface IClaptrapDesignStore : IEnumerable<IClaptrapDesign>
     {

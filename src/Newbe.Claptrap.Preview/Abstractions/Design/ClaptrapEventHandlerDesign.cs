@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Preview.Abstractions.Metadata
+namespace Newbe.Claptrap.Preview.Abstractions.Design
 {
     public class ClaptrapEventHandlerDesign : IClaptrapEventHandlerDesign
     {

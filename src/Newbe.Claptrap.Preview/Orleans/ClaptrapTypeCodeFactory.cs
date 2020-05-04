@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Newbe.Claptrap.Preview.Abstractions.Box;
-using Newbe.Claptrap.Preview.Abstractions.Metadata;
+using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Attributes;
 
 namespace Newbe.Claptrap.Preview.Orleans
