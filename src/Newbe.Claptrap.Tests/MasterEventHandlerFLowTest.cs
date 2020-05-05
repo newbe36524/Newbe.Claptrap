@@ -13,11 +13,11 @@ using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
 {
-    public class EventHandlerFlowTest
+    public class MasterEventHandlerFLowTest
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public EventHandlerFlowTest(
+        public MasterEventHandlerFLowTest(
             ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
@@ -58,7 +58,7 @@ namespace Newbe.Claptrap.Tests
             mocker.Mock<IStateSavingFlow>()
                 .Setup(x => x.OnNewStateCreated(It.IsAny<IState>()));
 
-            var flow = mocker.Create<EventHandlerFLow>();
+            var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
             await flow.OnNewEventReceived(new TestEvent());
@@ -93,7 +93,7 @@ namespace Newbe.Claptrap.Tests
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new TestHandler());
 
-            var flow = mocker.Create<EventHandlerFLow>();
+            var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
             await flow.OnNewEventReceived(new TestEvent());
@@ -133,7 +133,7 @@ namespace Newbe.Claptrap.Tests
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new TestHandler());
 
-            var flow = mocker.Create<EventHandlerFLow>();
+            var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
             await Assert.ThrowsAsync<EventSavingException>(() => flow.OnNewEventReceived(new TestEvent
@@ -173,7 +173,7 @@ namespace Newbe.Claptrap.Tests
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new ExceptionHandler());
 
-            var flow = mocker.Create<EventHandlerFLow>();
+            var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
             await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));
@@ -214,7 +214,7 @@ namespace Newbe.Claptrap.Tests
                 .Setup(x => x.RestoreAsync())
                 .Returns(Task.CompletedTask);
 
-            var flow = mocker.Create<EventHandlerFLow>();
+            var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
             await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));

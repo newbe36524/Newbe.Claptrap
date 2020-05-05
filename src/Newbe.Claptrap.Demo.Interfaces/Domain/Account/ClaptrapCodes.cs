@@ -4,12 +4,17 @@ namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
     {
         public static class AccountCodes
         {
-            private const string Prefix = "newbe.claptrap.demo.account__";
-            public const string StateCode = Prefix + "state";
+            public const string ClaptrapCode = "newbe.claptrap.demo.account";
+            private const string Prefix = ClaptrapCode + "__";
 
             public static class EventCodes
             {
                 public const string AccountBalanceChanged = Prefix + "accountBalanceChanged";
+            }
+
+            public static class MinionCodes
+            {
+                public const string BalanceMinion = Prefix + "m__balance";
             }
         }
     }

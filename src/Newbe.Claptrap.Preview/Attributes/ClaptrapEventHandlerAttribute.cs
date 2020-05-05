@@ -9,12 +9,12 @@ namespace Newbe.Claptrap.Preview.Attributes
     public class ClaptrapEventHandlerAttribute : Attribute
     {
         public Type EventHandlerType { get; set; }
-        public Type EventDataType { get; set; }
+        public string EventTypeCode { get; set; }
 
-        public ClaptrapEventHandlerAttribute(Type eventHandlerType, Type eventDataType)
+        public ClaptrapEventHandlerAttribute(Type eventHandlerType, string eventTypeCode)
         {
             EventHandlerType = eventHandlerType;
-            EventDataType = eventDataType;
+            EventTypeCode = eventTypeCode;
         }
     }
 }

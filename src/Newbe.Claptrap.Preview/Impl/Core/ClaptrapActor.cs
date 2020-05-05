@@ -72,7 +72,7 @@ namespace Newbe.Claptrap.Preview.Impl
             _eventHandlerFLow.Deactivate();
         }
 
-        public Task HandleEvent(IEvent @event)
+        public Task HandleEventAsync(IEvent @event)
         {
             return _eventHandlerFLow.OnNewEventReceived(@event);
         }

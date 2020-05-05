@@ -19,7 +19,11 @@ namespace Newbe.Claptrap.Demo.Server
         static async Task Main(string[] args)
         {
             var loggingCollection = new ServiceCollection();
-            loggingCollection.AddLogging(logging => { logging.AddConsole(); });
+            loggingCollection.AddLogging(logging =>
+            {
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Debug);
+            });
             var provider = loggingCollection.BuildServiceProvider();
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
 

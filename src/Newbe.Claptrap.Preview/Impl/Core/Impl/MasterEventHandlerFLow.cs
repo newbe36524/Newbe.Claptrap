@@ -9,7 +9,7 @@ using Newbe.Claptrap.Preview.Abstractions.Exceptions;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
-    public class EventHandlerFLow : IEventHandlerFLow
+    public class MasterEventHandlerFLow : IEventHandlerFLow
     {
         private readonly IStateAccessor _stateAccessor;
         private readonly IEventSaver _eventSaver;
@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IStateSavingFlow _stateSavingFlow;
         private readonly IEventHandledNotificationFlow _eventHandledNotificationFlow;
         private readonly StateOptions _stateOptions;
-        private readonly ILogger<EventHandlerFLow> _logger;
+        private readonly ILogger<MasterEventHandlerFLow> _logger;
 
         private IDisposable _eventHandleFlow = null!;
         private readonly Subject<EventItem> _incomingEventsSeq;
@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.Preview.Impl
             set => _stateAccessor.State = value;
         }
 
-        public EventHandlerFLow(
+        public MasterEventHandlerFLow(
             IStateAccessor stateAccessor,
             IEventSaver eventSaver,
             IStateHolder stateHolder,
@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.Preview.Impl
             IStateSavingFlow stateSavingFlow,
             IEventHandledNotificationFlow eventHandledNotificationFlow,
             StateOptions stateOptions,
-            ILogger<EventHandlerFLow> logger)
+            ILogger<MasterEventHandlerFLow> logger)
         {
             _stateAccessor = stateAccessor;
             _eventSaver = eventSaver;
@@ -207,6 +207,12 @@ namespace Newbe.Claptrap.Preview.Impl
             var handler = _eventHandlerFactory.Create(eventContext);
             _logger.LogTrace("created event handler : {handler}", handler);
             return handler;
+        }
+
+        private struct EventItem
+        {
+            public IEvent Event { get; set; }
+            public TaskCompletionSource<int> TaskCompletionSource { get; set; }
         }
     }
 }

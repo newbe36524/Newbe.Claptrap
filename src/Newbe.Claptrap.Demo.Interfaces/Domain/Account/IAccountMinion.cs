@@ -6,12 +6,11 @@ using C = Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCod
 
 namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
 {
-    [ClaptrapState(typeof(AccountStateData), C.ClaptrapCode)]
+    [ClaptrapMinion(C.ClaptrapCode)]
+    [ClaptrapState(typeof(AccountStateData), C.MinionCodes.BalanceMinion)]
     [ClaptrapEvent(typeof(AccountBalanceChangeEventData), C.EventCodes.AccountBalanceChanged)]
-    public interface IAccount : IClaptrapGrain
+    public interface IAccountMinion : IClaptrapMinionGrain
     {
-        Task TransferIn(decimal amount, string uid);
-
         Task<decimal> GetBalance();
     }
 }

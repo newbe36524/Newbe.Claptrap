@@ -43,6 +43,9 @@ Claptrap and it`s Minions are coming.
     - [X] 导出
     - [ ] 配置文件式设计 Design
   - [ ] 组件化
+  - 单元测试
+    - [ ] 覆盖率80%以上
+    - [ ] 覆盖主要的异常抛出情况
 - 开发工具
   - [ ] 项目模板
   - 代码样例
@@ -72,3 +75,7 @@ Claptrap and it`s Minions are coming.
 - [Orleans - Distributed Virtual Actor Model](https://github.com/dotnet/orleans)
 - [Service Fabric](https://docs.microsoft.com/zh-cn/azure/service-fabric/)
 - [ENode 1.0 - Saga的思想与实现](http://www.cnblogs.com/netfocus/p/3149156.html)
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/newbe36524/Newbe.Claptrap.svg)](https://starchart.cc/newbe36524/Newbe.Claptrap)

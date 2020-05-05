@@ -43,7 +43,8 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                             SavingWindowVersionLimit = 1000
                         },
                         InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),
-                        StateHolderFactoryType = typeof(DeepClonerStateHolderFactory)
+                        StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                        EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                     })
                 },
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>()

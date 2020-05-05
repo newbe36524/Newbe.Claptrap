@@ -21,6 +21,6 @@ namespace Newbe.Claptrap.Preview.Abstractions.Core
         /// </summary>
         /// <param name="event"></param>
         /// <returns></returns>
-        Task HandleEvent(IEvent @event);
+        Task HandleEventAsync(IEvent @event);
     }
 }

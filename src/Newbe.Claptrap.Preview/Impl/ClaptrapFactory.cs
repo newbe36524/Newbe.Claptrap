@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Design;
+using Newbe.Claptrap.Preview.Impl.Localization;
+using static Newbe.Claptrap.Preview.Impl.Localization.LK.L0006ClaptrapFactory;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
@@ -12,15 +14,18 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly ILogger<ClaptrapFactory> _logger;
         private readonly IClaptrapDesignStore _claptrapDesignStore;
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly IL _l;
 
         public ClaptrapFactory(
             ILogger<ClaptrapFactory> logger,
             IClaptrapDesignStore claptrapDesignStore,
-            ILifetimeScope lifetimeScope)
+            ILifetimeScope lifetimeScope,
+            IL l)
         {
             _logger = logger;
             _claptrapDesignStore = claptrapDesignStore;
             _lifetimeScope = lifetimeScope;
+            _l = l;
         }
 
         public IClaptrap Create(IClaptrapIdentity identity)
@@ -31,7 +36,7 @@ namespace Newbe.Claptrap.Preview.Impl
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "failed to create a claptrap. {identity}", identity);
+                _logger.LogError(e, _l[L001FailedToCreate], identity);
                 throw;
             }
 
@@ -43,21 +48,38 @@ namespace Newbe.Claptrap.Preview.Impl
                     builder.Register(context => identity)
                         .AsSelf()
                         .SingleInstance();
-                    builder.RegisterModule(new ClaptrapDesignModule(claptrapDesign));
+                    builder.RegisterModule(new ClaptrapSharedModule(claptrapDesign, identity));
+                    var masterDesign = claptrapDesign.ClaptrapMasterDesign;
+                    if (masterDesign != null)
+                    {
+                        _logger.LogDebug(_l[L002MasterFound], masterDesign.Identity.TypeCode);
+                        var moduleIdentity = new ClaptrapIdentity(identity.Id,
+                            masterDesign.Identity.TypeCode);
+                        builder.RegisterModule(new ClaptrapMinionModule(masterDesign,
+                            moduleIdentity));
+                    }
+                    else
+                    {
+                        _logger.LogDebug(_l[L003MasterFound], identity.TypeCode);
+                        builder.RegisterModule(new ClaptrapMasterModule(claptrapDesign, identity));
+                    }
                 });
                 var actor = actorScope.Resolve<ClaptrapActor>();
                 return actor;
             }
         }
 
-        private class ClaptrapDesignModule : Module
+        private class ClaptrapSharedModule : Module
         {
             private readonly IClaptrapDesign _claptrapDesign;
+            private readonly IClaptrapIdentity _identity;
 
-            public ClaptrapDesignModule(
-                IClaptrapDesign claptrapDesign)
+            public ClaptrapSharedModule(
+                IClaptrapDesign claptrapDesign,
+                IClaptrapIdentity identity)
             {
                 _claptrapDesign = claptrapDesign;
+                _identity = identity;
             }
 
             protected override void Load(ContainerBuilder builder)
@@ -65,61 +87,105 @@ namespace Newbe.Claptrap.Preview.Impl
                 base.Load(builder);
                 RegisterComponent<IStateSaver>(_claptrapDesign.StateSaverFactoryType);
                 RegisterComponent<IStateLoader>(_claptrapDesign.StateLoaderFactoryType);
-                RegisterComponent<IEventLoader>(_claptrapDesign.EventLoaderFactoryType);
-                RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
                 RegisterComponent<IEventHandlerFactory>(_claptrapDesign.EventHandlerFactoryFactoryType);
                 RegisterComponent<IStateHolder>(_claptrapDesign.StateHolderFactoryType);
-                // TODO move notifier
-                builder.RegisterType<EmptyEventHandledNotifier>()
-                    .AsSelf()
-                    .SingleInstance();
-                builder.RegisterType<EmptyEventHandledNotifierFactory>()
-                    .AsSelf()
-                    .SingleInstance();
-                RegisterComponent<IEventHandledNotifier>(typeof(EmptyEventHandledNotifierFactory));
                 builder.Register(t => t.Resolve(_claptrapDesign.InitialStateDataFactoryType))
                     .As<IInitialStateDataFactory>()
                     .SingleInstance();
                 builder.RegisterInstance(_claptrapDesign.StateOptions);
-                builder.RegisterModule<ClaptrapActorModule>();
+
+                builder.RegisterType<StateAccessor>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterType<StateRestorer>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterType<StateSavingFlow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
 
                 void RegisterComponent<TComponent>(Type factoryType)
                     where TComponent : class, IClaptrapComponent
                 {
                     builder.Register(t =>
                             ((IClaptrapComponentFactory<TComponent>) t.Resolve(factoryType))
-                            .Create(
-                                t.Resolve<IClaptrapIdentity>()))
+                            .Create(_identity))
                         .As<TComponent>()
                         .SingleInstance();
                 }
             }
+        }
 
-            public class ClaptrapActorModule : Module
+        private class ClaptrapMinionModule : Module
+        {
+            private readonly IClaptrapDesign _masterDesign;
+            private readonly ClaptrapIdentity _masterIdentity;
+
+            public ClaptrapMinionModule(IClaptrapDesign masterDesign,
+                ClaptrapIdentity masterIdentity)
             {
-                protected override void Load(ContainerBuilder builder)
+                _masterDesign = masterDesign;
+                _masterIdentity = masterIdentity;
+            }
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                RegisterComponent<IEventLoader>(_masterDesign.EventLoaderFactoryType);
+                
+                builder.RegisterType<MinionEventHandlerFLow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterType<EmptyEventHandledNotificationFlow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+
+                void RegisterComponent<TComponent>(Type factoryType)
+                    where TComponent : class, IClaptrapComponent
                 {
-                    base.Load(builder);
-                    builder.RegisterType<EventHandlerFLow>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .ExternallyOwned();
-                    builder.RegisterType<EventHandledNotificationFlow>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .ExternallyOwned();
-                    builder.RegisterType<StateAccessor>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .ExternallyOwned();
-                    builder.RegisterType<StateRestorer>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .ExternallyOwned();
-                    builder.RegisterType<StateSavingFlow>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .ExternallyOwned();
+                    builder.Register(t =>
+                            ((IClaptrapComponentFactory<TComponent>) t.Resolve(factoryType))
+                            .Create(_masterIdentity))
+                        .As<TComponent>()
+                        .SingleInstance();
+                }
+            }
+        }
+
+        private class ClaptrapMasterModule : Module
+        {
+            private readonly IClaptrapDesign _claptrapDesign;
+            private readonly IClaptrapIdentity _identity;
+
+            public ClaptrapMasterModule(
+                IClaptrapDesign claptrapDesign,
+                IClaptrapIdentity identity)
+            {
+                _claptrapDesign = claptrapDesign;
+                _identity = identity;
+            }
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                RegisterComponent<IEventLoader>(_claptrapDesign.EventLoaderFactoryType);
+                RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
+                builder.RegisterType<MasterEventHandlerFLow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterType<EventHandledNotificationFlow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterModule(new EventCenterNotifierModule(_identity));
+          
+                void RegisterComponent<TComponent>(Type factoryType)
+                    where TComponent : class, IClaptrapComponent
+                {
+                    builder.Register(t =>
+                            ((IClaptrapComponentFactory<TComponent>) t.Resolve(factoryType))
+                            .Create(_identity))
+                        .As<TComponent>()
+                        .SingleInstance();
                 }
             }
         }

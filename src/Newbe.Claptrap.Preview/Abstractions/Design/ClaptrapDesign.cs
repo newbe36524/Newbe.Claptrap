@@ -7,6 +7,7 @@ namespace Newbe.Claptrap.Preview.Abstractions.Design
     public class ClaptrapDesign : IClaptrapDesign
     {
         public IClaptrapIdentity Identity { get; set; } = null!;
+        public IClaptrapDesign ClaptrapMasterDesign { get; set; } = null!;
         public Type StateDataType { get; set; } = null!;
         public Type EventLoaderFactoryType { get; set; } = null!;
         public Type EventSaverFactoryType { get; set; } = null!;
@@ -17,5 +18,7 @@ namespace Newbe.Claptrap.Preview.Abstractions.Design
         public Type EventHandlerFactoryFactoryType { get; set; } = null!;
         public StateOptions StateOptions { get; set; } = null!;
         public IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; set; } = null!;
+        public Type ClaptrapBoxInterfaceType { get; set; } = null!;
+        public Type ClaptrapBoxImplementationType { get; set; } = null!;
     }
-}    
+}

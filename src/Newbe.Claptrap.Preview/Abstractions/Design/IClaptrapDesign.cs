@@ -11,6 +11,13 @@ namespace Newbe.Claptrap.Preview.Abstractions.Design
         /// </summary>
         IClaptrapIdentity Identity { get; }
 
+        /// <summary>
+        /// Design of this claptrap master.
+        /// Not null if this claptrap is a minion of other one claptrap.
+        /// Null is this is a master claptrap.
+        /// </summary>
+        IClaptrapDesign ClaptrapMasterDesign { get; }
+
         Type StateDataType { get; }
         Type EventLoaderFactoryType { get; set; }
         Type EventSaverFactoryType { get; set; }
@@ -19,7 +26,10 @@ namespace Newbe.Claptrap.Preview.Abstractions.Design
         Type InitialStateDataFactoryType { get; set; }
         Type StateHolderFactoryType { get; set; }
         StateOptions StateOptions { get; set; }
-        Type EventHandlerFactoryFactoryType { get; }
+        Type EventHandlerFactoryFactoryType { get; set; }
         IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; }
+
+        Type ClaptrapBoxInterfaceType { get; }
+        Type ClaptrapBoxImplementationType { get; }
     }
 }

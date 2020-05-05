@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Design;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
@@ -25,7 +26,9 @@ namespace Newbe.Claptrap.Preview.Impl.Design
         public ClaptrapDesignStore(
             ILogger<ClaptrapDesignStore>? logger = null)
         {
-            _logger = logger ?? LoggerFactoryHolder.Instance.CreateLogger<ClaptrapDesignStore>();
+            _logger = logger
+                      ?? LoggerFactoryHolder.Instance?.CreateLogger<ClaptrapDesignStore>()
+                      ?? NullLogger<ClaptrapDesignStore>.Instance;
         }
 
         public IClaptrapDesign FindDesign(IClaptrapIdentity claptrapIdentity)

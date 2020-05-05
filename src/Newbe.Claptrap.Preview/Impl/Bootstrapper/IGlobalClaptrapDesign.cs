@@ -12,5 +12,6 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
         Type InitialStateDataFactoryType { get; set; }
         Type StateHolderFactoryType { get; set; }
         StateOptions StateOptions { get; set; }
+        Type EventHandlerFactoryFactoryType { get; set; }
     }
 }

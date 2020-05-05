@@ -141,5 +141,29 @@ namespace Newbe.Claptrap.Preview.Impl.Localization
         }
 
         #endregion
+        
+        #region L0006ClaptrapFactory
+
+        public static class L0006ClaptrapFactory
+        {
+            public const string Prefix = nameof(LK) + ".L0006.";
+
+            /// <summary>
+            /// failed to create a claptrap. {identity}
+            /// </summary>
+            public static string L001FailedToCreate { get; internal set; }
+            
+            /// <summary>
+            /// This is a minion claptrap since it contains a master design in it`s design. master type code : {typeCode}
+            /// </summary>
+            public static string L002MasterFound { get; internal set; }
+            
+            /// <summary>
+            /// This is a master claptrap. type code : {typeCode}
+            /// </summary>
+            public static string L003MasterFound { get; internal set; }
+        }
+
+        #endregion
     }
 }
