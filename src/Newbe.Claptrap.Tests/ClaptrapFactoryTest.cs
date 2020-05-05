@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Fact]
-        public void Create()
+        public void CreateMaster()
         {
             var actorIdentity = TestClaptrapIdentity.Instance;
             var claptrapDesign = new ClaptrapDesign
@@ -54,6 +54,55 @@ namespace Newbe.Claptrap.Tests
             var actor = actorFactory.Create(actorIdentity);
             actor.Should().NotBeNull();
         }
+        
+        [Fact]
+        public void CreateMinion()
+        {
+            var actorIdentity = TestClaptrapIdentity.Instance;
+            var claptrapDesignStore = new ClaptrapDesignStore();
+            var masterDesign = new ClaptrapDesign
+            {
+                StateOptions = new StateOptions(),
+                Identity = actorIdentity,
+                EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
+                StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                StateDataType = typeof(TestStateData),
+                EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
+                EventSaverFactoryType = typeof(MemoryEventStoreFactory),
+                StateLoaderFactoryType = typeof(MemoryStateStoreFactory),
+                StateSaverFactoryType = typeof(MemoryStateStoreFactory),
+                EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
+                InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory)
+            };
+            claptrapDesignStore.AddOrReplace(masterDesign);
+            var minionDesign = new ClaptrapDesign
+            {
+                StateOptions = new StateOptions(),
+                Identity = actorIdentity,
+                EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
+                StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                StateDataType = typeof(TestStateData),
+                EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
+                EventSaverFactoryType = typeof(MemoryEventStoreFactory),
+                StateLoaderFactoryType = typeof(MemoryStateStoreFactory),
+                StateSaverFactoryType = typeof(MemoryStateStoreFactory),
+                EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
+                InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),
+                ClaptrapMasterDesign = masterDesign
+            };
+            claptrapDesignStore.AddOrReplace(minionDesign);
+            using var mocker = AutoMockHelper.Create(_testOutputHelper,builderAction: builder =>
+            {
+                builder.RegisterInstance(claptrapDesignStore)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+            });
+
+            var actorFactory = mocker.Create<ClaptrapFactory>();
+            var actor = actorFactory.Create(actorIdentity);
+            actor.Should().NotBeNull();
+        }
+
 
         private class TestStateData : IStateData
         {

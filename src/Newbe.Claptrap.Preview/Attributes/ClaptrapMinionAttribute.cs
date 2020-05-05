@@ -6,6 +6,7 @@ namespace Newbe.Claptrap.Preview.Attributes
     public class ClaptrapMinionAttribute : Attribute
     {
         public string MasterTypeCode { get; }
+        public bool ActivateWhenMasterActivated { get; set; }
 
         public ClaptrapMinionAttribute(string masterTypeCode)
         {

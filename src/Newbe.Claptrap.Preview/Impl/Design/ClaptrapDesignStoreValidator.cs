@@ -26,6 +26,11 @@ namespace Newbe.Claptrap.Preview.Impl.Design
 
                 IEnumerable<string> ValidateTypes()
                 {
+                    foreach (var error in ValidateMasterDesign(design))
+                    {
+                        yield return error;
+                    }
+
                     yield return ValidateTypeNotNull(design.Identity.TypeCode,
                         nameof(design.Identity.TypeCode));
                     yield return ValidateTypeNotNull(design.Identity,
@@ -67,6 +72,23 @@ namespace Newbe.Claptrap.Preview.Impl.Design
                         return type == null
                             ? $"{name} is required, please set it correctly"
                             : string.Empty;
+                    }
+
+                    static IEnumerable<string> ValidateMasterDesign(IClaptrapDesign design)
+                    {
+                        if (design.ClaptrapMasterDesign == null)
+                        {
+                            yield break;
+                        }
+
+                        foreach (var (key, _) in design.ClaptrapMasterDesign.EventHandlerDesigns)
+                        {
+                            if (!design.EventHandlerDesigns.ContainsKey(key))
+                            {
+                                yield return
+                                    $"There is no event handler found for {key} in {design.Identity}. It must be define as this is a minion and the mater will send it to this. If you don`t handle the event, you can define {nameof(EmptyEventHandler)} for this event.";
+                            }
+                        }
                     }
                 }
             }

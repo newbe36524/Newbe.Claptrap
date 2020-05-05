@@ -52,7 +52,7 @@ namespace Newbe.Claptrap.Demo.Client
             sw.Stop();
             Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms in {times}");
 
-            var accountMinion = client.GetGrain<IAccountMinion>(accountId);
+            var accountMinion = client.GetGrain<IAccountBalanceMinion>(accountId);
             sw.Restart();
             var balanceInMinion = await accountMinion.GetBalance();
             sw.Stop();

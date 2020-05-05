@@ -26,7 +26,7 @@ namespace Newbe.Claptrap.Preview.Impl.Design
         {
             var types = _types as Type[] ?? _types.ToArray();
 
-            var impls = types
+            var metadata = types
                 .Where(x => x.IsClass && !x.IsAbstract)
                 .Where(x => x.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>() != null)
                 .Select(implType =>
@@ -39,10 +39,10 @@ namespace Newbe.Claptrap.Preview.Impl.Design
                         boxInterfaceType = interfaceType,
                         minionAttr = interfaceType.GetCustomAttribute<ClaptrapMinionAttribute>(),
                         stateAttr = interfaceType.GetCustomAttribute<ClaptrapStateAttribute>(),
-                        eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>(),
+                        eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>().ToArray(),
                         stateInitialFactoryHandlerAttr =
                             implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
-                        eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>(),
+                        eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>().ToArray(),
                         eventStoreAttr = implType.GetCustomAttribute<EventStoreAttribute>(),
                         stateStoreAttr = implType.GetCustomAttribute<StateStoreAttribute>(),
                     };
@@ -51,35 +51,48 @@ namespace Newbe.Claptrap.Preview.Impl.Design
 
             var re = _claptrapDesignStoreFactory();
 
-            var claptrapDesignTuples = impls
-                .Select(x =>
+            var claptrapDesignTuples = metadata
+                .Select(m =>
                 {
                     var claptrapDesign = new ClaptrapDesign
                     {
-                        Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(x.stateAttr)),
-                        StateDataType = x.stateAttr.StateDataType,
-                        InitialStateDataFactoryType = x.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!,
+                        Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(m.stateAttr)),
+                        StateDataType = m.stateAttr.StateDataType,
+                        InitialStateDataFactoryType = m.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!,
                         StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
-                        EventLoaderFactoryType = x.eventStoreAttr?.EventLoaderFactoryType!,
-                        EventSaverFactoryType = x.eventStoreAttr?.EventSaverFactoryType!,
-                        StateLoaderFactoryType = x.stateStoreAttr?.StateLoaderFactoryType!,
-                        StateSaverFactoryType = x.stateStoreAttr?.StateSaverFactoryType!,
-                        ClaptrapBoxInterfaceType = x.boxInterfaceType,
-                        ClaptrapBoxImplementationType = x.boxImplType,
+                        EventLoaderFactoryType = m.eventStoreAttr?.EventLoaderFactoryType!,
+                        EventSaverFactoryType = m.eventStoreAttr?.EventSaverFactoryType!,
+                        StateLoaderFactoryType = m.stateStoreAttr?.StateLoaderFactoryType!,
+                        StateSaverFactoryType = m.stateStoreAttr?.StateSaverFactoryType!,
+                        ClaptrapBoxInterfaceType = m.boxInterfaceType,
+                        ClaptrapBoxImplementationType = m.boxImplType,
                         // TODO EventHandlerFactoryFactoryType 
                         // TODO state Options
                     };
-                    var handlerDesigns = x.eventAttrs.Select(e => new ClaptrapEventHandlerDesign
-                    {
-                        EventTypeCode = GetEventTypeCode(e),
-                        EventDataType = e.EventDataType,
-                        EventHandlerType = x.eventHandlerAttrs.Single(a => a.EventTypeCode == e.EventTypeCode)
-                            .EventHandlerType
-                    }).ToArray();
+                    ClaptrapEventHandlerDesign[] handlerDesigns;
+                    //  find more event and handlers from attribute
+                    handlerDesigns = m.eventAttrs.Length > m.eventHandlerAttrs.Length
+                        ? m.eventAttrs.Select(e => new ClaptrapEventHandlerDesign
+                            {
+                                EventTypeCode = e.EventTypeCode,
+                                EventDataType = e.EventDataType,
+                                EventHandlerType = m.eventHandlerAttrs
+                                    .FirstOrDefault(x => x.EventTypeCode == e.EventTypeCode)?.EventHandlerType!
+                            })
+                            .ToArray()
+                        : m.eventHandlerAttrs.Select(e => new ClaptrapEventHandlerDesign
+                            {
+                                EventTypeCode = e.EventTypeCode,
+                                EventDataType = m.eventAttrs
+                                    .FirstOrDefault(x => x.EventTypeCode == e.EventTypeCode)?.EventDataType!,
+                                EventHandlerType = e.EventHandlerType,
+                            })
+                            .ToArray();
+
                     claptrapDesign.EventHandlerDesigns =
                         new Dictionary<string, IClaptrapEventHandlerDesign>(
                             handlerDesigns.ToDictionary(a => a.EventTypeCode, a => (IClaptrapEventHandlerDesign) a));
-                    return (claptrapDesign, x);
+                    return (claptrapDesign, m);
                 })
                 .ToArray();
 
@@ -87,11 +100,11 @@ namespace Newbe.Claptrap.Preview.Impl.Design
             var typeCodeDic = claptrapDesignTuples
                 .ToDictionary(x => x.claptrapDesign.Identity.TypeCode);
 
-            foreach (var (claptrapDesign, x) in claptrapDesignTuples)
+            foreach (var (claptrapDesign, m) in claptrapDesignTuples)
             {
-                if (x.minionAttr != null)
+                if (m.minionAttr != null)
                 {
-                    if (typeCodeDic.TryGetValue(x.minionAttr.MasterTypeCode, out var masterDesign))
+                    if (typeCodeDic.TryGetValue(m.minionAttr.MasterTypeCode, out var masterDesign))
                     {
                         claptrapDesign.ClaptrapMasterDesign = masterDesign.claptrapDesign;
                     }
@@ -109,12 +122,6 @@ namespace Newbe.Claptrap.Preview.Impl.Design
             {
                 return attr.ActorTypeCode ??
                        attr.StateDataType.FullName;
-            }
-
-            static string GetEventTypeCode(ClaptrapEventAttribute attr)
-            {
-                return attr.EventTypeCode ??
-                       attr.EventDataType.FullName;
             }
         }
     }
