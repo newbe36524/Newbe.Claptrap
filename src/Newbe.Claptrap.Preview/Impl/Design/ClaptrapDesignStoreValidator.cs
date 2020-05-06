@@ -49,7 +49,20 @@ namespace Newbe.Claptrap.Preview.Impl.Design
                         nameof(design.InitialStateDataFactoryType));
                     yield return ValidateTypeNotNull(design.StateHolderFactoryType,
                         nameof(design.StateHolderFactoryType));
-                    yield return ValidateTypeNotNull(design.StateOptions, nameof(design.StateOptions));
+                    yield return ValidateTypeNotNull(design.ClaptrapOptions,
+                        nameof(design.ClaptrapOptions));
+                    yield return ValidateTypeNotNull(design.ClaptrapOptions.EventLoadingOptions,
+                        nameof(design.ClaptrapOptions.EventLoadingOptions));
+                    yield return ValidateTypeNotNull(design.ClaptrapOptions.StateRecoveryOptions,
+                        nameof(design.ClaptrapOptions.StateRecoveryOptions));
+                    yield return ValidateTypeNotNull(design.ClaptrapOptions.StateSavingOptions,
+                        nameof(design.ClaptrapOptions.StateSavingOptions));
+                    if (design.ClaptrapMasterDesign != null)
+                    {
+                        yield return ValidateTypeNotNull(design.ClaptrapOptions.MinionOptions!,
+                            nameof(design.ClaptrapOptions.MinionOptions));
+                    }
+
                     yield return ValidateTypeNotNull(design.EventHandlerFactoryFactoryType,
                         nameof(design.EventHandlerFactoryFactoryType));
                     yield return ValidateTypeNotNull(design.EventHandlerDesigns, nameof(design.EventHandlerDesigns));

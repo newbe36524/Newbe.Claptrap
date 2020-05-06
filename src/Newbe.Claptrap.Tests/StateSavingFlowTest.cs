@@ -4,6 +4,7 @@ using Autofac;
 using Moq;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,7 +26,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
-                builder.RegisterInstance(new StateOptions
+                builder.RegisterInstance(new StateSavingOptions
                 {
                     SavingWindowVersionLimit = 1
                 });
@@ -45,7 +46,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
-                builder.RegisterInstance(new StateOptions
+                builder.RegisterInstance(new StateSavingOptions
                 {
                     SavingWindowTime = TimeSpan.FromSeconds(1)
                 });
@@ -63,7 +64,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
-                builder.RegisterInstance(new StateOptions
+                builder.RegisterInstance(new StateSavingOptions
                 {
                     SavingWindowVersionLimit = 2
                 });
@@ -92,7 +93,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
                 // there is no saving windows set, it will save nothing
-                builder.RegisterInstance(new StateOptions());
+                builder.RegisterInstance(new StateSavingOptions());
             });
 
             var stateSavingFlow = mocker.Create<StateSavingFlow>();
@@ -106,7 +107,7 @@ namespace Newbe.Claptrap.Tests
         {
             using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
-                builder.RegisterInstance(new StateOptions
+                builder.RegisterInstance(new StateSavingOptions
                 {
                     SavingWindowVersionLimit = 1
                 });

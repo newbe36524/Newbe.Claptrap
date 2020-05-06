@@ -5,6 +5,7 @@ using FluentAssertions;
 using Newbe.Claptrap.Preview;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Design;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 using Newbe.Claptrap.Preview.Impl;
 using Newbe.Claptrap.Preview.Impl.Design;
 using Newbe.Claptrap.Preview.Impl.MemoryStore;
@@ -29,7 +30,13 @@ namespace Newbe.Claptrap.Tests
             var actorIdentity = TestClaptrapIdentity.Instance;
             var claptrapDesign = new ClaptrapDesign
             {
-                StateOptions = new StateOptions(),
+                ClaptrapOptions = new ClaptrapOptions
+                {
+                    MinionOptions = new MinionOptions(),
+                    EventLoadingOptions = new EventLoadingOptions(),
+                    StateRecoveryOptions = new StateRecoveryOptions(),
+                    StateSavingOptions = new StateSavingOptions()
+                },
                 Identity = actorIdentity,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
@@ -43,7 +50,7 @@ namespace Newbe.Claptrap.Tests
             };
             var claptrapDesignStore = new ClaptrapDesignStore();
             claptrapDesignStore.AddOrReplace(claptrapDesign);
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
                 builder.RegisterInstance(claptrapDesignStore)
                     .AsImplementedInterfaces()
@@ -54,7 +61,7 @@ namespace Newbe.Claptrap.Tests
             var actor = actorFactory.Create(actorIdentity);
             actor.Should().NotBeNull();
         }
-        
+
         [Fact]
         public void CreateMinion()
         {
@@ -62,7 +69,13 @@ namespace Newbe.Claptrap.Tests
             var claptrapDesignStore = new ClaptrapDesignStore();
             var masterDesign = new ClaptrapDesign
             {
-                StateOptions = new StateOptions(),
+                ClaptrapOptions = new ClaptrapOptions
+                {
+                    MinionOptions = new MinionOptions(),
+                    EventLoadingOptions = new EventLoadingOptions(),
+                    StateRecoveryOptions = new StateRecoveryOptions(),
+                    StateSavingOptions = new StateSavingOptions()
+                },
                 Identity = actorIdentity,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
@@ -77,7 +90,13 @@ namespace Newbe.Claptrap.Tests
             claptrapDesignStore.AddOrReplace(masterDesign);
             var minionDesign = new ClaptrapDesign
             {
-                StateOptions = new StateOptions(),
+                ClaptrapOptions = new ClaptrapOptions
+                {
+                    MinionOptions = new MinionOptions(),
+                    EventLoadingOptions = new EventLoadingOptions(),
+                    StateRecoveryOptions = new StateRecoveryOptions(),
+                    StateSavingOptions = new StateSavingOptions()
+                },
                 Identity = actorIdentity,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
@@ -91,7 +110,7 @@ namespace Newbe.Claptrap.Tests
                 ClaptrapMasterDesign = masterDesign
             };
             claptrapDesignStore.AddOrReplace(minionDesign);
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
             {
                 builder.RegisterInstance(claptrapDesignStore)
                     .AsImplementedInterfaces()

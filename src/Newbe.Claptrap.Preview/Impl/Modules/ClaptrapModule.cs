@@ -24,10 +24,6 @@ namespace Newbe.Claptrap.Preview.Impl.Modules
             builder.RegisterType<DesignBaseEventHandlerFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<ClaptrapActor>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
         }
     }
 }

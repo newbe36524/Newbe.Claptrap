@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
@@ -18,7 +19,7 @@ namespace Newbe.Claptrap.Preview.Impl
         private readonly IStateRestorer _stateRestorer;
         private readonly IStateSavingFlow _stateSavingFlow;
         private readonly IEventHandledNotificationFlow _eventHandledNotificationFlow;
-        private readonly StateOptions _stateOptions;
+        private readonly StateRecoveryOptions _stateRecoveryOptions;
         private readonly ILogger<MasterEventHandlerFLow> _logger;
 
         private IDisposable _eventHandleFlow = null!;
@@ -38,7 +39,7 @@ namespace Newbe.Claptrap.Preview.Impl
             IStateRestorer stateRestorer,
             IStateSavingFlow stateSavingFlow,
             IEventHandledNotificationFlow eventHandledNotificationFlow,
-            StateOptions stateOptions,
+            StateRecoveryOptions stateRecoveryOptions,
             ILogger<MasterEventHandlerFLow> logger)
         {
             _stateAccessor = stateAccessor;
@@ -48,7 +49,7 @@ namespace Newbe.Claptrap.Preview.Impl
             _stateRestorer = stateRestorer;
             _stateSavingFlow = stateSavingFlow;
             _eventHandledNotificationFlow = eventHandledNotificationFlow;
-            _stateOptions = stateOptions;
+            _stateRecoveryOptions = stateRecoveryOptions;
             _logger = logger;
             _incomingEventsSeq = new Subject<EventItem>();
         }
@@ -124,8 +125,8 @@ namespace Newbe.Claptrap.Preview.Impl
                             _logger.LogWarning(e,
                                 "there is an exception when handle event : {@event} . start to recover state as strategy : {strategy}",
                                 context.Event,
-                                _stateOptions.StateRecoveryStrategy);
-                            switch (_stateOptions.StateRecoveryStrategy)
+                                _stateRecoveryOptions.StateRecoveryStrategy);
+                            switch (_stateRecoveryOptions.StateRecoveryStrategy)
                             {
                                 case StateRecoveryStrategy.FromStateHolder:
                                     State = context.NowState;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 
 namespace Newbe.Claptrap.Preview.Abstractions.Design
 {
@@ -25,7 +26,7 @@ namespace Newbe.Claptrap.Preview.Abstractions.Design
         Type StateSaverFactoryType { get; set; }
         Type InitialStateDataFactoryType { get; set; }
         Type StateHolderFactoryType { get; set; }
-        StateOptions StateOptions { get; set; }
+        ClaptrapOptions ClaptrapOptions { get; set; }
         Type EventHandlerFactoryFactoryType { get; set; }
         IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; }
 

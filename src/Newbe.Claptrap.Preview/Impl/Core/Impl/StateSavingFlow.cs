@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
     public class StateSavingFlow : IStateSavingFlow
     {
-        private readonly StateOptions _stateOptions;
+        private readonly StateSavingOptions _stateSavingOptions;
         private readonly IStateSaver _stateSaver;
         private readonly ILogger<StateSavingFlow> _logger;
         private readonly Subject<IState> _nextStateSeq;
         private IDisposable _snapshotSavingFlow = null!;
 
         public StateSavingFlow(
-            StateOptions stateOptions,
+            StateSavingOptions stateSavingOptions,
             IStateSaver stateSaver,
             ILogger<StateSavingFlow> logger)
         {
-            _stateOptions = stateOptions;
+            _stateSavingOptions = stateSavingOptions;
             _stateSaver = stateSaver;
             _logger = logger;
             _nextStateSeq = new Subject<IState>();
@@ -36,8 +37,8 @@ namespace Newbe.Claptrap.Preview.Impl
                 .DistinctUntilChanged(state => state.Version);
 
             IObservable<IList<IState>> stateBuffer;
-            var savingWindowTime = _stateOptions.SavingWindowTime;
-            var savingWindowVersionLimit = _stateOptions.SavingWindowVersionLimit;
+            var savingWindowTime = _stateSavingOptions.SavingWindowTime;
+            var savingWindowVersionLimit = _stateSavingOptions.SavingWindowVersionLimit;
             if (savingWindowTime.HasValue && savingWindowVersionLimit.HasValue)
             {
                 stateBuffer = dist.Buffer(savingWindowTime.Value,

@@ -7,6 +7,7 @@ using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Design;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 using Newbe.Claptrap.Preview.Impl.Design;
 using Newbe.Claptrap.Preview.Impl.Localization;
 using Newbe.Claptrap.Preview.Impl.Modules;
@@ -36,11 +37,26 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 {
                     new GlobalClaptrapDesignStoreConfigurator(new GlobalClaptrapDesign
                     {
-                        StateOptions = new StateOptions
+                        ClaptrapOptions = new ClaptrapOptions
                         {
-                            SavingWindowTime = TimeSpan.FromSeconds(10),
-                            SaveWhenDeactivateAsync = true,
-                            SavingWindowVersionLimit = 1000
+                            StateSavingOptions = new StateSavingOptions
+                            {
+                                SavingWindowTime = TimeSpan.FromSeconds(10),
+                                SaveWhenDeactivateAsync = true,
+                                SavingWindowVersionLimit = 1000,
+                            },
+                            MinionOptions = new MinionOptions
+                            {
+                                ActivateMinionsAtStart = false
+                            },
+                            EventLoadingOptions = new EventLoadingOptions
+                            {
+                                LoadingCountInOneBatch = 1000
+                            },
+                            StateRecoveryOptions = new StateRecoveryOptions
+                            {
+                                StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder
+                            }
                         },
                         InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),
                         StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
@@ -60,7 +76,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
             return l;
         }
 
-        public ClaptrapBootstrapperBuilderOptions Options { get; } 
+        public ClaptrapBootstrapperBuilderOptions Options { get; }
 
         public IClaptrapBootstrapper Build()
         {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 using Newbe.Claptrap.Preview.Abstractions.Exceptions;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 using Xunit.Abstractions;
@@ -75,7 +76,7 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMockHelper.Create(_testOutputHelper,
                 builderAction: builder =>
                 {
-                    builder.RegisterInstance(new StateOptions
+                    builder.RegisterInstance(new StateSavingOptions
                     {
                         SaveWhenDeactivateAsync = true
                     });

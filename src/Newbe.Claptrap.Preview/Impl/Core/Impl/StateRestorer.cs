@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Components;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Newbe.Claptrap.Preview.Abstractions.Options;
 using Newbe.Claptrap.Preview.Impl.Localization;
 using static Newbe.Claptrap.Preview.Impl.Localization.LK.L0005StateRestorer;
 
@@ -16,6 +17,7 @@ namespace Newbe.Claptrap.Preview.Impl
     public class StateRestorer : IStateRestorer
     {
         private readonly IClaptrapIdentity _claptrapIdentity;
+        private readonly EventLoadingOptions _eventLoadingOptions;
         private readonly IStateAccessor _stateAccessor;
         private readonly IInitialStateDataFactory _initialStateDataFactory;
         private readonly IStateLoader _stateLoader;
@@ -26,6 +28,7 @@ namespace Newbe.Claptrap.Preview.Impl
 
         public StateRestorer(
             IClaptrapIdentity claptrapIdentity,
+            EventLoadingOptions eventLoadingOptions,
             IStateAccessor stateAccessor,
             IInitialStateDataFactory initialStateDataFactory,
             IStateLoader stateLoader,
@@ -35,6 +38,7 @@ namespace Newbe.Claptrap.Preview.Impl
             ILogger<StateRestorer> logger)
         {
             _claptrapIdentity = claptrapIdentity;
+            _eventLoadingOptions = eventLoadingOptions;
             _stateAccessor = stateAccessor;
             _initialStateDataFactory = initialStateDataFactory;
             _stateLoader = stateLoader;
@@ -101,7 +105,7 @@ namespace Newbe.Claptrap.Preview.Impl
             async IAsyncEnumerable<IEvent> GetEventFromVersion()
             {
                 var startVersion = State.NextVersion;
-                const long step = 1000L;
+                var step = _eventLoadingOptions.LoadingCountInOneBatch;
 
                 var left = startVersion;
                 var right = startVersion + step;

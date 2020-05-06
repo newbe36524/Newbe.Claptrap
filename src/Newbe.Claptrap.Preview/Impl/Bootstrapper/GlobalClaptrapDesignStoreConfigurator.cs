@@ -53,7 +53,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                 yield return type.GetProperty(nameof(IClaptrapDesign.StateSaverFactoryType));
                 yield return type.GetProperty(nameof(IClaptrapDesign.InitialStateDataFactoryType));
                 yield return type.GetProperty(nameof(IClaptrapDesign.StateHolderFactoryType));
-                yield return type.GetProperty(nameof(IClaptrapDesign.StateOptions));
+                yield return type.GetProperty(nameof(IClaptrapDesign.ClaptrapOptions));
                 yield return type.GetProperty(nameof(IClaptrapDesign.EventHandlerFactoryFactoryType));
             }
         }
