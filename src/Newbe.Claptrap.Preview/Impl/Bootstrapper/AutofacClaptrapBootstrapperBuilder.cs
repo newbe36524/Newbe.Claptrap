@@ -47,7 +47,7 @@ namespace Newbe.Claptrap.Preview.Impl.Bootstrapper
                             },
                             MinionOptions = new MinionOptions
                             {
-                                ActivateMinionsAtStart = false
+                                ActivateMinionsAtStart = true
                             },
                             EventLoadingOptions = new EventLoadingOptions
                             {

@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Preview.Impl
 {
-    public class AopClaptrapActor : IClaptrap
+    public class AopClaptrap : IClaptrap
     {
         private readonly IClaptrap _claptrap;
         private readonly IEnumerable<IClaptrapLifetimeInterceptor> _interceptors;
-        private readonly ILogger<AopClaptrapActor> _logger;
+        private readonly ILogger<AopClaptrap> _logger;
 
-        public AopClaptrapActor(
+        public AopClaptrap(
             IClaptrap claptrap,
             IEnumerable<IClaptrapLifetimeInterceptor> interceptors,
-            ILogger<AopClaptrapActor> logger)
+            ILogger<AopClaptrap> logger)
         {
             _claptrap = claptrap;
             _interceptors = interceptors;

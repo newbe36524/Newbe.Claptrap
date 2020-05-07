@@ -90,7 +90,7 @@ namespace Newbe.Claptrap.Preview.Impl
                 builder.RegisterType<ClaptrapActor>()
                     .As<IClaptrap>()
                     .SingleInstance();
-                builder.RegisterDecorator<AopClaptrapActor, IClaptrap>(context => true);
+                builder.RegisterDecorator<AopClaptrap, IClaptrap>(context => true);
 
                 RegisterComponent<IStateSaver>(_claptrapDesign.StateSaverFactoryType);
                 RegisterComponent<IStateLoader>(_claptrapDesign.StateLoaderFactoryType);
@@ -178,13 +178,22 @@ namespace Newbe.Claptrap.Preview.Impl
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
-                if (_claptrapDesign.ClaptrapOptions.MinionOptions == null)
+                var minionOptions = _claptrapDesign.ClaptrapOptions.MinionOptions;
+                if (minionOptions == null)
                 {
                     // TODO exception
                     // ReSharper disable once NotResolvedInText
                     throw new ArgumentNullException("minionOptions");
                 }
-                builder.RegisterInstance(_claptrapDesign.ClaptrapOptions.MinionOptions);
+
+                builder.RegisterInstance(minionOptions);
+                if (minionOptions.ActivateMinionsAtStart)
+                {
+                    builder.RegisterType<WakeMinionClaptrapLifetimeInterceptor>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                }
+
                 RegisterComponent<IEventLoader>(_claptrapDesign.EventLoaderFactoryType);
                 RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
                 builder.RegisterType<MasterEventHandlerFLow>()

@@ -1,10 +1,14 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Preview.Abstractions.Core;
+using Orleans.Concurrency;
 
 namespace Newbe.Claptrap.Preview.Orleans
 {
     public interface IClaptrapMinionGrain : IClaptrapGrain
     {
-        Task MasterCall(IEvent @event);
+        Task MasterEventReceivedAsync(IEvent @event);
+
+        [OneWay]
+        Task WakeAsync();
     }
 }

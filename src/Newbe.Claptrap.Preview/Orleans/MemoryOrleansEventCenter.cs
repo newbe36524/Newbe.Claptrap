@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.Preview.Impl
                         {
                             var grain = (IClaptrapMinionGrain) _grainFactory.GetGrain(design.ClaptrapBoxInterfaceType,
                                 identity.Id);
-                            yield return grain.MasterCall(@event);
+                            yield return grain.MasterEventReceivedAsync(@event);
                         }
                     }
                 }
