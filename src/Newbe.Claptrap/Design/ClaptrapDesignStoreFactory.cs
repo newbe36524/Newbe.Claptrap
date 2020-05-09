@@ -37,7 +37,7 @@ namespace Newbe.Claptrap.Design
 
             IEnumerable<IClaptrapDesignStoreProvider> GetProviders()
             {
-                yield return _claptrapDesignStoreProviderFactory.Invoke(assemblies.SelectMany(x => x.DefinedTypes));
+                yield return _claptrapDesignStoreProviderFactory.Invoke(assemblies.SelectMany(x => x.GetTypes()));
                 foreach (var claptrapDesignStoreProvider in _providers)
                 {
                     yield return claptrapDesignStoreProvider;

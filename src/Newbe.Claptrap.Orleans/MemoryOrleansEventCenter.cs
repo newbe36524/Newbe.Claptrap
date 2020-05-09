@@ -40,7 +40,7 @@ namespace Newbe.Claptrap.Orleans
                         foreach (var design in designs)
                         {
                             var grainInterfaceType = design.ClaptrapBoxInterfaceType;
-                            dynamic grain = _grainFactory.GetGrain(grainInterfaceType, identity.Id);
+                            var grain = (IClaptrapMinionGrain) _grainFactory.GetGrain(grainInterfaceType, identity.Id);
                             yield return grain.MasterEventReceivedAsync(@event);
                         }
                     }

@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
+using Orleans;
 using Orleans.Concurrency;
 
 namespace Newbe.Claptrap.Orleans
 {
-    public interface IClaptrapMinionGrain
+    public interface IClaptrapMinionGrain : IClaptrapGrain
     {
         Task MasterEventReceivedAsync(IEvent @event);
 
-        [OneWay]
         Task WakeAsync();
     }
 }

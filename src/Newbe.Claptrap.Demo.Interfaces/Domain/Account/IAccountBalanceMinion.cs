@@ -7,7 +7,7 @@ namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
 {
     [ClaptrapMinion(C.ClaptrapCode)]
     [ClaptrapState(typeof(AccountStateData), C.MinionCodes.BalanceMinion)]
-    public interface IAccountBalanceMinion : IClaptrapMinionGrain, IClaptrapGrain
+    public interface IAccountBalanceMinion : IClaptrapMinionGrain
     {
         Task<decimal> GetBalance();
     }

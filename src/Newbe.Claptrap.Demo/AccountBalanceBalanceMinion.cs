@@ -9,7 +9,8 @@ namespace Newbe.Claptrap.Demo
 {
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
-    public class AccountBalanceBalanceMinion : ClaptrapBoxGrain<AccountStateData>, IAccountBalanceMinion
+    public class AccountBalanceBalanceMinion : ClaptrapBoxGrain<AccountStateData>,
+        IAccountBalanceMinion
     {
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
 

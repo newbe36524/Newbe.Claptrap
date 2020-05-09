@@ -6,8 +6,7 @@ using Orleans;
 namespace Newbe.Claptrap.Orleans
 {
     public abstract class ClaptrapBoxGrain<TStateData> : Grain,
-        IClaptrapBoxGrain<TStateData>,
-        IClaptrapGrain
+        IClaptrapBoxGrain<TStateData>
         where TStateData : IStateData
     {
         private IClaptrapBox? _box;

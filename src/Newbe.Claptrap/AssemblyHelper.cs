@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,14 +17,11 @@ namespace Newbe.Claptrap
             Func<string, bool> filterFilter)
         {
             var files = Directory.GetFiles(baseDir, "*.dll")
-                .Where(filterFilter)
+                .Where(filePath => filterFilter(Path.GetFileName(filePath)))
                 .ToArray();
-            var assemblies = files
-                .Select(Assembly.LoadFile)
-                .ToArray();
-            foreach (var assembly in assemblies)
+            foreach (var file in files)
             {
-                AppDomain.CurrentDomain.Load(assembly.GetName());
+                Assembly.LoadFrom(file);
             }
         }
     }

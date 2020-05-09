@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.Demo
     [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
-    public class Account : ClaptrapBoxGrain<AccountStateData>, IAccount
+    public class Account : ClaptrapBoxGrain<AccountStateData>, IAccount, IClaptrapGrain
     {
         public Account(IClaptrapGrainCommonService claptrapGrainCommonService)
             : base(claptrapGrainCommonService)
