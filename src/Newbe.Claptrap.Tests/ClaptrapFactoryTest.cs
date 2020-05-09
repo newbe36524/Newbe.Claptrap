@@ -1,14 +1,12 @@
 using System.Collections.Immutable;
+using System.Linq;
 using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Design;
-using Newbe.Claptrap.Preview.Abstractions.Options;
-using Newbe.Claptrap.Preview.Impl;
-using Newbe.Claptrap.Preview.Impl.Design;
-using Newbe.Claptrap.Preview.Impl.MemoryStore;
+using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Design;
+using Newbe.Claptrap.MemoryStore;
+using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,6 +54,13 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
+
+            mocker.Mock<IClaptrapModuleProvider>()
+                .Setup(x => x.GetClaptrapSharedModules(actorIdentity))
+                .Returns(Enumerable.Empty<IClaptrapSharedModule>());
+            mocker.Mock<IClaptrapModuleProvider>()
+                .Setup(x => x.GetClaptrapMasterClaptrapModules(actorIdentity))
+                .Returns(Enumerable.Empty<IClaptrapMasterModule>());
 
             var actorFactory = mocker.Create<ClaptrapFactory>();
             var actor = actorFactory.Create(actorIdentity);
@@ -116,6 +121,13 @@ namespace Newbe.Claptrap.Tests
                     .AsImplementedInterfaces()
                     .SingleInstance();
             });
+
+            mocker.Mock<IClaptrapModuleProvider>()
+                .Setup(x => x.GetClaptrapSharedModules(actorIdentity))
+                .Returns(Enumerable.Empty<IClaptrapSharedModule>());
+            mocker.Mock<IClaptrapModuleProvider>()
+                .Setup(x => x.GetClaptrapMinionModules(actorIdentity))
+                .Returns(Enumerable.Empty<IClaptrapMinionModule>());
 
             var actorFactory = mocker.Create<ClaptrapFactory>();
             var actor = actorFactory.Create(actorIdentity);

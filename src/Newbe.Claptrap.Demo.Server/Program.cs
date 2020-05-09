@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Preview.Impl.Bootstrapper;
-using Newbe.Claptrap.Preview.StorageProvider.SQLite;
+using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.DataSerializer.Json;
+using Newbe.Claptrap.StorageProvider.SQLite;
 using Newtonsoft.Json;
 using Orleans;
 using Orleans.Hosting;
@@ -49,12 +51,13 @@ namespace Newbe.Claptrap.Demo.Server
                     builder.Populate(collection);
 
                     IClaptrapBootstrapperBuilder claptrapBootstrapperFactory =
-                        new AutofacClaptrapBootstrapperBuilder(loggerFactory);
+                        new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                     var claptrapBootstrapper = claptrapBootstrapperFactory
-                        .AddAssemblies(new[]
+                        .AddClaptrapDesignAssemblies(new[]
                         {
                             typeof(Account).Assembly
                         })
+                        .AddReferenceAssemblyAsClaptrapModuleAssemblies(typeof(Program).Assembly)
                         .ConfigureGlobalClaptrapDesign(design =>
                         {
                             design.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory);
@@ -64,8 +67,8 @@ namespace Newbe.Claptrap.Demo.Server
                         })
                         .SetCultureInfo(new CultureInfo("cn"))
                         .Build();
-                    
-                    claptrapBootstrapper.RegisterServices(builder);
+
+                    claptrapBootstrapper.Boot();
 
                     var store = claptrapBootstrapper.DumpDesignStore();
                     File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));

@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Design;
-using Newbe.Claptrap.Preview.Abstractions.Exceptions;
-using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Design;
 using Xunit;
 using Xunit.Abstractions;
 

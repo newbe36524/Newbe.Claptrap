@@ -1,7 +1,6 @@
 using FluentAssertions;
-using Newbe.Claptrap.Preview.Impl.Localization;
 using Xunit;
-using static Newbe.Claptrap.Preview.Impl.Localization.LK.L0001AutofacClaptrapBootstrapperBuilder;
+using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 
 namespace Newbe.Claptrap.Tests
 {

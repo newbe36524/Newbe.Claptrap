@@ -6,12 +6,8 @@ using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Components;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Serializer;
-using Newbe.Claptrap.Preview.Impl;
-using Newbe.Claptrap.Preview.StorageProvider.SQLite;
+using Newbe.Claptrap.Serializer;
+using Newbe.Claptrap.StorageProvider.SQLite;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,10 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Autofac;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Exceptions;
-using Newbe.Claptrap.Preview.Abstractions.Options;
-using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 

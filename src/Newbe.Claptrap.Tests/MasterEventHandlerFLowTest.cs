@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Preview.Abstractions.Components;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Exceptions;
-using Newbe.Claptrap.Preview.Abstractions.Options;
-using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Core.Impl;
+using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -51,7 +49,7 @@ namespace Newbe.Claptrap.Tests
                 .Returns(new TestHandler());
             
             mocker.Mock<IEventHandledNotificationFlow>()
-                .Setup(x => x.OnNewEventHandled(It.IsAny<IEventHandledNotifierContext>()));
+                .Setup(x => x.OnNewEventHandled(It.IsAny<IEventNotifierContext>()));
 
             mocker.Mock<IStateSavingFlow>()
                 .Setup(x => x.OnNewStateCreated(It.IsAny<IState>()));

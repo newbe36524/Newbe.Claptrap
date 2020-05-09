@@ -1,5 +1,4 @@
 using System;
-using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Tests
 {

@@ -1,7 +1,4 @@
 using System.Threading.Tasks;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Components;
-using Newbe.Claptrap.Preview.Abstractions.Core;
 
 namespace Newbe.Claptrap.Tests
 {

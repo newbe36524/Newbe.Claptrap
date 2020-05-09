@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Preview.Abstractions.Components;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Abstractions.Options;
-using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Core;
+using Newbe.Claptrap.Core.Impl;
+using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 

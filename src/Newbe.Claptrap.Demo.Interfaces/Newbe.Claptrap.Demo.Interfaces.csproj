@@ -10,7 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
     </ItemGroup>
 
 </Project>

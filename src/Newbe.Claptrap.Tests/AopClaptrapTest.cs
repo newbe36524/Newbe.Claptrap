@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Impl;
+using Newbe.Claptrap.Core;
 using Xunit;
 using Xunit.Abstractions;
 

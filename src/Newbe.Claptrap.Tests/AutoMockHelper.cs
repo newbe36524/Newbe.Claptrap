@@ -1,8 +1,7 @@
 using System;
 using Autofac;
 using Autofac.Extras.Moq;
-using Newbe.Claptrap.Preview.Abstractions;
-using Newbe.Claptrap.Preview.Impl.Modules;
+using Newbe.Claptrap.Modules;
 using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests

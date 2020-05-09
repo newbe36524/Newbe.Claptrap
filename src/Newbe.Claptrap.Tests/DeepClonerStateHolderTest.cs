@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Newbe.Claptrap.Preview;
-using Newbe.Claptrap.Preview.Abstractions.Core;
-using Newbe.Claptrap.Preview.Impl;
 using Xunit;
 
 namespace Newbe.Claptrap.Tests

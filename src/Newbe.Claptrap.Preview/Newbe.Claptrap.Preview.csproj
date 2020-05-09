@@ -5,26 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="5.1.4" />
-        <PackageReference Include="DeepCloner" Version="0.10.2" />
-        <PackageReference Include="Lexical.Localization" Version="0.28.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.3" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.2" />
-        <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-        <PackageReference Include="System.Reactive" Version="4.4.1" />
-        <PackageReference Include="Dapper" Version="2.0.35" />
-        <PackageReference Include="dbup-sqlite" Version="4.3.0" />
-        <PackageReference Include="Autofac.Extras.AggregateService" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.1.6" />
-        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.1.6" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="Docs\L-cn.ini" />
-      <EmbeddedResource Include="Docs\L.ini" />
-      <EmbeddedResource Include="StorageProvider\SQLite\SqlScripts\*.sql" />
+      <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 </Project>
