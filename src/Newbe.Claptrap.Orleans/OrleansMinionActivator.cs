@@ -47,17 +47,26 @@ namespace Newbe.Claptrap.Orleans
             {
                 foreach (var minionDesign in minions)
                 {
-                    if (_grainFactory.GetGrain(minionDesign.ClaptrapBoxInterfaceType, identity.Id) is
-                        IClaptrapMinionGrain minionGrain)
-                    {
-                        yield return minionGrain.WakeAsync();
-                    }
-                    else
-                    {
-                        _logger.LogDebug("{type} is not {minionGrain}, can`t to wake it up",
-                            minionDesign.ClaptrapBoxInterfaceType,
-                            nameof(IClaptrapMinionGrain));
-                    }
+                    var method =
+                        typeof(IGrainFactory).GetMethod(nameof(IGrainFactory.GetGrain), 1,
+                            new[] {typeof(string), typeof(string)});
+                    var makeGenericMethod = method.MakeGenericMethod(minionDesign.ClaptrapBoxInterfaceType);
+                    dynamic grain = makeGenericMethod.Invoke(_grainFactory,
+                        new object[] {identity.Id, string.Empty});
+
+                    IClaptrapMinionGrain minionGrain = grain;
+                    yield return minionGrain.WakeAsync();
+
+                    // if (grain is
+                    //     IClaptrapMinionGrain minionGrain)
+                    // {
+                    // }
+                    // else
+                    // {
+                    //     _logger.LogDebug("{type} is not {minionGrain}, can`t to wake it up",
+                    //         minionDesign.ClaptrapBoxInterfaceType,
+                    //         nameof(IClaptrapMinionGrain));
+                    // }
                 }
             }
         }

@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <nullable>disable</nullable>
     </PropertyGroup>
 
     <ItemGroup>

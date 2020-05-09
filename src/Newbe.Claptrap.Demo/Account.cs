@@ -6,11 +6,12 @@ using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.Account
 
 namespace Newbe.Claptrap.Demo
 {
+    [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
     public class Account : ClaptrapBoxGrain<AccountStateData>, IAccount
     {
-        public Account(IClaptrapGrainCommonService claptrapGrainCommonService) 
+        public Account(IClaptrapGrainCommonService claptrapGrainCommonService)
             : base(claptrapGrainCommonService)
         {
         }
@@ -30,6 +31,5 @@ namespace Newbe.Claptrap.Demo
             var re = StateData.Balance;
             return Task.FromResult(re);
         }
-       
     }
 }

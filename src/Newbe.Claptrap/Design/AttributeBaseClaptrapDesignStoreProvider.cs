@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Options;
 
 namespace Newbe.Claptrap.Design
 {
@@ -42,9 +43,17 @@ namespace Newbe.Claptrap.Design
                         stateInitialFactoryHandlerAttr =
                             implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
                         eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>().ToArray(),
-                        eventStoreAttr = implType.GetCustomAttribute<EventStoreAttribute>(),
-                        stateStoreAttr = implType.GetCustomAttribute<StateStoreAttribute>(),
-                        stateHolderAttr = implType.GetCustomAttribute<StateHolderAttribute>(),
+                        eventStoreAttr = implType.GetCustomAttribute<ClaptrapEventStoreAttribute>(),
+                        stateStoreAttr = implType.GetCustomAttribute<ClaptrapStateStoreAttribute>(),
+                        stateHolderAttr = implType.GetCustomAttribute<ClaptrapStateHolderAttribute>(),
+                        StateSavingOptionsAttribute =
+                            implType.GetCustomAttribute<ClaptrapStateSavingOptionsAttribute>(),
+                        MinionOptionsAttribute =
+                            implType.GetCustomAttribute<ClaptrapMinionOptionsAttribute>(),
+                        EventLoadingOptionsAttribute =
+                            implType.GetCustomAttribute<ClaptrapEventLoadingOptionsAttribute>(),
+                        StateRecoveryOptionsAttribute =
+                            implType.GetCustomAttribute<ClaptrapStateRecoveryOptionsAttribute>(),
                     };
                 })
                 .ToArray();
@@ -66,8 +75,36 @@ namespace Newbe.Claptrap.Design
                         StateSaverFactoryType = m.stateStoreAttr?.StateSaverFactoryType!,
                         ClaptrapBoxInterfaceType = m.boxInterfaceType,
                         ClaptrapBoxImplementationType = m.boxImplType,
+                        ClaptrapOptions = new ClaptrapOptions
+                        {
+                            MinionOptions = m.MinionOptionsAttribute == null
+                                ? null
+                                : new MinionOptions
+                                {
+                                    ActivateMinionsAtStart = m.MinionOptionsAttribute.ActivateMinionsAtStart
+                                },
+                            EventLoadingOptions = m.EventLoadingOptionsAttribute == null
+                                ? null!
+                                : new EventLoadingOptions
+                                {
+                                    LoadingCountInOneBatch = m.EventLoadingOptionsAttribute.LoadingCountInOneBatch,
+                                },
+                            StateRecoveryOptions = m.StateRecoveryOptionsAttribute == null
+                                ? null!
+                                : new StateRecoveryOptions
+                                {
+                                    StateRecoveryStrategy = m.StateRecoveryOptionsAttribute.StateRecoveryStrategy
+                                },
+                            StateSavingOptions = m.StateSavingOptionsAttribute == null
+                                ? null!
+                                : new StateSavingOptions
+                                {
+                                    SavingWindowTime = m.StateSavingOptionsAttribute.SavingWindowTime,
+                                    SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
+                                    SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
+                                }
+                        }
                         // TODO EventHandlerFactoryFactoryType 
-                        // TODO state Options
                     };
                     //  find more event and handlers from attribute
                     var handlerDesigns = m.eventAttrs.Length > m.eventHandlerAttrs.Length

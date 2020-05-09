@@ -3,12 +3,12 @@ using System;
 namespace Newbe.Claptrap
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class EventStoreAttribute : Attribute
+    public class ClaptrapEventStoreAttribute : Attribute
     {
         public Type EventSaverFactoryType { get; }
         public Type EventLoaderFactoryType { get; }
 
-        public EventStoreAttribute(
+        public ClaptrapEventStoreAttribute(
             Type eventSaverFactoryType,
             Type eventLoaderFactoryType)
         {

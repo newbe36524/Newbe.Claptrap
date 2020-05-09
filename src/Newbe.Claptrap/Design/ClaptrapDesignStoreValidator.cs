@@ -19,7 +19,10 @@ namespace Newbe.Claptrap.Design
             {
                 foreach (var error in ValidateTypes())
                 {
-                    yield return error;
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        yield return $"{design.Identity} {error}";
+                    }
                 }
 
                 IEnumerable<string> ValidateTypes()

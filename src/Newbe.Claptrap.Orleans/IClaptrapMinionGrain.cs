@@ -3,7 +3,7 @@ using Orleans.Concurrency;
 
 namespace Newbe.Claptrap.Orleans
 {
-    public interface IClaptrapMinionGrain : IClaptrapGrain
+    public interface IClaptrapMinionGrain
     {
         Task MasterEventReceivedAsync(IEvent @event);
 
