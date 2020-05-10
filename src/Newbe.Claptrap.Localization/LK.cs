@@ -30,7 +30,7 @@ namespace Newbe.Claptrap
             public static string L002AddProviderAsClaptrapDesignProvider { get; internal set; }
 
             /// <summary>
-            /// start to scan {assemblyArrayCount} assemblies, {assemblyNames}
+            /// start to scan {assemblyArrayCount} types
             /// </summary>
             public static string L003StartToScan { get; internal set; }
 

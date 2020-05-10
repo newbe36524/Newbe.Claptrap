@@ -80,11 +80,11 @@ namespace Newbe.Claptrap.Design
                         ClaptrapBoxImplementationType = m.boxImplType,
                         ClaptrapOptions = new ClaptrapOptions
                         {
-                            MinionOptions = m.MinionOptionsAttribute == null
-                                ? null
-                                : new MinionOptions
+                            MinionActivationOptions = m.MinionOptionsAttribute == null
+                                ? null!
+                                : new MinionActivationOptions
                                 {
-                                    ActivateMinionsAtStart = m.MinionOptionsAttribute.ActivateMinionsAtStart
+                                    ActivateMinionsAtMasterStart = m.MinionOptionsAttribute.ActivateMinionsAtStart
                                 },
                             EventLoadingOptions = m.EventLoadingOptionsAttribute == null
                                 ? null!

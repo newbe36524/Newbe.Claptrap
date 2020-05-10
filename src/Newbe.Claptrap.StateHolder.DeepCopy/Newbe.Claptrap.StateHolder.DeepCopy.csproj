@@ -12,5 +12,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 </Project>

@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.Tests
             {
                 ClaptrapOptions = new ClaptrapOptions
                 {
-                    MinionOptions = new MinionOptions(),
+                    MinionActivationOptions = new MinionActivationOptions(),
                     EventLoadingOptions = new EventLoadingOptions(),
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()
@@ -75,7 +75,7 @@ namespace Newbe.Claptrap.Tests
             {
                 ClaptrapOptions = new ClaptrapOptions
                 {
-                    MinionOptions = new MinionOptions(),
+                    MinionActivationOptions = new MinionActivationOptions(),
                     EventLoadingOptions = new EventLoadingOptions(),
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()
@@ -96,7 +96,7 @@ namespace Newbe.Claptrap.Tests
             {
                 ClaptrapOptions = new ClaptrapOptions
                 {
-                    MinionOptions = new MinionOptions(),
+                    MinionActivationOptions = new MinionActivationOptions(),
                     EventLoadingOptions = new EventLoadingOptions(),
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()

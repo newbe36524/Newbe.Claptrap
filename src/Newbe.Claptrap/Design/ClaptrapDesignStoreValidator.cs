@@ -74,11 +74,8 @@ namespace Newbe.Claptrap.Design
                             nameof(design.ClaptrapOptions.StateRecoveryOptions));
                         yield return ValidateTypeNotNull(design.ClaptrapOptions.StateSavingOptions,
                             nameof(design.ClaptrapOptions.StateSavingOptions));
-                        if (design.ClaptrapMasterDesign != null)
-                        {
-                            yield return ValidateTypeNotNull(design.ClaptrapOptions.MinionOptions!,
-                                nameof(design.ClaptrapOptions.MinionOptions));
-                        }
+                        yield return ValidateTypeNotNull(design.ClaptrapOptions.MinionActivationOptions!,
+                            nameof(design.ClaptrapOptions.MinionActivationOptions));
                     }
 
                     yield return ValidateTypeNotNull(design.EventHandlerFactoryFactoryType,

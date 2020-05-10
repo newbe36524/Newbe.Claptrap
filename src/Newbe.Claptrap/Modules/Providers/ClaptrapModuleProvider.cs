@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Autofac;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Core;
@@ -60,6 +61,7 @@ namespace Newbe.Claptrap.Modules
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
+
                 builder.RegisterType<ClaptrapActor>()
                     .As<IClaptrap>()
                     .SingleInstance();
@@ -76,6 +78,7 @@ namespace Newbe.Claptrap.Modules
                 builder.RegisterInstance(_claptrapDesign.ClaptrapOptions.EventLoadingOptions);
                 builder.RegisterInstance(_claptrapDesign.ClaptrapOptions.StateRecoveryOptions);
                 builder.RegisterInstance(_claptrapDesign.ClaptrapOptions.StateSavingOptions);
+                builder.RegisterInstance(_claptrapDesign.ClaptrapOptions.MinionActivationOptions);
 
                 builder.RegisterType<StateAccessor>()
                     .AsImplementedInterfaces()
@@ -116,6 +119,7 @@ namespace Newbe.Claptrap.Modules
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
+
                 RegisterComponent<IEventLoader>(_masterDesign.EventLoaderFactoryType);
 
                 builder.RegisterType<MinionEventHandlerFLow>()
@@ -155,16 +159,10 @@ namespace Newbe.Claptrap.Modules
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
-                var minionOptions = _claptrapDesign.ClaptrapOptions.MinionOptions;
-                if (minionOptions == null)
-                {
-                    // TODO exception
-                    // ReSharper disable once NotResolvedInText
-                    throw new ArgumentNullException("minionOptions");
-                }
 
-                builder.RegisterInstance(minionOptions);
-                if (minionOptions.ActivateMinionsAtStart)
+                var minionOptions = _claptrapDesign.ClaptrapOptions.MinionActivationOptions;
+                Debug.Assert(minionOptions != null, nameof(minionOptions) + " != null");
+                if (minionOptions.ActivateMinionsAtMasterStart)
                 {
                     builder.RegisterType<WakeMinionClaptrapLifetimeInterceptor>()
                         .AsImplementedInterfaces()
@@ -181,7 +179,7 @@ namespace Newbe.Claptrap.Modules
                     .SingleInstance();
                 // TODO 
                 // builder.RegisterModule(new EventCenterNotifierModule(_identity));
-                
+
                 builder.RegisterType<EventCenterEventNotifier>()
                     .AsSelf()
                     .InstancePerDependency();

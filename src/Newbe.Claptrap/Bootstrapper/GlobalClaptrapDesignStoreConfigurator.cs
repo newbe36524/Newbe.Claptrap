@@ -39,15 +39,6 @@ namespace Newbe.Claptrap.Bootstrapper
                             claptrapDesign.ClaptrapOptions,
                             claptrapDesign.Identity);
                     }
-
-                    // minion claptrap design
-                    if (claptrapDesign.ClaptrapMasterDesign != null)
-                    {
-                        SetValueIfNull(typeof(ClaptrapOptions).GetProperty(nameof(ClaptrapOptions.MinionOptions)),
-                            _globalClaptrapDesign.ClaptrapOptions,
-                            claptrapDesign.ClaptrapOptions,
-                            claptrapDesign.Identity);
-                    }
                 }
             }
 
@@ -86,6 +77,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 yield return type.GetProperty(nameof(ClaptrapOptions.EventLoadingOptions));
                 yield return type.GetProperty(nameof(ClaptrapOptions.StateRecoveryOptions));
                 yield return type.GetProperty(nameof(ClaptrapOptions.StateSavingOptions));
+                yield return type.GetProperty(nameof(ClaptrapOptions.MinionActivationOptions));
             }
         }
     }

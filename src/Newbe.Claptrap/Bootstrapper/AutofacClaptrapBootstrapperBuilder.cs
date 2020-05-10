@@ -46,9 +46,9 @@ namespace Newbe.Claptrap.Bootstrapper
                                 SaveWhenDeactivateAsync = true,
                                 SavingWindowVersionLimit = 1000,
                             },
-                            MinionOptions = new MinionOptions
+                            MinionActivationOptions = new MinionActivationOptions
                             {
-                                ActivateMinionsAtStart = false
+                                ActivateMinionsAtMasterStart = false
                             },
                             EventLoadingOptions = new EventLoadingOptions
                             {
@@ -143,8 +143,8 @@ namespace Newbe.Claptrap.Bootstrapper
                         .ToArray();
 
                     _logger.LogInformation(
-                        "Scanned {assemblies}, and found {count} claptrap application modules : {modules}",
-                        Options.ModuleTypes,
+                        "Scanned {typesCount}, and found {count} claptrap application modules : {modules}",
+                        Options.ModuleTypes.Count(),
                         applicationModules.Length,
                         applicationModules.Select(x => x.Name));
                 }
@@ -164,8 +164,8 @@ namespace Newbe.Claptrap.Bootstrapper
                     .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName) != null)
                     .ToArray();
                 _logger.LogInformation(
-                    "Scanned {assemblies}, and found {count} claptrap modules providers : {modules}",
-                    Options.ModuleTypes,
+                    "Scanned {typeCount}, and found {count} claptrap modules providers : {modules}",
+                    Options.ModuleTypes.Count(),
                     providers.Length,
                     providers);
 
@@ -193,9 +193,7 @@ namespace Newbe.Claptrap.Bootstrapper
             }
 
             var typeArray = types as Type[] ?? types.ToArray();
-            _logger.LogDebug(_l.Value[L003StartToScan],
-                typeArray.Length,
-                typeArray.Select(x => x.FullName));
+            _logger.LogDebug(_l.Value[L003StartToScan], typeArray.Length);
             _logger.LogDebug(_l.Value[L004StartToCreateClaptrapDesign]);
             var claptrapDesignStore = factory.Create(typeArray);
 

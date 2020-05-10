@@ -1,10 +1,10 @@
 namespace Newbe.Claptrap
 {
-    public class MinionOptions
+    public class MinionActivationOptions
     {
         /// <summary>
         /// To activate minions at this claptrap start or not
         /// </summary>
-        public bool ActivateMinionsAtStart { get; set; }
+        public bool ActivateMinionsAtMasterStart { get; set; }
     }
 }

@@ -18,8 +18,8 @@ namespace Newbe.Claptrap
         public EventLoadingOptions EventLoadingOptions { get; set; } = null!;
 
         /// <summary>
-        /// options about minions of this claptrap. null if this claptrap isn`t a master claptrap
+        /// options about minions of this claptrap. null if this claptrap isn`t a minion claptrap
         /// </summary>
-        public MinionOptions? MinionOptions { get; set; }
+        public MinionActivationOptions MinionActivationOptions { get; set; } = null!;
     }
 }
