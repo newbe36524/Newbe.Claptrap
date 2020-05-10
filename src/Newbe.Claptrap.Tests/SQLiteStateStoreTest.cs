@@ -6,26 +6,17 @@ using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
 using Newbe.Claptrap.StorageProvider.SQLite;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class SQLiteStateStoreTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public SQLiteStateStoreTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public async Task SaveState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -46,11 +37,11 @@ namespace Newbe.Claptrap.Tests
             await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, 123));
         }
 
-        [Fact]
+        [Test]
         public async Task SaveStateTwice()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -72,11 +63,11 @@ namespace Newbe.Claptrap.Tests
             await sqLiteStateStore.SaveAsync(new DataState(identity, noneStateData, 124));
         }
 
-        [Fact]
+        [Test]
         public async Task GetState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -109,11 +100,11 @@ namespace Newbe.Claptrap.Tests
             stateSnapshot.Identity.Id.Should().Be(identity.Id);
         }
 
-        [Fact]
+        [Test]
         public async Task NoneState()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {

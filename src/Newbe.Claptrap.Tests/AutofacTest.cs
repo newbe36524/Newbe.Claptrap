@@ -1,12 +1,12 @@
 using Autofac;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class AutofacTest
     {
-        [Fact]
+        [Test]
         public void SingleDelegateFactory()
         {
             var builder = new ContainerBuilder();
@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.Tests
             store1.Name.Should().Be(store2.Name);
         }
 
-        [Fact]
+        [Test]
         public void DiffPerLifetimeScope()
         {
             var builder = new ContainerBuilder();

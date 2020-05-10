@@ -1,30 +1,20 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class MasterEventHandlerFLowTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public MasterEventHandlerFLowTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public async Task HandleEvent()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions());
@@ -46,7 +36,7 @@ namespace Newbe.Claptrap.Tests
             mocker.Mock<IEventHandlerFactory>()
                 .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
                 .Returns(new TestHandler());
-            
+
             mocker.Mock<IEventHandledNotificationFlow>()
                 .Setup(x => x.OnNewEventHandled(It.IsAny<IEventNotifierContext>()));
 
@@ -60,10 +50,10 @@ namespace Newbe.Claptrap.Tests
             state.Version.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public async Task EventSavingResultAlreadyAdded()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions());
@@ -92,10 +82,10 @@ namespace Newbe.Claptrap.Tests
             state.Version.Should().Be(0);
         }
 
-        [Fact]
-        public async Task ThrownExceptionAsSavingEvent()
+        [Test]
+        public void ThrownExceptionAsSavingEvent()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions());
@@ -125,17 +115,17 @@ namespace Newbe.Claptrap.Tests
             var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
-            await Assert.ThrowsAsync<EventSavingException>(() => flow.OnNewEventReceived(new TestEvent
+            Assert.ThrowsAsync<EventSavingException>(() => flow.OnNewEventReceived(new TestEvent
             {
                 ClaptrapIdentity = TestClaptrapIdentity.Instance
             }));
             state.Version.Should().Be(0);
         }
 
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorks()
+        [Test]
+        public void ThrowExceptionAsHandlerWorks()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions
@@ -164,14 +154,14 @@ namespace Newbe.Claptrap.Tests
             var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
-            await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));
+            Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));
             state.Version.Should().Be(0);
         }
 
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorksAndRestoreFromStore()
+        [Test]
+        public void ThrowExceptionAsHandlerWorksAndRestoreFromStore()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions
@@ -204,7 +194,7 @@ namespace Newbe.Claptrap.Tests
             var flow = mocker.Create<MasterEventHandlerFLow>();
 
             flow.Activate();
-            await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));
+            Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent()));
             state.Version.Should().Be(0);
         }
     }

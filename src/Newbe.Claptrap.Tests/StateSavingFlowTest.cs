@@ -3,25 +3,16 @@ using System.Threading.Tasks;
 using Autofac;
 using Moq;
 using Newbe.Claptrap.Core.Impl;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class StateSavingFlowTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public StateSavingFlowTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public void WindowVersionLimit1()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create( builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -38,10 +29,10 @@ namespace Newbe.Claptrap.Tests
             stateSavingFlow.OnNewStateCreated(new TestState());
         }
 
-        [Fact]
+        [Test]
         public void WindowVersionLimitTime1Seconds()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create( builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -56,10 +47,10 @@ namespace Newbe.Claptrap.Tests
             // there will be nothing saved since it deactivate with 1 sec
         }
 
-        [Fact]
+        [Test]
         public void WindowVersionLimit2()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create( builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -84,10 +75,10 @@ namespace Newbe.Claptrap.Tests
             stateSavingFlow.OnNewStateCreated(laterState);
         }
 
-        [Fact]
+        [Test]
         public void NotSave()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create( builderAction: builder =>
             {
                 // there is no saving windows set, it will save nothing
                 builder.RegisterInstance(new StateSavingOptions());
@@ -99,10 +90,10 @@ namespace Newbe.Claptrap.Tests
         }
 
 
-        [Fact]
+        [Test]
         public void ExceptionAdnContinue()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create( builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {

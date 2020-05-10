@@ -6,27 +6,18 @@ using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class StateRestorerTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public StateRestorerTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         private readonly IClaptrapIdentity _testClaptrapIdentity = new TestClaptrapIdentity("123", "testActor");
 
-        [Fact]
+        [Test]
         public async Task NoSnapshot()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             mocker.Mock<IStateLoader>()
                 .Setup(x => x.GetStateSnapshotAsync())
                 .ReturnsAsync(default(IState));
@@ -46,10 +37,10 @@ namespace Newbe.Claptrap.Tests
             await restorer.RestoreAsync();
         }
 
-        [Fact]
+        [Test]
         public async Task RestoreStateWithEmptyEvents()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -66,10 +57,10 @@ namespace Newbe.Claptrap.Tests
             await restorer.RestoreAsync();
         }
 
-        [Fact]
+        [Test]
         public async Task RestoreStateWithSomeEvents()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
 
             var state = new TestState();
             mocker.Mock<IStateLoader>()
@@ -96,23 +87,23 @@ namespace Newbe.Claptrap.Tests
             {
                 yield return new TestEvent
                 {
-                    Version = 1,
+                    Version = 1
                 };
                 yield return new TestEvent
                 {
-                    Version = 2,
+                    Version = 2
                 };
                 yield return new TestEvent
                 {
-                    Version = 3,
+                    Version = 3
                 };
             }
         }
 
-        [Fact]
-        public async Task RestoreWithThrowException()
+        [Test]
+        public void RestoreWithThrowException()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
 
             var state = new TestState
             {
@@ -138,21 +129,21 @@ namespace Newbe.Claptrap.Tests
 
             var restorer = mocker.Create<StateRestorer>();
 
-            await Assert.ThrowsAsync<Exception>(async () => await restorer.RestoreAsync());
+            Assert.ThrowsAsync<Exception>(async () => await restorer.RestoreAsync());
 
             static IEnumerable<IEvent> AllEvents()
             {
                 yield return new TestEvent
                 {
-                    Version = 1,
+                    Version = 1
                 };
                 yield return new TestEvent
                 {
-                    Version = 2,
+                    Version = 2
                 };
                 yield return new TestEvent
                 {
-                    Version = 3,
+                    Version = 3
                 };
             }
         }

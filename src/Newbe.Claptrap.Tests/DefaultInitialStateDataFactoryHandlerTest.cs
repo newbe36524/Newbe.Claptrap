@@ -1,27 +1,15 @@
-using System;
 using System.Threading.Tasks;
-using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Design;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class DefaultInitialStateDataFactoryHandlerTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public DefaultInitialStateDataFactoryHandlerTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public async Task Create()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
 
             var actorIdentity = TestClaptrapIdentity.Instance;
             mocker.Mock<IClaptrapDesignStore>()

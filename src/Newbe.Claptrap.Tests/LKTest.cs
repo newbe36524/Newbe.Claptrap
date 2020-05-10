@@ -1,12 +1,12 @@
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 
 namespace Newbe.Claptrap.Tests
 {
     public class LKTest
     {
-        [Fact]
+        [Test]
         public void Init()
         {
             LK.Init();

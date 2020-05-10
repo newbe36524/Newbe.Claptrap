@@ -7,26 +7,17 @@ using Autofac.Extras.Moq;
 using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.StorageProvider.SQLite;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class SQLiteEventStoreTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public SQLiteEventStoreTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public async Task SaveEvent()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -54,11 +45,11 @@ namespace Newbe.Claptrap.Tests
             eventSavingResult.Should().Be(EventSavingResult.Success);
         }
 
-        [Fact]
+        [Test]
         public async Task SaveEventTwice()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -89,11 +80,11 @@ namespace Newbe.Claptrap.Tests
         }
 
 
-        [Fact]
+        [Test]
         public async Task GetEvents()
         {
             var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 nowTime: now,
                 builderAction: builder =>
                 {
@@ -125,10 +116,7 @@ namespace Newbe.Claptrap.Tests
                     Version = i
                 })
                 .ToArray();
-            foreach (var dataEvent in dataEvents)
-            {
-                await db.SaveEventAsync(dataEvent);
-            }
+            foreach (var dataEvent in dataEvents) await db.SaveEventAsync(dataEvent);
 
             var events = (await db.GetEventsAsync(0, 2)).ToArray();
             var versions = events.Select(x => x.Version).ToArray();

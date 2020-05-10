@@ -1,27 +1,16 @@
 using System.Collections.Immutable;
 using System.Linq;
 using Autofac;
-using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.MemoryStore;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class ClaptrapFactoryTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public ClaptrapFactoryTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public void CreateMaster()
         {
             var actorIdentity = TestClaptrapIdentity.Instance;
@@ -47,7 +36,7 @@ namespace Newbe.Claptrap.Tests
             };
             var claptrapDesignStore = new ClaptrapDesignStore();
             claptrapDesignStore.AddOrReplace(claptrapDesign);
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(claptrapDesignStore)
                     .AsImplementedInterfaces()
@@ -66,7 +55,7 @@ namespace Newbe.Claptrap.Tests
             actor.Should().NotBeNull();
         }
 
-        [Fact]
+        [Test]
         public void CreateMinion()
         {
             var actorIdentity = TestClaptrapIdentity.Instance;
@@ -114,7 +103,7 @@ namespace Newbe.Claptrap.Tests
                 ClaptrapMasterDesign = masterDesign
             };
             claptrapDesignStore.AddOrReplace(minionDesign);
-            using var mocker = AutoMockHelper.Create(_testOutputHelper, builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(claptrapDesignStore)
                     .AsImplementedInterfaces()

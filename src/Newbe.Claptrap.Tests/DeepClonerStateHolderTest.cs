@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Xunit;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class DeepClonerStateHolderTest
     {
-        [Fact]
+        [Test]
         public void TestClass()
         {
             var testData = new TestData
@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Tests
             ((TestData) re).Name.Should().Be(testData.Name);
         }
 
-        [Fact]
+        [Test]
         public void TestList()
         {
             const int listCount = 10;

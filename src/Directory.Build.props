@@ -13,6 +13,13 @@
         <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern. It could help you to build a distributed, scalable, and testable server application.
         This package is one part of that project. Please check the source repository for more details.
     https://github.com/newbe36524/Newbe.Claptrap </Description>
+        <PackageIcon>icon.png</PackageIcon>
         <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
+        <None Include="icon.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <PropertyGroup Condition=" '$(IsPackable)' != 'false' ">
+        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 </Project>

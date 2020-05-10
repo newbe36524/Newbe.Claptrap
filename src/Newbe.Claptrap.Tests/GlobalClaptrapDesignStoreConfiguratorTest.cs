@@ -5,33 +5,24 @@ using Autofac;
 using FluentAssertions;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Design;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class GlobalClaptrapDesignStoreConfiguratorTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public GlobalClaptrapDesignStoreConfiguratorTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Theory]
-        [InlineData(nameof(ClaptrapDesign.EventLoaderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.EventSaverFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateLoaderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateSaverFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.InitialStateDataFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateHolderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.EventHandlerFactoryFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventLoaderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventSaverFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateLoaderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateSaverFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.InitialStateDataFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateHolderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventHandlerFactoryFactoryType))]
         public void NullFactoryType(string propertyName)
         {
             var globalDesignFactoryType = typeof(int);
-            using var autoMock = AutoMockHelper.Create(_testOutputHelper,
+            using var autoMock = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     var globalClaptrapDesign = new GlobalClaptrapDesign();
@@ -46,7 +37,7 @@ namespace Newbe.Claptrap.Tests
             var claptrapDesignStore = new ClaptrapDesignStore();
             var claptrapDesign = new ClaptrapDesign
             {
-                Identity = TestClaptrapIdentity.Instance,
+                Identity = TestClaptrapIdentity.Instance
             };
             var property = typeof(ClaptrapDesign).GetProperty(propertyName);
             Debug.Assert(property != null, nameof(property) + " != null");
@@ -60,17 +51,17 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Theory]
-        [InlineData(nameof(ClaptrapDesign.EventLoaderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.EventSaverFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateLoaderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateSaverFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.InitialStateDataFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.StateHolderFactoryType))]
-        [InlineData(nameof(ClaptrapDesign.EventHandlerFactoryFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventLoaderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventSaverFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateLoaderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateSaverFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.InitialStateDataFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.StateHolderFactoryType))]
+        [TestCase(nameof(ClaptrapDesign.EventHandlerFactoryFactoryType))]
         public void HaveFactoryType(string propertyName)
         {
             var globalDesignFactoryType = typeof(int);
-            using var autoMock = AutoMockHelper.Create(_testOutputHelper,
+            using var autoMock = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     var globalClaptrapDesign = new GlobalClaptrapDesign();
@@ -85,7 +76,7 @@ namespace Newbe.Claptrap.Tests
             var claptrapDesignStore = new ClaptrapDesignStore();
             var claptrapDesign = new ClaptrapDesign
             {
-                Identity = TestClaptrapIdentity.Instance,
+                Identity = TestClaptrapIdentity.Instance
             };
             var property = typeof(ClaptrapDesign).GetProperty(propertyName);
             Debug.Assert(property != null, nameof(property) + " != null");
@@ -100,15 +91,15 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Theory]
-        [InlineData(nameof(ClaptrapOptions.StateSavingOptions))]
-        [InlineData(nameof(ClaptrapOptions.StateRecoveryOptions))]
-        [InlineData(nameof(ClaptrapOptions.EventLoadingOptions))]
+        [TestCase(nameof(ClaptrapOptions.StateSavingOptions))]
+        [TestCase(nameof(ClaptrapOptions.StateRecoveryOptions))]
+        [TestCase(nameof(ClaptrapOptions.EventLoadingOptions))]
         public void NullClaptrapOptions(string propertyName)
         {
             var propertyInfo = typeof(ClaptrapOptions).GetProperty(propertyName);
             Debug.Assert(propertyInfo != null, nameof(propertyInfo) + " != null");
             var globalOption = Activator.CreateInstance(propertyInfo.PropertyType);
-            using var autoMock = AutoMockHelper.Create(_testOutputHelper,
+            using var autoMock = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     var claptrapOptions = new ClaptrapOptions();
@@ -138,15 +129,15 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Theory]
-        [InlineData(nameof(ClaptrapOptions.StateSavingOptions))]
-        [InlineData(nameof(ClaptrapOptions.StateRecoveryOptions))]
-        [InlineData(nameof(ClaptrapOptions.EventLoadingOptions))]
+        [TestCase(nameof(ClaptrapOptions.StateSavingOptions))]
+        [TestCase(nameof(ClaptrapOptions.StateRecoveryOptions))]
+        [TestCase(nameof(ClaptrapOptions.EventLoadingOptions))]
         public void HaveClaptrapOptions(string propertyName)
         {
             var propertyInfo = typeof(ClaptrapOptions).GetProperty(propertyName);
             Debug.Assert(propertyInfo != null, nameof(propertyInfo) + " != null");
             var globalOption = Activator.CreateInstance(propertyInfo.PropertyType);
-            using var autoMock = AutoMockHelper.Create(_testOutputHelper,
+            using var autoMock = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     var claptrapOptions = new ClaptrapOptions();

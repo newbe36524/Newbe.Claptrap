@@ -2,7 +2,7 @@ using Autofac;
 
 namespace Newbe.Claptrap.DevTools
 {
-    public class ToolsServiceModule : Autofac.Module
+    public class ToolsServiceModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

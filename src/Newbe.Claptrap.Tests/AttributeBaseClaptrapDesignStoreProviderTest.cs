@@ -3,24 +3,17 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class AttributeBaseClaptrapDesignStoreProviderTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public AttributeBaseClaptrapDesignStoreProviderTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
 
         private AttributeBaseClaptrapDesignStoreProvider.Factory GetFactory()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new XunitLoggingModule(_testOutputHelper));
+            builder.RegisterModule(new TestLoggingModule());
             builder.RegisterType<ClaptrapDesignStore>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<AttributeBaseClaptrapDesignStoreProvider>().AsSelf().InstancePerLifetimeScope();
             var container = builder.Build();
@@ -29,7 +22,7 @@ namespace Newbe.Claptrap.Tests
             return factory;
         }
 
-        [Fact]
+        [Test]
         public void NothingToScan()
         {
             var factory = GetFactory();

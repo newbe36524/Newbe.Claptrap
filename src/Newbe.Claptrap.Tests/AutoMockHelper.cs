@@ -3,15 +3,12 @@ using System.Globalization;
 using Autofac;
 using Autofac.Extras.Moq;
 using Newbe.Claptrap.Localization.Modules;
-using Newbe.Claptrap.Modules;
-using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
 {
     public static class AutoMockHelper
     {
         public static AutoMock Create(
-            ITestOutputHelper testOutputHelper = null,
             bool localizationModule = true,
             DateTime? nowTime = null,
             bool verifyAll = true,
@@ -22,10 +19,7 @@ namespace Newbe.Claptrap.Tests
             var mocker = AutoMock.GetStrict(builder =>
             {
                 action(builder);
-                if (testOutputHelper != null)
-                {
-                    builder.AddLogging(testOutputHelper);
-                }
+                builder.RegisterModule<TestLoggingModule>();
 
                 if (localizationModule)
                 {

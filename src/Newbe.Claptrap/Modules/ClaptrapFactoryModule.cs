@@ -28,6 +28,10 @@ namespace Newbe.Claptrap.Modules
             builder.RegisterType<NoChangeStateHolderFactory>()
                 .AsSelf()
                 .SingleInstance();
+
+            builder.RegisterType<EmptyEventCenter>()
+                .As<IEventCenter>()
+                .SingleInstance();
         }
     }
 }

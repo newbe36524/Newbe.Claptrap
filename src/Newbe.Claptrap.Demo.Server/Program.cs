@@ -8,7 +8,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.DataSerializer.Json;
 using Newbe.Claptrap.StorageProvider.SQLite;
 using Newtonsoft.Json;
 using Orleans;

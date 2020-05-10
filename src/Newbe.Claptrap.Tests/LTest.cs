@@ -1,25 +1,15 @@
+using System;
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
-using Newbe.Claptrap.Localization;
 using Newbe.Claptrap.Localization.Modules;
-using Newbe.Claptrap.Modules;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class LTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public LTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public void Globalization()
         {
             var builder = new ContainerBuilder();
@@ -30,10 +20,10 @@ namespace Newbe.Claptrap.Tests
             var globalString = l[LK.L0001AutofacClaptrapBootstrapperBuilder.L001BuildException];
             globalString.Should().NotBeNullOrEmpty();
             globalString.Should().Be("failed to build claptrap bootstrapper");
-            _testOutputHelper.WriteLine(globalString);
+            Console.WriteLine(globalString);
         }
 
-        [Fact]
+        [Test]
         public void Localization()
         {
             var builder = new ContainerBuilder();
@@ -45,10 +35,10 @@ namespace Newbe.Claptrap.Tests
             var localString = l[LK.L0001AutofacClaptrapBootstrapperBuilder.L001BuildException];
             localString.Should().Be("构建 claptrap 启动器失败");
             localString.Should().NotBeNullOrEmpty();
-            _testOutputHelper.WriteLine(localString);
+            Console.WriteLine(localString);
         }
 
-        [Fact]
+        [Test]
         public void LocalizationWithModuleSettings()
         {
             var builder = new ContainerBuilder();
@@ -60,7 +50,7 @@ namespace Newbe.Claptrap.Tests
             var localString = l[LK.L0001AutofacClaptrapBootstrapperBuilder.L001BuildException];
             localString.Should().Be("构建 claptrap 启动器失败");
             localString.Should().NotBeNullOrEmpty();
-            _testOutputHelper.WriteLine(localString);
+            Console.WriteLine(localString);
         }
     }
 }

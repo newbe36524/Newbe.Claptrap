@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Autofac;
+using Autofac.Core;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
@@ -177,9 +178,9 @@ namespace Newbe.Claptrap.Modules
                 builder.RegisterType<EventHandledNotificationFlow>()
                     .AsImplementedInterfaces()
                     .SingleInstance();
-                // TODO 
-                // builder.RegisterModule(new EventCenterNotifierModule(_identity));
 
+                
+                // TODO move
                 builder.RegisterType<EventCenterEventNotifier>()
                     .AsSelf()
                     .InstancePerDependency();

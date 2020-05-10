@@ -2,25 +2,16 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using Newbe.Claptrap.Core.Impl;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class EventHandledNotificationFlowTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public EventHandledNotificationFlowTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public void OnNewEventHandled()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             mocker.Mock<IEventNotifier>()
                 .Setup(x => x.Notify(It.IsAny<IEventNotifierContext>()))
                 .Returns(Task.CompletedTask);
@@ -34,10 +25,10 @@ namespace Newbe.Claptrap.Tests
             });
         }
 
-        [Fact]
+        [Test]
         public void OnNewEventHandled_NotifierException()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             mocker.Mock<IEventNotifier>()
                 .Setup(x => x.Notify(It.IsAny<IEventNotifierContext>()))
                 .Returns(Task.FromException(new Exception("failed to send notification")));
@@ -51,19 +42,19 @@ namespace Newbe.Claptrap.Tests
             });
         }
 
-        [Fact]
+        [Test]
         public void Activate_Deactivate()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             var flow = mocker.Create<EventHandledNotificationFlow>();
             flow.Activate();
             flow.Deactivate();
         }
 
-        [Fact]
+        [Test]
         public void Deactivate_WithoutActivated()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             var flow = mocker.Create<EventHandledNotificationFlow>();
             flow.Deactivate();
         }

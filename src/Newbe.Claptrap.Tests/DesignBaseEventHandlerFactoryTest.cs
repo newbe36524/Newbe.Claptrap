@@ -1,25 +1,16 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class DesignBaseEventHandlerFactoryTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public DesignBaseEventHandlerFactoryTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public void Create()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             var actorIdentity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
             var testEvent = new TestEvent
             {
@@ -50,10 +41,10 @@ namespace Newbe.Claptrap.Tests
             eventHandler.Should().NotBeNull();
         }
 
-        [Fact]
+        [Test]
         public void NotFound()
         {
-            using var mocker = AutoMockHelper.Create(_testOutputHelper);
+            using var mocker = AutoMockHelper.Create();
             var actorIdentity = new TestClaptrapIdentity(Guid.NewGuid().ToString(), "typeCode");
             var testEvent = new TestEvent
             {

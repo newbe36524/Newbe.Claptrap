@@ -6,29 +6,20 @@ using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     public class MinionEventHandlerFLowTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public MinionEventHandlerFLowTest(
-            ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Fact]
+        [Test]
         public async Task HandleNextVersionEvent()
         {
             IState state = new TestState
             {
                 Version = 0
             };
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterType<StateAccessor>()
@@ -58,14 +49,14 @@ namespace Newbe.Claptrap.Tests
             state.Version.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public async Task HandleVersionOlderEvent()
         {
             IState state = new TestState
             {
                 Version = 1000
             };
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterType<StateAccessor>()
@@ -91,14 +82,14 @@ namespace Newbe.Claptrap.Tests
                 "do nothing as event version 1000 lte state next version 1000 , skip the event");
         }
 
-        [Fact]
+        [Test]
         public async Task HandleVersionMoreThanNextVersionEvent()
         {
             IState state = new TestState
             {
                 Version = 1000
             };
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterType<StateAccessor>()
@@ -127,7 +118,7 @@ namespace Newbe.Claptrap.Tests
                         Version = i,
                         Uid = "from db"
                     }).Cast<IEvent>()))
-                .Callback<long, long>((left, right) => _testOutputHelper.WriteLine($"left {left} right {right}"));
+                .Callback<long, long>((left, right) => Console.WriteLine($"left {left} right {right}"));
 
             var flow = mocker.Create<MinionEventHandlerFLow>();
 
@@ -146,19 +137,19 @@ namespace Newbe.Claptrap.Tests
                 "do nothing as event version 2000 gt state next version 1000 , read event from event store");
         }
 
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorks()
+        [Test]
+        public void ThrowExceptionAsHandlerWorks()
         {
             IState state = new TestState
             {
                 Version = 0
             };
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions
                     {
-                        StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder,
+                        StateRecoveryStrategy = StateRecoveryStrategy.FromStateHolder
                     });
                     builder.RegisterType<StateAccessor>()
                         .AsImplementedInterfaces()
@@ -177,26 +168,26 @@ namespace Newbe.Claptrap.Tests
             var flow = mocker.Create<MinionEventHandlerFLow>();
 
             flow.Activate();
-            await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent
+            Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent
             {
                 Version = state.NextVersion
             }));
             state.Version.Should().Be(0);
         }
 
-        [Fact]
-        public async Task ThrowExceptionAsHandlerWorksAndRestoreFromStore()
+        [Test]
+        public void ThrowExceptionAsHandlerWorksAndRestoreFromStore()
         {
             IState state = new TestState
             {
                 Version = 0
             };
-            using var mocker = AutoMockHelper.Create(_testOutputHelper,
+            using var mocker = AutoMockHelper.Create(
                 builderAction: builder =>
                 {
                     builder.RegisterInstance(new StateRecoveryOptions
                     {
-                        StateRecoveryStrategy = StateRecoveryStrategy.FromStore,
+                        StateRecoveryStrategy = StateRecoveryStrategy.FromStore
                     });
                     builder.RegisterType<StateAccessor>()
                         .AsImplementedInterfaces()
@@ -219,7 +210,7 @@ namespace Newbe.Claptrap.Tests
             var flow = mocker.Create<MinionEventHandlerFLow>();
 
             flow.Activate();
-            await Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent
+            Assert.ThrowsAsync<Exception>(() => flow.OnNewEventReceived(new TestEvent
             {
                 Version = state.NextVersion
             }));
