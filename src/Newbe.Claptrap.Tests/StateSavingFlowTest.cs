@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Moq;
 using Newbe.Claptrap.Core.Impl;
-using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 

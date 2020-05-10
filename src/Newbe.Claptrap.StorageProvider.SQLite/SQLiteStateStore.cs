@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Serializer;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {

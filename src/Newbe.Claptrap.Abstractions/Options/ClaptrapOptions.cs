@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.Options
+namespace Newbe.Claptrap
 {
     public class ClaptrapOptions
     {

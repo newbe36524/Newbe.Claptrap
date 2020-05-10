@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-namespace Newbe.Claptrap.Localization.Modules
+namespace Newbe.Claptrap.DataSerializer.Json.Modules.Providers
 {
     public class ClaptrapApplicationModuleProvider : IClaptrapApplicationModuleProvider
     {
         public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
         {
-            yield return new LocalizationModule();
+            yield return new JsonSerializerModule();
         }
     }
 }

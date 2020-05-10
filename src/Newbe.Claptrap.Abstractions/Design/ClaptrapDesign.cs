@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Newbe.Claptrap.Options;
 
-namespace Newbe.Claptrap.Design
+namespace Newbe.Claptrap
 {
     public class ClaptrapDesign : IClaptrapDesign
     {

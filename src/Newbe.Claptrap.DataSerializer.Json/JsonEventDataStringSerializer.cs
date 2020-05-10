@@ -1,6 +1,4 @@
 using System.Linq;
-using Newbe.Claptrap.Design;
-using Newbe.Claptrap.Serializer;
 using Newtonsoft.Json;
 
 namespace Newbe.Claptrap.DataSerializer.Json

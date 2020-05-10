@@ -12,12 +12,22 @@ namespace Newbe.Claptrap.Core.Impl
             _logger = logger;
         }
 
-        private IState _state;
+        private IState _state = null!;
 
         public IState State
         {
-            get { return _state; }
-            set { _state = value; }
+            get
+            {
+                _logger.LogTrace("Get state");
+                return _state;
+            }
+            set
+            {
+                _logger.LogTrace("Update state, old state: {oldState} new state: {newState}",
+                    _state,
+                    value);
+                _state = value;
+            }
         }
     }
 }

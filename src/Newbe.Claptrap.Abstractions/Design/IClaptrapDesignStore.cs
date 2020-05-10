@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Newbe.Claptrap.Design
+namespace Newbe.Claptrap
 {
     public interface IClaptrapDesignStore : IEnumerable<IClaptrapDesign>
     {

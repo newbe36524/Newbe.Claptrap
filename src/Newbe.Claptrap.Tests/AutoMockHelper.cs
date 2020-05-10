@@ -1,6 +1,8 @@
 using System;
+using System.Globalization;
 using Autofac;
 using Autofac.Extras.Moq;
+using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
 using Xunit.Abstractions;
 
@@ -13,7 +15,8 @@ namespace Newbe.Claptrap.Tests
             bool localizationModule = true,
             DateTime? nowTime = null,
             bool verifyAll = true,
-            Action<ContainerBuilder> builderAction = null)
+            Action<ContainerBuilder> builderAction = null,
+            CultureInfo cultureInfo = null)
         {
             var action = builderAction ?? (builder => { });
             var mocker = AutoMock.GetStrict(builder =>
@@ -26,7 +29,7 @@ namespace Newbe.Claptrap.Tests
 
                 if (localizationModule)
                 {
-                    builder.RegisterModule(new LocalizationModule());
+                    builder.RegisterModule(new LocalizationModule(cultureInfo));
                 }
 
                 if (nowTime.HasValue)

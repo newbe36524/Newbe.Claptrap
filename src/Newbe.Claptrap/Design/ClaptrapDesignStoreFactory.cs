@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace Newbe.Claptrap.Design
 {
@@ -24,7 +23,7 @@ namespace Newbe.Claptrap.Design
             _providers = new List<IClaptrapDesignStoreProvider>();
         }
 
-        public IClaptrapDesignStore Create(IEnumerable<Assembly> assemblies)
+        public IClaptrapDesignStore Create(IEnumerable<Type> types)
         {
             var providers = GetProviders().ToArray();
             _logger.LogInformation("start to create claptrap design store from {count} providers : {@providers}",
@@ -37,7 +36,7 @@ namespace Newbe.Claptrap.Design
 
             IEnumerable<IClaptrapDesignStoreProvider> GetProviders()
             {
-                yield return _claptrapDesignStoreProviderFactory.Invoke(assemblies.SelectMany(x => x.GetTypes()));
+                yield return _claptrapDesignStoreProviderFactory.Invoke(types);
                 foreach (var claptrapDesignStoreProvider in _providers)
                 {
                     yield return claptrapDesignStoreProvider;

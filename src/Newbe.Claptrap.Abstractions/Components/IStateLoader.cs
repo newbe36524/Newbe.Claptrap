@@ -7,7 +7,7 @@ namespace Newbe.Claptrap
         /// <summary>
         /// get latest state
         /// </summary>
-        /// <returns>return latest state of the actor. return null if there is no data</returns>
+        /// <returns>return latest state of the claptrap. return null if there is no data</returns>
         Task<IState?> GetStateSnapshotAsync();
     }
 }

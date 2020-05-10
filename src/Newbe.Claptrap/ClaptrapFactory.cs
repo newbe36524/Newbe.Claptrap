@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Design;
 using static Newbe.Claptrap.LK.L0006ClaptrapFactory;
 
 namespace Newbe.Claptrap

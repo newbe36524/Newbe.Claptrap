@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Options;
 
 namespace Newbe.Claptrap.Design
 {
@@ -25,6 +24,10 @@ namespace Newbe.Claptrap.Design
         public IClaptrapDesignStore Create()
         {
             var types = _types as Type[] ?? _types.ToArray();
+            if (types.Length == 0)
+            {
+                return _claptrapDesignStoreFactory();
+            }
 
             var metadata = types
                 .Where(x => x.IsClass && !x.IsAbstract)
@@ -103,7 +106,7 @@ namespace Newbe.Claptrap.Design
                                     SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
                                     SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
                                 }
-                        }
+                        },
                         // TODO EventHandlerFactoryFactoryType 
                     };
                     //  find more event and handlers from attribute

@@ -2,6 +2,7 @@
 
 #pragma warning disable 8618
 
+// ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap
 {
     // ReSharper disable once InconsistentNaming
@@ -81,7 +82,7 @@ namespace Newbe.Claptrap
         public static class L0002ClaptrapActor
         {
             public const string Prefix = nameof(LK) + ".L0002.";
-            
+
             /// <summary>
             /// failed to activate claptrap {identity}
             /// </summary>
@@ -108,8 +109,6 @@ namespace Newbe.Claptrap
 
         public static class L0004EventHandledNotificationFlow
         {
-            public const string Prefix = nameof(LK) + ".L0004.";
-
             /// <summary>
             /// success to notify about event be handled. event version : {version}
             /// </summary>
@@ -127,8 +126,6 @@ namespace Newbe.Claptrap
 
         public static class L0005StateRestorer
         {
-            public const string Prefix = nameof(LK) + ".L0005.";
-
             /// <summary>
             /// there is no state snapshot found from state loader
             /// </summary>
@@ -141,27 +138,47 @@ namespace Newbe.Claptrap
         }
 
         #endregion
-        
+
         #region L0006ClaptrapFactory
 
         public static class L0006ClaptrapFactory
         {
-            public const string Prefix = nameof(LK) + ".L0006.";
-
             /// <summary>
             /// failed to create a claptrap. {identity}
             /// </summary>
             public static string L001FailedToCreate { get; internal set; }
-            
+
             /// <summary>
             /// This is a minion claptrap since it contains a master design in it`s design. master type code : {typeCode}
             /// </summary>
             public static string L002MasterFound { get; internal set; }
-            
+
             /// <summary>
             /// This is a master claptrap. type code : {typeCode}
             /// </summary>
             public static string L003MasterFound { get; internal set; }
+        }
+
+        #endregion
+
+        #region L0007ClaptrapDesignStoreValidator
+
+        public static class L0007ClaptrapDesignStoreValidator
+        {
+            /// <summary>
+            /// {name} is required, please set it correctly.
+            /// </summary>
+            public static string L001ValueCannotBeNull { get; internal set; }
+
+            /// <summary>
+            /// Type {type} does not implement {componentType}.
+            /// </summary>
+            public static string L002NotImpl { get; internal set; }
+
+            /// <summary>
+            /// There is no event handler found for {eventTypeCode} in {claptrapIdentity}. It must be define as this is a minion and the mater will send it to this. If you don`t handle the event, you can define {handlerName} for this event.
+            /// </summary>
+            public static string L003MissingEventHandleInMinion { get; internal set; }
         }
 
         #endregion

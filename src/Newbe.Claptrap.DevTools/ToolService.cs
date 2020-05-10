@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.DevTools
         {
             var fileContent =
                 await File.ReadAllTextAsync(
-                    "../../../../Newbe.Claptrap.Preview/Impl/Localization/LK.cs");
+                    "../../../../Newbe.Claptrap.Localization/LK.cs");
             var root = CSharpSyntaxTree.ParseText(fileContent).GetCompilationUnitRoot();
             var items = GetLocalizationItems().OrderBy(x => x.Key).ToArray();
             var globalFile = _localizationFileFactory.Create(new LocalizationFile
@@ -31,10 +31,10 @@ namespace Newbe.Claptrap.DevTools
                 Items = items
             });
 
-            const string globalFilePath = "../../../../Newbe.Claptrap.Preview/Docs/L.ini";
+            const string globalFilePath = "../../../../Newbe.Claptrap.Localization/Docs/L.ini";
             await File.WriteAllTextAsync(globalFilePath, globalFile);
 
-            const string cnFilePath = "../../../../Newbe.Claptrap.Preview/Docs/L-cn.ini";
+            const string cnFilePath = "../../../../Newbe.Claptrap.Localization/Docs/L-cn.ini";
             var createNew = false;
             if (createNew)
             {

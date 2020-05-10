@@ -30,15 +30,14 @@ namespace Newbe.Claptrap.Core.Impl
             _eventHandledNotifierFlow = _eventHandledNotifierContextSeq
                 .Select(context => Observable.FromAsync(async () =>
                 {
-                    var version = context.Event.Version;
                     try
                     {
                         await _eventNotifier.Notify(context);
-                        _logger.LogDebug(_l[L001SuccessToNotify], version);
+                        _logger.LogDebug(_l[L001SuccessToNotify], context.Event.Version);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, _l[L002FailToNotify], version);
+                        _logger.LogError(e, _l[L002FailToNotify], context.Event.Version);
                     }
                 }))
                 .Concat()

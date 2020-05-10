@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 
-namespace Newbe.Claptrap.Bootstrapper
+namespace Newbe.Claptrap
 {
     public class ClaptrapBootstrapperBuilderOptions
     {
@@ -16,14 +16,14 @@ namespace Newbe.Claptrap.Bootstrapper
         /// <summary>
         /// Assemblies to scan claptrap design.
         /// </summary>
-        public IEnumerable<Assembly> DesignAssemblies { get; set; }
-            = Enumerable.Empty<Assembly>();
+        public IEnumerable<Type> DesignTypes { get; set; }
+            = Enumerable.Empty<Type>();
 
         /// <summary>
         /// Assemblies to scan claptrap application module and claptrap module.
         /// </summary>
-        public IEnumerable<Assembly> ModuleAssemblies { get; set; }
-            = Enumerable.Empty<Assembly>();
+        public IEnumerable<Type> ModuleTypes { get; set; }
+            = Enumerable.Empty<Type>();
 
         /// <summary>
         /// Claptrap design store provider. Claptrap design store will be built, combined and validated from all providers.

@@ -6,7 +6,6 @@ using FluentAssertions;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.MemoryStore;
-using Newbe.Claptrap.Options;
 using Xunit;
 using Xunit.Abstractions;
 

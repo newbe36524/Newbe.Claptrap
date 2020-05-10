@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Options;
 using static Newbe.Claptrap.LK.L0005StateRestorer;
 
 namespace Newbe.Claptrap.Core.Impl

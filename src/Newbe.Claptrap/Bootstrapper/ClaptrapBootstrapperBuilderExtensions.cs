@@ -24,6 +24,12 @@ namespace Newbe.Claptrap.Bootstrapper
             return builder;
         }
 
+        /// <summary>
+        /// Config global claptrap design
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public static IClaptrapBootstrapperBuilder ConfigureGlobalClaptrapDesign(
             this IClaptrapBootstrapperBuilder builder,
             Action<IGlobalClaptrapDesign> action)
@@ -34,34 +40,79 @@ namespace Newbe.Claptrap.Bootstrapper
             return builder;
         }
 
-        public static IClaptrapBootstrapperBuilder AddClaptrapDesignAssemblies(
+        /// <summary>
+        /// Add assemblies for scanning claptrap design
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder ScanClaptrapDesigns(
             this IClaptrapBootstrapperBuilder builder,
-            IEnumerable<Assembly> assemblies)
+            IEnumerable<Type> types)
         {
-            builder.Options.DesignAssemblies = builder.Options.DesignAssemblies.Concat(assemblies);
+            builder.Options.DesignTypes = builder.Options.DesignTypes.Concat(types);
             return builder;
         }
 
-        public static IClaptrapBootstrapperBuilder AddClaptrapModuleAssemblies(
+        /// <summary>
+        /// Add assemblies for scanning claptrap design
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder ScanClaptrapDesigns(
             this IClaptrapBootstrapperBuilder builder,
             IEnumerable<Assembly> assemblies)
+            => builder.ScanClaptrapDesigns(assemblies.SelectMany(x => x.GetTypes()));
+
+        /// <summary>
+        /// Add assemblies for scanning claptrap module
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="assemblies"></param>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder ScanClaptrapModule(
+            this IClaptrapBootstrapperBuilder builder,
+            IEnumerable<Assembly> assemblies)
+            => builder.ScanClaptrapModule(assemblies.SelectMany(x => x.GetTypes()));
+
+        /// <summary>
+        /// Add types for scanning claptrap modules
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder ScanClaptrapModule(
+            this IClaptrapBootstrapperBuilder builder,
+            IEnumerable<Type> types)
         {
-            builder.Options.ModuleAssemblies = builder.Options.ModuleAssemblies.Concat(assemblies);
+            builder.Options.ModuleTypes = builder.Options.ModuleTypes.Concat(types);
             return builder;
         }
 
-        public static IClaptrapBootstrapperBuilder AddReferenceAssemblyAsClaptrapModuleAssemblies(
-            this IClaptrapBootstrapperBuilder builder,
-            Assembly root)
+        /// <summary>
+        /// Add all assemblies related to Claptrap in application bin directory as claptrap module assembly
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder ScanClaptrapModule(
+            this IClaptrapBootstrapperBuilder builder)
         {
             AssemblyHelper.ScanAndLoadClaptrapAssemblies(AppDomain.CurrentDomain.BaseDirectory,
                 filePath => filePath.Contains("Claptrap"));
             var claptrapAssemblies =
                 AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains("Claptrap"));
-            builder.AddClaptrapModuleAssemblies(claptrapAssemblies);
+            builder.ScanClaptrapModule(claptrapAssemblies);
             return builder;
         }
 
+        /// <summary>
+        /// Set current culture info about claptrap system.
+        /// It will change language about all exception and message about claptrap system.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="cultureInfo"></param>
+        /// <returns></returns>
         public static IClaptrapBootstrapperBuilder SetCultureInfo(
             this IClaptrapBootstrapperBuilder builder,
             CultureInfo cultureInfo)
@@ -70,6 +121,12 @@ namespace Newbe.Claptrap.Bootstrapper
             return builder;
         }
 
+        /// <summary>
+        /// Configure builder options. 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="configAction"></param>
+        /// <returns></returns>
         public static IClaptrapBootstrapperBuilder ConfigureOptions(
             this IClaptrapBootstrapperBuilder builder,
             Action<ClaptrapBootstrapperBuilderOptions> configAction)

@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.Bootstrapper
+namespace Newbe.Claptrap
 {
     public interface IClaptrapMinionModule
     {

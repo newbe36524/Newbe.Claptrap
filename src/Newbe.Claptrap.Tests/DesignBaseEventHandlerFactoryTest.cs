@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Newbe.Claptrap.Design;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
 {
-    public class EventHandlerFactoryTest
+    public class DesignBaseEventHandlerFactoryTest
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public EventHandlerFactoryTest(
+        public DesignBaseEventHandlerFactoryTest(
             ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;

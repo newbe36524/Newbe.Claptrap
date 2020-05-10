@@ -1,7 +1,5 @@
 using System;
 using Autofac;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Xunit;
 using Xunit.Abstractions;
 
 namespace Newbe.Claptrap.Tests
@@ -11,12 +9,7 @@ namespace Newbe.Claptrap.Tests
         public static void AddLogging(this ContainerBuilder builder,
             ITestOutputHelper testOutputHelper)
         {
-            var loggerFactory = new LoggerFactory(new[] {new XunitLoggerProvider(testOutputHelper)});
-            builder.RegisterInstance(loggerFactory)
-                .AsImplementedInterfaces();
-            builder.RegisterGeneric(typeof(Logger<>))
-                .As(typeof(ILogger<>))
-                .SingleInstance();
+            builder.RegisterModule(new XunitLoggingModule(testOutputHelper));
         }
 
         public static void AddStaticClock(this ContainerBuilder builder,

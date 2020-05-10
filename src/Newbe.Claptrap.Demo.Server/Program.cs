@@ -53,11 +53,11 @@ namespace Newbe.Claptrap.Demo.Server
                     IClaptrapBootstrapperBuilder claptrapBootstrapperFactory =
                         new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                     var claptrapBootstrapper = claptrapBootstrapperFactory
-                        .AddClaptrapDesignAssemblies(new[]
+                        .ScanClaptrapDesigns(new[]
                         {
                             typeof(Account).Assembly
                         })
-                        .AddReferenceAssemblyAsClaptrapModuleAssemblies(typeof(Program).Assembly)
+                        .ScanClaptrapModule()
                         .ConfigureGlobalClaptrapDesign(design =>
                         {
                             design.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory);

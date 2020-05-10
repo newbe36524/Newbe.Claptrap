@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Design;
+using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
-using Newbe.Claptrap.Options;
 using Newtonsoft.Json;
 using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 using Module = Autofac.Module;
@@ -32,7 +31,8 @@ namespace Newbe.Claptrap.Bootstrapper
             _l = new Lazy<IL>(CreateL);
             Options = new ClaptrapBootstrapperBuilderOptions
             {
-                DesignAssemblies = Enumerable.Empty<Assembly>(),
+                DesignTypes = Enumerable.Empty<Type>(),
+                ModuleTypes = Enumerable.Empty<Type>(),
                 CultureInfo = CultureInfo.CurrentCulture,
                 ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>
                 {
@@ -65,7 +65,7 @@ namespace Newbe.Claptrap.Bootstrapper
                     })
                 },
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
-                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>()
+                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
             };
         }
 
@@ -109,13 +109,13 @@ namespace Newbe.Claptrap.Bootstrapper
                         CreateClaptrapDesignStore(
                             factory,
                             validator,
-                            Options.DesignAssemblies ?? throw new ArgumentNullException());
+                            Options.DesignTypes ?? throw new ArgumentNullException());
                 }
 
                 IClaptrapApplicationModule[]? applicationModules = null;
                 using (var scope = container.BeginLifetimeScope(innerBuilder =>
                 {
-                    var providerTypes = Options.ModuleAssemblies.SelectMany(x => x.GetTypes())
+                    var providerTypes = Options.ModuleTypes
                         .Where(x => x.IsClass && !x.IsAbstract)
                         .Where(x => x.GetInterface(typeof(IClaptrapApplicationModuleProvider).FullName) != null)
                         .ToArray();
@@ -144,7 +144,7 @@ namespace Newbe.Claptrap.Bootstrapper
 
                     _logger.LogInformation(
                         "Scanned {assemblies}, and found {count} claptrap application modules : {modules}",
-                        Options.ModuleAssemblies,
+                        Options.ModuleTypes,
                         applicationModules.Length,
                         applicationModules.Select(x => x.Name));
                 }
@@ -159,14 +159,13 @@ namespace Newbe.Claptrap.Bootstrapper
                     autofacModules);
 
                 // TODO move
-                var providers = Options.ModuleAssemblies
-                    .SelectMany(x => x.GetTypes())
+                var providers = Options.ModuleTypes
                     .Where(x => x.IsClass && !x.IsAbstract)
                     .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName) != null)
                     .ToArray();
                 _logger.LogInformation(
                     "Scanned {assemblies}, and found {count} claptrap modules providers : {modules}",
-                    Options.ModuleAssemblies,
+                    Options.ModuleTypes,
                     providers.Length,
                     providers);
 
@@ -185,7 +184,7 @@ namespace Newbe.Claptrap.Bootstrapper
         private IClaptrapDesignStore CreateClaptrapDesignStore(
             IClaptrapDesignStoreFactory factory,
             IClaptrapDesignStoreValidator validator,
-            IEnumerable<Assembly> assemblies)
+            IEnumerable<Type> types)
         {
             foreach (var provider in Options.ClaptrapDesignStoreProviders)
             {
@@ -193,12 +192,12 @@ namespace Newbe.Claptrap.Bootstrapper
                 factory.AddProvider(provider);
             }
 
-            var assemblyArray = assemblies as Assembly[] ?? assemblies.ToArray();
+            var typeArray = types as Type[] ?? types.ToArray();
             _logger.LogDebug(_l.Value[L003StartToScan],
-                assemblyArray.Length,
-                assemblyArray.Select(x => x.FullName));
+                typeArray.Length,
+                typeArray.Select(x => x.FullName));
             _logger.LogDebug(_l.Value[L004StartToCreateClaptrapDesign]);
-            var claptrapDesignStore = factory.Create(assemblyArray);
+            var claptrapDesignStore = factory.Create(typeArray);
 
             _logger.LogInformation(_l.Value[L005ClaptrapStoreCreated]);
             _logger.LogDebug(_l.Value[L006ShowAllDesign],

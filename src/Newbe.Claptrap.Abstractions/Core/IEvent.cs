@@ -3,7 +3,7 @@ namespace Newbe.Claptrap
     public interface IEvent
     {
         /// <summary>
-        /// actor identity
+        /// claptrap identity
         /// </summary>
         IClaptrapIdentity ClaptrapIdentity { get; }
 

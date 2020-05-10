@@ -4,26 +4,27 @@ namespace Newbe.Claptrap
 {
     public class EventHandlerNotFoundException : Exception
     {
-        public string ActorTypeCode { get; set; }
+        public string ClaptrapTypeCode { get; set; }
         public string EventTypeCode { get; set; }
 
-        public EventHandlerNotFoundException(string actorTypeCode, string eventTypeCode)
-            : this($"EventHandler not found for {actorTypeCode} {eventTypeCode}. please make sure you have registered",
-                actorTypeCode,
+        public EventHandlerNotFoundException(string claptrapTypeCode, string eventTypeCode)
+            : this($"EventHandler not found for {claptrapTypeCode} {eventTypeCode}. please make sure you have registered",
+                claptrapTypeCode,
                 eventTypeCode)
         {
         }
 
-        public EventHandlerNotFoundException(string message, string actorTypeCode, string eventTypeCode) : base(message)
+        public EventHandlerNotFoundException(string message, string claptrapTypeCode, string eventTypeCode) :
+            base(message)
         {
-            ActorTypeCode = actorTypeCode;
+            ClaptrapTypeCode = claptrapTypeCode;
             EventTypeCode = eventTypeCode;
         }
 
-        public EventHandlerNotFoundException(string message, Exception innerException, string actorTypeCode,
+        public EventHandlerNotFoundException(string message, Exception innerException, string claptrapTypeCode,
             string eventTypeCode) : base(message, innerException)
         {
-            ActorTypeCode = actorTypeCode;
+            ClaptrapTypeCode = claptrapTypeCode;
             EventTypeCode = eventTypeCode;
         }
     }

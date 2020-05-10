@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Lexical.Localization;
 using Lexical.Localization.Asset;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.Localization
 {
     public class DefaultAssetSource : List<IAssetSource>, ILibraryAssetSources
     {

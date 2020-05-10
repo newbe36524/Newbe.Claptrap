@@ -32,7 +32,7 @@ jobs:
     - name: Test
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage"
+        dotnet test --no-restore --collect:"XPlat Code Coverage"
     - name: Codecov
       uses: codecov/codecov-action@v1.0.6
       # with:

@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.Box
+namespace Newbe.Claptrap
 {
     public interface IClaptrapBoxFactory
     {

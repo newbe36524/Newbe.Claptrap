@@ -1,6 +1,8 @@
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
+using Newbe.Claptrap.Localization;
+using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
 using Xunit;
 using Xunit.Abstractions;

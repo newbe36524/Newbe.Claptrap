@@ -1,5 +1,4 @@
 using System;
-using Newbe.Claptrap.Options;
 
 namespace Newbe.Claptrap.Bootstrapper
 {

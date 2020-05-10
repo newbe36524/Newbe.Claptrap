@@ -1,7 +1,7 @@
 using Lexical.Localization;
 using Lexical.Localization.Asset;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.Localization
 {
     internal class LocalizationRoot : LineRoot.LinkedTo
     {

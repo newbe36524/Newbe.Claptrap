@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Newbe.Claptrap.Localization;
 
+// ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap
 {
     // ReSharper disable once InconsistentNaming
@@ -31,8 +33,7 @@ namespace Newbe.Claptrap
 
             static void InitOne(Type type)
             {
-                var prefixField = type.GetField("Prefix");
-                var prefix = prefixField.GetValue(null).ToString();
+                var prefix = $"{nameof(LK)}.{type.Name.Substring(0, "LXXXX".Length)}.";
                 var propertyInfos = type.GetProperties();
                 foreach (var propertyInfo in propertyInfos)
                 {
@@ -96,34 +97,6 @@ namespace Newbe.Claptrap
                     {
                         return
                             $"type name {type.Name} is not a number after 'L', please confirm that is in {classNamePrefix}XXX format";
-                    }
-
-                    var fieldInfo = type.GetField("Prefix");
-                    if (fieldInfo == null)
-                    {
-                        return $"there is no Prefix const string in {type.Name}, please add it as others";
-                    }
-
-                    string prefixValue = null;
-                    try
-                    {
-                        prefixValue = fieldInfo.GetValue(null).ToString();
-                    }
-                    catch (Exception)
-                    {
-                        return "failed to get Prefix field value, please confirm that it is a const string field.";
-                    }
-
-                    if (string.IsNullOrEmpty(prefixValue))
-                    {
-                        return "failed to get Prefix field value, please confirm that it is a const string field.";
-                    }
-
-                    var expectedPrefixValue = nameof(LK) + $".{classPrefix}.";
-                    if (expectedPrefixValue != prefixValue)
-                    {
-                        return
-                            $"value of Prefix field {prefixValue} in {type.Name} is not as expected {expectedPrefixValue}, please make it correctly";
                     }
 
                     return string.Empty;

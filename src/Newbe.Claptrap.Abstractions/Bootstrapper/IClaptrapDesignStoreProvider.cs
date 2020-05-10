@@ -1,6 +1,4 @@
-using Newbe.Claptrap.Design;
-
-namespace Newbe.Claptrap.Bootstrapper
+namespace Newbe.Claptrap
 {
     public interface IClaptrapDesignStoreProvider
     {

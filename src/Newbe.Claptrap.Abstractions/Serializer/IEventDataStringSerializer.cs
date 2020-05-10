@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.Serializer
+namespace Newbe.Claptrap
 {
     public interface IEventDataStringSerializer : IEventDataSerializer<string>
     {

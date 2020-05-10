@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Options;
 using static Newbe.Claptrap.LK.L0002ClaptrapActor;
 
 namespace Newbe.Claptrap.Core

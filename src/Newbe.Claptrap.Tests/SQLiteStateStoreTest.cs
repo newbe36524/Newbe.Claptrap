@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Serializer;
 using Newbe.Claptrap.StorageProvider.SQLite;
 using Xunit;
 using Xunit.Abstractions;

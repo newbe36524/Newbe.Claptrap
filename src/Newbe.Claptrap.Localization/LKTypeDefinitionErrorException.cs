@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.Localization
 {
     public class LKTypeDefinitionErrorException : Exception
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Newbe.Claptrap.Bootstrapper
+namespace Newbe.Claptrap
 {
     public interface IClaptrapModuleProvider
     {

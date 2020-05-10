@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Design
+namespace Newbe.Claptrap
 {
     public interface IClaptrapEventHandlerDesign
     {

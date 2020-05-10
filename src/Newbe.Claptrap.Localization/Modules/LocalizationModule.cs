@@ -1,10 +1,9 @@
 using System.Globalization;
 using Autofac;
 using Lexical.Localization;
-using Newbe.Claptrap.Bootstrapper;
 using Module = Autofac.Module;
 
-namespace Newbe.Claptrap.Modules
+namespace Newbe.Claptrap.Localization.Modules
 {
     public class LocalizationModule : Module, IClaptrapApplicationModule
     {
