@@ -7,15 +7,11 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
         <PackageReference Include="Autofac.Extras.AggregateService" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.1.6" />
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.1.6">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Orleans.Core\Newbe.Claptrap.Orleans.Core.csproj" />
     </ItemGroup>
 
 </Project>

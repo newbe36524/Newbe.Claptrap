@@ -159,7 +159,7 @@ namespace Newbe.Claptrap.Design
 
             static string GetActorTypeCode(ClaptrapStateAttribute attr)
             {
-                return attr.ActorTypeCode ??
+                return attr.ClaptrapTypeCode ??
                        attr.StateDataType.FullName;
             }
         }

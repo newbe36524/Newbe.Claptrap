@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Extras.AggregateService;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace Newbe.Claptrap.Orleans.Modules
 {

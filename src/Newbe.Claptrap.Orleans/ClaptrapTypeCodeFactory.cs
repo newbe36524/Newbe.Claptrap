@@ -1,7 +1,5 @@
 using System.Linq;
 using System.Reflection;
-using Newbe.Claptrap.Box;
-using Newbe.Claptrap.Design;
 
 namespace Newbe.Claptrap.Orleans
 {
@@ -17,13 +15,13 @@ namespace Newbe.Claptrap.Orleans
 
         public string GetClaptrapTypeCode(IClaptrapBox claptrapBox)
         {
-            // to find type code from attribute as this method is invoke before claptrap activated
+            // to find type code from attribute as this method is invoke before claptrap activated. Identity is unable to be used.
             var claptrapStateAttribute = claptrapBox
                 .GetType()
                 .GetInterfaces()
                 .Select(x => x.GetCustomAttribute<ClaptrapStateAttribute>())
                 .Single(x => x != null);
-            var typeCode = claptrapStateAttribute.ActorTypeCode;
+            var typeCode = claptrapStateAttribute.ClaptrapTypeCode;
             return typeCode;
         }
 

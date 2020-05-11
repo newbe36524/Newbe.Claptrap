@@ -1,5 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace Newbe.Claptrap.Orleans.Modules
 {

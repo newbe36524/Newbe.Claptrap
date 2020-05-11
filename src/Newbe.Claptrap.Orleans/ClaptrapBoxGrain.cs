@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Newbe.Claptrap.Box;
 using Orleans;
 
 namespace Newbe.Claptrap.Orleans

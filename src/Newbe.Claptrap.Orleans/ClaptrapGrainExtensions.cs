@@ -4,17 +4,8 @@ namespace Newbe.Claptrap.Orleans
     {
         public static DataEvent CreateEvent<TStateData, TEventDataType>(
             this IClaptrapBoxGrain<TStateData> claptrapBox,
-            TEventDataType eventData)
-            where TStateData : IStateData
-            where TEventDataType : IEventData
-        {
-            return CreateEvent(claptrapBox, eventData, default);
-        }
-
-        public static DataEvent CreateEvent<TStateData, TEventDataType>(
-            this IClaptrapBoxGrain<TStateData> claptrapBox,
             TEventDataType eventData,
-            string? uid)
+            string? uid = default)
             where TStateData : IStateData
             where TEventDataType : IEventData
         {

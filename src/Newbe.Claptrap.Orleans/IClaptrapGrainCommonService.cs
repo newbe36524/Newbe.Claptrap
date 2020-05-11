@@ -1,4 +1,3 @@
-using Newbe.Claptrap.Box;
 
 namespace Newbe.Claptrap.Orleans
 {

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace Newbe.Claptrap.Orleans.Modules
 {

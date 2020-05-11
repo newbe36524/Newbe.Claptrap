@@ -9,12 +9,12 @@ namespace Newbe.Claptrap
     public class ClaptrapStateAttribute : Attribute
     {
         public Type StateDataType { get; set; }
-        public string ActorTypeCode { get; set; }
+        public string ClaptrapTypeCode { get; set; }
 
-        public ClaptrapStateAttribute(Type stateDataType, string actorTypeCode)
+        public ClaptrapStateAttribute(Type stateDataType, string claptrapTypeCode)
         {
             StateDataType = stateDataType;
-            ActorTypeCode = actorTypeCode;
+            ClaptrapTypeCode = claptrapTypeCode;
         }
     }
 }
