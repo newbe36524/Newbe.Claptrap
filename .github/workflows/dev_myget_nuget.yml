@@ -37,4 +37,4 @@ jobs:
     - name: Push nuget package to MyGet registry
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --api-key ${{ secrets.MYGET_TOKEN }} --skip-duplicate --source https://www.myget.org/F/newbe36524/api/v3/index.json
+        dotnet nuget push **/*.nupkg --api-key ${{ secrets.MYGET_TOKEN }} --no-symbols --skip-duplicate --source https://www.myget.org/F/newbe36524/api/v3/index.json
