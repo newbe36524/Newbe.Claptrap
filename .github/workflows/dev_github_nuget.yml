@@ -21,7 +21,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        source-url: https://nuget.pkg.github.com/newbe36524/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - uses: aarnott/nbgv@v0.3
       with:
@@ -34,12 +36,7 @@ jobs:
         cd $GITHUB_WORKSPACE/src
         dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
 
-    - name: Push generated package to GitHub registry
+    - name: Push nuget package to GitHub registry
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate --source https://nuget.pkg.github.com/newbe36524/index.json
-
-    - name: Push generated package to MyGet registry
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --api-key ${{ secrets.MYGET_TOKEN }} --skip-duplicate --source https://www.myget.org/F/newbe36524/api/v3/index.json
+        dotnet nuget push **/*.nupkg --skip-duplicate
