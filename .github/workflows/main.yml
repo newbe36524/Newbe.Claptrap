@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-      git fetch --prune --unshallow
+        git fetch --prune --unshallow
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
