@@ -39,4 +39,4 @@ jobs:
     - name: Push nuget package to GitHub registry
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols
+        dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
