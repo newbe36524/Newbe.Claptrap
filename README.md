@@ -1,5 +1,6 @@
 # Newbe.Claptrap
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1dc6b2b96f684548a74796fa54e376dd)](https://app.codacy.com/manual/472158246/Newbe.Claptrap?utm_source=github.com&utm_medium=referral&utm_content=newbe36524/Newbe.Claptrap&utm_campaign=Badge_Grade_Dashboard)
 [![build](https://github.com/newbe36524/Newbe.Claptrap/workflows/Claptrap/badge.svg)](https://github.com/newbe36524/Newbe.Claptrap/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)](https://codecov.io/gh/newbe36524/Newbe.Claptrap)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=coverage)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
