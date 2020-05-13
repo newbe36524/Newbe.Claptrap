@@ -18,8 +18,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: |
-        git fetch --prune --unshallow
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -28,23 +29,30 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet restore
-    - name: Build
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet build --configuration Release --no-restore
-    - name: Test
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet test --no-restore --collect:"XPlat Code Coverage"
+    # - name: Build
+    #   run: |
+    #     cd $GITHUB_WORKSPACE/src
+    #     dotnet build --configuration Release --no-restore
+    # - name: Test
+    #   run: |
+    #     cd $GITHUB_WORKSPACE/src
+    #     dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+
+    - name: Sonarscanner for dotnet
+      uses: Secbyte/dotnet-sonarscanner@v2.2
+      with:
+        buildCommand: dotnet build $GITHUB_WORKSPACE/src --configuration Release
+        testCommand: dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings
+        projectKey: newbe36524_Newbe.Claptrap
+        projectName: Newbe.Claptrap
+        sonarOrganisation: newbe36524
+        beginArguments: >
+            /d:sonar.cs.opencover.reportsPaths='"src/Newbe.Claptrap.Tests/TestResults/*/coverage.opencover.xml"'
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Codecov
       uses: codecov/codecov-action@v1.0.6
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      with:
-        projectBaseDir: src
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       # with:
       #   # User defined upload name. Visible in Codecov UI
       #   name: # optional
