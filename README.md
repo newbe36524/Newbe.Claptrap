@@ -4,7 +4,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)](https://codecov.io/gh/newbe36524/Newbe.Claptrap)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=coverage)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=alert_status)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=code_smells)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1fd0e7443364414ca0003dab27f9f9b8)](https://www.codacy.com/manual/472158246/Newbe.Claptrap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=newbe36524/Newbe.Claptrap&amp;utm_campaign=Badge_Grade)
 
 以`事件溯源`和`Actor模式`作为基本理论的一套服务端开发框架。于此之上，开发者可以更为简单的开发出“分布式”、“可水平扩展”、“可测试性高”的应用系统。
 

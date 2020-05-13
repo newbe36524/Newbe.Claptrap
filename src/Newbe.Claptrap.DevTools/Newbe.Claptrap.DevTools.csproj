@@ -5,6 +5,7 @@
         <IsPackable>false</IsPackable>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <nullable>disable</nullable>
+        <SonarQubeExclude>true</SonarQubeExclude>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />

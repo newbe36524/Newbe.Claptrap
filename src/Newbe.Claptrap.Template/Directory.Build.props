@@ -1,0 +1,5 @@
+<Project>
+    <PropertyGroup>
+        <SonarQubeExclude>true</SonarQubeExclude>
+    </PropertyGroup>
+</Project>

@@ -64,3 +64,11 @@ jobs:
       #   flags: # optional
       #   # Specify whether or not CI build should fail if Codecov runs into an error during upload
       #   fail_ci_if_error: # optional
+
+    - name: Codacy Coverage Reporter
+      uses: codacy/codacy-coverage-reporter-action@0.2.0
+      with:
+        # Project token for the Codacy project you want to send coverage information
+        project-token: ${{ secrets.CODACY_TOKEN }}
+        # Optional comma separated list of coverage reports to send to Codacy
+        coverage-reports: src/*.Tests/TestResults/*/coverage.opencover.xml # optional, default is 
