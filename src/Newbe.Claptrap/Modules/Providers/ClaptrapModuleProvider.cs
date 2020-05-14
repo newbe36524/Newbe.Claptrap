@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Autofac;
-using Autofac.Core;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
-using Newbe.Claptrap.Design;
 
 namespace Newbe.Claptrap.Modules
 {

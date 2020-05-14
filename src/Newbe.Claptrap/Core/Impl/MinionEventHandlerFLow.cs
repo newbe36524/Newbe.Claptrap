@@ -119,18 +119,18 @@ namespace Newbe.Claptrap.Core.Impl
                     {
                         try
                         {
-                            await HandleEventCoreAsync();
+                            await HandleEventCoreAsync().ConfigureAwait(false);
                             context.TaskCompletionSource?.SetResult(0);
                         }
                         catch (Exception e)
                         {
-                            await HandleException(e);
+                            await HandleException(e).ConfigureAwait(false);
                             context.TaskCompletionSource?.SetException(e);
                         }
 
                         async Task HandleEventCoreAsync()
                         {
-                            var nextState = await context.EventHandler.HandleEvent(context.EventContext);
+                            var nextState = await context.EventHandler.HandleEvent(context.EventContext).ConfigureAwait(false);
                             _logger.LogInformation("event handled and updating state");
                             _logger.LogDebug("start update to {@state}", nextState);
                             State = nextState;

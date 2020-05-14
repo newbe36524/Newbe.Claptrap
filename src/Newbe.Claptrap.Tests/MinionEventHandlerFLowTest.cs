@@ -116,7 +116,6 @@ namespace Newbe.Claptrap.Tests
                     .Select(i => new TestEvent
                     {
                         Version = i,
-                        Uid = "from db"
                     }).Cast<IEvent>()))
                 .Callback<long, long>((left, right) => Console.WriteLine($"left {left} right {right}"));
 

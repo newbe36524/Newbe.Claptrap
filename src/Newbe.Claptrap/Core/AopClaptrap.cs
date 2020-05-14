@@ -25,48 +25,48 @@ namespace Newbe.Claptrap.Core
 
         public async Task ActivateAsync()
         {
-            await RunInterceptors(x => x.ActivatingAsync());
+            await RunInterceptors(x => x.ActivatingAsync()).ConfigureAwait(false);
 
             try
             {
                 await _claptrap.ActivateAsync();
-                await RunInterceptors(x => x.ActivatedAsync());
+                await RunInterceptors(x => x.ActivatedAsync()).ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                await RunInterceptors(x => x.ActivatingThrowExceptionAsync(e));
+                await RunInterceptors(x => x.ActivatingThrowExceptionAsync(e)).ConfigureAwait(false);
                 throw;
             }
         }
 
         public async Task DeactivateAsync()
         {
-            await RunInterceptors(x => x.DeactivatingAsync());
+            await RunInterceptors(x => x.DeactivatingAsync()).ConfigureAwait(false);
 
             try
             {
                 await _claptrap.DeactivateAsync();
-                await RunInterceptors(x => x.DeactivatedAsync());
+                await RunInterceptors(x => x.DeactivatedAsync()).ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                await RunInterceptors(x => x.DeactivatingThrowExceptionAsync(e));
+                await RunInterceptors(x => x.DeactivatingThrowExceptionAsync(e)).ConfigureAwait(false);
                 throw;
             }
         }
 
         public async Task HandleEventAsync(IEvent @event)
         {
-            await RunInterceptors(x => x.HandlingEventAsync(@event));
+            await RunInterceptors(x => x.HandlingEventAsync(@event)).ConfigureAwait(false);
 
             try
             {
                 await _claptrap.HandleEventAsync(@event);
-                await RunInterceptors(x => x.HandledEventAsync(@event));
+                await RunInterceptors(x => x.HandledEventAsync(@event)).ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                await RunInterceptors(x => x.HandlingEventThrowExceptionAsync(@event, e));
+                await RunInterceptors(x => x.HandlingEventThrowExceptionAsync(@event, e)).ConfigureAwait(false);
                 throw;
             }
         }

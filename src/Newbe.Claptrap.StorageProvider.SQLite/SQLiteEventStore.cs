@@ -39,25 +39,25 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                 return true;
             });
             _insertSql = new Lazy<string>(() =>
-                $"INSERT OR IGNORE INTO [{DbHelper.GetEventTableName(Identity)}] ([version], [uid], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @Uid, @EventTypeCode, @EventData, @CreatedTime)");
+                $"INSERT INTO [{DbHelper.GetEventTableName(Identity)}] ([version], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @EventTypeCode, @EventData, @CreatedTime)");
             _selectSql = new Lazy<string>(() =>
                 $"SELECT * FROM [{DbHelper.GetEventTableName(Identity)}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]");
         }
 
         public IClaptrapIdentity Identity { get; }
 
-        public async Task<EventSavingResult> SaveEventAsync(IEvent @event)
+        public async Task SaveEventAsync(IEvent @event)
         {
             try
             {
-                return await SaveEventAsyncCore();
+                await SaveEventAsyncCore();
             }
             catch (Exception e)
             {
                 throw new EventSavingException(e, @event);
             }
 
-            async Task<EventSavingResult> SaveEventAsyncCore()
+            async Task SaveEventAsyncCore()
             {
                 _ = _databaseCreated.Value;
                 var eventData =
@@ -68,15 +68,12 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                     CreatedTime = _clock.UtcNow,
                     EventData = eventData,
                     EventTypeCode = @event.EventTypeCode,
-                    Uid = @event.Uid!,
                 };
                 _logger.LogDebug("start to save event to store {@eventEntity}", eventEntity);
 
                 await using var db = _sqLiteDbFactory.GetEventDbConnection(Identity);
                 var rowCount = await db.ExecuteAsync(_insertSql.Value, eventEntity);
-                var re = rowCount > 0 ? EventSavingResult.Success : EventSavingResult.AlreadyAdded;
-                _logger.LogDebug("event savingResult : {eventSavingResult}", re);
-                return re;
+                _logger.LogDebug("event savingResult : {eventSavingResult}", rowCount);
             }
         }
 
@@ -93,7 +90,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             var re = eventEntities.Select(x =>
             {
                 var eventData = _eventDataStringSerializer.Deserialize(Identity.TypeCode, x.EventTypeCode, x.EventData);
-                var dataEvent = new DataEvent(Identity, x.EventTypeCode, eventData, x.Uid)
+                var dataEvent = new DataEvent(Identity, x.EventTypeCode, eventData)
                 {
                     Version = x.Version
                 };
@@ -104,12 +101,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                 startVersion,
                 endVersion);
             return re;
-        }
-
-        private struct SavingItem
-        {
-            public TaskCompletionSource<EventSavingResult> TaskCompletionSource { get; set; }
-            public IEvent Event { get; set; }
         }
     }
 }
