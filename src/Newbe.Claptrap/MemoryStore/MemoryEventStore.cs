@@ -20,18 +20,10 @@ namespace Newbe.Claptrap.MemoryStore
 
         public IClaptrapIdentity Identity { get; }
 
-        public Task<EventSavingResult> SaveEventAsync(IEvent @event)
+        public Task SaveEventAsync(IEvent @event)
         {
-            if (_list.Any(x =>
-                x.ClaptrapIdentity.TypeCode == @event.ClaptrapIdentity.TypeCode
-                && x.EventTypeCode == @event.EventTypeCode
-                && x.Uid == @event.Uid))
-            {
-                return Task.FromResult(EventSavingResult.AlreadyAdded);
-            }
-
             _list.Add(@event);
-            return Task.FromResult(EventSavingResult.Success);
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)

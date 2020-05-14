@@ -10,6 +10,6 @@ namespace Newbe.Claptrap
         /// <param name="event"></param>
         /// <returns></returns>
         /// <exception cref="EventSavingException">throw if save with a exception</exception>
-        Task<EventSavingResult> SaveEventAsync(IEvent @event);
+        Task SaveEventAsync(IEvent @event);
     }
 }

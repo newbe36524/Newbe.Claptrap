@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.MemoryStore;
 
 namespace Newbe.Claptrap.Modules

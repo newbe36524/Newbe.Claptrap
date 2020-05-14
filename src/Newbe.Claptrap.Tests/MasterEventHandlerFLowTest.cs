@@ -27,7 +27,7 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventSaver>()
                 .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
+                .Returns(Task.CompletedTask);
 
             mocker.Mock<IStateHolder>()
                 .Setup(x => x.DeepCopy(It.IsAny<IState>()))
@@ -48,38 +48,6 @@ namespace Newbe.Claptrap.Tests
             flow.Activate();
             await flow.OnNewEventReceived(new TestEvent());
             state.Version.Should().Be(1);
-        }
-
-        [Test]
-        public async Task EventSavingResultAlreadyAdded()
-        {
-            using var mocker = AutoMockHelper.Create(
-                builderAction: builder =>
-                {
-                    builder.RegisterInstance(new StateRecoveryOptions());
-                    builder.RegisterType<StateAccessor>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance();
-                });
-            var state = new TestState();
-            mocker.Create<StateAccessor>().State = state;
-            mocker.Mock<IEventSaver>()
-                .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.AlreadyAdded);
-
-            mocker.Mock<IStateHolder>()
-                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
-                .Returns(state);
-
-            mocker.Mock<IEventHandlerFactory>()
-                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
-                .Returns(new TestHandler());
-
-            var flow = mocker.Create<MasterEventHandlerFLow>();
-
-            flow.Activate();
-            await flow.OnNewEventReceived(new TestEvent());
-            state.Version.Should().Be(0);
         }
 
         [Test]
@@ -141,7 +109,7 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventSaver>()
                 .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
+                .Returns(Task.CompletedTask);
 
             mocker.Mock<IStateHolder>()
                 .Setup(x => x.DeepCopy(It.IsAny<IState>()))
@@ -177,7 +145,7 @@ namespace Newbe.Claptrap.Tests
 
             mocker.Mock<IEventSaver>()
                 .Setup(x => x.SaveEventAsync(It.IsAny<IEvent>()))
-                .ReturnsAsync(EventSavingResult.Success);
+                .Returns(Task.CompletedTask);
 
             mocker.Mock<IStateHolder>()
                 .Setup(x => x.DeepCopy(It.IsAny<IState>()))

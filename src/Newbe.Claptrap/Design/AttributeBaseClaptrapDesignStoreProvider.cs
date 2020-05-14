@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace Newbe.Claptrap.Design
 {
@@ -141,12 +140,9 @@ namespace Newbe.Claptrap.Design
 
             foreach (var (claptrapDesign, m) in claptrapDesignTuples)
             {
-                if (m.minionAttr != null)
+                if (m.minionAttr != null && typeCodeDic.TryGetValue(m.minionAttr.MasterTypeCode, out var masterDesign))
                 {
-                    if (typeCodeDic.TryGetValue(m.minionAttr.MasterTypeCode, out var masterDesign))
-                    {
-                        claptrapDesign.ClaptrapMasterDesign = masterDesign.claptrapDesign;
-                    }
+                    claptrapDesign.ClaptrapMasterDesign = masterDesign.claptrapDesign;
                 }
             }
 
