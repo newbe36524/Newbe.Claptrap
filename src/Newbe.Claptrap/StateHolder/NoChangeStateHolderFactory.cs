@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.StateHolder
 {
     public class NoChangeStateHolderFactory : IClaptrapComponentFactory<IStateHolder>
     {

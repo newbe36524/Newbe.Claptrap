@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Newbe.Claptrap
+namespace Newbe.Claptrap.StateHolder
 {
     [ExcludeFromCodeCoverage]
     public class NoChangeStateHolder : IStateHolder

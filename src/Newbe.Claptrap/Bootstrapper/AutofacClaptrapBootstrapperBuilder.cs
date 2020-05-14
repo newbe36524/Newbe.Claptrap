@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
+using Newbe.Claptrap.StateHolder;
 using Newtonsoft.Json;
 using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 using Module = Autofac.Module;

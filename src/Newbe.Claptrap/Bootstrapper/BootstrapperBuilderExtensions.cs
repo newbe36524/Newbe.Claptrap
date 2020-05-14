@@ -1,4 +1,5 @@
 using Newbe.Claptrap.MemoryStore;
+using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Bootstrapper
 {
