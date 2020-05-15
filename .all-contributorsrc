@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "newbe36524",
+      "name": "Newbe36524",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7685462?v=4",
+      "profile": "https://www.newbe.pro",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Newbe.Claptrap",
+  "projectOwner": "newbe36524",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

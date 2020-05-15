@@ -14,7 +14,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
 
         public IClaptrapIdentity Identity { get; }
 
-        public Task<EventSavingResult> SaveEventAsync(IEvent @event)
+        public Task SaveEventAsync(IEvent @event)
         {
             throw new System.NotImplementedException();
         }

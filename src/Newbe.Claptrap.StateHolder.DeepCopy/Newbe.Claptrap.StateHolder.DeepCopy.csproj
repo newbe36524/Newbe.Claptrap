@@ -8,6 +8,8 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />
         <PackageReference Include="DeepCloner" Version="0.10.2" />
+        <PackageReference Include="Fody" Version="6.1.1" />
+        <PackageReference Include="Visualize.Fody" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>

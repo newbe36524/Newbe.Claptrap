@@ -13,8 +13,7 @@ namespace Newbe.Claptrap.Orleans
                 claptrapBox.ClaptrapGrainCommonService.ClaptrapTypeCodeFactory.FindEventTypeCode(claptrapBox, eventData);
             var dataEvent = new DataEvent(claptrapBox.Claptrap.State.Identity,
                 eventTypeCode,
-                eventData,
-                uid);
+                eventData);
             return dataEvent;
         }
     }

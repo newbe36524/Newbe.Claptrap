@@ -40,45 +40,8 @@ namespace Newbe.Claptrap.Tests
 
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(identity);
-            var eventSavingResult =
-                await db.SaveEventAsync(new DataEvent(identity, eventTypeCode, testEventData, null));
-            eventSavingResult.Should().Be(EventSavingResult.Success);
+            await db.SaveEventAsync(new DataEvent(identity, eventTypeCode, testEventData));
         }
-
-        [Test]
-        public async Task SaveEventTwice()
-        {
-            var now = DateTime.Parse("2020-01-01");
-            using var mocker = AutoMockHelper.Create(
-                nowTime: now,
-                builderAction: builder =>
-                {
-                    builder.RegisterType<SQLiteDbManager>()
-                        .AsImplementedInterfaces()
-                        .SingleInstance();
-                    builder.RegisterType<DbFilePath>()
-                        .AsSelf();
-                });
-            var identity = new TestClaptrapIdentity(Guid.NewGuid().ToString("N"), "testType.Code");
-            var eventTypeCode = "eventType";
-            var testEventData = new TestEventData();
-
-            await using var keepConnection = MockDbInMemory(mocker, identity);
-
-            mocker.Mock<IEventDataStringSerializer>()
-                .Setup(x => x.Serialize(identity.TypeCode, eventTypeCode, testEventData))
-                .Returns("testResult");
-
-            var factory = mocker.Create<SQLiteEventStore.Factory>();
-            var db = factory.Invoke(identity);
-            var eventSavingResult =
-                await db.SaveEventAsync(new DataEvent(identity, eventTypeCode, testEventData, null));
-            eventSavingResult.Should().Be(EventSavingResult.Success);
-            eventSavingResult =
-                await db.SaveEventAsync(new DataEvent(identity, eventTypeCode, testEventData, null));
-            eventSavingResult.Should().Be(EventSavingResult.AlreadyAdded);
-        }
-
 
         [Test]
         public async Task GetEvents()
@@ -111,7 +74,7 @@ namespace Newbe.Claptrap.Tests
             var factory = mocker.Create<SQLiteEventStore.Factory>();
             var db = factory.Invoke(identity);
             var dataEvents = Enumerable.Range(0, 10)
-                .Select(i => new DataEvent(identity, eventTypeCode, testEventData, Guid.NewGuid().ToString())
+                .Select(i => new DataEvent(identity, eventTypeCode, testEventData)
                 {
                     Version = i
                 })

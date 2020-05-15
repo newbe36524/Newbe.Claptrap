@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.Design;
 
 namespace Newbe.Claptrap.Bootstrapper
 {

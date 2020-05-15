@@ -1,7 +1,6 @@
 using System;
 using Autofac;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Design;
 
 namespace Newbe.Claptrap
 {

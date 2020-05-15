@@ -90,30 +90,20 @@ namespace Newbe.Claptrap.Core.Impl
 
                         async Task HandleEventCoreAsync()
                         {
-                            var eventSavingResult = await SaveEvent(context.Event);
-                            switch (eventSavingResult)
+                            await SaveEvent(context.Event);
+                            var nextState = await context.EventHandler.HandleEvent(context.EventContext);
+                            _logger.LogInformation("event handled and updating state");
+                            _logger.LogDebug("start update to {@state}", nextState);
+                            State = nextState;
+                            State.IncreaseVersion();
+                            _stateSavingFlow.OnNewStateCreated(State);
+                            _eventHandledNotificationFlow.OnNewEventHandled(new EventNotifierContext
                             {
-                                case EventSavingResult.Success:
-                                    var nextState = await context.EventHandler.HandleEvent(context.EventContext);
-                                    _logger.LogInformation("event handled and updating state");
-                                    _logger.LogDebug("start update to {@state}", nextState);
-                                    State = nextState;
-                                    State.IncreaseVersion();
-                                    _stateSavingFlow.OnNewStateCreated(State);
-                                    _eventHandledNotificationFlow.OnNewEventHandled(new EventNotifierContext
-                                    {
-                                        Event = context.Event,
-                                        CurrentState = nextState,
-                                        OldState = context.NowState
-                                    });
-                                    _logger.LogDebug("state version updated : {version}", State.Version);
-                                    break;
-                                case EventSavingResult.AlreadyAdded:
-                                    _logger.LogInformation("event already added, nothing would on going");
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
+                                Event = context.Event,
+                                CurrentState = nextState,
+                                OldState = context.NowState
+                            });
+                            _logger.LogDebug("state version updated : {version}", State.Version);
                         }
 
                         async Task HandleException(Exception e)
@@ -139,25 +129,12 @@ namespace Newbe.Claptrap.Core.Impl
                 .Subscribe();
 
 
-            async Task<EventSavingResult> SaveEvent(IEvent @event)
+            async Task SaveEvent(IEvent @event)
             {
                 try
                 {
                     _logger.LogTrace("start to save event {@event}", @event);
-                    var eventSavingResult = await _eventSaver.SaveEventAsync(@event);
-                    switch (eventSavingResult)
-                    {
-                        case EventSavingResult.AlreadyAdded:
-                            _logger.LogTrace("event AlreadyAdded before {@event}", @event);
-                            break;
-                        case EventSavingResult.Success:
-                            _logger.LogTrace("event saved {@event}", @event);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-                    return eventSavingResult;
+                    await _eventSaver.SaveEventAsync(@event);
                 }
                 catch (EventSavingException e)
                 {

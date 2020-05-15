@@ -5,7 +5,9 @@
         <RootNamespace>Newbe.Claptrap.Orleans</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Fody" Version="6.1.1" />
         <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.1.6" />
+        <PackageReference Include="Visualize.Fody" Version="1.2.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />

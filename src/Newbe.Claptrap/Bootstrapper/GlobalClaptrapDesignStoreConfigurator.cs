@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Design;
 
 namespace Newbe.Claptrap.Bootstrapper
 {

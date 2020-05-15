@@ -1,5 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Box;
 
 namespace Newbe.Claptrap.Modules
