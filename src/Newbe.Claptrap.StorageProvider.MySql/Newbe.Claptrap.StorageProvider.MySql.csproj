@@ -6,12 +6,19 @@
 
     <ItemGroup>
       <PackageReference Include="Autofac" Version="5.2.0" />
+      <PackageReference Include="Dapper" Version="2.0.35" />
       <PackageReference Include="dbup-mysql" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="SqlScripts\0001-event-mysql_default_table.sql" />
+      <EmbeddedResource Include="SqlScripts\0001-state-mysql_default_table.sql" />
+      <None Remove="scripts\Sql\0001-mysql_default_table_event.sql" />
     </ItemGroup>
 
 </Project>

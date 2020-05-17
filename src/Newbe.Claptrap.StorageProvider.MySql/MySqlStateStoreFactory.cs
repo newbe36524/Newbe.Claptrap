@@ -1,12 +1,14 @@
+using Newbe.Claptrap.StorageProvider.MySql.DefaultTable;
+
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public class MySqlStateStoreFactory : IClaptrapComponentFactory<IStateLoader>,
         IClaptrapComponentFactory<IStateSaver>
     {
-        private readonly MySqlStateStore.Factory _factory;
+        private readonly SharedTableMySqlStateStore.Factory _factory;
 
         public MySqlStateStoreFactory(
-            MySqlStateStore.Factory factory)
+            SharedTableMySqlStateStore.Factory factory)
         {
             _factory = factory;
         }

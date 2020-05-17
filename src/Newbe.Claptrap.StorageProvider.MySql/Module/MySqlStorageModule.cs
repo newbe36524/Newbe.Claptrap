@@ -1,4 +1,5 @@
 using Autofac;
+using Newbe.Claptrap.StorageProvider.MySql.DefaultTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Module
 {
@@ -10,11 +11,11 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<MySqlStateStore>()
+            builder.RegisterType<SharedTableMySqlStateStore>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<MySqlEventStore>()
+            builder.RegisterType<DefaultTableMySqlEventStore>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

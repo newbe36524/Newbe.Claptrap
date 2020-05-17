@@ -2,7 +2,6 @@
 create table '$EventTableName$'
 (
     version       long
-        constraint '$EventTableName$_pk'
             primary key,
     eventtypecode text,
     eventdata     text,
