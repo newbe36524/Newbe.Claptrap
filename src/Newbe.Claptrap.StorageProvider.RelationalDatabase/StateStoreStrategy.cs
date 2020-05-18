@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.StorageProvider.MySql
+namespace Newbe.Claptrap.StorageProvider.RelationalDatabase
 {
     public enum StateStoreStrategy
     {

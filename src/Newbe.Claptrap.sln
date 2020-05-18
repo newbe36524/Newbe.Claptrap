@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans.Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.MySql", "Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj", "{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.RelationalDatabase", "Newbe.Claptrap.StorageProvider.RelationalDatabase\Newbe.Claptrap.StorageProvider.RelationalDatabase.csproj", "{74345BB4-E437-46D4-A93A-09CCA2980219}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +136,10 @@ Global
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74345BB4-E437-46D4-A93A-09CCA2980219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74345BB4-E437-46D4-A93A-09CCA2980219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74345BB4-E437-46D4-A93A-09CCA2980219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74345BB4-E437-46D4-A93A-09CCA2980219}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7067F9F7-0633-43ED-BD69-427F9211C433} = {B22E7AD3-A4C5-4304-8AF7-6D42625E9C0D}
@@ -154,5 +160,6 @@ Global
 		{12067EB6-46EE-43D6-BD59-39D566AFD70F} = {D3A78049-C52A-46EF-A788-3466C4DBEE22}
 		{E2299ABA-6326-40EB-BCD2-3238D9F9363A} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
+		{74345BB4-E437-46D4-A93A-09CCA2980219} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 	EndGlobalSection
 EndGlobal

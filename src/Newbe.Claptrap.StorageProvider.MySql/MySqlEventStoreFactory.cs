@@ -1,14 +1,14 @@
-using Newbe.Claptrap.StorageProvider.MySql.DefaultTable;
+using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public class MySqlEventStoreFactory : IClaptrapComponentFactory<IEventLoader>,
         IClaptrapComponentFactory<IEventSaver>
     {
-        private readonly DefaultTableMySqlEventStore.Factory _factory;
+        private readonly SharedTableEventStore.Factory _factory;
 
         public MySqlEventStoreFactory(
-            DefaultTableMySqlEventStore.Factory factory)
+            SharedTableEventStore.Factory factory)
         {
             _factory = factory;
         }

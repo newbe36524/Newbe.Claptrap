@@ -5,50 +5,31 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace Newbe.Claptrap.StorageProvider.MySql.DefaultTable
+namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
 {
-    public class DefaultTableMySqlEventStore : IEventLoader, IEventSaver
+    public class SharedTableEventStore : IEventLoader, IEventSaver
     {
-        private readonly SharedTableEventTableDef.Factory _factory;
         private readonly IClock _clock;
-        private readonly ILogger<DefaultTableMySqlEventStore> _logger;
+        private readonly ILogger<SharedTableEventStore> _logger;
+        private readonly IShareTableEventStoreProvider _shareTableEventStoreProvider;
         private readonly IEventDataStringSerializer _eventDataStringSerializer;
-        private readonly IMySqlDbManager _mySqlDbManager;
-        private readonly IMySqlDbFactory _mySqlDbFactory;
+        private readonly IDbFactory _dbFactory;
 
-        public delegate DefaultTableMySqlEventStore Factory(IClaptrapIdentity identity);
+        public delegate SharedTableEventStore Factory(IClaptrapIdentity identity);
 
-        private readonly Lazy<string> _insertSql;
-        private readonly Lazy<string> _selectSql;
-
-        public DefaultTableMySqlEventStore(IClaptrapIdentity identity,
-            SharedTableEventTableDef.Factory factory,
+        public SharedTableEventStore(IClaptrapIdentity identity,
             IClock clock,
-            ILogger<DefaultTableMySqlEventStore> logger,
+            ILogger<SharedTableEventStore> logger,
+            IShareTableEventStoreProvider shareTableEventStoreProvider,
             IEventDataStringSerializer eventDataStringSerializer,
-            IMySqlDbManager mySqlDbManager,
-            IMySqlDbFactory mySqlDbFactory)
+            IDbFactory dbFactory)
         {
-            _factory = factory;
             _clock = clock;
             _logger = logger;
+            _shareTableEventStoreProvider = shareTableEventStoreProvider;
             _eventDataStringSerializer = eventDataStringSerializer;
-            _mySqlDbManager = mySqlDbManager;
-            _mySqlDbFactory = mySqlDbFactory;
+            _dbFactory = dbFactory;
             Identity = identity;
-            _insertSql = new Lazy<string>(() =>
-            {
-                var def = _factory.Invoke();
-                return
-                    $"INSERT INTO [{def.SchemaName}].[{def.EventTableName}] ([claptrap_type_code], [claptrap_id], [version], [event_type_code], [event_data], [created_time]) VALUES (@ClaptrapTypeCode, @ClaptrapId, @Version, @EventTypeCode, @EventData, @CreatedTime)";
-            });
-
-            _selectSql = new Lazy<string>(() =>
-            {
-                var def = _factory.Invoke();
-                return
-                    $"SELECT * FROM [{def.SchemaName}].[{def.EventTableName}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
-            });
         }
 
         // private bool InitDb()
@@ -81,14 +62,14 @@ namespace Newbe.Claptrap.StorageProvider.MySql.DefaultTable
 
             async Task SaveEventAsyncCore()
             {
-                var insertSql = _insertSql.Value;
+                var insertOneSql = _shareTableEventStoreProvider.CreateInsertOneSql(Identity);
                 var identity = @event.ClaptrapIdentity;
                 var eventData = _eventDataStringSerializer.Serialize(
                     identity.TypeCode,
                     @event.EventTypeCode,
                     @event.Data);
-                await using var db = _mySqlDbFactory.GetConnection(Identity);
-                await db.ExecuteAsync(insertSql, new DefaultTableEventEntity
+                using var db = _dbFactory.GetConnection(Identity);
+                await db.ExecuteAsync(insertOneSql, new DefaultTableEventEntity
                 {
                     Version = @event.Version,
                     CreatedTime = _clock.UtcNow,
@@ -103,8 +84,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.DefaultTable
         public async Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
             var ps = new {startVersion, endVersion};
-            await using var db = _mySqlDbFactory.GetConnection(Identity);
-            var eventEntities = await db.QueryAsync<DefaultTableEventEntity>(_selectSql.Value, ps);
+            using var db = _dbFactory.GetConnection(Identity);
+            var selectSql = _shareTableEventStoreProvider.CreateSelectSql(Identity);
+            var eventEntities = await db.QueryAsync<DefaultTableEventEntity>(selectSql, ps);
 
             var re = eventEntities.Select(x =>
             {
@@ -121,7 +103,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.DefaultTable
                 endVersion);
             return re;
         }
-
 
         public class DefaultTableEventEntity
         {
