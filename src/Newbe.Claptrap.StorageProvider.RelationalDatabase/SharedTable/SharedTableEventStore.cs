@@ -7,6 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
 {
+    public interface IEventSaverProvider
+    {
+        Task SaveOneAsync(IEvent @event);
+        Task SaveManyAsync(IEnumerable<IEvent> events);
+    }
+
     public class SharedTableEventStore : IEventLoader, IEventSaver
     {
         private readonly IClock _clock;
@@ -31,21 +37,6 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
             _dbFactory = dbFactory;
             Identity = identity;
         }
-
-        // private bool InitDb()
-        // {
-        //     var def = _factory.Invoke();
-        //     _mySqlDbManager.CreateOrUpdateDatabase(Identity, EventSqlSelector, new CreateEventTableVars
-        //     {
-        //         SchemaName = def.SchemaName,
-        //         EventTableName = def.EventTableName,
-        //     }.GetDictionary());
-        //     return true;
-        //
-        //     static bool EventSqlSelector(string file)
-        //         => file.EndsWith("event-mysql_default_table.sql");
-        // }
-
 
         public IClaptrapIdentity Identity { get; }
 

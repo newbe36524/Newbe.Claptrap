@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
-    public class MySqlDbManager : IMySqlDbManager
+    public class DbUpMySqlDbManager : IMySqlDbManager
     {
         private readonly IMySqlDbFactory _mySqlDbFactory;
-        private readonly ILogger<MySqlDbManager> _logger;
+        private readonly ILogger<DbUpMySqlDbManager> _logger;
 
-        public MySqlDbManager(
+        public DbUpMySqlDbManager(
             IMySqlDbFactory mySqlDbFactory,
-            ILogger<MySqlDbManager> logger)
+            ILogger<DbUpMySqlDbManager> logger)
         {
             _mySqlDbFactory = mySqlDbFactory;
             _logger = logger;

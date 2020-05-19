@@ -4,7 +4,6 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
     {
         string CreateInsertOneSql(IClaptrapIdentity identity);
         string CreateSelectSql(IClaptrapIdentity identity);
-        string SchemaName { get; }
-        string EventTableName { get; }
+        IDbMigrationManager DbMigrationManager(IClaptrapIdentity identity);
     }
 }
