@@ -1,9 +1,10 @@
-name: Github Dev Nuget Package
+name: Publish dev nuget package to azure
 
 on:
   push:
     branches: 
       - develop
+      - feature/ci
   pull_request: 
     branches: 
       - develop
@@ -34,9 +35,15 @@ jobs:
     - name: pack
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
+        mkdir pkgs
+        dotnet pack --configuration Release -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
 
-    - name: Push nuget package to GitHub registry
+    - name: Push nuget package to Azure storage
+      env: 
+        SLEET_FEED_TYPE: azure
+        SLEET_FEED_CONTAINER: feed
+        SLEET_FEED_CONNECTIONSTRING: ${{secrets.SLEET_CONNECTIONSTRING}}
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
+        dotnet tool install -g sleet
+        sleet push .\pkgs --skip-existing
