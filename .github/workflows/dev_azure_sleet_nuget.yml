@@ -39,7 +39,11 @@ jobs:
         dotnet pack --configuration Release -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
 
     - name: Push nuget package to GitHub registry
+      env: 
+        SLEET_FEED_TYPE: azure
+        SLEET_FEED_CONTAINER: feed
+        SLEET_FEED_CONNECTIONSTRING: ${{secrets.SLEET_CONNECTIONSTRING}}
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet tool install -g sleet
-        sleet push .\pkgs --skip-existing -p SLEET_FEED_TYPE=azure -p SLEET_FEED_CONTAINER=feed -p SLEET_FEED_CONNECTIONSTRING="${{secrets.SLEET_CONNECTIONSTRING}}" 
+        sleet push .\pkgs --skip-existing
