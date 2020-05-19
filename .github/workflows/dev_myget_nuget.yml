@@ -1,4 +1,4 @@
-name: MyGet Dev Nuget Package
+name: Publish dev nuget package to MyGet
 
 on:
   push:

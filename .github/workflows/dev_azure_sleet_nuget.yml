@@ -1,9 +1,10 @@
-name: Github Dev Nuget Package
+name: Publish dev nuget package to azure
 
 on:
   push:
     branches: 
       - develop
+      - feature/ci
   pull_request: 
     branches: 
       - develop
@@ -39,4 +40,5 @@ jobs:
     - name: Push nuget package to GitHub registry
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
+        dotnet tool install -g sleet
+        sleet push .*.nupkg --skip-existing -p SLEET_FEED_TYPE=azure -p SLEET_FEED_CONTAINER=feed -p "${{secrets.SLEET_CONNECTIONSTRING}}" 

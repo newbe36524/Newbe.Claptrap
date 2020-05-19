@@ -1,4 +1,4 @@
-name: Claptrap
+name: Claptrap build
 
 on:
   push:
