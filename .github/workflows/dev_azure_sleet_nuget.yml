@@ -38,7 +38,7 @@ jobs:
         mkdir pkgs
         dotnet pack --configuration Release -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
 
-    - name: Push nuget package to GitHub registry
+    - name: Push nuget package to Azure storage
       env: 
         SLEET_FEED_TYPE: azure
         SLEET_FEED_CONTAINER: feed
