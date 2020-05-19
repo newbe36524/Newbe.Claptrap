@@ -35,10 +35,11 @@ jobs:
     - name: pack
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
+        mkdir pkgs
+        dotnet pack --configuration Release -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
 
     - name: Push nuget package to GitHub registry
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet tool install -g sleet
-        sleet push .*.nupkg --skip-existing -p SLEET_FEED_TYPE=azure -p SLEET_FEED_CONTAINER=feed -p SLEET_FEED_CONNECTIONSTRING="${{secrets.SLEET_CONNECTIONSTRING}}" 
+        sleet push .\pkgs --skip-existing -p SLEET_FEED_TYPE=azure -p SLEET_FEED_CONTAINER=feed -p SLEET_FEED_CONNECTIONSTRING="${{secrets.SLEET_CONNECTIONSTRING}}" 
