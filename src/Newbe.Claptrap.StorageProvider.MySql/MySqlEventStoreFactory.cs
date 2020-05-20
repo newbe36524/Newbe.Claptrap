@@ -1,26 +1,18 @@
-using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
+using System;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public class MySqlEventStoreFactory : IClaptrapComponentFactory<IEventLoader>,
         IClaptrapComponentFactory<IEventSaver>
     {
-        private readonly SharedTableEventStore.Factory _factory;
-
-        public MySqlEventStoreFactory(
-            SharedTableEventStore.Factory factory)
-        {
-            _factory = factory;
-        }
-
         IEventLoader IClaptrapComponentFactory<IEventLoader>.Create(IClaptrapIdentity claptrapIdentity)
         {
-            return _factory.Invoke(claptrapIdentity);
+            throw new NotImplementedException();
         }
 
         IEventSaver IClaptrapComponentFactory<IEventSaver>.Create(IClaptrapIdentity claptrapIdentity)
         {
-            return _factory.Invoke(claptrapIdentity);
+            throw new NotImplementedException();
         }
     }
 }

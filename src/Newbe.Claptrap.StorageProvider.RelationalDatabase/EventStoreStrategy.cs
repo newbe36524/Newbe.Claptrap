@@ -1,11 +1,11 @@
 namespace Newbe.Claptrap.StorageProvider.RelationalDatabase
 {
-    public enum StateStoreStrategy
+    public enum EventStoreStrategy
     {
         /// <summary>
         /// event will be store at default table
         /// </summary>
-        DefaultTable,
+        SharedTable,
         OneTypeOneTable,
         OneIdentityOneTable,
     }

@@ -18,6 +18,12 @@
     </PropertyGroup>
     <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
         <None Include="icon.png" Pack="true" PackagePath=""/>
+        <PackageReference Include="Fody" Version="6.1.1">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Visualize.Fody" Version="1.2.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>  
     </ItemGroup>
     <PropertyGroup Condition=" '$(IsPackable)' != 'false' ">
         <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>

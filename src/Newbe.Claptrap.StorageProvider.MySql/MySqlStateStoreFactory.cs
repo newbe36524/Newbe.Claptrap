@@ -1,3 +1,4 @@
+using Newbe.Claptrap.StorageProvider.RelationalDatabase;
 using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql

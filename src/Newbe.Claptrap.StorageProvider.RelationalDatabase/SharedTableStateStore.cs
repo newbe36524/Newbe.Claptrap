@@ -2,8 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
-namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
+namespace Newbe.Claptrap.StorageProvider.RelationalDatabase
 {
     public class SharedTableStateStore : IStateLoader, IStateSaver
     {
@@ -36,7 +37,8 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
         {
             var sql = _shareTableStateStoreProvider.CreateUpsertSql(Identity);
             var stateData = _stateDataStringSerializer.Serialize(state.Identity.TypeCode, state.Data);
-            using var db = _dbFactory.GetConnection(state.Identity);
+            // todo NULL
+            using var db = _dbFactory.GetConnection("null");
             await db.ExecuteAsync(sql, new SharedTableStateEntity
             {
                 Version = state.Version,
@@ -49,7 +51,8 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
 
         public async Task<IState?> GetStateSnapshotAsync()
         {
-            using var db = _dbFactory.GetConnection(Identity);
+            // todo NULL
+            using var db = _dbFactory.GetConnection("null");
             var sql = _shareTableStateStoreProvider.CreateSelectSql(Identity);
             var stateEntity = await db.QuerySingleOrDefaultAsync<SharedTableStateEntity>(sql,
                 new

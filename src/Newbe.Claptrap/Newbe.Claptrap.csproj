@@ -5,19 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Fody" Version="6.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="SmartFormat.NET" Version="2.5.0" />
-        <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-        <PackageReference Include="System.Reactive" Version="4.4.1" />
-        <PackageReference Include="Visualize.Fody" Version="1.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4"/>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
+        <PackageReference Include="SmartFormat.NET" Version="2.5.0"/>
+        <PackageReference Include="System.Linq.Async" Version="4.1.1"/>
+        <PackageReference Include="System.Reactive" Version="4.4.1"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
-      <ProjectReference Include="..\Newbe.Claptrap.Localization\Newbe.Claptrap.Localization.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj"/>
+        <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj"/>
+        <ProjectReference Include="..\Newbe.Claptrap.Localization\Newbe.Claptrap.Localization.csproj"/>
     </ItemGroup>
 
 </Project>

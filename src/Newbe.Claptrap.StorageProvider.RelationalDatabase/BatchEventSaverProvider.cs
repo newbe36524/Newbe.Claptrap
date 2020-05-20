@@ -5,24 +5,23 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
+namespace Newbe.Claptrap.StorageProvider.RelationalDatabase
 {
-    public class BatchEventSaver : IEventSaver, IDisposable
+    public abstract class BatchEventSaverProvider<T> : IDisposable
     {
+        protected abstract Task SaveOneAsync(T entity);
+        protected abstract Task SaveManyAsync(IEnumerable<T> entities);
+
         private readonly EventSaverOptions _eventSaverOptions;
-        private readonly IEventSaverProvider _eventSaverProvider;
-        private readonly Subject<SavingItem> _subject;
+        protected readonly Subject<SavingItem> Subject;
         private readonly IDisposable _handler;
 
-        public BatchEventSaver(IClaptrapIdentity identity,
-            EventSaverOptions eventSaverOptions,
-            IEventSaverProvider eventSaverProvider)
+        protected BatchEventSaverProvider(
+            EventSaverOptions eventSaverOptions)
         {
             _eventSaverOptions = eventSaverOptions;
-            _eventSaverProvider = eventSaverProvider;
-            Identity = identity;
-            _subject = new Subject<SavingItem>();
-            _handler = CreateHandler(_subject);
+            Subject = new Subject<SavingItem>();
+            _handler = CreateHandler(Subject);
         }
 
         private IDisposable CreateHandler(IObservable<SavingItem> subject)
@@ -49,7 +48,7 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
                     {
                         try
                         {
-                            await _eventSaverProvider.SaveOneAsync(item.Event);
+                            await SaveOneAsync(item.Entity);
                             item.Tcs.SetResult(0);
                         }
                         catch (Exception e)
@@ -67,7 +66,7 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
                     {
                         try
                         {
-                            await _eventSaverProvider.SaveManyAsync(items.Select(a => a.Event));
+                            await SaveManyAsync(items.Select(a => a.Entity));
                             foreach (var savingItem in items)
                             {
                                 savingItem.Tcs.SetResult(0);
@@ -102,28 +101,21 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable
                 => _eventSaverOptions.InsertManyWindowCount!.Value;
         }
 
-        public IClaptrapIdentity Identity { get; }
-
-        public Task SaveEventAsync(IEvent @event)
+        protected struct SavingItem
         {
-            var tcs = new TaskCompletionSource<int>();
-            _subject.OnNext(new SavingItem
+            public SavingItem(T entity)
             {
-                Event = @event,
-                Tcs = tcs
-            });
-            return tcs.Task;
-        }
+                Entity = entity;
+                Tcs = new TaskCompletionSource<int>();
+            }
 
-        private struct SavingItem
-        {
-            public TaskCompletionSource<int> Tcs { get; set; }
-            public IEvent Event { get; set; }
+            public T Entity { get; }
+            public TaskCompletionSource<int> Tcs { get; }
         }
 
         public void Dispose()
         {
-            _subject.Dispose();
+            Subject.Dispose();
             _handler.Dispose();
         }
     }
