@@ -1,6 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Module
 {
@@ -12,9 +10,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<SharedTableStateStore>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
         }
     }
 }

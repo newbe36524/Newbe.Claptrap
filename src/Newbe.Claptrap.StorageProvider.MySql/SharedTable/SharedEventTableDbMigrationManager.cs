@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.SharedTable
 {
-    public class SharedEventTableDbMigrationManager : IDbMigrationManager
+    public class SharedEventTableDbMigrationManager
     {
         public delegate SharedEventTableDbMigrationManager Factory(IClaptrapIdentity identity,
             SharedTableMigrationVar sharedTableMigrationVar);

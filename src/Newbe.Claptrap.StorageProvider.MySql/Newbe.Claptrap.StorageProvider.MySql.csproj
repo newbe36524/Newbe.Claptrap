@@ -22,4 +22,8 @@
       <None Remove="scripts\Sql\0001-mysql_default_table_event.sql" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="EventStore\OneTypeOneTable" />
+    </ItemGroup>
+
 </Project>

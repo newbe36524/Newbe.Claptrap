@@ -1,9 +1,8 @@
 using System;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.SharedTable
 {
-    public class MySqlShareTableStateStoreProvider : IShareTableStateStoreProvider
+    public class MySqlShareTableStateStoreProvider
     {
         private readonly Lazy<string> _selectSql;
         private readonly Lazy<string> _upsertSql;
