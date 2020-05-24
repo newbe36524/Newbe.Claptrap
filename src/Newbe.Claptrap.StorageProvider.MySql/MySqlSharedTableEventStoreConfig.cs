@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public class MySqlSharedTableEventStoreConfig
     {

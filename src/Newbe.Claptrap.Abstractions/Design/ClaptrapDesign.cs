@@ -19,5 +19,6 @@ namespace Newbe.Claptrap
         public IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; set; } = null!;
         public Type ClaptrapBoxInterfaceType { get; set; } = null!;
         public Type ClaptrapBoxImplementationType { get; set; } = null!;
+        public StorageProviderOptions StorageProviderOptions { get; set; } = null!;
     }
 }

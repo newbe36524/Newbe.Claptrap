@@ -78,5 +78,31 @@ namespace Newbe.Claptrap
         /// Implementation type of claptrap box
         /// </summary>
         Type ClaptrapBoxImplementationType { get; }
+
+        StorageProviderOptions StorageProviderOptions { get; }
+    }
+
+    public class StorageProviderOptions
+    {
+        public IEventSaverOptions EventSaverOptions { get; }
+        public IEventLoaderOptions EventLoaderOptions { get; }
+        public IStateSaverOptions StateSaverOptions { get; }
+        public IStateLoaderOptions StateLoaderOptions { get; }
+    }
+
+    public interface IEventSaverOptions
+    {
+    }
+
+    public interface IEventLoaderOptions
+    {
+    }
+
+    public interface IStateSaverOptions
+    {
+    }
+
+    public interface IStateLoaderOptions
+    {
     }
 }

@@ -5,6 +5,8 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore
 {
     public class AutoMigrationEventSaver : IEventSaver
     {
+        public delegate AutoMigrationEventSaver Factory(IEventSaver eventSaver);
+
         private readonly IEventSaver _eventSaver;
         private readonly Lazy<Task> _migrated;
 

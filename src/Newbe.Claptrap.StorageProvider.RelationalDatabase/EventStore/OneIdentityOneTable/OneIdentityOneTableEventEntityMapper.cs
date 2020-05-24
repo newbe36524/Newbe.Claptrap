@@ -1,11 +1,11 @@
 namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore.OneIdentityOneTable
 {
-    public class OneTypeOneTableEventEntityMapper : IEventEntityMapper<OneIdentityOneTableEventEntity>
+    public class OneIdentityOneTableEventEntityMapper : IEventEntityMapper<OneIdentityOneTableEventEntity>
     {
         private readonly IClock _clock;
         private readonly IEventDataStringSerializer _eventDataStringSerializer;
 
-        public OneTypeOneTableEventEntityMapper(
+        public OneIdentityOneTableEventEntityMapper(
             IClock clock,
             IEventDataStringSerializer eventDataStringSerializer)
         {

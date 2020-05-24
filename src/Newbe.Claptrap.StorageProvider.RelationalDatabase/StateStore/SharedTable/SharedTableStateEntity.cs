@@ -4,10 +4,10 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.StateStore.SharedTab
 {
     public class SharedTableStateEntity : IStateEntity
     {
-        public string ClaptrapTypeCode { get; set; }
-        public string ClaptrapId { get; set; }
+        public string ClaptrapTypeCode { get; set; } = null!;
+        public string ClaptrapId { get; set; } = null!;
         public long Version { get; set; }
-        public string StateData { get; set; }
+        public string StateData { get; set; } = null!;
         public DateTime UpdatedTime { get; set; }
     }
 }

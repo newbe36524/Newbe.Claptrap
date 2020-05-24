@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Newbe.Claptrap.StorageProvider.RelationalDatabase.Module;
+using Newbe.Claptrap.StorageProvider.RelationalDatabase.Options;
 
 namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore
 {
@@ -13,14 +15,14 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore
         protected abstract Task SaveOneAsync(T entity);
         protected abstract Task SaveManyAsync(IEnumerable<T> entities);
 
-        private readonly EventSaverOptions _eventSaverOptions;
+        private readonly IBatchEventSaverOptions _batchEventSaverOptions;
         protected readonly Subject<SavingItem> Subject;
         private readonly IDisposable _handler;
 
         protected BatchEventEntitySaver(
-            EventSaverOptions eventSaverOptions)
+            IBatchEventSaverOptions batchEventSaverOptions)
         {
-            _eventSaverOptions = eventSaverOptions;
+            _batchEventSaverOptions = batchEventSaverOptions;
             Subject = new Subject<SavingItem>();
             _handler = CreateHandler(Subject);
         }
@@ -88,18 +90,18 @@ namespace Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore
             return handler;
 
             bool ValidCount()
-                => _eventSaverOptions.InsertManyWindowCount.HasValue
-                   && _eventSaverOptions.InsertManyWindowCount > 0;
+                => _batchEventSaverOptions.InsertManyWindowCount.HasValue
+                   && _batchEventSaverOptions.InsertManyWindowCount > 0;
 
             bool ValidTime()
-                => _eventSaverOptions.InsertManyWindowTimeInMilliseconds.HasValue
-                   && _eventSaverOptions.InsertManyWindowTimeInMilliseconds > 0;
+                => _batchEventSaverOptions.InsertManyWindowTimeInMilliseconds.HasValue
+                   && _batchEventSaverOptions.InsertManyWindowTimeInMilliseconds > 0;
 
             TimeSpan GetWindowTime()
-                => TimeSpan.FromMilliseconds(_eventSaverOptions.InsertManyWindowTimeInMilliseconds!.Value);
+                => TimeSpan.FromMilliseconds(_batchEventSaverOptions.InsertManyWindowTimeInMilliseconds!.Value);
 
             int GetWindowCount()
-                => _eventSaverOptions.InsertManyWindowCount!.Value;
+                => _batchEventSaverOptions.InsertManyWindowCount!.Value;
         }
 
         protected readonly struct SavingItem
