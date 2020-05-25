@@ -31,7 +31,7 @@ namespace Newbe.Claptrap.Demo.Server
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
-                                .UseSQLiteAsEventStore()
+                                .UseMySqlAsEventStore()
                                 .UseSQLiteAsStateStore()
                                 .ScanClaptrapDesigns(new[]
                                 {

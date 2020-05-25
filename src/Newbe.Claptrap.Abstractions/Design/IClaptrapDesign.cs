@@ -84,10 +84,10 @@ namespace Newbe.Claptrap
 
     public class StorageProviderOptions
     {
-        public IEventSaverOptions EventSaverOptions { get; }
-        public IEventLoaderOptions EventLoaderOptions { get; }
-        public IStateSaverOptions StateSaverOptions { get; }
-        public IStateLoaderOptions StateLoaderOptions { get; }
+        public IEventSaverOptions EventSaverOptions { get; set; }
+        public IEventLoaderOptions EventLoaderOptions { get; set; }
+        public IStateSaverOptions StateSaverOptions { get; set; }
+        public IStateLoaderOptions StateLoaderOptions { get; set; }
     }
 
     public interface IEventSaverOptions

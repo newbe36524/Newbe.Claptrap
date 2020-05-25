@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans.Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.MySql", "Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj", "{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.RelationalDatabase", "Newbe.Claptrap.StorageProvider.RelationalDatabase\Newbe.Claptrap.StorageProvider.RelationalDatabase.csproj", "{74345BB4-E437-46D4-A93A-09CCA2980219}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.Relational", "Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj", "{74345BB4-E437-46D4-A93A-09CCA2980219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

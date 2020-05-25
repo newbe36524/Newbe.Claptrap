@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.MySql.SharedTable;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase;
-using Newbe.Claptrap.StorageProvider.RelationalDatabase.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
@@ -10,16 +11,16 @@ namespace Newbe.Claptrap.StorageProvider.MySql
     {
         private readonly ISqlCache _sqlCache;
         private readonly IClaptrapDesignStore _claptrapDesignStore;
-        private readonly MySqlDatabaseConfig _mySqlDatabaseConfig;
+        private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
 
         public MySqlSqlCacheHelper(
             ISqlCache sqlCache,
             IClaptrapDesignStore claptrapDesignStore,
-            MySqlDatabaseConfig mySqlDatabaseConfig)
+            IMySqlSharedTableEventStoreOptions mySqlSharedTableEventStoreOptions)
         {
             _sqlCache = sqlCache;
             _claptrapDesignStore = claptrapDesignStore;
-            _mySqlDatabaseConfig = mySqlDatabaseConfig;
+            _mySqlSharedTableEventStoreOptions = mySqlSharedTableEventStoreOptions;
         }
 
         public void Init()
@@ -31,7 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
 
         private void InitSharedTableInsertOneSql()
         {
-            var config = _mySqlDatabaseConfig.SharedTableEventStoreConfig;
+            var config = _mySqlSharedTableEventStoreOptions;
             var sharedTableInsertOneSql =
                 $"INSERT INTO [{config.SchemaName}].[{config.EventTableName}] ([claptrap_type_code], [claptrap_id], [version], [event_type_code], [event_data], [created_time]) VALUES (@ClaptrapTypeCode, @ClaptrapId, @Version, @EventTypeCode, @EventData, @CreatedTime)";
 
@@ -49,7 +50,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
                 }
             }
 
-            var config = _mySqlDatabaseConfig.SharedTableEventStoreConfig;
+            var config = _mySqlSharedTableEventStoreOptions;
             string insertManySqlHeader =
                 $"INSERT INTO [{config.SchemaName}].[{config.EventTableName}] ([claptrap_type_code], [claptrap_id], [version], [event_type_code], [event_data], [created_time]) VALUES ";
             var valuesSql = Enumerable.Range(0, maxCount)
@@ -68,7 +69,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
 
         private void InitSharedTableEventStoreSelectSql()
         {
-            var config = _mySqlDatabaseConfig.SharedTableEventStoreConfig;
+            var config = _mySqlSharedTableEventStoreOptions;
             var sql =
                 $"SELECT * FROM [{config.SchemaName}].[{config.EventTableName}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
 

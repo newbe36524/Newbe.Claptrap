@@ -19,6 +19,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     </ItemGroup>
 

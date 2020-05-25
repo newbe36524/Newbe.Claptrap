@@ -12,5 +12,6 @@ namespace Newbe.Claptrap.Bootstrapper
         public Type StateHolderFactoryType { get; set; } = null!;
         public ClaptrapOptions ClaptrapOptions { get; set; } = null!;
         public Type EventHandlerFactoryFactoryType { get; set; } = null!;
+        public StorageProviderOptions StorageProviderOptions { get; set; } = null!;
     }
 }
