@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.Orleans
             _logger = logger;
             _minionDesignsLookup = designStore
                 .Where(x => x.ClaptrapMasterDesign != null)
-                .ToLookup(x => x.ClaptrapMasterDesign.Identity.TypeCode);
+                .ToLookup(x => x.ClaptrapMasterDesign.ClaptrapTypeCode);
         }
 
         public async Task SendToMinionsAsync(IClaptrapIdentity identity, IEvent @event)

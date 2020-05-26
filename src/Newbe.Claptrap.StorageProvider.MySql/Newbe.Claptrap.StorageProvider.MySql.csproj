@@ -19,7 +19,6 @@
     <ItemGroup>
       <EmbeddedResource Include="SqlScripts\0001-event-mysql_shared_table.sql" />
       <EmbeddedResource Include="SqlScripts\0001-state-mysql_default_table.sql" />
-      <None Remove="scripts\Sql\0001-mysql_default_table_event.sql" />
     </ItemGroup>
 
 </Project>

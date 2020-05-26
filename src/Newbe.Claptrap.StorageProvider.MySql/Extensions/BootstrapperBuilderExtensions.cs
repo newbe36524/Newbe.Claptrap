@@ -11,18 +11,23 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder UseMySqlAsStateStore(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureGlobalClaptrapDesign(design =>
-            {
-                design.StateLoaderFactoryType = typeof(MySqlStateStoreFactory);
-                design.StateSaverFactoryType = typeof(MySqlStateStoreFactory);
-            });
+            => builder
+                .ConfigureClaptrapDesign(
+                    x => x.StateLoaderFactoryType == null,
+                    x =>
+                        x.StateLoaderFactoryType = typeof(MySqlStateStoreFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.StateSaverFactoryType == null,
+                    x =>
+                        x.StateSaverFactoryType = typeof(MySqlStateStoreFactory)
+                );
 
         public static IClaptrapBootstrapperBuilder UseMySqlAsEventStore(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureGlobalClaptrapDesign(design =>
+            => builder.ConfigureClaptrapDesign(x =>
             {
-                design.EventLoaderFactoryType = typeof(RelationalEventStoreFactory);
-                design.EventSaverFactoryType = typeof(RelationalEventStoreFactory);
+                x.EventLoaderFactoryType = typeof(RelationalEventStoreFactory);
+                x.EventSaverFactoryType = typeof(RelationalEventStoreFactory);
                 var mysqlOptions = new MySqlSharedTableEventStoreOptions
                 {
                     SchemaName = "claptrap",
@@ -33,11 +38,8 @@ namespace Newbe.Claptrap.Bootstrapper
                     IsAutoMigrationEnabled = true,
                     InsertManyWindowTimeInMilliseconds = 20
                 };
-                design.StorageProviderOptions = new StorageProviderOptions
-                {
-                    EventLoaderOptions = mysqlOptions,
-                    EventSaverOptions = mysqlOptions,
-                };
+                x.StorageProviderOptions.EventLoaderOptions = mysqlOptions;
+                x.StorageProviderOptions.EventSaverOptions = mysqlOptions;
             });
     }
 }

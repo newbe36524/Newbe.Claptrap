@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Modules
             var claptrapDesigns = _claptrapDesignStore.ToArray();
             foreach (var claptrapDesign in claptrapDesigns)
             {
-                var actorTypeCode = claptrapDesign.Identity.TypeCode;
+                var actorTypeCode = claptrapDesign.ClaptrapTypeCode;
                 _logger.LogDebug("start to register actor type : {actorTypeCode}", actorTypeCode);
                 foreach (var type in GetTypes(claptrapDesign).Distinct())
                 {

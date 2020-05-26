@@ -6,9 +6,9 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder UseDeepClonerStateHolder(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureGlobalClaptrapDesign(design =>
-            {
-                design.StateHolderFactoryType = typeof(DesignBaseEventHandlerFactory);
-            });
+            => builder.ConfigureClaptrapDesign(
+                x => x.StateHolderFactoryType == null,
+                x =>
+                    x.StateHolderFactoryType = typeof(DesignBaseEventHandlerFactory));
     }
 }

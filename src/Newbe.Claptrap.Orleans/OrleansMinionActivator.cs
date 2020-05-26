@@ -21,7 +21,7 @@ namespace Newbe.Claptrap.Orleans
             _logger = logger;
             _grainFactory = grainFactory;
             _minionLookUp = claptrapDesignStore.Where(x => x.ClaptrapMasterDesign != null)
-                .ToLookup(x => x.ClaptrapMasterDesign.Identity.TypeCode)
+                .ToLookup(x => x.ClaptrapMasterDesign.ClaptrapTypeCode)
                 .ToDictionary(x => x.Key, x => x.ToArray());
         }
 

@@ -67,7 +67,7 @@ namespace Newbe.Claptrap.Design
                 {
                     var claptrapDesign = new ClaptrapDesign
                     {
-                        Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(m.stateAttr)),
+                        ClaptrapTypeCode = GetActorTypeCode(m.stateAttr),
                         StateDataType = m.stateAttr.StateDataType,
                         InitialStateDataFactoryType = m.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!,
                         StateHolderFactoryType = m.stateHolderAttr?.StateHolderFactory!,
@@ -136,7 +136,7 @@ namespace Newbe.Claptrap.Design
 
             // try to map master and minions
             var typeCodeDic = claptrapDesignTuples
-                .ToDictionary(x => x.claptrapDesign.Identity.TypeCode);
+                .ToDictionary(x => x.claptrapDesign.ClaptrapTypeCode);
 
             foreach (var (claptrapDesign, m) in claptrapDesignTuples)
             {

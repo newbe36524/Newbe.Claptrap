@@ -61,7 +61,7 @@ namespace Newbe.Claptrap
                     var masterDesign = claptrapDesign.ClaptrapMasterDesign;
                     if (masterDesign != null)
                     {
-                        _logger.LogDebug(_l[L002MasterFound], masterDesign.Identity.TypeCode);
+                        _logger.LogDebug(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
                         var minionModules = _claptrapModuleProviders
                             .SelectMany(x => x.GetClaptrapMinionModules(identity))
                             .OfType<Module>()

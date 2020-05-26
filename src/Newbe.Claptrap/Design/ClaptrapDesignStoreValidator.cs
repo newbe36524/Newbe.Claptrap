@@ -31,7 +31,7 @@ namespace Newbe.Claptrap.Design
                 {
                     if (!string.IsNullOrEmpty(error))
                     {
-                        yield return $"{design.Identity} {error}";
+                        yield return $"{design.ClaptrapTypeCode} {error}";
                     }
                 }
 
@@ -42,14 +42,8 @@ namespace Newbe.Claptrap.Design
                         yield return error;
                     }
 
-                    yield return ValidateTypeNotNull(design.Identity,
-                        nameof(design.Identity));
-                    if (design.Identity != null)
-                    {
-                        yield return ValidateTypeNotNull(design.Identity.TypeCode,
-                            nameof(design.Identity.TypeCode));
-                    }
-
+                    yield return ValidateTypeNotNull(design.ClaptrapTypeCode,
+                        nameof(design.ClaptrapTypeCode));
                     yield return ValidateTypeNotNull(design.StateDataType,
                         nameof(design.StateDataType));
                     yield return ValidateTypeNotNull(design.EventLoaderFactoryType,
@@ -125,7 +119,7 @@ namespace Newbe.Claptrap.Design
                                 yield return Smart.Format(_l[L003MissingEventHandleInMinion], new
                                 {
                                     eventTypeCode = key,
-                                    claptrapIdentity = minionDesign.Identity,
+                                    claptrapTypeCode = minionDesign.ClaptrapTypeCode,
                                     handlerName = nameof(EmptyEventHandler)
                                 });
                             }

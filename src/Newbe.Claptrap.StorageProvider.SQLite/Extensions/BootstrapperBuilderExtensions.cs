@@ -7,18 +7,25 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder UseSQLiteAsStateStore(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureGlobalClaptrapDesign(design =>
-            {
-                design.StateLoaderFactoryType = typeof(SQLiteStateStoreFactory);
-                design.StateSaverFactoryType = typeof(SQLiteStateStoreFactory);
-            });
+            => builder
+                .ConfigureClaptrapDesign(
+                    x => x.StateLoaderFactoryType == null,
+                    x =>
+                        x.StateLoaderFactoryType = typeof(SQLiteStateStoreFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.StateSaverFactoryType == null,
+                    x =>
+                        x.StateSaverFactoryType = typeof(SQLiteStateStoreFactory));
 
         public static IClaptrapBootstrapperBuilder UseSQLiteAsEventStore(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureGlobalClaptrapDesign(design =>
-            {
-                design.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory);
-                design.EventSaverFactoryType = typeof(SQLiteEventStoreFactory);
-            });
+            => builder.ConfigureClaptrapDesign(
+                    x => x.EventLoaderFactoryType == null,
+                    x =>
+                        x.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.EventSaverFactoryType == null,
+                    x =>
+                        x.EventSaverFactoryType = typeof(SQLiteEventStoreFactory));
     }
 }
