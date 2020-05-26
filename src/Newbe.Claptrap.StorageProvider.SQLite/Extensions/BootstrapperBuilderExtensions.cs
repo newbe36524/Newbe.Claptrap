@@ -1,4 +1,6 @@
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.SQLite;
+using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
@@ -19,13 +21,15 @@ namespace Newbe.Claptrap.Bootstrapper
 
         public static IClaptrapBootstrapperBuilder UseSQLiteAsEventStore(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureClaptrapDesign(
-                    x => x.EventLoaderFactoryType == null,
-                    x =>
-                        x.EventLoaderFactoryType = typeof(SQLiteEventStoreFactory))
+            => builder
                 .ConfigureClaptrapDesign(
-                    x => x.EventSaverFactoryType == null,
                     x =>
-                        x.EventSaverFactoryType = typeof(SQLiteEventStoreFactory));
+                    {
+                        x.EventLoaderFactoryType = typeof(RelationalEventStoreFactory);
+                        x.EventSaverFactoryType = typeof(RelationalEventStoreFactory);
+                        var options = new SQLiteOneIdentityOneTableEventStoreOptions();
+                        x.StorageProviderOptions.EventLoaderOptions = options;
+                        x.StorageProviderOptions.EventSaverOptions = options;
+                    });
     }
 }

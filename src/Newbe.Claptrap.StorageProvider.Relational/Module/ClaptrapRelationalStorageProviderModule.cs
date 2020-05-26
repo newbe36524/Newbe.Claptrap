@@ -27,7 +27,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterType<RelationalEventLoader<OneIdentityOneTableEventEntity>>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<RelationalEventSaver<SharedTableEventEntity>>()
                 .AsSelf()
                 .InstancePerLifetimeScope();

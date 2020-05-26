@@ -1,19 +1,20 @@
 using System;
 using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
-    public class EventStoreMigrationFactory : IEventStoreMigrationFactory
+    public class MySqlEventStoreMigrationFactory : IEventStoreMigrationFactory
     {
         private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         private readonly SharedTableEventStoreDbUpMysqlMigration.Factory
             _sharedTableEventStoreDbUpMysqlMigrationManagerFactory;
 
-        public EventStoreMigrationFactory(
+        public MySqlEventStoreMigrationFactory(
             IClaptrapDesignStore claptrapDesignStore,
             SharedTableEventStoreDbUpMysqlMigration.Factory
                 sharedTableEventStoreDbUpMysqlMigrationManagerFactory)

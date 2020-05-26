@@ -10,11 +10,11 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
     {
         private readonly IEventEntityMapper<T> _mapper;
         private readonly IEventEntityLoader<T> _loader;
-        private readonly ILogger _logger;
+        private readonly ILogger<RelationalEventLoader<T>> _logger;
 
         public RelationalEventLoader(
             IClaptrapIdentity identity,
-            ILogger logger,
+            ILogger<RelationalEventLoader<T>> logger,
             IEventEntityMapper<T> mapper,
             IEventEntityLoader<T> loader)
         {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.StorageProvider.MySql.SharedTable
+namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 {
     public class MySqlShareTableStateStoreProvider
     {

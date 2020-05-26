@@ -6,21 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using DbUp;
 using DbUp.Engine;
-using DbUp.Helpers;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
-namespace Newbe.Claptrap.StorageProvider.MySql
+namespace Newbe.Claptrap.StorageProvider.SQLite
 {
-    public abstract class DbUpMysqlMigration :
+    public abstract class DbUpSQLiteMigration :
         IEventLoaderMigration,
         IEventSaverMigration
     {
         private readonly IDbFactory _dbFactory;
         private readonly ILogger _logger;
 
-        protected DbUpMysqlMigration(
+        protected DbUpSQLiteMigration(
             IDbFactory dbFactory,
             ILogger logger)
         {
@@ -52,11 +51,10 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             {
                 var dbMigration =
                     DeployChanges.To
-                        .MySqlDatabase(conn)
+                        .SQLiteDatabase(conn)
                         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
                         .LogToAutodetectedLog()
                         .LogToConsole()
-                        .JournalTo(new NullJournal())
                         .WithVariablesEnabled()
                         .WithVariables(data)
                         .Build();

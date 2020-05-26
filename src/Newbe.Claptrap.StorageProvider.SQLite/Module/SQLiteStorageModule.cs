@@ -1,4 +1,8 @@
 using Autofac;
+using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -27,6 +31,20 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             builder.RegisterType<DbFilePath>()
                 .AsSelf()
                 .InstancePerDependency();
+
+            builder.RegisterType<SQLieOneIdentityOneTableEventEntitySaver>()
+                .As<IEventEntitySaver<OneIdentityOneTableEventEntity>>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<SQLiteOneIdentityOneTableEventEntityLoader>()
+                .As<IEventEntityLoader<OneIdentityOneTableEventEntity>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SQLiteEventStoreMigrationFactory>()
+                .As<IEventStoreMigrationFactory>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<OneIdentityOneTableDbUpSQLiteMigration>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
     }
 }

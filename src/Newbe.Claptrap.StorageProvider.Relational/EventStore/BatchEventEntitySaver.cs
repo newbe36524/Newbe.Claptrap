@@ -121,9 +121,9 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
             _handler.Dispose();
         }
 
-        public Task SaveAsync(T eventEntity)
+        public Task SaveAsync(T entity)
         {
-            var savingItem = new SavingItem(eventEntity);
+            var savingItem = new SavingItem(entity);
             Subject.OnNext(savingItem);
             return savingItem.Tcs.Task;
         }

@@ -1,5 +1,6 @@
 using Autofac;
 using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 
@@ -15,10 +16,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             base.Load(builder);
             builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
                     .CreateEventLoaderMigration(t.Resolve<IClaptrapIdentity>()))
-                .As<IEventLoaderMigration>();
+                .As<IEventLoaderMigration>()
+                .InstancePerLifetimeScope();
             builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
                     .CreateEventSaverMigration(t.Resolve<IClaptrapIdentity>()))
-                .As<IEventSaverMigration>();
+                .As<IEventSaverMigration>()
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<MySqlSqlCacheHelper>()
                 .As<IMySqlSqlCacheHelper>()
@@ -36,7 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<EventStoreMigrationFactory>()
+            builder.RegisterType<MySqlEventStoreMigrationFactory>()
                 .As<IEventStoreMigrationFactory>()
                 .InstancePerLifetimeScope();
 

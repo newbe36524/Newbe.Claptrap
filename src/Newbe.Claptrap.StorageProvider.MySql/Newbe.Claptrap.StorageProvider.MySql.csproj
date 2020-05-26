@@ -21,4 +21,8 @@
       <EmbeddedResource Include="SqlScripts\0001-state-mysql_default_table.sql" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="StateStore\SharedTable" />
+    </ItemGroup>
+
 </Project>

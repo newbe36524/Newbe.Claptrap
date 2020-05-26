@@ -68,6 +68,37 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         IEventLoader IClaptrapComponentFactory<IEventLoader>.Create(IClaptrapIdentity claptrapIdentity)
         {
+            var claptrapDesign = _claptrapDesignStore.FindDesign(claptrapIdentity);
+            var loaderOptions = claptrapDesign.StorageProviderOptions.EventLoaderOptions;
+            if (loaderOptions is IRelationalEventLoaderOptions relationalEventLoaderOptions)
+            {
+                var scope = _lifetimeScope.BeginLifetimeScope(builder =>
+                {
+                    if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
+                        && autoMigrationOptions.IsAutoMigrationEnabled)
+                    {
+                        builder.RegisterType<AutoMigrationEventLoader>()
+                            .AsSelf()
+                            .InstancePerLifetimeScope();
+                        builder.RegisterDecorator<IEventLoader>((context, ps, inner) => context
+                            .Resolve<AutoMigrationEventLoader.Factory>()
+                            .Invoke(inner), context => true);
+                    }
+                });
+                var eventLoader = relationalEventLoaderOptions.EventStoreStrategy switch
+                {
+                    EventStoreStrategy.SharedTable => scope.Resolve(
+                        typeof(RelationalEventLoader<SharedTableEventEntity>)),
+                    EventStoreStrategy.OneTypeOneTable => scope.Resolve(
+                        typeof(RelationalEventLoader<OneTypeOneTableEventEntity>)),
+                    EventStoreStrategy.OneIdentityOneTable => scope.Resolve(
+                        typeof(RelationalEventLoader<OneIdentityOneTableEventEntity>)),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return (IEventLoader) eventLoader;
+            }
+
             throw new System.NotImplementedException();
         }
     }

@@ -6,6 +6,8 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
     public class AutoMigrationEventLoader : IEventLoader
     {
+        public delegate AutoMigrationEventLoader Factory(IEventLoader eventLoader);
+
         private readonly IEventLoader _eventLoader;
         private readonly Lazy<Task> _migrated;
 

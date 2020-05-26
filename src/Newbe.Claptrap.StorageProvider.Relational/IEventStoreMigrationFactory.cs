@@ -1,6 +1,6 @@
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
-namespace Newbe.Claptrap.StorageProvider.MySql
+namespace Newbe.Claptrap.StorageProvider.Relational
 {
     public interface IEventStoreMigrationFactory
     {

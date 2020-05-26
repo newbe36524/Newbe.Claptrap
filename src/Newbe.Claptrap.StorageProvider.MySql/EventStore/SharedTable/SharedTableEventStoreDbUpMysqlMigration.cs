@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
+using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
@@ -14,7 +15,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         public SharedTableEventStoreDbUpMysqlMigration(
             IMySqlSharedTableEventStoreOptions options,
             IDbFactory dbFactory,
-            ILogger logger) : base(dbFactory,
+            ILogger<SharedTableEventStoreDbUpMysqlMigration> logger) : base(dbFactory,
             logger)
         {
             _options = options;

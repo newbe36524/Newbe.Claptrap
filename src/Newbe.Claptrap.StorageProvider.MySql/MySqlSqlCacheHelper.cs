@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.MySql.SharedTable;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 
@@ -11,12 +10,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql
     {
         private readonly ISqlCache _sqlCache;
         private readonly IClaptrapDesignStore _claptrapDesignStore;
-        private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
+        private readonly IMySqlSharedTableEventStoreOptions? _mySqlSharedTableEventStoreOptions;
 
         public MySqlSqlCacheHelper(
             ISqlCache sqlCache,
             IClaptrapDesignStore claptrapDesignStore,
-            IMySqlSharedTableEventStoreOptions mySqlSharedTableEventStoreOptions)
+            IMySqlSharedTableEventStoreOptions? mySqlSharedTableEventStoreOptions = null)
         {
             _sqlCache = sqlCache;
             _claptrapDesignStore = claptrapDesignStore;
@@ -25,9 +24,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql
 
         public void Init()
         {
-            InitSharedTableInsertOneSql();
-            InitSharedTableInsertManySql();
-            InitSharedTableEventStoreSelectSql();
+            if (_mySqlSharedTableEventStoreOptions != null)
+            {
+                InitSharedTableInsertOneSql();
+                InitSharedTableInsertManySql();
+                InitSharedTableEventStoreSelectSql();
+            }
         }
 
         private void InitSharedTableInsertOneSql()

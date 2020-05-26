@@ -1,6 +1,7 @@
 using System.Data;
+using Newbe.Claptrap.StorageProvider.Relational;
 
-namespace Newbe.Claptrap.StorageProvider.Relational
+namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     public interface IDbFactory
     {
@@ -19,5 +20,18 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         /// <exception cref="MissingDbException"></exception>
         /// <returns></returns>
         IDbConnection GetConnection(string dbName);
+    }
+
+    public class DbFactory : IDbFactory
+    {
+        public string GetConnectionString(string dbName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IDbConnection GetConnection(string dbName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
