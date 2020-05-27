@@ -45,21 +45,32 @@ namespace Newbe.Claptrap.StorageProvider.Relational
                             .InstancePerLifetimeScope();
                         builder.RegisterDecorator<IEventSaver>((context, ps, inner) => context
                             .Resolve<AutoMigrationEventSaver.Factory>()
-                            .Invoke(inner), context => true);
+                            .Invoke(inner));
+                    }
+
+                    switch (relationalEventSaverOptions.EventStoreStrategy)
+                    {
+                        case EventStoreStrategy.SharedTable:
+                            builder.RegisterType<RelationalEventSaver<SharedTableEventEntity>>()
+                                .As<IEventSaver>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        case EventStoreStrategy.OneTypeOneTable:
+                            builder.RegisterType<RelationalEventSaver<OneTypeOneTableEventEntity>>()
+                                .As<IEventSaver>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        case EventStoreStrategy.OneIdentityOneTable:
+                            builder.RegisterType<RelationalEventSaver<OneIdentityOneTableEventEntity>>()
+                                .As<IEventSaver>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 });
-                var eventSaver = relationalEventSaverOptions.EventStoreStrategy switch
-                {
-                    EventStoreStrategy.SharedTable => scope.Resolve(
-                        typeof(RelationalEventSaver<SharedTableEventEntity>)),
-                    EventStoreStrategy.OneTypeOneTable => scope.Resolve(
-                        typeof(RelationalEventSaver<OneTypeOneTableEventEntity>)),
-                    EventStoreStrategy.OneIdentityOneTable => scope.Resolve(
-                        typeof(RelationalEventSaver<OneIdentityOneTableEventEntity>)),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return (IEventSaver) eventSaver;
+                var eventSaver = scope.Resolve<IEventSaver>();
+                return eventSaver;
             }
 
             // TODO 
@@ -82,21 +93,32 @@ namespace Newbe.Claptrap.StorageProvider.Relational
                             .InstancePerLifetimeScope();
                         builder.RegisterDecorator<IEventLoader>((context, ps, inner) => context
                             .Resolve<AutoMigrationEventLoader.Factory>()
-                            .Invoke(inner), context => true);
+                            .Invoke(inner));
+                    }
+
+                    switch (relationalEventLoaderOptions.EventStoreStrategy)
+                    {
+                        case EventStoreStrategy.SharedTable:
+                            builder.RegisterType<RelationalEventLoader<SharedTableEventEntity>>()
+                                .As<IEventLoader>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        case EventStoreStrategy.OneTypeOneTable:
+                            builder.RegisterType<RelationalEventLoader<OneTypeOneTableEventEntity>>()
+                                .As<IEventLoader>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        case EventStoreStrategy.OneIdentityOneTable:
+                            builder.RegisterType<RelationalEventLoader<OneIdentityOneTableEventEntity>>()
+                                .As<IEventLoader>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 });
-                var eventLoader = relationalEventLoaderOptions.EventStoreStrategy switch
-                {
-                    EventStoreStrategy.SharedTable => scope.Resolve(
-                        typeof(RelationalEventLoader<SharedTableEventEntity>)),
-                    EventStoreStrategy.OneTypeOneTable => scope.Resolve(
-                        typeof(RelationalEventLoader<OneTypeOneTableEventEntity>)),
-                    EventStoreStrategy.OneIdentityOneTable => scope.Resolve(
-                        typeof(RelationalEventLoader<OneIdentityOneTableEventEntity>)),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return (IEventLoader) eventLoader;
+                var eventLoader = scope.Resolve<IEventLoader>();
+                return eventLoader;
             }
 
             throw new System.NotImplementedException();

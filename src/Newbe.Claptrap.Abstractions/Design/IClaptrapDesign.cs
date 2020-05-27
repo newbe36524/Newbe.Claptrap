@@ -92,7 +92,15 @@ namespace Newbe.Claptrap
     {
     }
 
+    public class EmptyEventSaverOptions : IEventSaverOptions
+    {
+    }
+
     public interface IEventLoaderOptions
+    {
+    }
+
+    public class EmptyEventLoaderOptions : IEventLoaderOptions
     {
     }
 
@@ -100,7 +108,15 @@ namespace Newbe.Claptrap
     {
     }
 
+    public class EmptyStateSaverOptions : IStateSaverOptions
+    {
+    }
+
     public interface IStateLoaderOptions
+    {
+    }
+
+    public class EmptyStateLoaderOptions : IStateLoaderOptions
     {
     }
 }

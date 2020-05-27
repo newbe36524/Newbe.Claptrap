@@ -14,6 +14,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+            builder.RegisterType<MySqlEventStoreMigrationFactory>()
+                .As<IEventStoreMigrationFactory>()
+                .InstancePerLifetimeScope();
             builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
                     .CreateEventLoaderMigration(t.Resolve<IClaptrapIdentity>()))
                 .As<IEventLoaderMigration>()
@@ -37,10 +40,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
 
             builder.RegisterType<SharedTableEventStoreDbUpMysqlMigration>()
                 .AsSelf()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<MySqlEventStoreMigrationFactory>()
-                .As<IEventStoreMigrationFactory>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterBuildCallback(scope =>

@@ -46,9 +46,6 @@ namespace Newbe.Claptrap
                 var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
                 var actorScope = _lifetimeScope.BeginLifetimeScope(builder =>
                 {
-                    builder.Register(context => identity)
-                        .AsSelf()
-                        .SingleInstance();
                     var sharedModules = _claptrapModuleProviders
                         .SelectMany(x => x.GetClaptrapSharedModules(identity))
                         .OfType<Module>()

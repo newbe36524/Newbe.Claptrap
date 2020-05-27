@@ -1,4 +1,4 @@
--- $ActorTypeCode$ $ActorId$ $EventTableName$ $StateTableName$
+-- $EventTableName$
 create table '$EventTableName$'
 (
     version       long

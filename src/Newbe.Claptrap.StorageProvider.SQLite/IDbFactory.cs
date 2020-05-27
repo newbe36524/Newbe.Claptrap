@@ -21,17 +21,4 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         /// <returns></returns>
         IDbConnection GetConnection(string dbName);
     }
-
-    public class DbFactory : IDbFactory
-    {
-        public string GetConnectionString(string dbName)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IDbConnection GetConnection(string dbName)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
 }

@@ -51,9 +51,9 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         public IEventSaverMigration CreateEventSaverMigration(IClaptrapIdentity identity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var loaderOptions = claptrapDesign.StorageProviderOptions.EventLoaderOptions;
-            var relationalEventLoaderOptions = (IRelationalEventLoaderOptions) loaderOptions;
-            switch (relationalEventLoaderOptions.EventStoreStrategy)
+            var saverOptions = claptrapDesign.StorageProviderOptions.EventSaverOptions;
+            var relationalEventSaverOptions = (IRelationalEventSaverOptions) saverOptions;
+            switch (relationalEventSaverOptions.EventStoreStrategy)
             {
                 case EventStoreStrategy.SharedTable:
                     break;
@@ -62,7 +62,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                 case EventStoreStrategy.OneIdentityOneTable:
                     return _oneIdentityOneTableDbUpSQLiteMigrationFactory(
                         identity,
-                        (ISQLiteOneIdentityOneTableEventStoreOptions) relationalEventLoaderOptions);
+                        (ISQLiteOneIdentityOneTableEventStoreOptions) relationalEventSaverOptions);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

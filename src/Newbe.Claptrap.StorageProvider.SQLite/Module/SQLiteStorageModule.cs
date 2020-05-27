@@ -32,6 +32,16 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                 .AsSelf()
                 .InstancePerDependency();
 
+            //new 
+
+            builder.RegisterType<SQLiteSqlCache>()
+                .As<ISQLiteSqlCache>()
+                .SingleInstance();
+
+            builder.RegisterType<DbFactory>()
+                .As<IDbFactory>()
+                .SingleInstance();
+
             builder.RegisterType<SQLieOneIdentityOneTableEventEntitySaver>()
                 .As<IEventEntitySaver<OneIdentityOneTableEventEntity>>()
                 .InstancePerLifetimeScope();
@@ -42,9 +52,23 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             builder.RegisterType<SQLiteEventStoreMigrationFactory>()
                 .As<IEventStoreMigrationFactory>()
                 .InstancePerLifetimeScope();
+            builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
+                    .CreateEventLoaderMigration(t.Resolve<IClaptrapIdentity>()))
+                .As<IEventLoaderMigration>()
+                .InstancePerLifetimeScope();
+            builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
+                    .CreateEventSaverMigration(t.Resolve<IClaptrapIdentity>()))
+                .As<IEventSaverMigration>()
+                .InstancePerLifetimeScope();
             builder.RegisterType<OneIdentityOneTableDbUpSQLiteMigration>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterBuildCallback(scope =>
+            {
+                var sqLiteSqlCache = scope.Resolve<ISQLiteSqlCache>();
+                sqLiteSqlCache.Init();
+            });
         }
     }
 }

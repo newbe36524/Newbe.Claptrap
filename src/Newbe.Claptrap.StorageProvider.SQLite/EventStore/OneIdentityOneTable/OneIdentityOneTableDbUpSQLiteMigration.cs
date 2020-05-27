@@ -37,8 +37,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
         {
             var ps = new Dictionary<string, string>
             {
-                {"ActorTypeCode", _identity.TypeCode},
-                {"ActorId", _identity.Id},
                 {"EventTableName", _options.EventTableName},
             };
             return ps;
