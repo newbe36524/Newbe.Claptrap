@@ -48,23 +48,23 @@ namespace Newbe.Claptrap.Bootstrapper
 
     public interface ISQLiteProviderEvenStoreConfigurator
     {
-        ISQLiteProviderEvenStoreConfigurator ConfigureOptions(Action<StorageProviderOptions> optionsAction);
+        ISQLiteProviderEvenStoreConfigurator ConfigureOptions(Action<ClaptrapStorageProviderOptions> optionsAction);
     }
 
     public class SQLiteProviderEvenStoreConfigurator : ISQLiteProviderEvenStoreConfigurator
     {
-        private readonly StorageProviderOptions _storageProviderOptions;
+        private readonly ClaptrapStorageProviderOptions _claptrapStorageProviderOptions;
 
         public SQLiteProviderEvenStoreConfigurator(
-            StorageProviderOptions storageProviderOptions)
+            ClaptrapStorageProviderOptions claptrapStorageProviderOptions)
         {
-            _storageProviderOptions = storageProviderOptions;
+            _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
         public ISQLiteProviderEvenStoreConfigurator ConfigureOptions(
-            Action<StorageProviderOptions> optionsAction)
+            Action<ClaptrapStorageProviderOptions> optionsAction)
         {
-            optionsAction(_storageProviderOptions);
+            optionsAction(_claptrapStorageProviderOptions);
             return this;
         }
     }
@@ -109,7 +109,7 @@ namespace Newbe.Claptrap.Bootstrapper
                     {
                         x.EventLoaderFactoryType = typeof(RelationalEventStoreFactory);
                         x.EventSaverFactoryType = typeof(RelationalEventStoreFactory);
-                        var configurator = new SQLiteProviderEvenStoreConfigurator(x.StorageProviderOptions);
+                        var configurator = new SQLiteProviderEvenStoreConfigurator(x.ClaptrapStorageProviderOptions);
                         eventStore(configurator);
                     });
             return this;

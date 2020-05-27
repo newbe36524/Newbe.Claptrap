@@ -63,18 +63,18 @@ namespace Newbe.Claptrap.Modules
                     .SingleInstance();
                 builder.RegisterInstance(_claptrapDesign)
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StorageProviderOptions)
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions)
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StorageProviderOptions.EventLoaderOptions)
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.EventLoaderOptions)
                     .AsImplementedInterfaces()
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StorageProviderOptions.EventSaverOptions)
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.EventSaverOptions)
                     .AsImplementedInterfaces()
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StorageProviderOptions.StateLoaderOptions)
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.StateLoaderOptions)
                     .AsImplementedInterfaces()
                     .SingleInstance();
-                builder.RegisterInstance(_claptrapDesign.StorageProviderOptions.StateSaverOptions)
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.StateSaverOptions)
                     .AsImplementedInterfaces()
                     .SingleInstance();
 

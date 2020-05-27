@@ -26,7 +26,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         IEventSaver IClaptrapComponentFactory<IEventSaver>.Create(IClaptrapIdentity claptrapIdentity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(claptrapIdentity);
-            var saverOptions = claptrapDesign.StorageProviderOptions.EventSaverOptions;
+            var saverOptions = claptrapDesign.ClaptrapStorageProviderOptions.EventSaverOptions;
             if (saverOptions is IRelationalEventSaverOptions relationalEventSaverOptions)
             {
                 var scope = _lifetimeScope.BeginLifetimeScope(builder =>
@@ -80,7 +80,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         IEventLoader IClaptrapComponentFactory<IEventLoader>.Create(IClaptrapIdentity claptrapIdentity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(claptrapIdentity);
-            var loaderOptions = claptrapDesign.StorageProviderOptions.EventLoaderOptions;
+            var loaderOptions = claptrapDesign.ClaptrapStorageProviderOptions.EventLoaderOptions;
             if (loaderOptions is IRelationalEventLoaderOptions relationalEventLoaderOptions)
             {
                 var scope = _lifetimeScope.BeginLifetimeScope(builder =>

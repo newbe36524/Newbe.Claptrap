@@ -12,13 +12,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             _dbFilePathFactory = dbFilePathFactory;
         }
 
-        public SQLiteConnection GetEventDbConnection(IClaptrapIdentity claptrapIdentity)
-        {
-            var dbFilePath = _dbFilePathFactory.Invoke(claptrapIdentity);
-            var filename = dbFilePath.GetEventDbFilename();
-            return new SQLiteConnection(DbHelper.ConnectionString(filename));
-        }
-
         public SQLiteConnection GetStateDbConnection(IClaptrapIdentity claptrapIdentity)
         {
             var dbFilePath = _dbFilePathFactory.Invoke(claptrapIdentity);

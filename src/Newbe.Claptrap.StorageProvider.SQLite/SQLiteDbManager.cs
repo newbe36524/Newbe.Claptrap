@@ -36,14 +36,9 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             {
                 {"ActorTypeCode", claptrapIdentity.TypeCode},
                 {"ActorId", claptrapIdentity.Id},
-                {"EventTableName", DbHelper.GetEventTableName(claptrapIdentity)},
                 {"StateTableName", DbHelper.GetStateTableName(claptrapIdentity)},
             };
-            MigrationDb(_sqLiteDbFactory.GetEventDbConnection(claptrapIdentity), EventSqlSelector, ps);
             MigrationDb(_sqLiteDbFactory.GetStateDbConnection(claptrapIdentity), StateSqlSelector, ps);
-
-            static bool EventSqlSelector(string file)
-                => file.EndsWith(".event.sql");
 
             static bool StateSqlSelector(string file)
                 =>  file.EndsWith(".state.sql");

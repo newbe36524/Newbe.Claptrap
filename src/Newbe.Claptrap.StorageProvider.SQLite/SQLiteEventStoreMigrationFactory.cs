@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         public IEventLoaderMigration CreateEventLoaderMigration(IClaptrapIdentity identity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var loaderOptions = claptrapDesign.StorageProviderOptions.EventLoaderOptions;
+            var loaderOptions = claptrapDesign.ClaptrapStorageProviderOptions.EventLoaderOptions;
             var relationalEventLoaderOptions = (IRelationalEventLoaderOptions) loaderOptions;
             switch (relationalEventLoaderOptions.EventStoreStrategy)
             {
@@ -51,7 +51,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         public IEventSaverMigration CreateEventSaverMigration(IClaptrapIdentity identity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var saverOptions = claptrapDesign.StorageProviderOptions.EventSaverOptions;
+            var saverOptions = claptrapDesign.ClaptrapStorageProviderOptions.EventSaverOptions;
             var relationalEventSaverOptions = (IRelationalEventSaverOptions) saverOptions;
             switch (relationalEventSaverOptions.EventStoreStrategy)
             {

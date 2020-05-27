@@ -27,7 +27,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
         public IEventLoaderMigration CreateEventLoaderMigration(IClaptrapIdentity identity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var loaderOptions = claptrapDesign.StorageProviderOptions.EventLoaderOptions;
+            var loaderOptions = claptrapDesign.ClaptrapStorageProviderOptions.EventLoaderOptions;
             var relationalEventLoaderOptions = (IRelationalEventLoaderOptions) loaderOptions;
             switch (relationalEventLoaderOptions.EventStoreStrategy)
             {

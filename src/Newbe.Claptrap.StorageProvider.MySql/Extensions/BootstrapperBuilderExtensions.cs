@@ -38,8 +38,8 @@ namespace Newbe.Claptrap.Bootstrapper
                     IsAutoMigrationEnabled = true,
                     InsertManyWindowTimeInMilliseconds = 20
                 };
-                x.StorageProviderOptions.EventLoaderOptions = mysqlOptions;
-                x.StorageProviderOptions.EventSaverOptions = mysqlOptions;
+                x.ClaptrapStorageProviderOptions.EventLoaderOptions = mysqlOptions;
+                x.ClaptrapStorageProviderOptions.EventSaverOptions = mysqlOptions;
             });
     }
 }

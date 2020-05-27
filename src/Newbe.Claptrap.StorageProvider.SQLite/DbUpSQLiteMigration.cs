@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DbUp;
 using DbUp.Engine;
+using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
@@ -44,41 +45,36 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             Func<string, bool> sqlSelector,
             IDictionary<string, string> variables)
         {
-            var connectionString = _dbFactory.GetConnectionString(dbName);
-            MigrationDb(connectionString, variables);
+            using var conn = _dbFactory.GetConnection(dbName);
+            var dbMigration =
+                DeployChanges.To
+                    .SQLiteDatabase(new SharedConnection(conn))
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
+                    .LogToAutodetectedLog()
+                    .LogToConsole()
+                    .WithVariablesEnabled()
+                    .WithVariables(variables)
+                    .Build();
 
-            void MigrationDb(string conn, IDictionary<string, string> data)
+            var result = dbMigration.PerformUpgrade();
+
+            if (!result.Successful)
             {
-                var dbMigration =
-                    DeployChanges.To
-                        .SQLiteDatabase(conn)
-                        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
-                        .LogToAutodetectedLog()
-                        .LogToConsole()
-                        .WithVariablesEnabled()
-                        .WithVariables(data)
-                        .Build();
-
-                var result = dbMigration.PerformUpgrade();
-
-                if (!result.Successful)
-                {
-                    throw new Exception(
-                        $"db migration failed",
-                        result.Error);
-                }
-
-                if (result.Scripts.Any())
-                {
-                    _logger.LogInformation("db migration is success.");
-                }
-                else
-                {
-                    _logger.LogDebug("db schema is latest, do nothing to migration");
-                }
-
-                _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
+                throw new Exception(
+                    "db migration failed",
+                    result.Error);
             }
+
+            if (result.Scripts.Any())
+            {
+                _logger.LogInformation("db migration is success.");
+            }
+            else
+            {
+                _logger.LogDebug("db schema is latest, do nothing to migration");
+            }
+
+            _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
         }
 
         private static string WriteExecutedScriptsToOctopusTaskSummary(DatabaseUpgradeResult result)

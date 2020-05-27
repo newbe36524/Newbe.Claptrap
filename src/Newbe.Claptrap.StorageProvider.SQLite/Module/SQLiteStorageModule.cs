@@ -14,9 +14,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<SQLiteEventStore>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
             builder.RegisterType<SQLiteStateStore>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
@@ -49,20 +46,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                 .As<IEventEntityLoader<OneIdentityOneTableEventEntity>>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<SQLiteEventStoreMigrationFactory>()
-                .As<IEventStoreMigrationFactory>()
-                .InstancePerLifetimeScope();
-            builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
-                    .CreateEventLoaderMigration(t.Resolve<IClaptrapIdentity>()))
-                .As<IEventLoaderMigration>()
-                .InstancePerLifetimeScope();
-            builder.Register(t => t.Resolve<IEventStoreMigrationFactory>()
-                    .CreateEventSaverMigration(t.Resolve<IClaptrapIdentity>()))
-                .As<IEventSaverMigration>()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<OneIdentityOneTableDbUpSQLiteMigration>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
 
             builder.RegisterBuildCallback(scope =>
             {

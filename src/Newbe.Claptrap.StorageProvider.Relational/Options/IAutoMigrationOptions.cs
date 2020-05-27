@@ -1,10 +1,7 @@
 namespace Newbe.Claptrap.StorageProvider.Relational.Options
 {
     public interface IAutoMigrationOptions :
-        IEventSaverOptions,
-        IEventLoaderOptions,
-        IStateSaverOptions,
-        IStateLoaderOptions
+        IStorageProviderOptions
     {
         public bool IsAutoMigrationEnabled { get; }
     }

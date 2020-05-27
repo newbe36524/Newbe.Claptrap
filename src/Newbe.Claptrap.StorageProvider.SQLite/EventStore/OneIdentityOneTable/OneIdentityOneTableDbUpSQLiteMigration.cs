@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -25,7 +26,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
 
         protected override string GetDbName()
         {
-            return $"{_identity.TypeCode}_{_identity.Id}";
+            return DbNameHelper.GetDbNameForOneIdentityOneTable(_identity);
         }
 
         protected override bool SqlSelector(string fileName)

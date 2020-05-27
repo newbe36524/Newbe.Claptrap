@@ -125,9 +125,6 @@ namespace Newbe.Claptrap.Tests
         {
             var keepConnection = DbHelper.CreateInMemoryConnection(identity);
             mocker.Mock<ISQLiteDbFactory>()
-                .Setup(x => x.GetEventDbConnection(identity))
-                .Returns(() => DbHelper.CreateInMemoryConnection(identity));
-            mocker.Mock<ISQLiteDbFactory>()
                 .Setup(x => x.GetStateDbConnection(identity))
                 .Returns(() => DbHelper.CreateInMemoryConnection(identity));
             return keepConnection;

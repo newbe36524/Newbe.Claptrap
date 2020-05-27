@@ -77,10 +77,10 @@ namespace Newbe.Claptrap
         /// </summary>
         Type ClaptrapBoxImplementationType { get; }
 
-        StorageProviderOptions StorageProviderOptions { get; }
+        ClaptrapStorageProviderOptions ClaptrapStorageProviderOptions { get; }
     }
 
-    public class StorageProviderOptions
+    public class ClaptrapStorageProviderOptions
     {
         public IEventSaverOptions EventSaverOptions { get; set; }
         public IEventLoaderOptions EventLoaderOptions { get; set; }
@@ -88,7 +88,11 @@ namespace Newbe.Claptrap
         public IStateLoaderOptions StateLoaderOptions { get; set; }
     }
 
-    public interface IEventSaverOptions
+    public interface IStorageProviderOptions
+    {
+    }
+
+    public interface IEventSaverOptions : IStorageProviderOptions
     {
     }
 
@@ -96,7 +100,7 @@ namespace Newbe.Claptrap
     {
     }
 
-    public interface IEventLoaderOptions
+    public interface IEventLoaderOptions : IStorageProviderOptions
     {
     }
 
@@ -104,7 +108,7 @@ namespace Newbe.Claptrap
     {
     }
 
-    public interface IStateSaverOptions
+    public interface IStateSaverOptions : IStorageProviderOptions
     {
     }
 
@@ -112,7 +116,7 @@ namespace Newbe.Claptrap
     {
     }
 
-    public interface IStateLoaderOptions
+    public interface IStateLoaderOptions : IStorageProviderOptions
     {
     }
 
