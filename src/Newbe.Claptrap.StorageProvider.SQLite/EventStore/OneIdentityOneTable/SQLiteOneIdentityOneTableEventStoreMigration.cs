@@ -1,25 +1,21 @@
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
 {
-    public class OneIdentityOneTableDbUpSQLiteMigration : DbUpSQLiteMigration
+    public class SQLiteOneIdentityOneTableEventStoreMigration : DbUpSQLiteMigration
     {
-        public delegate OneIdentityOneTableDbUpSQLiteMigration Factory(IClaptrapIdentity identity,
-            ISQLiteOneIdentityOneTableEventStoreOptions options);
-
         private readonly IClaptrapIdentity _identity;
         private readonly IClaptrapDesign _claptrapDesign;
         private readonly ISQLiteOneIdentityOneTableEventStoreOptions _options;
 
-        public OneIdentityOneTableDbUpSQLiteMigration(
+        public SQLiteOneIdentityOneTableEventStoreMigration(
             IClaptrapIdentity identity,
             IClaptrapDesign claptrapDesign,
             ISQLiteOneIdentityOneTableEventStoreOptions options,
             IDbFactory dbFactory,
-            ILogger<OneIdentityOneTableDbUpSQLiteMigration> logger)
+            ILogger<SQLiteOneIdentityOneTableEventStoreMigration> logger)
             : base(dbFactory, logger)
         {
             _identity = identity;
@@ -29,12 +25,12 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
 
         protected override string GetDbName()
         {
-            return DbNameHelper.GetDbNameForOneIdentityOneTable(_claptrapDesign, _identity);
+            return DbNameHelper.OneIdentityOneTableEventStore(_claptrapDesign, _identity);
         }
 
         protected override bool SqlSelector(string fileName)
         {
-            return fileName.EndsWith(".event.sql");
+            return fileName.EndsWith("-OneIdentityOneTable.event.sql");
         }
 
         protected override Dictionary<string, string> GetVariables()

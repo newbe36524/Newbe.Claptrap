@@ -6,6 +6,8 @@ using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneTypeOneTable;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore.OneIdentityOneTable;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {
@@ -23,6 +25,8 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
         {
             var design = _claptrapDesignStore.FindDesign(identity);
             yield return new RelationalEventLoaderModule(design);
+            yield return new RelationalStateLoaderModule(design);
+            yield return new RelationalStateSaverModule(design);
         }
 
         public IEnumerable<IClaptrapMasterModule> GetClaptrapMasterClaptrapModules(IClaptrapIdentity identity)
@@ -139,6 +143,94 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
                         case EventStoreStrategy.OneIdentityOneTable:
                             builder.RegisterType<RelationalEventLoader<OneIdentityOneTableEventEntity>>()
                                 .As<IRelationalEventLoader>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+        }
+
+        private class RelationalStateLoaderModule : Autofac.Module, IClaptrapSharedModule
+        {
+            private readonly IClaptrapDesign _design;
+
+            public RelationalStateLoaderModule(IClaptrapDesign design)
+            {
+                _design = design;
+            }
+
+            public string Name { get; } =
+                "Claptrap relational database storage provider shared components module for IStateLoader";
+
+            public string Description { get; } =
+                "Module for claptrap relational database storage provider shared components for IStateLoader";
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                var loaderOptions = _design.ClaptrapStorageProviderOptions.StateLoaderOptions;
+                if (loaderOptions is IRelationalStateLoaderOptions relationalStateLoaderOptions)
+                {
+                    if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
+                        && autoMigrationOptions.IsAutoMigrationEnabled)
+                    {
+                        builder.RegisterType<AutoMigrationStateLoader>()
+                            .AsSelf()
+                            .InstancePerLifetimeScope();
+                        builder.RegisterDecorator<AutoMigrationStateLoader, IStateLoader>();
+                    }
+
+                    switch (relationalStateLoaderOptions.StateStoreStrategy)
+                    {
+                        case StateStoreStrategy.OneIdentityOneTable:
+                            builder.RegisterType<RelationalStateLoader<OneIdentityOneTableStateEntity>>()
+                                .As<IRelationalStateLoader>()
+                                .InstancePerLifetimeScope();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+        }
+
+        private class RelationalStateSaverModule : Autofac.Module, IClaptrapSharedModule
+        {
+            private readonly IClaptrapDesign _design;
+
+            public RelationalStateSaverModule(IClaptrapDesign design)
+            {
+                _design = design;
+            }
+
+            public string Name { get; } =
+                "Claptrap relational database storage provider shared components module for IStateSaver";
+
+            public string Description { get; } =
+                "Module for claptrap relational database storage provider shared components for IStateSaver";
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                var saverOptions = _design.ClaptrapStorageProviderOptions.StateSaverOptions;
+                if (saverOptions is IRelationalStateSaverOptions relationalStateSaverOptions)
+                {
+                    if (saverOptions is IAutoMigrationOptions autoMigrationOptions
+                        && autoMigrationOptions.IsAutoMigrationEnabled)
+                    {
+                        builder.RegisterType<AutoMigrationStateSaver>()
+                            .AsSelf()
+                            .InstancePerLifetimeScope();
+                        builder.RegisterDecorator<AutoMigrationStateSaver, IStateSaver>();
+                    }
+
+                    switch (relationalStateSaverOptions.StateStoreStrategy)
+                    {
+                        case StateStoreStrategy.OneIdentityOneTable:
+                            builder.RegisterType<RelationalStateSaver<OneIdentityOneTableStateEntity>>()
+                                .As<IRelationalStateSaver>()
                                 .InstancePerLifetimeScope();
                             break;
                         default:

@@ -1,37 +1,37 @@
 using System.Threading.Tasks;
 using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore.OneIdentityOneTable;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdentityOneTable
 {
-    public class SQLieOneIdentityOneTableEventEntitySaver :
-        IEventEntitySaver<OneIdentityOneTableEventEntity>
+    public class SQLieOneIdentityOneTableStateEntitySaver :
+        IStateEntitySaver<OneIdentityOneTableStateEntity>
     {
         private readonly IClaptrapIdentity _claptrapIdentity;
         private readonly IClaptrapDesign _claptrapDesign;
         private readonly IDbFactory _dbFactory;
         private readonly string _insertSql;
 
-        public SQLieOneIdentityOneTableEventEntitySaver(
+        public SQLieOneIdentityOneTableStateEntitySaver(
             IClaptrapIdentity claptrapIdentity,
             IClaptrapDesign claptrapDesign,
             IDbFactory dbFactory,
             ISqlTemplateCache sqlTemplateCache,
-            ISQLiteOneIdentityOneTableEventStoreOptions eventStoreOptions)
+            ISQLiteOneIdentityOneTableStateStoreOptions stateStoreOptions)
         {
             _claptrapIdentity = claptrapIdentity;
             _claptrapDesign = claptrapDesign;
             _dbFactory = dbFactory;
-            var sql = sqlTemplateCache.Get(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreInsertOneSql);
-            _insertSql = string.Format(sql, eventStoreOptions.EventTableName);
+            var sql = sqlTemplateCache.Get(SQLiteSqlCacheKeys.OneIdentityOneTableStateStoreInsertOneSql);
+            _insertSql = string.Format(sql, stateStoreOptions.StateTableName);
         }
 
-        public async Task SaveAsync(OneIdentityOneTableEventEntity entity)
+        public async Task SaveAsync(OneIdentityOneTableStateEntity entity)
         {
-            var dbName = DbNameHelper.OneIdentityOneTableEventStore(_claptrapDesign, _claptrapIdentity);
+            var dbName = DbNameHelper.OneIdentityOneTableStateStore(_claptrapDesign, _claptrapIdentity);
             using var db = _dbFactory.GetConnection(dbName);
             await db.ExecuteAsync(_insertSql, entity);
         }

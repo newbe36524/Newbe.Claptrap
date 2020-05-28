@@ -19,5 +19,11 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
 
         public const int OneIdentityOneTableEventStoreSelectSql = OneIdentityOneTableEventStorePrefix + 30_000;
 
+
+        private const int OneTypeOneTableStateStorePrefix = Prefix + 600_000;
+
+        public const int OneIdentityOneTableStateStoreInsertOneSql = OneTypeOneTableStateStorePrefix + 10_000;
+
+        public const int OneIdentityOneTableStateStoreSelectSql = OneTypeOneTableStateStorePrefix + 30_000;
     }
 }

@@ -55,7 +55,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql
                         .MySqlDatabase(conn)
                         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
                         .LogToAutodetectedLog()
-                        .LogToConsole()
                         .JournalTo(new NullJournal())
                         .WithVariablesEnabled()
                         .WithVariables(data)

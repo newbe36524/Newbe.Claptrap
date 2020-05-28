@@ -10,10 +10,10 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 
         public AutoMigrationStateSaver(
             IStateSaver stateSaver,
-            IStateStoreMigrationManager stateStoreMigrationManager)
+            IStateSaverMigration stateSaverMigration)
         {
             _stateSaver = stateSaver;
-            _migrated = new Lazy<Task>(stateStoreMigrationManager.MigrateAsync);
+            _migrated = new Lazy<Task>(stateSaverMigration.MigrateAsync);
         }
 
         public IClaptrapIdentity Identity => _stateSaver.Identity;

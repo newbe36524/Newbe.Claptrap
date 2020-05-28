@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 {
-    public class RelationalStateSaver<T> : IStateSaver
+    public class RelationalStateSaver<T> : IRelationalStateSaver
         where T : IStateEntity
     {
         private readonly IStateEntityMapper<T> _mapper;

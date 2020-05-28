@@ -1,8 +1,10 @@
 using Autofac;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore.OneIdentityOneTable;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdentityOneTable;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -14,23 +16,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<SQLiteStateStore>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<SQLiteDbFactory>()
-                .As<ISQLiteDbFactory>()
-                .SingleInstance();
-
-            builder.RegisterType<SQLiteDbManager>()
-                .As<ISQLiteDbManager>()
-                .SingleInstance();
-
-            builder.RegisterType<DbFilePath>()
-                .AsSelf()
-                .InstancePerDependency();
-
-            //new 
-
             builder.RegisterType<SQLiteSqlCache>()
                 .As<ISQLiteSqlCache>()
                 .SingleInstance();
@@ -44,6 +29,13 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                 .InstancePerLifetimeScope();
             builder.RegisterType<SQLiteOneIdentityOneTableEventEntityLoader>()
                 .As<IEventEntityLoader<OneIdentityOneTableEventEntity>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SQLieOneIdentityOneTableStateEntitySaver>()
+                .As<IStateEntitySaver<OneIdentityOneTableStateEntity>>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<SQLiteOneIdentityOneTableStateEntityLoader>()
+                .As<IStateEntityLoader<OneIdentityOneTableStateEntity>>()
                 .InstancePerLifetimeScope();
 
 

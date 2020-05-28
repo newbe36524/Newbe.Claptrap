@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
         private readonly IClaptrapIdentity _claptrapIdentity;
         private readonly IClaptrapDesign _claptrapDesign;
         private readonly IDbFactory _dbFactory;
-        private readonly Lazy<string> _selectSql;
+        private readonly string _selectSql;
 
         public SQLiteOneIdentityOneTableEventEntityLoader(
             IClaptrapIdentity claptrapIdentity,
@@ -29,15 +29,14 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
             _claptrapDesign = claptrapDesign;
             _dbFactory = dbFactory;
             var sql = sqlTemplateCache.Get(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreSelectSql);
-            _selectSql = new Lazy<string>(() => string.Format(sql, eventStoreOptions.EventTableName));
+            _selectSql = string.Format(sql, eventStoreOptions.EventTableName);
         }
 
         public async Task<IEnumerable<OneIdentityOneTableEventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            var dbName = DbNameHelper.GetDbNameForOneIdentityOneTable(_claptrapDesign, _claptrapIdentity);
+            var dbName = DbNameHelper.OneIdentityOneTableEventStore(_claptrapDesign, _claptrapIdentity);
             using var db = _dbFactory.GetConnection(dbName);
-            var sql = _selectSql.Value;
-            var re = await db.QueryAsync<OneIdentityOneTableEventEntity>(sql, new {startVersion, endVersion});
+            var re = await db.QueryAsync<OneIdentityOneTableEventEntity>(_selectSql, new {startVersion, endVersion});
             return re.ToArray();
         }
     }

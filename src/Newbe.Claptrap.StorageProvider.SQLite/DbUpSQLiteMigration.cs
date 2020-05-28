@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,12 +9,15 @@ using DbUp.Engine;
 using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     public abstract class DbUpSQLiteMigration :
         IEventLoaderMigration,
-        IEventSaverMigration
+        IEventSaverMigration,
+        IStateLoaderMigration,
+        IStateSaverMigration
     {
         private readonly IDbFactory _dbFactory;
         private readonly ILogger _logger;
@@ -51,7 +53,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                     .SQLiteDatabase(new SharedConnection(conn))
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
                     .LogToAutodetectedLog()
-                    .LogToConsole()
                     .WithVariablesEnabled()
                     .WithVariables(variables)
                     .Build();

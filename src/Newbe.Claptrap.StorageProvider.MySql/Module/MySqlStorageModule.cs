@@ -1,6 +1,5 @@
 using Autofac;
 using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 

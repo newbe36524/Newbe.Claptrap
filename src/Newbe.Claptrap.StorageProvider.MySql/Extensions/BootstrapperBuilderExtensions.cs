@@ -1,4 +1,3 @@
-using System;
 using Newbe.Claptrap.StorageProvider.MySql;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
@@ -26,8 +25,8 @@ namespace Newbe.Claptrap.Bootstrapper
             this IClaptrapBootstrapperBuilder builder)
             => builder.ConfigureClaptrapDesign(x =>
             {
-                x.EventLoaderFactoryType = typeof(RelationalEventStoreFactory);
-                x.EventSaverFactoryType = typeof(RelationalEventStoreFactory);
+                x.EventLoaderFactoryType = typeof(SQLiteStoreFactory);
+                x.EventSaverFactoryType = typeof(SQLiteStoreFactory);
                 var mysqlOptions = new MySqlSharedTableEventStoreOptions
                 {
                     SchemaName = "claptrap",

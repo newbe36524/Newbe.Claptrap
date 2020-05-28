@@ -2,13 +2,15 @@ using Autofac;
 
 namespace Newbe.Claptrap.StorageProvider.Relational
 {
-    public class RelationalEventStoreFactory :
+    public class SQLiteStoreFactory :
         IClaptrapComponentFactory<IEventSaver>,
-        IClaptrapComponentFactory<IEventLoader>
+        IClaptrapComponentFactory<IEventLoader>,
+        IClaptrapComponentFactory<IStateSaver>,
+        IClaptrapComponentFactory<IStateLoader>
     {
         private readonly ILifetimeScope _lifetimeScope;
 
-        public RelationalEventStoreFactory(
+        public SQLiteStoreFactory(
             ILifetimeScope lifetimeScope)
         {
             _lifetimeScope = lifetimeScope;
@@ -22,6 +24,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         IEventLoader IClaptrapComponentFactory<IEventLoader>.Create(IClaptrapIdentity claptrapIdentity)
         {
             return _lifetimeScope.Resolve<IRelationalEventLoader>();
+        }
+
+        IStateSaver IClaptrapComponentFactory<IStateSaver>.Create(IClaptrapIdentity claptrapIdentity)
+        {
+            return _lifetimeScope.Resolve<IRelationalStateSaver>();
+        }
+
+        IStateLoader IClaptrapComponentFactory<IStateLoader>.Create(IClaptrapIdentity claptrapIdentity)
+        {
+            return _lifetimeScope.Resolve<IRelationalStateLoader>();
         }
     }
 }

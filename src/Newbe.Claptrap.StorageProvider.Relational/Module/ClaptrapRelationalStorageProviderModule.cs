@@ -3,6 +3,9 @@ using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneTypeOneTable;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {
@@ -28,7 +31,14 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
                 .As<IEventEntityMapper<OneIdentityOneTableEventEntity>>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<RelationalEventStoreFactory>()
+            builder.RegisterType<OneIdentityOneTableStateEntityMapper>()
+                .As<IStateEntityMapper<OneIdentityOneTableStateEntity>>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<SharedTableStateEntityMapper>()
+                .As<IStateEntityMapper<SharedTableStateEntity>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SQLiteStoreFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

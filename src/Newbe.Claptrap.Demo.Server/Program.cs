@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Orleans;
 using Orleans.Hosting;
 
@@ -40,10 +39,12 @@ namespace Newbe.Claptrap.Demo.Server
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
                                 .UseSQLite(sqlite =>
-                                    sqlite.AsEventStore(eventStore =>
-                                        eventStore.OneIdentityOneTable())
+                                    sqlite
+                                        .AsEventStore(eventStore =>
+                                            eventStore.OneIdentityOneTable())
+                                        .AsStateStore(stateStore =>
+                                            stateStore.OneIdentityOneTable())
                                 )
-                                .UseSQLiteAsStateStore()
                                 .ScanClaptrapDesigns(new[]
                                 {
                                     typeof(AccountGrain).Assembly
