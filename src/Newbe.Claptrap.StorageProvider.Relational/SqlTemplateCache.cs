@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap.StorageProvider.Relational
 {
-    public class SqlCache : ISqlCache
+    public class SqlTemplateCache : ISqlTemplateCache
     {
         private readonly Dictionary<string, Dictionary<int, string>>
             _parameterNames = new Dictionary<string, Dictionary<int, string>>();
@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
                 _parameterNames.Add(name, dic);
             }
 
-            if (!dic.TryGetValue(index, out var p))
+            if (!dic.TryGetValue(index, out _))
             {
                 dic[index] = $"@{name}{index}";
             }

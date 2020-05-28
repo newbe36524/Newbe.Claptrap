@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Orleans;
 using Orleans.Hosting;
 
@@ -13,6 +17,10 @@ namespace Newbe.Claptrap.Demo.Server
     {
         public static Task Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            {
+                Console.WriteLine(eventArgs.ExceptionObject);
+            };
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(context =>
                 {
@@ -42,6 +50,8 @@ namespace Newbe.Claptrap.Demo.Server
                                 })
                                 .Build();
                             claptrapBootstrapper.Boot();
+                            var store = claptrapBootstrapper.DumpDesignStore();
+                            File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));
                         });
 
                     return serviceProviderFactory;

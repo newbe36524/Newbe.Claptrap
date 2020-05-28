@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.Relational
 {
-    public interface ISqlCache
+    public interface ISqlTemplateCache
     {
         string Get(int key);
         void Add(int key, string sql);

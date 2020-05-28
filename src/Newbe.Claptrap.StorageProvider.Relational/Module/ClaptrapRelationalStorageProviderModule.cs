@@ -14,29 +14,9 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<SqlCache>()
-                .As<ISqlCache>()
+            builder.RegisterType<SqlTemplateCache>()
+                .As<ISqlTemplateCache>()
                 .SingleInstance();
-
-            builder.RegisterType<RelationalEventLoader<SharedTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<RelationalEventLoader<OneTypeOneTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<RelationalEventLoader<OneIdentityOneTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<RelationalEventSaver<SharedTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<RelationalEventSaver<OneTypeOneTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<RelationalEventSaver<OneIdentityOneTableEventEntity>>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
 
             builder.RegisterType<SharedTableEventEntityMapper>()
                 .As<IEventEntityMapper<SharedTableEventEntity>>()

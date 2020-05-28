@@ -11,22 +11,25 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable
             ISQLiteOneIdentityOneTableEventStoreOptions options);
 
         private readonly IClaptrapIdentity _identity;
+        private readonly IClaptrapDesign _claptrapDesign;
         private readonly ISQLiteOneIdentityOneTableEventStoreOptions _options;
 
         public OneIdentityOneTableDbUpSQLiteMigration(
             IClaptrapIdentity identity,
+            IClaptrapDesign claptrapDesign,
             ISQLiteOneIdentityOneTableEventStoreOptions options,
             IDbFactory dbFactory,
             ILogger<OneIdentityOneTableDbUpSQLiteMigration> logger)
             : base(dbFactory, logger)
         {
             _identity = identity;
+            _claptrapDesign = claptrapDesign;
             _options = options;
         }
 
         protected override string GetDbName()
         {
-            return DbNameHelper.GetDbNameForOneIdentityOneTable(_identity);
+            return DbNameHelper.GetDbNameForOneIdentityOneTable(_claptrapDesign, _identity);
         }
 
         protected override bool SqlSelector(string fileName)

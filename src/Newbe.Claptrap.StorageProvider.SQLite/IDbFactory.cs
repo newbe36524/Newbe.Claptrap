@@ -1,5 +1,4 @@
 using System.Data;
-using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
@@ -9,7 +8,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         /// 
         /// </summary>
         /// <param name="dbName"></param>
-        /// <exception cref="MissingDbException"></exception>
         /// <returns></returns>
         string GetConnectionString(string dbName);
 
@@ -17,7 +15,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         /// 
         /// </summary>
         /// <param name="dbName"></param>
-        /// <exception cref="MissingDbException"></exception>
         /// <returns></returns>
         IDbConnection GetConnection(string dbName);
     }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
-    public class RelationalEventSaver<T> : IEventSaver
+    public class RelationalEventSaver<T> : IRelationalEventSaver
         where T : IEventEntity
     {
         private readonly IEventEntityMapper<T> _mapper;

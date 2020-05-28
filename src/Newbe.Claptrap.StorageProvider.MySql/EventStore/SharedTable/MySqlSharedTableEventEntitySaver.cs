@@ -14,22 +14,22 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
     {
         private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
         private readonly IDbFactory _dbFactory;
-        private readonly ISqlCache _sqlCache;
+        private readonly ISqlTemplateCache _sqlTemplateCache;
 
         public MySqlSharedTableEventEntitySaver(
             IBatchEventSaverOptions batchEventSaverOptions,
             IMySqlSharedTableEventStoreOptions mySqlSharedTableEventStoreOptions,
             IDbFactory dbFactory,
-            ISqlCache sqlCache) : base(batchEventSaverOptions)
+            ISqlTemplateCache sqlTemplateCache) : base(batchEventSaverOptions)
         {
             _mySqlSharedTableEventStoreOptions = mySqlSharedTableEventStoreOptions;
             _dbFactory = dbFactory;
-            _sqlCache = sqlCache;
+            _sqlTemplateCache = sqlTemplateCache;
         }
 
         protected override async Task SaveOneAsync(SharedTableEventEntity entity)
         {
-            var sql = _sqlCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreInsertOneSql);
+            var sql = _sqlTemplateCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreInsertOneSql);
             var dbName = _mySqlSharedTableEventStoreOptions.SharedTableEventStoreDbName;
             using var db = _dbFactory.GetConnection(dbName);
             await db.ExecuteAsync(sql, entity);
@@ -44,7 +44,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                 return;
             }
 
-            var sql = _sqlCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreInsertManySql(count));
+            var sql = _sqlTemplateCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreInsertManySql(count));
             var dbName = _mySqlSharedTableEventStoreOptions.SharedTableEventStoreDbName;
             using var db = _dbFactory.GetConnection(dbName);
             var ps = new DynamicParameters();
@@ -53,7 +53,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                 foreach (var (parameterName, valueFunc) in SharedTableEventEntity.ValueFactories())
                 {
                     var sharedTableEventEntity = array[i];
-                    ps.Add(_sqlCache.GetParameterName(parameterName, i), valueFunc(sharedTableEventEntity));
+                    ps.Add(_sqlTemplateCache.GetParameterName(parameterName, i), valueFunc(sharedTableEventEntity));
                 }
             }
 

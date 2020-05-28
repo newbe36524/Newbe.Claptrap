@@ -1,0 +1,154 @@
+[
+  {
+    "ClaptrapTypeCode": "newbe.claptrap.demo.account__m__balance",
+    "ClaptrapMasterDesign": {
+      "ClaptrapTypeCode": "newbe.claptrap.demo.account",
+      "ClaptrapMasterDesign": null,
+      "ClaptrapOptions": {
+        "StateSavingOptions": {
+          "SavingWindowTime": "00:00:10",
+          "SavingWindowVersionLimit": 1000,
+          "SaveWhenDeactivateAsync": true
+        },
+        "StateRecoveryOptions": {
+          "StateRecoveryStrategy": 1
+        },
+        "EventLoadingOptions": {
+          "LoadingCountInOneBatch": 1000
+        },
+        "MinionActivationOptions": {
+          "ActivateMinionsAtMasterStart": true
+        }
+      },
+      "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventHandlerDesigns": {
+        "newbe.claptrap.demo.account__accountBalanceChanged": {
+          "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+          "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        }
+      },
+      "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "ClaptrapStorageProviderOptions": {
+        "EventSaverOptions": {
+          "EventStoreStrategy": 2,
+          "IsAutoMigrationEnabled": true,
+          "EventTableName": "events"
+        },
+        "EventLoaderOptions": {
+          "EventStoreStrategy": 2,
+          "IsAutoMigrationEnabled": true,
+          "EventTableName": "events"
+        },
+        "StateSaverOptions": {},
+        "StateLoaderOptions": {}
+      }
+    },
+    "ClaptrapOptions": {
+      "StateSavingOptions": {
+        "SavingWindowTime": "00:00:10",
+        "SavingWindowVersionLimit": 1000,
+        "SaveWhenDeactivateAsync": true
+      },
+      "StateRecoveryOptions": {
+        "StateRecoveryStrategy": 1
+      },
+      "EventLoadingOptions": {
+        "LoadingCountInOneBatch": 1000
+      },
+      "MinionActivationOptions": {
+        "ActivateMinionsAtMasterStart": false
+      }
+    },
+    "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerDesigns": {
+      "newbe.claptrap.demo.account__accountBalanceChanged": {
+        "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+        "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      }
+    },
+    "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccountBalanceMinion, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapStorageProviderOptions": {
+      "EventSaverOptions": {
+        "EventStoreStrategy": 2,
+        "IsAutoMigrationEnabled": true,
+        "EventTableName": "events"
+      },
+      "EventLoaderOptions": {
+        "EventStoreStrategy": 2,
+        "IsAutoMigrationEnabled": true,
+        "EventTableName": "events"
+      },
+      "StateSaverOptions": {},
+      "StateLoaderOptions": {}
+    }
+  },
+  {
+    "ClaptrapTypeCode": "newbe.claptrap.demo.account",
+    "ClaptrapMasterDesign": null,
+    "ClaptrapOptions": {
+      "StateSavingOptions": {
+        "SavingWindowTime": "00:00:10",
+        "SavingWindowVersionLimit": 1000,
+        "SaveWhenDeactivateAsync": true
+      },
+      "StateRecoveryOptions": {
+        "StateRecoveryStrategy": 1
+      },
+      "EventLoadingOptions": {
+        "LoadingCountInOneBatch": 1000
+      },
+      "MinionActivationOptions": {
+        "ActivateMinionsAtMasterStart": true
+      }
+    },
+    "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalEventStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.SQLite.SQLiteStateStoreFactory, Newbe.Claptrap.StorageProvider.SQLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerDesigns": {
+      "newbe.claptrap.demo.account__accountBalanceChanged": {
+        "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+        "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+      }
+    },
+    "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapStorageProviderOptions": {
+      "EventSaverOptions": {
+        "EventStoreStrategy": 2,
+        "IsAutoMigrationEnabled": true,
+        "EventTableName": "events"
+      },
+      "EventLoaderOptions": {
+        "EventStoreStrategy": 2,
+        "IsAutoMigrationEnabled": true,
+        "EventTableName": "events"
+      },
+      "StateSaverOptions": {},
+      "StateLoaderOptions": {}
+    }
+  }
+]

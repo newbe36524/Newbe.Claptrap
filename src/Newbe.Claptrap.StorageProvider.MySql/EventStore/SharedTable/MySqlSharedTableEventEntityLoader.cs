@@ -12,16 +12,16 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
     public class MySqlSharedTableEventEntityLoader : IEventEntityLoader<SharedTableEventEntity>
     {
         private readonly IDbFactory _dbFactory;
-        private readonly ISqlCache _sqlCache;
+        private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
 
         public MySqlSharedTableEventEntityLoader(
             IDbFactory dbFactory,
-            ISqlCache sqlCache,
+            ISqlTemplateCache sqlTemplateCache,
             IMySqlSharedTableEventStoreOptions mySqlSharedTableEventStoreOptions)
         {
             _dbFactory = dbFactory;
-            _sqlCache = sqlCache;
+            _sqlTemplateCache = sqlTemplateCache;
             _mySqlSharedTableEventStoreOptions = mySqlSharedTableEventStoreOptions;
         }
 
@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         {
             var dbName = _mySqlSharedTableEventStoreOptions.SharedTableEventStoreDbName;
             using var db = _dbFactory.GetConnection(dbName);
-            var sql = _sqlCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreSelectSql);
+            var sql = _sqlTemplateCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreSelectSql);
             var re = await db.QueryAsync<SharedTableEventEntity>(sql, new {startVersion, endVersion});
             return re.ToArray();
         }

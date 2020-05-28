@@ -9,12 +9,12 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
 
     public class SQLiteSqlCache : ISQLiteSqlCache
     {
-        private readonly ISqlCache _sqlCache;
+        private readonly ISqlTemplateCache _sqlTemplateCache;
 
         public SQLiteSqlCache(
-            ISqlCache sqlCache)
+            ISqlTemplateCache sqlTemplateCache)
         {
-            _sqlCache = sqlCache;
+            _sqlTemplateCache = sqlTemplateCache;
         }
 
         public void Init()
@@ -26,18 +26,18 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         private void InitOneIdentityOneTableEventStoreInsertOneSql()
         {
             const string oneIdentityOneTableEventStoreInsertOneSql =
-                "INSERT INTO [{eventTableName}] ([version], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @EventTypeCode, @EventData, @CreatedTime)";
+                "INSERT INTO [{0}] ([version], [eventtypecode], [eventdata], [createdtime]) VALUES (@Version, @EventTypeCode, @EventData, @CreatedTime)";
 
-            _sqlCache.Add(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreInsertOneSql,
+            _sqlTemplateCache.Add(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreInsertOneSql,
                 oneIdentityOneTableEventStoreInsertOneSql);
         }
 
         private void InitOneIdentityOneTableEventStoreSelectSql()
         {
             const string oneIdentityOneTableEventStoreSelectSql =
-                "SELECT * FROM [{eventTableName}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
+                "SELECT * FROM [{0}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
 
-            _sqlCache.Add(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreSelectSql,
+            _sqlTemplateCache.Add(SQLiteSqlCacheKeys.OneIdentityOneTableEventStoreSelectSql,
                 oneIdentityOneTableEventStoreSelectSql);
         }
     }

@@ -8,16 +8,16 @@ namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public class MySqlSqlCacheHelper : IMySqlSqlCacheHelper
     {
-        private readonly ISqlCache _sqlCache;
+        private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IClaptrapDesignStore _claptrapDesignStore;
         private readonly IMySqlSharedTableEventStoreOptions? _mySqlSharedTableEventStoreOptions;
 
         public MySqlSqlCacheHelper(
-            ISqlCache sqlCache,
+            ISqlTemplateCache sqlTemplateCache,
             IClaptrapDesignStore claptrapDesignStore,
             IMySqlSharedTableEventStoreOptions? mySqlSharedTableEventStoreOptions = null)
         {
-            _sqlCache = sqlCache;
+            _sqlTemplateCache = sqlTemplateCache;
             _claptrapDesignStore = claptrapDesignStore;
             _mySqlSharedTableEventStoreOptions = mySqlSharedTableEventStoreOptions;
         }
@@ -38,7 +38,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             var sharedTableInsertOneSql =
                 $"INSERT INTO [{config.SchemaName}].[{config.EventTableName}] ([claptrap_type_code], [claptrap_id], [version], [event_type_code], [event_data], [created_time]) VALUES (@ClaptrapTypeCode, @ClaptrapId, @Version, @EventTypeCode, @EventData, @CreatedTime)";
 
-            _sqlCache.Add(MysqlSqlCacheKeys.SharedTableEventStoreInsertOneSql, sharedTableInsertOneSql);
+            _sqlTemplateCache.Add(MysqlSqlCacheKeys.SharedTableEventStoreInsertOneSql, sharedTableInsertOneSql);
         }
 
         private void InitSharedTableInsertManySql()
@@ -48,7 +48,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             {
                 foreach (var name in SharedTableEventEntity.ParameterNames())
                 {
-                    _sqlCache.AddParameterName(name, i);
+                    _sqlTemplateCache.AddParameterName(name, i);
                 }
             }
 
@@ -65,7 +65,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
                     x => insertManySqlHeader + string.Join(",", valuesSql.Take(x)));
             foreach (var (key, sql) in insertManySql)
             {
-                _sqlCache.Add(key, sql);
+                _sqlTemplateCache.Add(key, sql);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             var sql =
                 $"SELECT * FROM [{config.SchemaName}].[{config.EventTableName}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
 
-            _sqlCache.Add(MysqlSqlCacheKeys.SharedTableEventStoreSelectSql, sql);
+            _sqlTemplateCache.Add(MysqlSqlCacheKeys.SharedTableEventStoreSelectSql, sql);
         }
 
         private static string ValuePartFactory(IEnumerable<string> parameters)
