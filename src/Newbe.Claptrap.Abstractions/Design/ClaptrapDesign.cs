@@ -5,7 +5,7 @@ namespace Newbe.Claptrap
 {
     public class ClaptrapDesign : IClaptrapDesign
     {
-        public IClaptrapIdentity Identity { get; set; } = null!;
+        public string ClaptrapTypeCode { get; set; } = null!;
         public IClaptrapDesign ClaptrapMasterDesign { get; set; } = null!;
         public ClaptrapOptions ClaptrapOptions { get; set; } = null!;
         public Type StateDataType { get; set; } = null!;
@@ -19,5 +19,6 @@ namespace Newbe.Claptrap
         public IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; set; } = null!;
         public Type ClaptrapBoxInterfaceType { get; set; } = null!;
         public Type ClaptrapBoxImplementationType { get; set; } = null!;
+        public ClaptrapStorageProviderOptions ClaptrapStorageProviderOptions { get; } = new ClaptrapStorageProviderOptions();
     }
 }

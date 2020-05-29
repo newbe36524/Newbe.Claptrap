@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
+using Newbe.Claptrap.StateHolder;
 using Newtonsoft.Json;
 using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 using Module = Autofac.Module;
@@ -34,39 +35,48 @@ namespace Newbe.Claptrap.Bootstrapper
                 DesignTypes = Enumerable.Empty<Type>(),
                 ModuleTypes = Enumerable.Empty<Type>(),
                 CultureInfo = CultureInfo.CurrentCulture,
-                ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>
-                {
-                    new GlobalClaptrapDesignStoreConfigurator(new GlobalClaptrapDesign
-                    {
-                        ClaptrapOptions = new ClaptrapOptions
-                        {
-                            StateSavingOptions = new StateSavingOptions
-                            {
-                                SavingWindowTime = TimeSpan.FromSeconds(10),
-                                SaveWhenDeactivateAsync = true,
-                                SavingWindowVersionLimit = 1000,
-                            },
-                            MinionActivationOptions = new MinionActivationOptions
-                            {
-                                ActivateMinionsAtMasterStart = false
-                            },
-                            EventLoadingOptions = new EventLoadingOptions
-                            {
-                                LoadingCountInOneBatch = 1000
-                            },
-                            StateRecoveryOptions = new StateRecoveryOptions
-                            {
-                                StateRecoveryStrategy = StateRecoveryStrategy.FromStore
-                            }
-                        },
-                        InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),
-                        StateHolderFactoryType = typeof(NoChangeStateHolderFactory),
-                        EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
-                    })
-                },
+                ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
                 ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
             };
+
+            this
+                .ConfigureClaptrapDesign(
+                    x => x.ClaptrapOptions.StateSavingOptions == null,
+                    x => x.ClaptrapOptions.StateSavingOptions = new StateSavingOptions
+                    {
+                        SavingWindowTime = TimeSpan.FromSeconds(10),
+                        SaveWhenDeactivateAsync = true,
+                        SavingWindowVersionLimit = 1000,
+                    })
+                .ConfigureClaptrapDesign(
+                    x => x.ClaptrapOptions.MinionActivationOptions == null,
+                    x => x.ClaptrapOptions.MinionActivationOptions = new MinionActivationOptions
+                    {
+                        ActivateMinionsAtMasterStart = false
+                    })
+                .ConfigureClaptrapDesign(
+                    x => x.ClaptrapOptions.EventLoadingOptions == null,
+                    x => x.ClaptrapOptions.EventLoadingOptions = new EventLoadingOptions
+                    {
+                        LoadingCountInOneBatch = 1000
+                    })
+                .ConfigureClaptrapDesign(
+                    x => x.ClaptrapOptions.StateRecoveryOptions == null,
+                    x => x.ClaptrapOptions.StateRecoveryOptions = new StateRecoveryOptions
+                    {
+                        StateRecoveryStrategy = StateRecoveryStrategy.FromStore
+                    })
+                .ConfigureClaptrapDesign(
+                    x => x.InitialStateDataFactoryType == null,
+                    x => x.InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.StateHolderFactoryType == null,
+                    x => x.StateHolderFactoryType = typeof(NoChangeStateHolderFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.EventHandlerFactoryFactoryType == null,
+                    x => x.EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory))
+                ;
         }
 
         private IL CreateL()
@@ -174,7 +184,8 @@ namespace Newbe.Claptrap.Bootstrapper
 
                 var claptrapBootstrapper =
                     new AutofacClaptrapBootstrapper(_applicationBuilder,
-                        autofacModules,
+                        autofacModules
+                            .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
                         claptrapDesignStore);
 
                 return claptrapBootstrapper;

@@ -4,16 +4,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     public static class DbHelper
     {
-        public static string GetEventTableName(IClaptrapIdentity claptrapIdentity)
-        {
-            return "events";
-        }
-
-        public static string GetStateTableName(IClaptrapIdentity claptrapIdentity)
-        {
-            return "state";
-        }
-
         public static string ConnectionString(string filename)
         {
             var re =

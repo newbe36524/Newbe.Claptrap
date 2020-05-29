@@ -67,6 +67,34 @@ namespace Newbe.Claptrap.Tests
             store1.Name.Should().NotBe(store2.Name);
         }
 
+        [Test]
+        public void SingleDelegateFactoryWithDiffArguments()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<TestClass>()
+                .AsSelf()
+                .SingleInstance();
+
+            var container = builder.Build();
+            var factory = container.Resolve<TestClass.Factory>();
+            var testClass1 = factory.Invoke("name1");
+            var testClass2 = factory.Invoke("name2");
+            testClass1.Should().Be(testClass2, "it is the same since factory invoked");
+            testClass1.Name.Should().Be(testClass2.Name);
+        }
+
+        public class TestClass
+        {
+            public delegate TestClass Factory(string name);
+
+            public TestClass(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+        }
+
         public interface IStore
         {
             string Name { get; set; }

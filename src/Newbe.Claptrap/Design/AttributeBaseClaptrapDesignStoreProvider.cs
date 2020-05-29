@@ -61,92 +61,91 @@ namespace Newbe.Claptrap.Design
                 .ToArray();
 
             var re = _claptrapDesignStoreFactory();
+            var metadataDic = metadata
+                .ToDictionary(m => GetActorTypeCode(m.stateAttr));
 
-            var claptrapDesignTuples = metadata
-                .Select(m =>
+            var claptrapDesigns = metadata
+                .Select(m => new ClaptrapDesign
                 {
-                    var claptrapDesign = new ClaptrapDesign
-                    {
-                        Identity = new ClaptrapIdentity(string.Empty, GetActorTypeCode(m.stateAttr)),
-                        StateDataType = m.stateAttr.StateDataType,
-                        InitialStateDataFactoryType = m.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!,
-                        StateHolderFactoryType = m.stateHolderAttr?.StateHolderFactory!,
-                        EventLoaderFactoryType = m.eventStoreAttr?.EventLoaderFactoryType!,
-                        EventSaverFactoryType = m.eventStoreAttr?.EventSaverFactoryType!,
-                        StateLoaderFactoryType = m.stateStoreAttr?.StateLoaderFactoryType!,
-                        StateSaverFactoryType = m.stateStoreAttr?.StateSaverFactoryType!,
-                        ClaptrapBoxInterfaceType = m.boxInterfaceType,
-                        ClaptrapBoxImplementationType = m.boxImplType,
-                        ClaptrapOptions = new ClaptrapOptions
-                        {
-                            MinionActivationOptions = m.MinionOptionsAttribute == null
-                                ? null!
-                                : new MinionActivationOptions
-                                {
-                                    ActivateMinionsAtMasterStart = m.MinionOptionsAttribute.ActivateMinionsAtStart
-                                },
-                            EventLoadingOptions = m.EventLoadingOptionsAttribute == null
-                                ? null!
-                                : new EventLoadingOptions
-                                {
-                                    LoadingCountInOneBatch = m.EventLoadingOptionsAttribute.LoadingCountInOneBatch,
-                                },
-                            StateRecoveryOptions = m.StateRecoveryOptionsAttribute == null
-                                ? null!
-                                : new StateRecoveryOptions
-                                {
-                                    StateRecoveryStrategy = m.StateRecoveryOptionsAttribute.StateRecoveryStrategy
-                                },
-                            StateSavingOptions = m.StateSavingOptionsAttribute == null
-                                ? null!
-                                : new StateSavingOptions
-                                {
-                                    SavingWindowTime = m.StateSavingOptionsAttribute.SavingWindowTime,
-                                    SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
-                                    SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
-                                }
-                        },
-                        // TODO EventHandlerFactoryFactoryType 
-                    };
-                    //  find more event and handlers from attribute
-                    var handlerDesigns = m.eventAttrs.Length > m.eventHandlerAttrs.Length
-                        ? m.eventAttrs.Select(e => new ClaptrapEventHandlerDesign
-                            {
-                                EventTypeCode = e.EventTypeCode,
-                                EventDataType = e.EventDataType,
-                                EventHandlerType = m.eventHandlerAttrs
-                                    .FirstOrDefault(x => x.EventTypeCode == e.EventTypeCode)?.EventHandlerType!
-                            })
-                            .ToArray()
-                        : m.eventHandlerAttrs.Select(e => new ClaptrapEventHandlerDesign
-                            {
-                                EventTypeCode = e.EventTypeCode,
-                                EventDataType = m.eventAttrs
-                                    .FirstOrDefault(x => x.EventTypeCode == e.EventTypeCode)?.EventDataType!,
-                                EventHandlerType = e.EventHandlerType,
-                            })
-                            .ToArray();
-
-                    claptrapDesign.EventHandlerDesigns =
-                        new Dictionary<string, IClaptrapEventHandlerDesign>(
-                            handlerDesigns.ToDictionary(a => a.EventTypeCode, a => (IClaptrapEventHandlerDesign) a));
-                    return (claptrapDesign, m);
+                    ClaptrapTypeCode = GetActorTypeCode(m.stateAttr)
                 })
-                .ToArray();
+                .ToDictionary(x => x.ClaptrapTypeCode);
 
             // try to map master and minions
-            var typeCodeDic = claptrapDesignTuples
-                .ToDictionary(x => x.claptrapDesign.Identity.TypeCode);
-
-            foreach (var (claptrapDesign, m) in claptrapDesignTuples)
+            foreach (var (typeCode, design) in claptrapDesigns)
             {
-                if (m.minionAttr != null && typeCodeDic.TryGetValue(m.minionAttr.MasterTypeCode, out var masterDesign))
+                var m = metadataDic[typeCode];
+                if (m.minionAttr != null &&
+                    claptrapDesigns.TryGetValue(m.minionAttr.MasterTypeCode, out var masterDesign))
                 {
-                    claptrapDesign.ClaptrapMasterDesign = masterDesign.claptrapDesign;
+                    design.ClaptrapMasterDesign = masterDesign;
                 }
             }
 
-            foreach (var claptrapDesign in claptrapDesignTuples.Select(x => x.claptrapDesign))
+            foreach (var design in claptrapDesigns.Values)
+            {
+                var m = metadataDic[design.ClaptrapTypeCode];
+                design.StateDataType = m.stateAttr.StateDataType;
+                design.InitialStateDataFactoryType =
+                    m.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!;
+                design.StateHolderFactoryType = m.stateHolderAttr?.StateHolderFactory!;
+                design.EventLoaderFactoryType = m.eventStoreAttr?.EventLoaderFactoryType!;
+                design.EventSaverFactoryType = m.eventStoreAttr?.EventSaverFactoryType!;
+                design.StateLoaderFactoryType = m.stateStoreAttr?.StateLoaderFactoryType!;
+                design.StateSaverFactoryType = m.stateStoreAttr?.StateSaverFactoryType!;
+                design.ClaptrapBoxInterfaceType = m.boxInterfaceType;
+                design.ClaptrapBoxImplementationType = m.boxImplType;
+                design.ClaptrapOptions = new ClaptrapOptions
+                {
+                    MinionActivationOptions = m.MinionOptionsAttribute == null
+                        ? null!
+                        : new MinionActivationOptions
+                        {
+                            ActivateMinionsAtMasterStart = m.MinionOptionsAttribute.ActivateMinionsAtStart
+                        },
+                    EventLoadingOptions = m.EventLoadingOptionsAttribute == null
+                        ? null!
+                        : new EventLoadingOptions
+                        {
+                            LoadingCountInOneBatch = m.EventLoadingOptionsAttribute.LoadingCountInOneBatch,
+                        },
+                    StateRecoveryOptions = m.StateRecoveryOptionsAttribute == null
+                        ? null!
+                        : new StateRecoveryOptions
+                        {
+                            StateRecoveryStrategy = m.StateRecoveryOptionsAttribute.StateRecoveryStrategy
+                        },
+                    StateSavingOptions = m.StateSavingOptionsAttribute == null
+                        ? null!
+                        : new StateSavingOptions
+                        {
+                            SavingWindowTime = m.StateSavingOptionsAttribute.SavingWindowTime,
+                            SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
+                            SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
+                        }
+                };
+                // TODO EventHandlerFactoryFactoryType 
+                // find more event from attribute
+                // attribute will be found on master design 
+                ClaptrapEventAttribute[] eventAttrs = design.ClaptrapMasterDesign != null
+                    ? metadataDic[design.ClaptrapMasterDesign.ClaptrapTypeCode].eventAttrs
+                    : m.eventAttrs;
+
+                var handlerDesigns = eventAttrs.Select(e => new ClaptrapEventHandlerDesign
+                    {
+                        EventTypeCode = e.EventTypeCode,
+                        EventDataType = e.EventDataType,
+                        EventHandlerType = m.eventHandlerAttrs
+                            .FirstOrDefault(x => x.EventTypeCode == e.EventTypeCode)?.EventHandlerType!
+                    })
+                    .ToArray();
+
+                design.EventHandlerDesigns =
+                    new Dictionary<string, IClaptrapEventHandlerDesign>(
+                        handlerDesigns.ToDictionary(a => a.EventTypeCode, a => (IClaptrapEventHandlerDesign) a));
+            }
+
+            foreach (var claptrapDesign in claptrapDesigns.Values)
             {
                 re.AddOrReplace(claptrapDesign);
             }

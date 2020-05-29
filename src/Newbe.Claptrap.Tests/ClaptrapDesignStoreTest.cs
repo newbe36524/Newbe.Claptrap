@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.Tests
             var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
             {
-                Identity = actorIdentity
+                ClaptrapTypeCode = typeCode
             };
             claptrapDesignStore.AddOrReplace(design);
             var claptrapDesign = claptrapDesignStore.FindDesign(actorIdentity);
@@ -33,12 +33,12 @@ namespace Newbe.Claptrap.Tests
             var actorIdentity = new TestClaptrapIdentity(id, typeCode);
             var design = new ClaptrapDesign
             {
-                Identity = actorIdentity
+                ClaptrapTypeCode = typeCode
             };
             claptrapDesignStore.AddOrReplace(design);
             var newDesign = new ClaptrapDesign
             {
-                Identity = actorIdentity
+                ClaptrapTypeCode = typeCode
             };
             claptrapDesignStore.AddOrReplace(newDesign);
             var claptrapDesign = claptrapDesignStore.FindDesign(actorIdentity);
@@ -56,45 +56,18 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Test]
-        public void IdSpecificFirstFound()
+        public void DesignFound()
         {
             using var mocker = AutoMockHelper.Create();
             var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
             const string typeCode = "testCode";
-            var actorIdentity = new TestClaptrapIdentity("123", typeCode);
-            var idDesign = new ClaptrapDesign
+            var design = new ClaptrapDesign
             {
-                Identity = actorIdentity
+                ClaptrapTypeCode = typeCode
             };
-            claptrapDesignStore.AddOrReplace(idDesign);
-            var globalDesign = new ClaptrapDesign
-            {
-                Identity = new TestClaptrapIdentity(string.Empty, typeCode)
-            };
-            claptrapDesignStore.AddOrReplace(globalDesign);
-            var claptrapDesign = claptrapDesignStore.FindDesign(actorIdentity);
-            claptrapDesign.Should().Be(idDesign);
-        }
-
-        [Test]
-        public void GlobalDesignFound()
-        {
-            using var mocker = AutoMockHelper.Create();
-            var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
-            const string typeCode = "testCode";
-            var actorIdentity = new TestClaptrapIdentity("123", typeCode);
-            var idDesign = new ClaptrapDesign
-            {
-                Identity = actorIdentity
-            };
-            claptrapDesignStore.AddOrReplace(idDesign);
-            var globalDesign = new ClaptrapDesign
-            {
-                Identity = new TestClaptrapIdentity(string.Empty, typeCode)
-            };
-            claptrapDesignStore.AddOrReplace(globalDesign);
+            claptrapDesignStore.AddOrReplace(design);
             var claptrapDesign = claptrapDesignStore.FindDesign(new TestClaptrapIdentity("456", typeCode));
-            claptrapDesign.Should().Be(globalDesign);
+            claptrapDesign.Should().Be(design);
         }
     }
 }

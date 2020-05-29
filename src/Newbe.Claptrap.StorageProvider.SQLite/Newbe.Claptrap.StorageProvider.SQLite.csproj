@@ -2,27 +2,29 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />
-        <PackageReference Include="Fody" Version="6.1.1" />
+        
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
         <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.2" />
         <PackageReference Include="System.Linq.Async" Version="4.1.1" />
         <PackageReference Include="System.Reactive" Version="4.4.1" />
         <PackageReference Include="Dapper" Version="2.0.35" />
         <PackageReference Include="dbup-sqlite" Version="4.3.0" />
-        <PackageReference Include="Visualize.Fody" Version="1.2.0" />
+        
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="SqlScripts\0001-Create Event Table.event.sql" />
-      <EmbeddedResource Include="SqlScripts\0001-Create State Table.state.sql" />
+      <EmbeddedResource Include="SqlScripts\EventStore\OneIdOneFile\0001-OneIdOneFile.event.sql" />
+      <EmbeddedResource Include="SqlScripts\StateStore\OneIdOneFile\0001-OneIdOneFile.state.sql" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 

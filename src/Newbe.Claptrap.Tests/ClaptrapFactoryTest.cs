@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.Tests
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()
                 },
-                Identity = actorIdentity,
+                ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),
@@ -69,7 +69,7 @@ namespace Newbe.Claptrap.Tests
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()
                 },
-                Identity = actorIdentity,
+                ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),
@@ -90,7 +90,7 @@ namespace Newbe.Claptrap.Tests
                     StateRecoveryOptions = new StateRecoveryOptions(),
                     StateSavingOptions = new StateSavingOptions()
                 },
-                Identity = actorIdentity,
+                ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),

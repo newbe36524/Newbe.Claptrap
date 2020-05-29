@@ -176,7 +176,7 @@ namespace Newbe.Claptrap
             public static string L002NotImpl { get; internal set; }
 
             /// <summary>
-            /// There is no event handler found for {eventTypeCode} in {claptrapIdentity}. It must be define as this is a minion and the mater will send it to this. If you don`t handle the event, you can define {handlerName} for this event.
+            /// There is no event handler found for {eventTypeCode} in {claptrapTypeCode}. It must be define as this is a minion and the mater will send it to this. If you don`t handle the event, you can define {handlerName} for this event.
             /// </summary>
             public static string L003MissingEventHandleInMinion { get; internal set; }
         }

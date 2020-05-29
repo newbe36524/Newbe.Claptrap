@@ -6,7 +6,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
     {
         public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
         {
-            yield return new SQLiteStorageModule();
+            yield return new SQLiteStorageSharedModule();
         }
     }
 }

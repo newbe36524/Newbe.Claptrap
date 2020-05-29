@@ -92,7 +92,7 @@ namespace Newbe.Claptrap.Core.Impl
                         {
                             await SaveEvent(context.Event);
                             var nextState = await context.EventHandler.HandleEvent(context.EventContext);
-                            _logger.LogInformation("event handled and updating state");
+                            _logger.LogDebug("event handled and updating state");
                             _logger.LogDebug("start update to {@state}", nextState);
                             State = nextState;
                             State.IncreaseVersion();

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>Newbe.Claptrap</RootNamespace>
+        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,8 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Fody" Version="6.1.1" />
-      <PackageReference Include="Visualize.Fody" Version="1.2.0" />
+      
+      
     </ItemGroup>
 
 </Project>

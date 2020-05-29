@@ -24,19 +24,32 @@ namespace Newbe.Claptrap.Bootstrapper
             return builder;
         }
 
-        /// <summary>
-        /// Config global claptrap design
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public static IClaptrapBootstrapperBuilder ConfigureGlobalClaptrapDesign(
+        public static IClaptrapBootstrapperBuilder ConfigureClaptrapDesign(
             this IClaptrapBootstrapperBuilder builder,
-            Action<IGlobalClaptrapDesign> action)
+            Action<IClaptrapDesign> action)
         {
-            var design = new GlobalClaptrapDesign();
-            action.Invoke(design);
-            builder.Options.ClaptrapDesignStoreConfigurators.Add(new GlobalClaptrapDesignStoreConfigurator(design));
+            builder.Options.ClaptrapDesignStoreConfigurators.Add(new FuncClaptrapDesignStoreConfigurator(store =>
+            {
+                foreach (var claptrapDesign in store)
+                {
+                    action(claptrapDesign);
+                }
+            }));
+            return builder;
+        }
+
+        public static IClaptrapBootstrapperBuilder ConfigureClaptrapDesign(
+            this IClaptrapBootstrapperBuilder builder,
+            Func<IClaptrapDesign, bool> predicate,
+            Action<IClaptrapDesign> action)
+        {
+            builder.Options.ClaptrapDesignStoreConfigurators.Add(new FuncClaptrapDesignStoreConfigurator(store =>
+            {
+                foreach (var claptrapDesign in store.Where(predicate))
+                {
+                    action(claptrapDesign);
+                }
+            }));
             return builder;
         }
 

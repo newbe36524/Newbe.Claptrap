@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
+using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Modules
 {

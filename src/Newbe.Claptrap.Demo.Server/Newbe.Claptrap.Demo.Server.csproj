@@ -9,16 +9,17 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-        <PackageReference Include="Fody" Version="6.1.1" />
+        
         <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.1.6" />
         <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="3.1.6" />
         <PackageReference Include="OrleansDashboard" Version="3.1.0" />
-        <PackageReference Include="Visualize.Fody" Version="1.2.0" />
+        
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     </ItemGroup>
 

@@ -39,5 +39,11 @@ namespace Newbe.Claptrap
 
         public IList<IClaptrapModuleProvider> ClaptrapModuleProviders { get; set; }
             = new List<IClaptrapModuleProvider>();
+
+        /// <summary>
+        /// {dbName:connectionString}
+        /// </summary>
+        public IDictionary<string, string> StorageConnectionStrings { get; set; }
+            = new Dictionary<string, string>();
     }
 }

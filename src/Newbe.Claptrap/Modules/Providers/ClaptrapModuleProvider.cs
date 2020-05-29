@@ -59,6 +59,24 @@ namespace Newbe.Claptrap.Modules
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
+                builder.RegisterInstance(_identity)
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign)
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions)
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.EventLoaderOptions)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.EventSaverOptions)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.StateLoaderOptions)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+                builder.RegisterInstance(_claptrapDesign.ClaptrapStorageProviderOptions.StateSaverOptions)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
 
                 builder.RegisterType<ClaptrapActor>()
                     .As<IClaptrap>()
@@ -176,7 +194,7 @@ namespace Newbe.Claptrap.Modules
                     .AsImplementedInterfaces()
                     .SingleInstance();
 
-                
+
                 // TODO move
                 builder.RegisterType<EventCenterEventNotifier>()
                     .AsSelf()

@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+
+    db:
+      image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      ports:
+        - 3306:3306
+      environment:
+        MYSQL_ROOT_PASSWORD: claptrap
+  
+    adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8080:8080

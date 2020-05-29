@@ -67,7 +67,7 @@ namespace Newbe.Claptrap.Core.Impl
                         try
                         {
                             await SaveStateAsync(latestState);
-                            _logger.LogInformation("state snapshot save, version : {version}",
+                            _logger.LogDebug("state snapshot save, version : {version}",
                                 latestState.Version);
                         }
                         catch (Exception e)
@@ -98,7 +98,7 @@ namespace Newbe.Claptrap.Core.Impl
         {
             _logger.LogDebug("start to save state");
             await _stateSaver.SaveAsync(state);
-            _logger.LogInformation("state save success");
+            _logger.LogDebug("state save success");
         }
     }
 }
