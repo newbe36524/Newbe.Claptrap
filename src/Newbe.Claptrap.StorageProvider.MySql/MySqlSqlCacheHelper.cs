@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
@@ -46,7 +46,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             const int maxCount = 10000;
             for (var i = 0; i < maxCount; i++)
             {
-                foreach (var name in SharedTableEventEntity.ParameterNames())
+                foreach (var name in EventEntity.ParameterNames())
                 {
                     _sqlTemplateCache.AddParameterName(name, i);
                 }
@@ -57,7 +57,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql
                 $"INSERT INTO [{config.SchemaName}].[{config.EventTableName}] ([claptrap_type_code], [claptrap_id], [version], [event_type_code], [event_data], [created_time]) VALUES ";
             var valuesSql = Enumerable.Range(0, maxCount)
                 .Select(x =>
-                    ValuePartFactory(SharedTableEventEntity.ParameterNames()))
+                    ValuePartFactory(EventEntity.ParameterNames()))
                 .ToArray();
 
             var insertManySql = Enumerable.Range(1, maxCount)

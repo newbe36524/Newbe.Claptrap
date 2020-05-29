@@ -21,10 +21,10 @@
         }
       },
       "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -39,22 +39,22 @@
       "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "ClaptrapStorageProviderOptions": {
         "EventSaverOptions": {
-          "EventStoreStrategy": 2,
+          "SQLiteEventStoreStrategy": 1,
           "IsAutoMigrationEnabled": true,
           "EventTableName": "events"
         },
         "EventLoaderOptions": {
-          "EventStoreStrategy": 2,
+          "SQLiteEventStoreStrategy": 1,
           "IsAutoMigrationEnabled": true,
           "EventTableName": "events"
         },
         "StateSaverOptions": {
-          "StateStoreStrategy": 0,
+          "SQLiteStateStoreStrategy": 0,
           "IsAutoMigrationEnabled": true,
           "StateTableName": "states"
         },
         "StateLoaderOptions": {
-          "StateStoreStrategy": 0,
+          "SQLiteStateStoreStrategy": 0,
           "IsAutoMigrationEnabled": true,
           "StateTableName": "states"
         }
@@ -77,10 +77,10 @@
       }
     },
     "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -95,22 +95,22 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "EventStoreStrategy": 2,
+        "SQLiteEventStoreStrategy": 1,
         "IsAutoMigrationEnabled": true,
         "EventTableName": "events"
       },
       "EventLoaderOptions": {
-        "EventStoreStrategy": 2,
+        "SQLiteEventStoreStrategy": 1,
         "IsAutoMigrationEnabled": true,
         "EventTableName": "events"
       },
       "StateSaverOptions": {
-        "StateStoreStrategy": 0,
+        "SQLiteStateStoreStrategy": 0,
         "IsAutoMigrationEnabled": true,
         "StateTableName": "states"
       },
       "StateLoaderOptions": {
-        "StateStoreStrategy": 0,
+        "SQLiteStateStoreStrategy": 0,
         "IsAutoMigrationEnabled": true,
         "StateTableName": "states"
       }
@@ -136,10 +136,10 @@
       }
     },
     "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.SQLiteStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -154,22 +154,22 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "EventStoreStrategy": 2,
+        "SQLiteEventStoreStrategy": 1,
         "IsAutoMigrationEnabled": true,
         "EventTableName": "events"
       },
       "EventLoaderOptions": {
-        "EventStoreStrategy": 2,
+        "SQLiteEventStoreStrategy": 1,
         "IsAutoMigrationEnabled": true,
         "EventTableName": "events"
       },
       "StateSaverOptions": {
-        "StateStoreStrategy": 0,
+        "SQLiteStateStoreStrategy": 0,
         "IsAutoMigrationEnabled": true,
         "StateTableName": "states"
       },
       "StateLoaderOptions": {
-        "StateStoreStrategy": 0,
+        "SQLiteStateStoreStrategy": 0,
         "IsAutoMigrationEnabled": true,
         "StateTableName": "states"
       }

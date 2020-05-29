@@ -1,13 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneIdentityOneTable;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.OneTypeOneTable;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational.StateStore.OneIdentityOneTable;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {
@@ -59,40 +54,15 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             {
                 base.Load(builder);
                 var saverOptions = _design.ClaptrapStorageProviderOptions.EventSaverOptions;
-                if (saverOptions is IRelationalEventSaverOptions relationalEventSaverOptions)
+                if (saverOptions is IAutoMigrationOptions autoMigrationOptions
+                    && autoMigrationOptions.IsAutoMigrationEnabled)
                 {
-                    if (saverOptions is IAutoMigrationOptions autoMigrationOptions
-                        && autoMigrationOptions.IsAutoMigrationEnabled)
-                    {
-                        builder.RegisterType<AutoMigrationEventSaver>()
-                            .AsSelf()
-                            .InstancePerLifetimeScope();
-                        builder.RegisterDecorator<IEventSaver>((context, ps, inner) => context
-                            .Resolve<AutoMigrationEventSaver.Factory>()
-                            .Invoke(inner));
-                    }
-
-                    switch (relationalEventSaverOptions.EventStoreStrategy)
-                    {
-                        case EventStoreStrategy.SharedTable:
-                            builder.RegisterType<RelationalEventSaver<SharedTableEventEntity>>()
-                                .As<IRelationalEventSaver>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        case EventStoreStrategy.OneTypeOneTable:
-                            builder.RegisterType<RelationalEventSaver<OneTypeOneTableEventEntity>>()
-                                .As<IRelationalEventSaver>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        case EventStoreStrategy.OneIdentityOneTable:
-                            builder.RegisterType<RelationalEventSaver<OneIdentityOneTableEventEntity>>()
-                                .As<IRelationalEventSaver>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterDecorator<AutoMigrationEventSaver, IEventSaver>();
                 }
+
+                builder.RegisterType<RelationalEventSaver<EventEntity>>()
+                    .As<IRelationalEventSaver>()
+                    .InstancePerLifetimeScope();
             }
         }
 
@@ -115,40 +85,15 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             {
                 base.Load(builder);
                 var loaderOptions = _design.ClaptrapStorageProviderOptions.EventLoaderOptions;
-                if (loaderOptions is IRelationalEventLoaderOptions relationalEventLoaderOptions)
+                if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
+                    && autoMigrationOptions.IsAutoMigrationEnabled)
                 {
-                    if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
-                        && autoMigrationOptions.IsAutoMigrationEnabled)
-                    {
-                        builder.RegisterType<AutoMigrationEventLoader>()
-                            .AsSelf()
-                            .InstancePerLifetimeScope();
-                        builder.RegisterDecorator<IEventLoader>((context, ps, inner) => context
-                            .Resolve<AutoMigrationEventLoader.Factory>()
-                            .Invoke(inner));
-                    }
-
-                    switch (relationalEventLoaderOptions.EventStoreStrategy)
-                    {
-                        case EventStoreStrategy.SharedTable:
-                            builder.RegisterType<RelationalEventLoader<SharedTableEventEntity>>()
-                                .As<IRelationalEventLoader>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        case EventStoreStrategy.OneTypeOneTable:
-                            builder.RegisterType<RelationalEventLoader<OneTypeOneTableEventEntity>>()
-                                .As<IRelationalEventLoader>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        case EventStoreStrategy.OneIdentityOneTable:
-                            builder.RegisterType<RelationalEventLoader<OneIdentityOneTableEventEntity>>()
-                                .As<IRelationalEventLoader>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterDecorator<AutoMigrationEventLoader, IEventLoader>();
                 }
+
+                builder.RegisterType<RelationalEventLoader<EventEntity>>()
+                    .As<IRelationalEventLoader>()
+                    .InstancePerLifetimeScope();
             }
         }
 
@@ -171,28 +116,15 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             {
                 base.Load(builder);
                 var loaderOptions = _design.ClaptrapStorageProviderOptions.StateLoaderOptions;
-                if (loaderOptions is IRelationalStateLoaderOptions relationalStateLoaderOptions)
+                if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
+                    && autoMigrationOptions.IsAutoMigrationEnabled)
                 {
-                    if (loaderOptions is IAutoMigrationOptions autoMigrationOptions
-                        && autoMigrationOptions.IsAutoMigrationEnabled)
-                    {
-                        builder.RegisterType<AutoMigrationStateLoader>()
-                            .AsSelf()
-                            .InstancePerLifetimeScope();
-                        builder.RegisterDecorator<AutoMigrationStateLoader, IStateLoader>();
-                    }
-
-                    switch (relationalStateLoaderOptions.StateStoreStrategy)
-                    {
-                        case StateStoreStrategy.OneIdentityOneTable:
-                            builder.RegisterType<RelationalStateLoader<OneIdentityOneTableStateEntity>>()
-                                .As<IRelationalStateLoader>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterDecorator<AutoMigrationStateLoader, IStateLoader>();
                 }
+
+                builder.RegisterType<RelationalStateLoader<StateEntity>>()
+                    .As<IRelationalStateLoader>()
+                    .InstancePerLifetimeScope();
             }
         }
 
@@ -215,28 +147,15 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             {
                 base.Load(builder);
                 var saverOptions = _design.ClaptrapStorageProviderOptions.StateSaverOptions;
-                if (saverOptions is IRelationalStateSaverOptions relationalStateSaverOptions)
+                if (saverOptions is IAutoMigrationOptions autoMigrationOptions
+                    && autoMigrationOptions.IsAutoMigrationEnabled)
                 {
-                    if (saverOptions is IAutoMigrationOptions autoMigrationOptions
-                        && autoMigrationOptions.IsAutoMigrationEnabled)
-                    {
-                        builder.RegisterType<AutoMigrationStateSaver>()
-                            .AsSelf()
-                            .InstancePerLifetimeScope();
-                        builder.RegisterDecorator<AutoMigrationStateSaver, IStateSaver>();
-                    }
-
-                    switch (relationalStateSaverOptions.StateStoreStrategy)
-                    {
-                        case StateStoreStrategy.OneIdentityOneTable:
-                            builder.RegisterType<RelationalStateSaver<OneIdentityOneTableStateEntity>>()
-                                .As<IRelationalStateSaver>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterDecorator<AutoMigrationStateSaver, IStateSaver>();
                 }
+
+                builder.RegisterType<RelationalStateSaver<StateEntity>>()
+                    .As<IRelationalStateSaver>()
+                    .InstancePerLifetimeScope();
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 {
     public class RelationalStateLoader<T> : IRelationalStateLoader
-        where T : IStateEntity
+        where T : class, IStateEntity
     {
         private readonly IStateEntityMapper<T> _mapper;
         private readonly IStateEntityLoader<T> _stateEntityLoader;

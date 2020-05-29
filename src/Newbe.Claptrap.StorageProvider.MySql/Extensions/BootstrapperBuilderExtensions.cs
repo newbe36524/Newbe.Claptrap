@@ -1,7 +1,6 @@
 using Newbe.Claptrap.StorageProvider.MySql;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
-using EventStoreStrategy = Newbe.Claptrap.StorageProvider.Relational.EventStore.EventStoreStrategy;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
@@ -25,8 +24,8 @@ namespace Newbe.Claptrap.Bootstrapper
             this IClaptrapBootstrapperBuilder builder)
             => builder.ConfigureClaptrapDesign(x =>
             {
-                x.EventLoaderFactoryType = typeof(SQLiteStoreFactory);
-                x.EventSaverFactoryType = typeof(SQLiteStoreFactory);
+                x.EventLoaderFactoryType = typeof(RelationalStoreFactory);
+                x.EventSaverFactoryType = typeof(RelationalStoreFactory);
                 var mysqlOptions = new MySqlSharedTableEventStoreOptions
                 {
                     SchemaName = "claptrap",

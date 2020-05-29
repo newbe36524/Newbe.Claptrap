@@ -5,12 +5,11 @@ using Dapper;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
-    public class MySqlSharedTableEventEntitySaver : BatchEventEntitySaver<SharedTableEventEntity>
+    public class MySqlSharedTableEventEntitySaver : BatchEventEntitySaver<EventEntity>
     {
         private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
         private readonly IDbFactory _dbFactory;
@@ -27,7 +26,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             _sqlTemplateCache = sqlTemplateCache;
         }
 
-        protected override async Task SaveOneAsync(SharedTableEventEntity entity)
+        protected override async Task SaveOneAsync(EventEntity entity)
         {
             var sql = _sqlTemplateCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreInsertOneSql);
             var dbName = _mySqlSharedTableEventStoreOptions.SharedTableEventStoreDbName;
@@ -35,9 +34,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             await db.ExecuteAsync(sql, entity);
         }
 
-        protected override async Task SaveManyAsync(IEnumerable<SharedTableEventEntity> entities)
+        protected override async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
-            var array = entities as SharedTableEventEntity[] ?? entities.ToArray();
+            var array = entities as EventEntity[] ?? entities.ToArray();
             var count = array.Length;
             if (count <= 0)
             {
@@ -50,7 +49,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             var ps = new DynamicParameters();
             for (var i = 0; i < count; i++)
             {
-                foreach (var (parameterName, valueFunc) in SharedTableEventEntity.ValueFactories())
+                foreach (var (parameterName, valueFunc) in EventEntity.ValueFactories())
                 {
                     var sharedTableEventEntity = array[i];
                     ps.Add(_sqlTemplateCache.GetParameterName(parameterName, i), valueFunc(sharedTableEventEntity));

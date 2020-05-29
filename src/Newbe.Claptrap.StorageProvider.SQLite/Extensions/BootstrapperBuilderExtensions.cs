@@ -1,4 +1,5 @@
 using System;
+using Newbe.Claptrap.StorageProvider.SQLite.Extensions;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
@@ -9,9 +10,7 @@ namespace Newbe.Claptrap.Bootstrapper
             this IClaptrapBootstrapperBuilder builder,
             Action<SQLiteProviderConfigurator> sqlite)
         {
-            var sqLiteProviderConfigurator = new SQLiteProviderConfigurator(x => true, builder);
-            sqlite(sqLiteProviderConfigurator);
-            return builder;
+            return builder.UseSQLite(x => true, sqlite);
         }
 
         public static IClaptrapBootstrapperBuilder UseSQLite(

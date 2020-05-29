@@ -18,8 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="SqlScripts\EventStore\OneIdentityOneTable\0001-OneIdentityOneTable.event.sql" />
-      <EmbeddedResource Include="SqlScripts\StateStore\OneIdentityOneTable\0001-OneIdentityOneTable.state.sql" />
+      <EmbeddedResource Include="SqlScripts\EventStore\OneIdOneFile\0001-OneIdOneFile.event.sql" />
+      <EmbeddedResource Include="SqlScripts\StateStore\OneIdOneFile\0001-OneIdOneFile.state.sql" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.MySql/SqlScripts/0001-event-mysql_shared_table.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/EventStore/OneIdentityOneTable/0001-OneIdentityOneTable.event.sql" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/StateStore/OneIdentityOneTable/0001-OneIdentityOneTable.state.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/EventStore/OneIdOneFile/0001-OneIdOneFile.event.sql" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/StateStore/OneIdOneFile/0001-OneIdOneFile.state.sql" dialect="SQLite" />
   </component>
 </project>

@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
-using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdentityOneTable;
+using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -23,7 +22,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
         public IEnumerable<IClaptrapSharedModule> GetClaptrapSharedModules(IClaptrapIdentity identity)
         {
             var design = _claptrapDesignStore.FindDesign(identity);
-            var re = new SQLiteMigrationModule(design);
+            var re = new SQLiteStorageModule(design);
             yield return re;
         }
 
@@ -37,98 +36,104 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             yield break;
         }
 
-        private class SQLiteMigrationModule : Autofac.Module, IClaptrapSharedModule
+        private class SQLiteStorageModule : Autofac.Module, IClaptrapSharedModule
         {
             private readonly IClaptrapDesign _design;
 
-            public SQLiteMigrationModule(IClaptrapDesign design)
+            public SQLiteStorageModule(IClaptrapDesign design)
             {
                 _design = design;
             }
 
-            public string Name { get; } = "Claptrap SQLite migration module";
-            public string Description { get; } = "Module for SQLite migration";
+            public string Name { get; } = "Claptrap SQLite module";
+            public string Description { get; } = "Module for SQLite to support EventStore and StateStore";
 
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
                 var options = _design.ClaptrapStorageProviderOptions;
-                if (options.EventLoaderOptions is ISQLiteStorageMigrationOptions
-                    eventLoaderMigrationOptions && eventLoaderMigrationOptions.IsAutoMigrationEnabled)
+                if (options.EventLoaderOptions is ISQLiteEventLoaderOptions relationalEventLoaderOptions)
                 {
-                    if (options.EventLoaderOptions is IRelationalEventLoaderOptions relationalEventLoaderOptions)
+                    switch (relationalEventLoaderOptions.SQLiteEventStoreStrategy)
                     {
-                        switch (relationalEventLoaderOptions.EventStoreStrategy)
-                        {
-                            case EventStoreStrategy.SharedTable:
-                                break;
-                            case EventStoreStrategy.OneTypeOneTable:
-                                break;
-                            case EventStoreStrategy.OneIdentityOneTable:
-                                builder.RegisterType<SQLiteOneIdentityOneTableEventStoreMigration>()
-                                    .As<IEventLoaderMigration>()
-                                    .InstancePerLifetimeScope();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                    }
-                }
-
-                if (options.EventSaverOptions is ISQLiteStorageMigrationOptions
-                        eventSaverMigrationOptions && eventSaverMigrationOptions.IsAutoMigrationEnabled
-                                                   && options.EventSaverOptions is IRelationalEventSaverOptions
-                                                       relationalEventSaverOptions)
-                {
-                    switch (relationalEventSaverOptions.EventStoreStrategy)
-                    {
-                        case EventStoreStrategy.SharedTable:
-                            break;
-                        case EventStoreStrategy.OneTypeOneTable:
-                            break;
-                        case EventStoreStrategy.OneIdentityOneTable:
-                            builder.RegisterType<SQLiteOneIdentityOneTableEventStoreMigration>()
-                                .As<IEventSaverMigration>()
+                        case SQLiteEventStoreStrategy.OneIdOneFile:
+                            builder.RegisterType<SQLiteOneIdOneFileEventEntityLoader>()
+                                .AsImplementedInterfaces()
                                 .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.EventLoaderOptions,
+                                typeof(SQLiteOneIdOneFileEventStoreMigration),
+                                typeof(IEventLoaderMigration));
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
                 }
 
-                if (options.StateLoaderOptions is ISQLiteStorageMigrationOptions
-                    stateLoaderMigrationOptions && stateLoaderMigrationOptions.IsAutoMigrationEnabled)
+                if (options.EventSaverOptions is ISQLiteEventSaverOptions relationalEventSaverOptions)
                 {
-                    if (options.StateLoaderOptions is IRelationalStateLoaderOptions relationalStateLoaderOptions)
+                    switch (relationalEventSaverOptions.SQLiteEventStoreStrategy)
                     {
-                        switch (relationalStateLoaderOptions.StateStoreStrategy)
-                        {
-                            case StateStoreStrategy.OneIdentityOneTable:
-                                builder.RegisterType<SQLiteOneIdentityOneTableStateStoreMigration>()
-                                    .As<IStateLoaderMigration>()
-                                    .InstancePerLifetimeScope();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                        case SQLiteEventStoreStrategy.OneIdOneFile:
+                            builder.RegisterType<SQLiteOneIdOneFileEventEntitySaver>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.EventSaverOptions,
+                                typeof(SQLiteOneIdOneFileEventStoreMigration),
+                                typeof(IEventSaverMigration));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
 
-                if (options.StateSaverOptions is ISQLiteStorageMigrationOptions
-                    stateSaverMigrationOptions && stateSaverMigrationOptions.IsAutoMigrationEnabled)
+                if (options.StateLoaderOptions is ISQLiteStateLoaderOptions relationalStateLoaderOptions)
                 {
-                    if (options.StateSaverOptions is IRelationalStateSaverOptions relationalStateSaverOptions)
+                    switch (relationalStateLoaderOptions.SQLiteStateStoreStrategy)
                     {
-                        switch (relationalStateSaverOptions.StateStoreStrategy)
-                        {
-                            case StateStoreStrategy.OneIdentityOneTable:
-                                builder.RegisterType<SQLiteOneIdentityOneTableStateStoreMigration>()
-                                    .As<IStateSaverMigration>()
-                                    .InstancePerLifetimeScope();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                        case SQLiteStateStoreStrategy.OneIdOneFile:
+                            builder.RegisterType<SQLiteOneIdOneFileStateEntityLoader>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.StateLoaderOptions,
+                                typeof(SQLiteOneIdOneFileStateStoreMigration),
+                                typeof(IStateLoaderMigration));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                if (options.StateSaverOptions is ISQLiteStateSaverOptions relationalStateSaverOptions)
+                {
+                    switch (relationalStateSaverOptions.SQLiteStateStoreStrategy)
+                    {
+                        case SQLiteStateStoreStrategy.OneIdOneFile:
+                            builder.RegisterType<SQLiteOneIdOneFileStateEntitySaver>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.StateSaverOptions,
+                                typeof(SQLiteOneIdOneFileStateStoreMigration),
+                                typeof(IStateSaverMigration));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                void RegisterIfAutoMigrationEnabled(IStorageProviderOptions ops,
+                    Type type,
+                    Type migrationInterfaceType)
+                {
+                    if (ops is ISQLiteStorageMigrationOptions
+                        migrationOptions && migrationOptions.IsAutoMigrationEnabled)
+                    {
+                        builder.RegisterType(type)
+                            .As(migrationInterfaceType)
+                            .InstancePerLifetimeScope();
                     }
                 }
             }
