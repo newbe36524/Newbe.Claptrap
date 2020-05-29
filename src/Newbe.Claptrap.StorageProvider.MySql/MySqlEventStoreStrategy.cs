@@ -1,7 +1,9 @@
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
-    public enum StateStoreStrategy
+    public enum MySqlEventStoreStrategy
     {
+        SharedTable,
+        OneTypeOneTable,
         OneIdentityOneTable,
     }
 }

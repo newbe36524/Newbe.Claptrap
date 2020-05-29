@@ -1,7 +1,7 @@
 namespace Newbe.Claptrap.StorageProvider.MySql.Options
 {
-    public interface IRelationalStateLoaderOptions :
-        IStrategyBaseStateStoreOptions,
+    public interface IMySqlStateLoaderOptions :
+        IStateStoreStrategyOptions,
         IStateLoaderOptions
     {
     }

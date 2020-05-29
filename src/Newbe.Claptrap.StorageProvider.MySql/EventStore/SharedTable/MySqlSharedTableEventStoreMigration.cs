@@ -5,17 +5,14 @@ using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
-    public class SharedTableEventStoreDbUpMysqlMigration : DbUpMysqlMigration
+    public class MySqlSharedTableEventStoreMigration : DbUpMysqlMigration
     {
-        public delegate SharedTableEventStoreDbUpMysqlMigration Factory(
-            IMySqlSharedTableEventStoreOptions options);
-
         private readonly IMySqlSharedTableEventStoreOptions _options;
 
-        public SharedTableEventStoreDbUpMysqlMigration(
+        public MySqlSharedTableEventStoreMigration(
             IMySqlSharedTableEventStoreOptions options,
             IDbFactory dbFactory,
-            ILogger<SharedTableEventStoreDbUpMysqlMigration> logger) : base(dbFactory,
+            ILogger<MySqlSharedTableEventStoreMigration> logger) : base(dbFactory,
             logger)
         {
             _options = options;
@@ -23,20 +20,20 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         protected override string GetDbName()
         {
-            return _options.SharedTableEventStoreDbName;
+            return _options.DbName;
         }
 
         protected override bool SqlSelector(string fileName)
         {
-            return fileName.EndsWith("event-mysql_shared_table.sql");
+            return fileName.EndsWith("-SharedTable.event.sql");
         }
 
         protected override Dictionary<string, string> GetVariables()
         {
             return new Dictionary<string, string>
             {
+                {"SchemaName", _options.SchemaName},
                 {"EventTableName", _options.EventTableName},
-                {"Schema", _options.SchemaName},
             };
         }
     }

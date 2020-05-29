@@ -18,12 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="SqlScripts\0001-event-mysql_shared_table.sql" />
-      <EmbeddedResource Include="SqlScripts\0001-state-mysql_default_table.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="StateStore\SharedTable" />
+      <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql" />
+      <EmbeddedResource Include="SqlScripts\StateStore\SharedTable\0001-SharedTable.state.sql" />
     </ItemGroup>
 
 </Project>

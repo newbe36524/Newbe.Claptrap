@@ -184,7 +184,8 @@ namespace Newbe.Claptrap.Bootstrapper
 
                 var claptrapBootstrapper =
                     new AutofacClaptrapBootstrapper(_applicationBuilder,
-                        autofacModules,
+                        autofacModules
+                            .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
                         claptrapDesignStore);
 
                 return claptrapBootstrapper;

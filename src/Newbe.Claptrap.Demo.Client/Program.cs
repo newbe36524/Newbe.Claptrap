@@ -39,23 +39,28 @@ namespace Newbe.Claptrap.Demo.Client
             await client.Connect(exception => Task.FromResult(true));
             Console.WriteLine("connected");
 
-            var accountId = "123";
-            var account = client.GetGrain<IAccount>(accountId);
-            var balance = await account.GetBalance();
-            Console.WriteLine(balance);
-            var sw = Stopwatch.StartNew();
-            const int times = 1;
-            await Task.WhenAll(Enumerable.Range(0, times)
-                .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
-            Console.WriteLine(await account.GetBalance());
-            sw.Stop();
-            Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms in {times}");
+            await Task.WhenAll(Enumerable.Range(1, 10).Select(x => RunOneAccount(x.ToString())));
 
-            var accountMinion = client.GetGrain<IAccountBalanceMinion>(accountId);
-            sw.Restart();
-            var balanceInMinion = await accountMinion.GetBalance();
-            sw.Stop();
-            Console.WriteLine($"balance in minion is {balanceInMinion}, cost time {sw.ElapsedMilliseconds} ms");
+            async Task RunOneAccount(string accountId)
+            {
+                Debug.Assert(client != null, nameof(client) + " != null");
+                var account = client.GetGrain<IAccount>(accountId);
+                var balance = await account.GetBalance();
+                Console.WriteLine(balance);
+                var sw = Stopwatch.StartNew();
+                const int times = 100;
+                await Task.WhenAll(Enumerable.Range(0, times)
+                    .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
+                Console.WriteLine(await account.GetBalance());
+                sw.Stop();
+                Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms in {times}");
+
+                var accountMinion = client.GetGrain<IAccountBalanceMinion>(accountId);
+                sw.Restart();
+                var balanceInMinion = await accountMinion.GetBalance();
+                sw.Stop();
+                Console.WriteLine($"balance in minion is {balanceInMinion}, cost time {sw.ElapsedMilliseconds} ms");
+            }
             // var random = new Random();
             // var sw = Stopwatch.StartNew();
             // var round = 0;

@@ -38,17 +38,26 @@ namespace Newbe.Claptrap.Demo.Server
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
-                                .UseSQLite(sqlite =>
-                                    sqlite
-                                        .AsEventStore(eventStore =>
-                                            eventStore.OneIdentityOneTable())
-                                        .AsStateStore(stateStore =>
-                                            stateStore.OneIdentityOneTable())
-                                )
                                 .ScanClaptrapDesigns(new[]
                                 {
                                     typeof(AccountGrain).Assembly
                                 })
+                                // .UseSQLite(sqlite =>
+                                //     sqlite
+                                //         .AsEventStore(eventStore =>
+                                //             eventStore.OneIdentityOneTable())
+                                //         .AsStateStore(stateStore =>
+                                //             stateStore.OneIdentityOneTable())
+                                // )
+                                .AddConnectionString("claptrap",
+                                    "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;UseCompression=True;Pooling=True;Keepalive=10;MinimumPoolSize=10;MaximumPoolSize=50;")
+                                .UseMySql(mysql =>
+                                    mysql
+                                        .AsEventStore(eventStore =>
+                                            eventStore.SharedTable())
+                                        .AsStateStore(stateStore =>
+                                            stateStore.SharedTable())
+                                )
                                 .Build();
                             claptrapBootstrapper.Boot();
                             var store = claptrapBootstrapper.DumpDesignStore();

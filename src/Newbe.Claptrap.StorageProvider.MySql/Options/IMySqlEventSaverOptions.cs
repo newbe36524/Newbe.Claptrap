@@ -1,7 +1,7 @@
 namespace Newbe.Claptrap.StorageProvider.MySql.Options
 {
-    public interface IRelationalEventSaverOptions :
-        IStrategyBaseEventStoreOptions,
+    public interface IMySqlEventSaverOptions :
+        IEventStoreStrategyOptions,
         IEventSaverOptions
     {
     }

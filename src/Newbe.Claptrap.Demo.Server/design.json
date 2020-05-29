@@ -39,24 +39,40 @@
       "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "ClaptrapStorageProviderOptions": {
         "EventSaverOptions": {
-          "SQLiteEventStoreStrategy": 1,
-          "IsAutoMigrationEnabled": true,
-          "EventTableName": "events"
+          "MySqlEventStoreStrategy": 0,
+          "SchemaName": "claptrap",
+          "EventTableName": "events",
+          "DbName": "claptrap",
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 1000,
+          "IsAutoMigrationEnabled": true
         },
         "EventLoaderOptions": {
-          "SQLiteEventStoreStrategy": 1,
-          "IsAutoMigrationEnabled": true,
-          "EventTableName": "events"
+          "MySqlEventStoreStrategy": 0,
+          "SchemaName": "claptrap",
+          "EventTableName": "events",
+          "DbName": "claptrap",
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 1000,
+          "IsAutoMigrationEnabled": true
         },
         "StateSaverOptions": {
-          "SQLiteStateStoreStrategy": 0,
+          "MySqlStateStoreStrategy": 0,
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
-          "StateTableName": "states"
+          "SchemaName": "claptrap",
+          "StateTableName": "states",
+          "DbName": "claptrap"
         },
         "StateLoaderOptions": {
-          "SQLiteStateStoreStrategy": 0,
+          "MySqlStateStoreStrategy": 0,
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
-          "StateTableName": "states"
+          "SchemaName": "claptrap",
+          "StateTableName": "states",
+          "DbName": "claptrap"
         }
       }
     },
@@ -95,24 +111,40 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "SQLiteEventStoreStrategy": 1,
-        "IsAutoMigrationEnabled": true,
-        "EventTableName": "events"
+        "MySqlEventStoreStrategy": 0,
+        "SchemaName": "claptrap",
+        "EventTableName": "events",
+        "DbName": "claptrap",
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
+        "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "SQLiteEventStoreStrategy": 1,
-        "IsAutoMigrationEnabled": true,
-        "EventTableName": "events"
+        "MySqlEventStoreStrategy": 0,
+        "SchemaName": "claptrap",
+        "EventTableName": "events",
+        "DbName": "claptrap",
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
+        "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "SQLiteStateStoreStrategy": 0,
+        "MySqlStateStoreStrategy": 0,
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
-        "StateTableName": "states"
+        "SchemaName": "claptrap",
+        "StateTableName": "states",
+        "DbName": "claptrap"
       },
       "StateLoaderOptions": {
-        "SQLiteStateStoreStrategy": 0,
+        "MySqlStateStoreStrategy": 0,
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
-        "StateTableName": "states"
+        "SchemaName": "claptrap",
+        "StateTableName": "states",
+        "DbName": "claptrap"
       }
     }
   },
@@ -154,24 +186,40 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "SQLiteEventStoreStrategy": 1,
-        "IsAutoMigrationEnabled": true,
-        "EventTableName": "events"
+        "MySqlEventStoreStrategy": 0,
+        "SchemaName": "claptrap",
+        "EventTableName": "events",
+        "DbName": "claptrap",
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
+        "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "SQLiteEventStoreStrategy": 1,
-        "IsAutoMigrationEnabled": true,
-        "EventTableName": "events"
+        "MySqlEventStoreStrategy": 0,
+        "SchemaName": "claptrap",
+        "EventTableName": "events",
+        "DbName": "claptrap",
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
+        "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "SQLiteStateStoreStrategy": 0,
+        "MySqlStateStoreStrategy": 0,
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
-        "StateTableName": "states"
+        "SchemaName": "claptrap",
+        "StateTableName": "states",
+        "DbName": "claptrap"
       },
       "StateLoaderOptions": {
-        "SQLiteStateStoreStrategy": 0,
+        "MySqlStateStoreStrategy": 0,
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
-        "StateTableName": "states"
+        "SchemaName": "claptrap",
+        "StateTableName": "states",
+        "DbName": "claptrap"
       }
     }
   }

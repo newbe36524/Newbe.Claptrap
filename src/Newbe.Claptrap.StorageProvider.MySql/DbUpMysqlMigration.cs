@@ -10,12 +10,15 @@ using DbUp.Helpers;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
     public abstract class DbUpMysqlMigration :
         IEventLoaderMigration,
-        IEventSaverMigration
+        IEventSaverMigration,
+        IStateLoaderMigration,
+        IStateSaverMigration
     {
         private readonly IDbFactory _dbFactory;
         private readonly ILogger _logger;

@@ -1,11 +1,14 @@
+using System.Collections;
 using System.Collections.Generic;
 using Lexical.Localization;
 using Lexical.Localization.Asset;
 
 namespace Newbe.Claptrap.Localization
 {
-    public class DefaultAssetSource : List<IAssetSource>, ILibraryAssetSources
+    public class DefaultAssetSource : ILibraryAssetSources
     {
+        private readonly List<IAssetSource> _list = new List<IAssetSource>();
+
         private readonly LineEmbeddedSource _defaultSource =
             LineReaderMap.Default.EmbeddedAssetSource(typeof(DefaultAssetSource).Assembly,
                 typeof(DefaultAssetSource).Namespace + ".Docs.L.ini");
@@ -14,11 +17,21 @@ namespace Newbe.Claptrap.Localization
             LineReaderMap.Default.EmbeddedAssetSource(typeof(DefaultAssetSource).Assembly,
                 typeof(DefaultAssetSource).Namespace + ".Docs.L-cn.ini");
 
-        public DefaultAssetSource() : base()
+        public DefaultAssetSource()
         {
             // Add internal localization source
-            Add(_defaultSource);
-            Add(_cnSource);
+            _list.Add(_defaultSource);
+            _list.Add(_cnSource);
+        }
+
+        public IEnumerator<IAssetSource> GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

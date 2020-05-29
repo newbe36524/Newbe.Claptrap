@@ -2,14 +2,14 @@ using Newbe.Claptrap.StorageProvider.Relational.Options;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Options
 {
-    public interface IMySqlSharedTableEventStoreOptions :
-        IMySqlEventLoaderOptions,
-        IMySqlEventSaverOptions,
+    public interface IMySqlSharedTableStateStoreOptions :
+        IMySqlStateLoaderOptions,
+        IMySqlStateSaverOptions,
         IBatchEventSaverOptions,
         IMySqlMigrationOptions
     {
         string SchemaName { get; }
-        string EventTableName { get; }
+        string StateTableName { get; }
         string DbName { get; }
     }
 }

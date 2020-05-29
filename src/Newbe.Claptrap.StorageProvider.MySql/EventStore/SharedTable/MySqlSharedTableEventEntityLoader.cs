@@ -11,26 +11,34 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
     public class MySqlSharedTableEventEntityLoader : IEventEntityLoader<EventEntity>
     {
         private readonly IDbFactory _dbFactory;
-        private readonly ISqlTemplateCache _sqlTemplateCache;
-        private readonly IMySqlSharedTableEventStoreOptions _mySqlSharedTableEventStoreOptions;
+        private readonly IMySqlSharedTableEventStoreOptions _options;
+        private readonly string _selectSql;
 
         public MySqlSharedTableEventEntityLoader(
             IDbFactory dbFactory,
-            ISqlTemplateCache sqlTemplateCache,
-            IMySqlSharedTableEventStoreOptions mySqlSharedTableEventStoreOptions)
+            IMySqlSharedTableEventStoreOptions options)
         {
             _dbFactory = dbFactory;
-            _sqlTemplateCache = sqlTemplateCache;
-            _mySqlSharedTableEventStoreOptions = mySqlSharedTableEventStoreOptions;
+            _options = options;
+            _selectSql =
+                $"SELECT * FROM {options.SchemaName}.{options.EventTableName} WHERE version >= @startVersion AND version < @endVersion ORDER BY version";
         }
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            var dbName = _mySqlSharedTableEventStoreOptions.SharedTableEventStoreDbName;
+            var dbName = _options.DbName;
             using var db = _dbFactory.GetConnection(dbName);
-            var sql = _sqlTemplateCache.Get(MysqlSqlCacheKeys.SharedTableEventStoreSelectSql);
-            var re = await db.QueryAsync<EventEntity>(sql, new {startVersion, endVersion});
-            return re.ToArray();
+            var entities = await db.QueryAsync<SharedTableEventEntity>(_selectSql, new {startVersion, endVersion});
+            var re = entities.Select(x => new EventEntity
+            {
+                Version = x.version,
+                ClaptrapId = x.claptrap_id,
+                CreatedTime = x.created_time,
+                EventData = x.event_data,
+                ClaptrapTypeCode = x.claptrap_type_code,
+                EventTypeCode = x.event_type_code,
+            }).ToArray();
+            return re;
         }
     }
 }

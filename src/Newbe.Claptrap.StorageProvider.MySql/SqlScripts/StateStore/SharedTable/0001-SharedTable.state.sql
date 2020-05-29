@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS $SchemaName$.$StateTableName$
     version            long     NOT NULL,
     state_data         LONGTEXT null,
     updated_time       datetime NOT NULL,
-    INDEX (claptrap_type_code(100), claptrap_id(50), version(16))
+    UNIQUE INDEX (claptrap_type_code(100), claptrap_id(50))
 ) ENGINE = 'InnoDB';
