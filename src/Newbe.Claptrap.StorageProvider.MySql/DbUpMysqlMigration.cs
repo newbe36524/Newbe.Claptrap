@@ -9,39 +9,40 @@ using DbUp.Engine;
 using DbUp.Helpers;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.Relational;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
-    public abstract class DbUpMysqlMigration :
-        IEventLoaderMigration,
-        IEventSaverMigration,
-        IStateLoaderMigration,
-        IStateSaverMigration
+    public class DbUpMysqlMigration :
+        IStorageMigration
     {
+        public delegate DbUpMysqlMigration Factory(ILogger logger,
+            DbUpMysqlMigrationOptions options);
+
         private readonly IDbFactory _dbFactory;
         private readonly ILogger _logger;
+        private readonly Lazy<bool> _init;
 
-        protected DbUpMysqlMigration(
-            IDbFactory dbFactory,
-            ILogger logger)
+        public DbUpMysqlMigration(
+            ILogger logger,
+            DbUpMysqlMigrationOptions options,
+            IDbFactory dbFactory)
         {
             _dbFactory = dbFactory;
             _logger = logger;
+            _init = new Lazy<bool>(() =>
+            {
+                var dbName = options.DbName;
+                var dictionary = options.Variables;
+                CreateOrUpdateDatabase(dbName, options.SqlSelector, dictionary);
+                return true;
+            });
         }
 
         public Task MigrateAsync()
         {
-            var dbName = GetDbName();
-            var dictionary = GetVariables();
-            CreateOrUpdateDatabase(dbName, SqlSelector, dictionary);
+            _ = _init.Value;
             return Task.CompletedTask;
         }
-
-        protected abstract string GetDbName();
-        protected abstract bool SqlSelector(string fileName);
-        protected abstract Dictionary<string, string> GetVariables();
 
         private void CreateOrUpdateDatabase(
             string dbName,

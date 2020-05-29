@@ -1,12 +1,13 @@
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
     public class SharedTableEventBatchSaverFactory : ISharedTableEventBatchSaverFactory
     {
-        private static readonly ConcurrentDictionary<string, SharedTableEventBatchSaver>
-            Savers = new ConcurrentDictionary<string, SharedTableEventBatchSaver>();
+        private readonly Dictionary<string, SharedTableEventBatchSaver>
+            _savers = new Dictionary<string, SharedTableEventBatchSaver>();
 
+        private readonly object _locker = new object();
         private readonly SharedTableEventBatchSaver.Factory _factory;
 
         public SharedTableEventBatchSaverFactory(
@@ -17,9 +18,23 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         public ISharedTableEventBatchSaver Create(string dbName, string schemaName, string eventTableName)
         {
-            var sharedTableEventBatchSaver = Savers.GetOrAdd($"{dbName}_{schemaName}_{eventTableName}",
-                s => _factory.Invoke(dbName, schemaName, eventTableName));
-            return sharedTableEventBatchSaver;
+            var key = $"{dbName}_{schemaName}_{eventTableName}";
+            if (_savers.TryGetValue(key, out var saver))
+            {
+                return saver;
+            }
+
+            lock (_locker)
+            {
+                if (_savers.TryGetValue(key, out saver))
+                {
+                    return saver;
+                }
+
+                saver = _factory.Invoke(dbName, schemaName, eventTableName);
+                _savers[key] = saver;
+                return saver;
+            }
         }
     }
 }

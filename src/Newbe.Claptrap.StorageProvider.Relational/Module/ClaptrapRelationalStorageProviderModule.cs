@@ -27,6 +27,9 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterType<RelationalStoreFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<StorageMigrationContainer>()
+                .As<IStorageMigrationContainer>()
+                .SingleInstance();
         }
     }
 }

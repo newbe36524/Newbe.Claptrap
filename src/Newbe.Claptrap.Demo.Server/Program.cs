@@ -30,12 +30,12 @@ namespace Newbe.Claptrap.Demo.Server
                             {
                                 logging.AddConsole();
                                 logging.SetMinimumLevel(LogLevel.Debug);
-                                logging.AddFilter((s, level) => s.StartsWith("Orleans") && level >= LogLevel.Warning);
-                                logging.AddFilter((s, level) => s.Contains("Claptrap"));
                             });
                             var buildServiceProvider = collection.BuildServiceProvider();
                             var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
+                            const string mysqlConnectionString =
+                                "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;";
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
                                 .ScanClaptrapDesigns(new[]
@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 //             stateStore.OneIdentityOneTable())
                                 // )
                                 .AddConnectionString("claptrap",
-                                    "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;UseCompression=True;Pooling=True;Keepalive=10;MinimumPoolSize=10;MaximumPoolSize=50;")
+                                    mysqlConnectionString)
                                 .UseMySql(mysql =>
                                     mysql
                                         .AsEventStore(eventStore =>
@@ -70,8 +70,16 @@ namespace Newbe.Claptrap.Demo.Server
                 {
                     siloBuilder
                         .UseLocalhostClustering()
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.SetMinimumLevel(LogLevel.Debug);
+                            logging.AddFilter(
+                                (s, level) => s.StartsWith("Microsoft.Orleans") && level >= LogLevel.Error);
+                            logging.AddFilter((s, level) => s.Contains("Claptrap") && level >= LogLevel.Information);
+                        })
                         .ConfigureApplicationParts(manager =>
                             manager.AddFromDependencyContext().WithReferences())
+                        // .UseDashboard(options => options.Port = 9000)
                         ;
                 })
                 .RunConsoleAsync();

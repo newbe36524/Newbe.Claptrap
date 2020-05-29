@@ -1,40 +1,42 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
-    public class MySqlSharedTableEventStoreMigration : DbUpMysqlMigration
+    public class MySqlSharedTableEventStoreMigration :
+        IEventLoaderMigration,
+        IEventSaverMigration
     {
-        private readonly IMySqlSharedTableEventStoreOptions _options;
+        private readonly Task _migrationTask;
 
         public MySqlSharedTableEventStoreMigration(
-            IMySqlSharedTableEventStoreOptions options,
-            IDbFactory dbFactory,
-            ILogger<MySqlSharedTableEventStoreMigration> logger) : base(dbFactory,
-            logger)
+            ILogger<MySqlSharedTableEventStoreMigration> logger,
+            DbUpMysqlMigration.Factory factory,
+            IStorageMigrationContainer storageMigrationContainer,
+            IMySqlSharedTableEventStoreOptions options)
         {
-            _options = options;
-        }
-
-        protected override string GetDbName()
-        {
-            return _options.DbName;
-        }
-
-        protected override bool SqlSelector(string fileName)
-        {
-            return fileName.EndsWith("-SharedTable.event.sql");
-        }
-
-        protected override Dictionary<string, string> GetVariables()
-        {
-            return new Dictionary<string, string>
+            var migration = factory.Invoke(logger, new DbUpMysqlMigrationOptions
             {
-                {"SchemaName", _options.SchemaName},
-                {"EventTableName", _options.EventTableName},
-            };
+                Variables = new Dictionary<string, string>
+                {
+                    {"SchemaName", options.SchemaName},
+                    {"EventTableName", options.EventTableName},
+                },
+                DbName = options.DbName,
+                SqlSelector = fileName => fileName.EndsWith("-SharedTable.event.sql"),
+            });
+            var migrationKey =
+                $"{nameof(MySqlSharedTableEventStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.EventTableName}";
+            _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
+        }
+
+        public Task MigrateAsync()
+        {
+            return _migrationTask;
         }
     }
 }

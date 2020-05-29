@@ -6,6 +6,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
@@ -20,25 +21,29 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         private readonly string _schemaName;
         private readonly string _eventTableName;
         private readonly IDbFactory _dbFactory;
+        private readonly ILogger<SharedTableEventBatchSaver> _logger;
         private readonly Subject<SavingItem> _subject = new Subject<SavingItem>();
 
         public SharedTableEventBatchSaver(
             string dbName,
             string schemaName,
             string eventTableName,
-            IDbFactory dbFactory)
+            IDbFactory dbFactory,
+            ILogger<SharedTableEventBatchSaver> logger)
         {
             _dbName = dbName;
             _schemaName = schemaName;
             _eventTableName = eventTableName;
             _dbFactory = dbFactory;
+            _logger = logger;
             _subject
-                .Buffer(TimeSpan.FromMilliseconds(50), 1000)
+                .Buffer(TimeSpan.FromMilliseconds(10), 1000)
+                .Where(x => x.Count > 0)
                 .Select(x => Observable.FromAsync(async () =>
                 {
                     try
                     {
-                        await SaveManyCoreMany(x.SelectMany(a => a.EventEntities));
+                        await SaveManyCoreMany(x.Select(a => a.EventEntity)).ConfigureAwait(false);
                         foreach (var savingItem in x)
                         {
                             savingItem.Tcs.SetResult(0);
@@ -52,6 +57,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                         }
                     }
                 }))
+                .Merge()
                 .Subscribe();
         }
 
@@ -86,12 +92,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             await db.ExecuteAsync(sql, ps);
         }
 
-        public Task SaveManyAsync(IEnumerable<EventEntity> entities)
+        public Task SaveAsync(EventEntity entity)
         {
             var savingItem = new SavingItem
             {
                 Tcs = new TaskCompletionSource<int>(),
-                EventEntities = entities
+                EventEntity = entity
             };
             _subject.OnNext(savingItem);
             return savingItem.Tcs.Task;
@@ -119,7 +125,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         private struct SavingItem
         {
-            public IEnumerable<EventEntity> EventEntities { get; set; }
+            public EventEntity EventEntity { get; set; }
             public TaskCompletionSource<int> Tcs { get; set; }
         }
     }

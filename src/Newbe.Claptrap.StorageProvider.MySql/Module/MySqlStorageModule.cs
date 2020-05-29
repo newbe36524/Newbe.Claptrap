@@ -21,6 +21,10 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             builder.RegisterType<SharedTableEventBatchSaverFactory>()
                 .As<ISharedTableEventBatchSaverFactory>()
                 .SingleInstance();
+
+            builder.RegisterType<DbUpMysqlMigration>()
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }

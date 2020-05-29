@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,27 +40,22 @@ namespace Newbe.Claptrap.Demo.Client
             await client.Connect(exception => Task.FromResult(true));
             Console.WriteLine("connected");
 
-            await Task.WhenAll(Enumerable.Range(1, 10).Select(x => RunOneAccount(x.ToString())));
+            var ids = Enumerable.Range(1, 100);
+            var sw = Stopwatch.StartNew();
+            await Task.WhenAll(ids.SelectMany(x => RunOneAccount(x.ToString())));
+            sw.Stop();
+            Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms");
+            const int times = 100;
 
-            async Task RunOneAccount(string accountId)
+            IEnumerable<Task> RunOneAccount(string accountId)
             {
                 Debug.Assert(client != null, nameof(client) + " != null");
                 var account = client.GetGrain<IAccount>(accountId);
-                var balance = await account.GetBalance();
-                Console.WriteLine(balance);
-                var sw = Stopwatch.StartNew();
-                const int times = 100;
-                await Task.WhenAll(Enumerable.Range(0, times)
-                    .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())));
-                Console.WriteLine(await account.GetBalance());
-                sw.Stop();
-                Console.WriteLine($"cost time {sw.ElapsedMilliseconds} ms in {times}");
-
-                var accountMinion = client.GetGrain<IAccountBalanceMinion>(accountId);
-                sw.Restart();
-                var balanceInMinion = await accountMinion.GetBalance();
-                sw.Stop();
-                Console.WriteLine($"balance in minion is {balanceInMinion}, cost time {sw.ElapsedMilliseconds} ms");
+                foreach (var task in Enumerable.Range(0, times)
+                    .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())))
+                {
+                    yield return task;
+                }
             }
             // var random = new Random();
             // var sw = Stopwatch.StartNew();

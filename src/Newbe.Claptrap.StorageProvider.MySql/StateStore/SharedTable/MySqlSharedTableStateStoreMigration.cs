@@ -1,39 +1,43 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable
 {
-    public class MySqlSharedTableStateStoreMigration : DbUpMysqlMigration
+    public class MySqlSharedTableStateStoreMigration :
+        IStateLoaderMigration,
+        IStateSaverMigration
     {
-        private readonly IMySqlSharedTableStateStoreOptions _options;
+        private readonly Task _migrationTask;
 
         public MySqlSharedTableStateStoreMigration(
-            IDbFactory dbFactory,
-            IMySqlSharedTableStateStoreOptions options,
-            ILogger<MySqlSharedTableStateStoreMigration> logger) : base(dbFactory, logger)
+            ILogger<MySqlSharedTableStateStoreMigration> logger,
+            DbUpMysqlMigration.Factory factory,
+            IStorageMigrationContainer storageMigrationContainer,
+            IMySqlSharedTableStateStoreOptions options)
         {
-            _options = options;
-        }
-
-        protected override string GetDbName()
-        {
-            return _options.DbName;
-        }
-
-        protected override bool SqlSelector(string fileName)
-        {
-            return fileName.EndsWith("-SharedTable.state.sql");
-        }
-
-        protected override Dictionary<string, string> GetVariables()
-        {
-            return new Dictionary<string, string>
+            var migration = factory.Invoke(logger, new DbUpMysqlMigrationOptions
             {
-                {"SchemaName", _options.SchemaName},
-                {"StateTableName", _options.StateTableName},
-            };
+                Variables = new Dictionary<string, string>
+                {
+                    {"SchemaName", options.SchemaName},
+                    {"StateTableName", options.StateTableName},
+                },
+                DbName = options.DbName,
+                SqlSelector = fileName => fileName.EndsWith("-SharedTable.state.sql"),
+            });
+            var migrationKey =
+                $"{nameof(MySqlSharedTableStateStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.StateTableName}";
+            _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
+        }
+
+
+        public Task MigrateAsync()
+        {
+            return _migrationTask;
         }
     }
 }
