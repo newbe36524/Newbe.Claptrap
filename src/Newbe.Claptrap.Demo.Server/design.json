@@ -39,7 +39,7 @@
       "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "ClaptrapStorageProviderOptions": {
         "EventSaverOptions": {
-          "MySqlEventStoreStrategy": 0,
+          "PostgreSQLEventStoreStrategy": 0,
           "SchemaName": "claptrap",
           "EventTableName": "events",
           "DbName": "claptrap",
@@ -48,7 +48,7 @@
           "IsAutoMigrationEnabled": true
         },
         "EventLoaderOptions": {
-          "MySqlEventStoreStrategy": 0,
+          "PostgreSQLEventStoreStrategy": 0,
           "SchemaName": "claptrap",
           "EventTableName": "events",
           "DbName": "claptrap",
@@ -57,7 +57,7 @@
           "IsAutoMigrationEnabled": true
         },
         "StateSaverOptions": {
-          "MySqlStateStoreStrategy": 0,
+          "PostgreSQLStateStoreStrategy": 0,
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
@@ -66,7 +66,7 @@
           "DbName": "claptrap"
         },
         "StateLoaderOptions": {
-          "MySqlStateStoreStrategy": 0,
+          "PostgreSQLStateStoreStrategy": 0,
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
@@ -111,7 +111,7 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "MySqlEventStoreStrategy": 0,
+        "PostgreSQLEventStoreStrategy": 0,
         "SchemaName": "claptrap",
         "EventTableName": "events",
         "DbName": "claptrap",
@@ -120,7 +120,7 @@
         "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "MySqlEventStoreStrategy": 0,
+        "PostgreSQLEventStoreStrategy": 0,
         "SchemaName": "claptrap",
         "EventTableName": "events",
         "DbName": "claptrap",
@@ -129,7 +129,7 @@
         "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "MySqlStateStoreStrategy": 0,
+        "PostgreSQLStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
@@ -138,7 +138,7 @@
         "DbName": "claptrap"
       },
       "StateLoaderOptions": {
-        "MySqlStateStoreStrategy": 0,
+        "PostgreSQLStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
@@ -186,7 +186,7 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "MySqlEventStoreStrategy": 0,
+        "PostgreSQLEventStoreStrategy": 0,
         "SchemaName": "claptrap",
         "EventTableName": "events",
         "DbName": "claptrap",
@@ -195,7 +195,7 @@
         "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "MySqlEventStoreStrategy": 0,
+        "PostgreSQLEventStoreStrategy": 0,
         "SchemaName": "claptrap",
         "EventTableName": "events",
         "DbName": "claptrap",
@@ -204,7 +204,7 @@
         "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "MySqlStateStoreStrategy": 0,
+        "PostgreSQLStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
@@ -213,7 +213,7 @@
         "DbName": "claptrap"
       },
       "StateLoaderOptions": {
-        "MySqlStateStoreStrategy": 0,
+        "PostgreSQLStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,

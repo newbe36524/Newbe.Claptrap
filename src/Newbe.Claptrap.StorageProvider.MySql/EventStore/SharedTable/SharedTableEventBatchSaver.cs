@@ -71,7 +71,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                     claptrap_type_code = x.ClaptrapTypeCode,
                     created_time = x.CreatedTime,
                     event_data = x.EventData,
-                    event_type_code = x.ClaptrapTypeCode,
+                    event_type_code = x.EventTypeCode,
                     version = x.Version
                 })
                 .ToArray();

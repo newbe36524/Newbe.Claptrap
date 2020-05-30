@@ -47,14 +47,6 @@ namespace Newbe.Claptrap.Orleans
                 foreach (var minionDesign in minions)
                 {
                     var grain = _grainFactory.GetGrain(minionDesign.ClaptrapBoxInterfaceType, identity.Id);
-                    foreach (var @interface in grain.GetType().GetInterfaces())
-                    {
-                        if (typeof(IClaptrapMinionGrain) == @interface)
-                        {
-                            Console.WriteLine(@interface);
-                        }
-                    }
-
                     if (grain is IClaptrapMinionGrain minionGrain)
                     {
                         yield return minionGrain.WakeAsync();

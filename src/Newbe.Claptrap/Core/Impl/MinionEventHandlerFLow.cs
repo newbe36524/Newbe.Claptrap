@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -68,30 +69,35 @@ namespace Newbe.Claptrap.Core.Impl
 
 
                     return LoadEventFromLoader()
-                        .ToObservable()
                         .Concat(Observable.Return(item));
 
-                    async IAsyncEnumerable<EventItem> LoadEventFromLoader()
-                    {
-                        // TODO config
-                        const int step = 1000;
-                        var versionCount = item.Event.Version - State.NextVersion;
-                        var pageCount = (int) Math.Ceiling(versionCount * 1.0 / step);
-                        for (var i = 0; i < pageCount; i++)
-                        {
-                            var left = State.NextVersion + i * step;
-                            var right = Math.Min(State.NextVersion + (i + 1) * step, item.Event.Version);
-                            var events = await _eventLoader.GetEventsAsync(left, right);
-                            foreach (var @event in events)
+                    IObservable<EventItem> LoadEventFromLoader() =>
+                        Observable.Create<EventItem>(
+                            async observer =>
                             {
-                                yield return new EventItem
+                                // TODO config
+                                const int step = 1000;
+                                var versionCount = item.Event.Version - State.NextVersion;
+                                var pageCount = (int) Math.Ceiling(versionCount * 1.0 / step);
+                                for (var i = 0; i < pageCount; i++)
                                 {
-                                    Event = @event,
-                                    TaskCompletionSource = null
-                                };
-                            }
-                        }
-                    }
+                                    var left = State.NextVersion + i * step;
+                                    var right = Math.Min(State.NextVersion + (i + 1) * step, item.Event.Version);
+                                    var events = await _eventLoader.GetEventsAsync(left, right);
+                                    var items = events.Select(@event => new EventItem
+                                    {
+                                        Event = @event,
+                                        TaskCompletionSource = null
+                                    }).ToArray();
+                                    foreach (var eventItem in items)
+                                    {
+                                        observer.OnNext(eventItem);
+                                    }
+                                }
+
+                                observer.OnCompleted();
+                                return Disposable.Empty;
+                            });
                 })
                 .Select(item =>
                 {
@@ -130,7 +136,8 @@ namespace Newbe.Claptrap.Core.Impl
 
                         async Task HandleEventCoreAsync()
                         {
-                            var nextState = await context.EventHandler.HandleEvent(context.EventContext).ConfigureAwait(false);
+                            var nextState = await context.EventHandler.HandleEvent(context.EventContext)
+                                .ConfigureAwait(false);
                             _logger.LogDebug("event handled and updating state");
                             _logger.LogDebug("start update to {@state}", nextState);
                             State = nextState;

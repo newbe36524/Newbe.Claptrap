@@ -21,7 +21,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 
         public async Task<IState?> GetStateSnapshotAsync()
         {
-            var entity = await _stateEntityLoader.GetStateSnapshotAsync();
+            var entity = await _stateEntityLoader.GetStateSnapshotAsync().ConfigureAwait(false);
             if (entity == null)
             {
                 return null;

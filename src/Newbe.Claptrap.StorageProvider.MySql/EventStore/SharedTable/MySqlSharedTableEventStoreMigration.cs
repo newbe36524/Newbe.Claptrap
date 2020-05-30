@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
+using DbUp;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
@@ -15,20 +17,24 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         public MySqlSharedTableEventStoreMigration(
             ILogger<MySqlSharedTableEventStoreMigration> logger,
-            DbUpMysqlMigration.Factory factory,
+            DbUpMigration.Factory factory,
+            IDbFactory dbFactory,
             IStorageMigrationContainer storageMigrationContainer,
             IMySqlSharedTableEventStoreOptions options)
         {
-            var migration = factory.Invoke(logger, new DbUpMysqlMigrationOptions
-            {
-                Variables = new Dictionary<string, string>
+            var migrationOptions = new DbUpMigrationOptions(
+                new[] {Assembly.GetExecutingAssembly()},
+                fileName => fileName.EndsWith("-SharedTable.event.sql"),
+                new Dictionary<string, string>
                 {
                     {"SchemaName", options.SchemaName},
                     {"EventTableName", options.EventTableName},
                 },
-                DbName = options.DbName,
-                SqlSelector = fileName => fileName.EndsWith("-SharedTable.event.sql"),
-            });
+                () =>
+                    DeployChanges
+                        .To.MySqlDatabase(dbFactory.GetConnectionString(options.DbName)),
+                true);
+            var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
                 $"{nameof(MySqlSharedTableEventStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.EventTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);

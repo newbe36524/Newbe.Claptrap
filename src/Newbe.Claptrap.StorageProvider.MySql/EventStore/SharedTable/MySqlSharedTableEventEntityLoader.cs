@@ -13,22 +13,32 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         private readonly IDbFactory _dbFactory;
         private readonly IMySqlSharedTableEventStoreOptions _options;
         private readonly string _selectSql;
+        private readonly IClaptrapIdentity _masterOrSelfIdentity;
 
         public MySqlSharedTableEventEntityLoader(
             IDbFactory dbFactory,
-            IMySqlSharedTableEventStoreOptions options)
+            IClaptrapIdentity identity,
+            IMySqlSharedTableEventStoreOptions options,
+            IMasterClaptrapInfo masterClaptrapInfo = null)
         {
             _dbFactory = dbFactory;
             _options = options;
+            _masterOrSelfIdentity = masterClaptrapInfo?.Identity ?? identity;
             _selectSql =
-                $"SELECT * FROM {options.SchemaName}.{options.EventTableName} WHERE version >= @startVersion AND version < @endVersion ORDER BY version";
+                $"SELECT * FROM {options.SchemaName}.{options.EventTableName} WHERE version >= @startVersion AND version < @endVersion AND claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId ORDER BY version";
         }
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
             var dbName = _options.DbName;
             using var db = _dbFactory.GetConnection(dbName);
-            var entities = await db.QueryAsync<SharedTableEventEntity>(_selectSql, new {startVersion, endVersion});
+            var entities = await db.QueryAsync<SharedTableEventEntity>(_selectSql, new
+            {
+                startVersion,
+                endVersion,
+                ClaptrapTypeCode = _masterOrSelfIdentity.TypeCode,
+                ClaptrapId = _masterOrSelfIdentity.Id
+            });
             var re = entities.Select(x => new EventEntity
             {
                 Version = x.version,

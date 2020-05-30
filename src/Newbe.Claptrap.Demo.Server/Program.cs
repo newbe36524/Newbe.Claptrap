@@ -36,6 +36,8 @@ namespace Newbe.Claptrap.Demo.Server
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                             const string mysqlConnectionString =
                                 "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;";
+                            const string postgreSQLConnectionString =
+                                "Server=localhost;Port=5432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;";
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
                                 .ScanClaptrapDesigns(new[]
@@ -49,10 +51,19 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.OneIdentityOneTable())
                                 // )
+                                // .AddConnectionString("claptrap",
+                                //     mysqlConnectionString)
+                                // .UseMySql(mysql =>
+                                //     mysql
+                                //         .AsEventStore(eventStore =>
+                                //             eventStore.SharedTable())
+                                //         .AsStateStore(stateStore =>
+                                //             stateStore.SharedTable())
+                                // )
                                 .AddConnectionString("claptrap",
-                                    mysqlConnectionString)
-                                .UseMySql(mysql =>
-                                    mysql
+                                    postgreSQLConnectionString)
+                                .UsePostgreSQL(postgreSQL =>
+                                    postgreSQL
                                         .AsEventStore(eventStore =>
                                             eventStore.SharedTable())
                                         .AsStateStore(stateStore =>
@@ -75,7 +86,7 @@ namespace Newbe.Claptrap.Demo.Server
                             logging.SetMinimumLevel(LogLevel.Debug);
                             logging.AddFilter(
                                 (s, level) => s.StartsWith("Microsoft.Orleans") && level >= LogLevel.Error);
-                            logging.AddFilter((s, level) => s.Contains("Claptrap") && level >= LogLevel.Information);
+                            logging.AddFilter((s, level) => s.Contains("Claptrap") && level >= LogLevel.Error);
                         })
                         .ConfigureApplicationParts(manager =>
                             manager.AddFromDependencyContext().WithReferences())

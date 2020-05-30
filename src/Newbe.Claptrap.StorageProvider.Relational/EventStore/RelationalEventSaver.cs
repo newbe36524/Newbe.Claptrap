@@ -40,7 +40,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
             {
                 var entity = _mapper.Map(@event);
                 _logger.LogDebug("start to save event to store {@eventEntity}", entity);
-                await _saver.SaveAsync(entity);
+                await _saver.SaveAsync(entity).ConfigureAwait(false);
             }
         }
     }

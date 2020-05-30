@@ -1,45 +1,47 @@
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using DbUp;
+using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
 {
-    public class SQLiteOneIdOneFileEventStoreMigration : DbUpSQLiteMigration
+    public class SQLiteOneIdOneFileEventStoreMigration :
+        IEventLoaderMigration,
+        IEventSaverMigration
     {
-        private readonly IClaptrapIdentity _identity;
-        private readonly IClaptrapDesign _claptrapDesign;
-        private readonly ISQLiteOneIdOneFileEventStoreOptions _options;
+        private readonly IStorageMigration _migration;
 
         public SQLiteOneIdOneFileEventStoreMigration(
             IClaptrapIdentity identity,
-            IClaptrapDesign claptrapDesign,
             ISQLiteOneIdOneFileEventStoreOptions options,
             IDbFactory dbFactory,
-            ILogger<SQLiteOneIdOneFileEventStoreMigration> logger)
-            : base(dbFactory, logger)
+            DbUpMigration.Factory factory,
+            ILogger<SQLiteOneIdOneFileEventStoreMigration> logger,
+            IMasterClaptrapInfo masterClaptrapInfo = null)
         {
-            _identity = identity;
-            _claptrapDesign = claptrapDesign;
-            _options = options;
+            var migrationOptions = new DbUpMigrationOptions(
+                new[] {Assembly.GetExecutingAssembly()},
+                fileName => fileName.EndsWith("-OneIdOneFile.event.sql"),
+                new Dictionary<string, string>
+                {
+                    {"EventTableName", options.EventTableName},
+                },
+                () =>
+                    DeployChanges
+                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(
+                            SQLiteDbNameHelper.OneIdOneFileEventStore(masterClaptrapInfo?.Identity ?? identity)))),
+                true);
+            _migration = factory.Invoke(logger, migrationOptions);
         }
 
-        protected override string GetDbName()
+        public Task MigrateAsync()
         {
-            return SQLiteDbNameHelper.OneIdentityOneTableEventStore(_claptrapDesign, _identity);
-        }
-
-        protected override bool SqlSelector(string fileName)
-        {
-            return fileName.EndsWith("-OneIdOneFile.event.sql");
-        }
-
-        protected override Dictionary<string, string> GetVariables()
-        {
-            var ps = new Dictionary<string, string>
-            {
-                {"EventTableName", _options.EventTableName},
-            };
-            return ps;
+            return _migration.MigrateAsync();
         }
     }
 }

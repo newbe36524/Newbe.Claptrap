@@ -30,6 +30,10 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterType<StorageMigrationContainer>()
                 .As<IStorageMigrationContainer>()
                 .SingleInstance();
+
+            builder.RegisterType<DbUpMigration>()
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }

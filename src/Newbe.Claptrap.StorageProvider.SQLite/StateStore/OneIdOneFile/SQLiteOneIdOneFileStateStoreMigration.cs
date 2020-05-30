@@ -1,43 +1,47 @@
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using DbUp;
+using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.StorageProvider.Relational;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
 {
-    public class SQLiteOneIdOneFileStateStoreMigration : DbUpSQLiteMigration
+    public class SQLiteOneIdOneFileStateStoreMigration :
+        IStateLoaderMigration,
+        IStateSaverMigration
     {
-        private readonly IClaptrapIdentity _identity;
-        private readonly IClaptrapDesign _claptrapDesign;
-        private readonly ISQLiteOneIdOneFileStateStoreOptions _options;
+        private readonly IStorageMigration _migration;
 
         public SQLiteOneIdOneFileStateStoreMigration(
             IClaptrapIdentity identity,
             IClaptrapDesign claptrapDesign,
             IDbFactory dbFactory,
+            DbUpMigration.Factory factory,
             ISQLiteOneIdOneFileStateStoreOptions options,
-            ILogger<SQLiteOneIdOneFileStateStoreMigration> logger) : base(dbFactory, logger)
+            ILogger<SQLiteOneIdOneFileStateStoreMigration> logger)
         {
-            _identity = identity;
-            _claptrapDesign = claptrapDesign;
-            _options = options;
+            var migrationOptions = new DbUpMigrationOptions(
+                new[] {Assembly.GetExecutingAssembly()},
+                fileName => fileName.EndsWith("-OneIdOneFile.state.sql"),
+                new Dictionary<string, string>
+                {
+                    {"StateTableName", options.StateTableName}
+                },
+                () =>
+                    DeployChanges
+                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(
+                            SQLiteDbNameHelper.OneIdOneFileStateStore(claptrapDesign, identity)))),
+                false);
+            _migration = factory.Invoke(logger, migrationOptions);
         }
 
-        protected override string GetDbName()
+        public Task MigrateAsync()
         {
-            return SQLiteDbNameHelper.OneIdentityOneTableStateStore(_claptrapDesign, _identity);
-        }
-
-        protected override bool SqlSelector(string fileName)
-        {
-            return fileName.EndsWith("-OneIdOneFile.state.sql");
-        }
-
-        protected override Dictionary<string, string> GetVariables()
-        {
-            return new Dictionary<string, string>
-            {
-                {"StateTableName", _options.StateTableName}
-            };
+            return _migration.MigrateAsync();
         }
     }
 }
