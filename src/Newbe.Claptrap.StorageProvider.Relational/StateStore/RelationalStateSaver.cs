@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
         public async Task SaveAsync(IState state)
         {
             var stateEntity = _mapper.Map(state);
-            await _stateEntitySaver.SaveAsync(stateEntity);
+            await _stateEntitySaver.SaveAsync(stateEntity).ConfigureAwait(false);
         }
     }
 }

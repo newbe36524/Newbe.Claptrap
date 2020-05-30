@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 
         public async Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
-            var entities = await _loader.SelectAsync(startVersion, endVersion);
+            var entities = await _loader.SelectAsync(startVersion, endVersion).ConfigureAwait(false);
             var re = entities.Select(x => _mapper.Map(x, Identity)).ToArray();
             _logger.LogDebug("found {count} events that version in range [{startVersion}, {endVersion}).",
                 re.Length,

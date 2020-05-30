@@ -39,6 +39,7 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("start to connect");
             await client.Connect(exception => Task.FromResult(true));
             Console.WriteLine("connected");
+            var rd = new Random();
 
             var ids = Enumerable.Range(1, 100);
             var sw = Stopwatch.StartNew();
@@ -52,7 +53,7 @@ namespace Newbe.Claptrap.Demo.Client
                 Debug.Assert(client != null, nameof(client) + " != null");
                 var account = client.GetGrain<IAccount>(accountId);
                 foreach (var task in Enumerable.Range(0, times)
-                    .Select(i => account.TransferIn(100, Guid.NewGuid().ToString())))
+                    .Select(i => account.TransferIn(rd.Next(0, 100), Guid.NewGuid().ToString())))
                 {
                     yield return task;
                 }

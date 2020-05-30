@@ -1,61 +1,63 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using DbUp;
 using DbUp.Engine;
-using DbUp.SQLite.Helpers;
+using DbUp.Helpers;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite
+namespace Newbe.Claptrap.StorageProvider.Relational
 {
-    public abstract class DbUpSQLiteMigration :
-        IEventLoaderMigration,
-        IEventSaverMigration,
-        IStateLoaderMigration,
-        IStateSaverMigration
+    public class DbUpMigration :
+        IStorageMigration
     {
-        private readonly IDbFactory _dbFactory;
-        private readonly ILogger _logger;
+        public delegate DbUpMigration Factory(ILogger logger,
+            DbUpMigrationOptions options);
 
-        protected DbUpSQLiteMigration(
-            IDbFactory dbFactory,
-            ILogger logger)
+        private readonly ILogger _logger;
+        private readonly DbUpMigrationOptions _options;
+        private readonly Lazy<bool> _init;
+
+        public DbUpMigration(
+            ILogger logger,
+            DbUpMigrationOptions options)
         {
-            _dbFactory = dbFactory;
             _logger = logger;
+            _options = options;
+            _init = new Lazy<bool>(() =>
+            {
+                CreateOrUpdateDatabase();
+                return true;
+            });
         }
 
         public Task MigrateAsync()
         {
-            var dbName = GetDbName();
-            var dictionary = GetVariables();
-            CreateOrUpdateDatabase(dbName, SqlSelector, dictionary);
+            _ = _init.Value;
             return Task.CompletedTask;
         }
 
-        protected abstract string GetDbName();
-        protected abstract bool SqlSelector(string fileName);
-        protected abstract Dictionary<string, string> GetVariables();
-
-        private void CreateOrUpdateDatabase(
-            string dbName,
-            Func<string, bool> sqlSelector,
-            IDictionary<string, string> variables)
+        private void CreateOrUpdateDatabase()
         {
-            using var conn = _dbFactory.GetConnection(dbName);
-            var dbMigration =
-                DeployChanges.To
-                    .SQLiteDatabase(new SharedConnection(conn))
-                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), sqlSelector)
-                    .LogToAutodetectedLog()
-                    .WithVariablesEnabled()
-                    .WithVariables(variables)
-                    .Build();
+            var builder = _options.UpgradeEngineBuilderFactory();
+            foreach (var scriptAssembly in _options.ScriptAssemblies)
+            {
+                builder
+                    .WithScriptsEmbeddedInAssembly(scriptAssembly, _options.ScriptSelector);
+            }
+
+            builder
+                .LogToAutodetectedLog()
+                .WithVariablesEnabled()
+                .WithVariables(_options.Variables);
+
+            if (_options.EnableNullJournal)
+            {
+                builder.JournalTo(new NullJournal());
+            }
+
+            var dbMigration = builder.Build();
 
             var result = dbMigration.PerformUpgrade();
 

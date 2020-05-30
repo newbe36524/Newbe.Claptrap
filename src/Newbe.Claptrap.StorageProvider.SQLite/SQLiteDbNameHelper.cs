@@ -4,15 +4,13 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
 {
     public static class SQLiteDbNameHelper
     {
-        public static string OneIdentityOneTableEventStore(
-            IClaptrapDesign design,
-            IClaptrapIdentity identity)
+        public static string OneIdOneFileEventStore(
+            IClaptrapIdentity masterOrSelfIdentity)
         {
-            var typeCode = design.ClaptrapMasterDesign?.ClaptrapTypeCode ?? design.ClaptrapTypeCode;
-            return Path.Combine($"{typeCode}_{identity.Id}", "eventDb.db");
+            return Path.Combine($"{masterOrSelfIdentity.TypeCode}_{masterOrSelfIdentity.Id}", "eventDb.db");
         }
 
-        public static string OneIdentityOneTableStateStore(
+        public static string OneIdOneFileStateStore(
             IClaptrapDesign design,
             IClaptrapIdentity identity)
         {

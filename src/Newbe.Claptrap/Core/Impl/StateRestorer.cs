@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -65,9 +66,9 @@ namespace Newbe.Claptrap.Core.Impl
                 State = stateSnapshot;
             }
 
-            var eventsFromStore = GetEventFromVersion().ToObservable();
+            var eventsFromStore = CreateGetEventFromVersion();
             ExceptionDispatchInfo? exceptionDispatchInfo = null;
-            var restoreStateFlow = eventsFromStore
+            await eventsFromStore
                 .Select(evt => Observable.FromAsync(
                     async () =>
                     {
@@ -91,33 +92,36 @@ namespace Newbe.Claptrap.Core.Impl
                     }
                 ))
                 .Concat()
-                .Subscribe(
-                    _ => { },
-                    ex => { },
-                    () => { _logger.LogDebug("success restore state from event store"); });
-            restoreStateFlow.Dispose();
+                .LastOrDefaultAsync()
+                .ToTask();
             exceptionDispatchInfo?.Throw();
 
-            async IAsyncEnumerable<IEvent> GetEventFromVersion()
+            IObservable<IEvent> CreateGetEventFromVersion()
             {
-                var startVersion = State.NextVersion;
-                var step = _eventLoadingOptions.LoadingCountInOneBatch;
-
-                var left = startVersion;
-                var right = startVersion + step;
-                var any = true;
-                while (any)
-                {
-                    any = false;
-                    foreach (var @event in await _eventLoader.GetEventsAsync(left, right))
+                var observable = Observable.Create<IEvent[]>(async observer =>
                     {
-                        any = true;
-                        yield return @event;
-                    }
+                        var startVersion = State.NextVersion;
+                        var step = _eventLoadingOptions.LoadingCountInOneBatch;
 
-                    left = right;
-                    right += step;
-                }
+                        var left = startVersion;
+                        var right = startVersion + step;
+                        var any = true;
+                        while (any)
+                        {
+                            var events = await _eventLoader.GetEventsAsync(left, right);
+                            var array = events.ToArray();
+                            any = array.Length > 0;
+                            observer.OnNext(array);
+                            left = right;
+                            right += step;
+                        }
+
+                        observer.OnCompleted();
+                        return Disposable.Empty;
+                    })
+                    .SelectMany(x => x);
+
+                return observable;
             }
         }
 

@@ -34,9 +34,9 @@ namespace Newbe.Claptrap.Modules
         public IEnumerable<IClaptrapMinionModule> GetClaptrapMinionModules(IClaptrapIdentity identity)
         {
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-            var moduleIdentity = new ClaptrapIdentity(identity.Id,
-                identity.TypeCode);
-            var re = new ClaptrapMinionModule(claptrapDesign, moduleIdentity);
+            var masterIdentity = new ClaptrapIdentity(identity.Id,
+                claptrapDesign.ClaptrapMasterDesign.ClaptrapTypeCode);
+            var re = new ClaptrapMinionModule(claptrapDesign, masterIdentity, identity);
             yield return re;
         }
 
@@ -124,17 +124,25 @@ namespace Newbe.Claptrap.Modules
             public string Description { get; } = "Module for minion";
             private readonly IClaptrapDesign _masterDesign;
             private readonly IClaptrapIdentity _masterIdentity;
+            private readonly IClaptrapIdentity _minionIdentity;
 
             public ClaptrapMinionModule(IClaptrapDesign masterDesign,
-                IClaptrapIdentity masterIdentity)
+                IClaptrapIdentity masterIdentity,
+                IClaptrapIdentity minionIdentity)
             {
                 _masterDesign = masterDesign;
                 _masterIdentity = masterIdentity;
+                _minionIdentity = minionIdentity;
             }
 
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
+                var masterClaptrapInfo = new MasterClaptrapInfo(_masterIdentity,
+                    _masterDesign);
+                builder.RegisterInstance(masterClaptrapInfo)
+                    .As<IMasterClaptrapInfo>()
+                    .SingleInstance();
 
                 RegisterComponent<IEventLoader>(_masterDesign.EventLoaderFactoryType);
 
@@ -150,7 +158,7 @@ namespace Newbe.Claptrap.Modules
                 {
                     builder.Register(t =>
                             ((IClaptrapComponentFactory<TComponent>) t.Resolve(factoryType))
-                            .Create(_masterIdentity))
+                            .Create(_minionIdentity))
                         .As<TComponent>()
                         .SingleInstance();
                 }

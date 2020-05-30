@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
 
         public async Task SaveAsync(StateEntity entity)
         {
-            var dbName = SQLiteDbNameHelper.OneIdentityOneTableStateStore(_claptrapDesign, _claptrapIdentity);
+            var dbName = SQLiteDbNameHelper.OneIdOneFileStateStore(_claptrapDesign, _claptrapIdentity);
             using var db = _isqLiteDbFactory.GetConnection(dbName);
             await db.ExecuteAsync(_insertSql, entity);
         }
