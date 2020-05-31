@@ -25,15 +25,17 @@ Claptrap and it`s Minions are coming.
     - [x] 内存
     - [x] SQLite
     - [X] Mysql
-    - [ ] MSSQL
+    - [X] Mongo
     - [X] Postgresql
+    - [ ] MSSQL
     - [ ] Oracle
   - 状态存储支持
     - [x] 内存
     - [x] SQLite
     - [X] Mysql
-    - [ ] MSSQL
+    - [X] Mongo
     - [X] Postgresql
+    - [ ] MSSQL
     - [ ] Oracle
   - 存储通用功能
     - [x] 存储结构自动迁移
@@ -44,7 +46,7 @@ Claptrap and it`s Minions are coming.
     - [X] 支持启动时配置
   - [X] Minions
   - 事件处理广播器与接收器
-    - [ ] 基于Orleans直接调用
+    - [X] 基于Orleans直接调用
     - [ ] RabbitMQ
   - 事件与状态序列化
     - [X] Json
@@ -54,7 +56,6 @@ Claptrap and it`s Minions are coming.
     - [X] 启动时变更 Design
     - [X] 导出
     - [ ] 配置文件式设计 Design
-  - [ ] 组件化
   - 单元测试
     - [ ] 覆盖率80%以上
     - [ ] 覆盖主要的异常抛出情况
