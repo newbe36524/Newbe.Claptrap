@@ -32,12 +32,12 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.DbName)),
+                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)),
                 true);
 
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
-                $"{nameof(PostgreSQLSharedTableEventStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.EventTableName}";
+                $"{nameof(PostgreSQLSharedTableEventStoreMigration)}_{options.ConnectionName}_{options.SchemaName}_{options.EventTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
         }
 

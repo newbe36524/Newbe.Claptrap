@@ -38,6 +38,8 @@ namespace Newbe.Claptrap.Demo.Server
                                 "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;";
                             const string postgreSQLConnectionString =
                                 "Server=localhost;Port=5432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;";
+                            const string mongoConnectionString =
+                                "mongodb://root:claptrap@localhost/claptrap?authSource=admin";
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
                                 .ScanClaptrapDesigns(new[]
@@ -60,14 +62,23 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
+                                // .AddConnectionString("claptrap",
+                                //     postgreSQLConnectionString)
+                                // .UsePostgreSQL(postgreSQL =>
+                                //     postgreSQL
+                                //         .AsEventStore(eventStore =>
+                                //             eventStore.SharedTable())
+                                //         .AsStateStore(stateStore =>
+                                //             stateStore.SharedTable())
+                                // )
                                 .AddConnectionString("claptrap",
-                                    postgreSQLConnectionString)
-                                .UsePostgreSQL(postgreSQL =>
-                                    postgreSQL
+                                    mongoConnectionString)
+                                .UseMongoDB(mongoDb =>
+                                    mongoDb
                                         .AsEventStore(eventStore =>
-                                            eventStore.SharedTable())
+                                            eventStore.SharedCollection())
                                         .AsStateStore(stateStore =>
-                                            stateStore.SharedTable())
+                                            stateStore.SharedCollection())
                                 )
                                 .Build();
                             claptrapBootstrapper.Boot();

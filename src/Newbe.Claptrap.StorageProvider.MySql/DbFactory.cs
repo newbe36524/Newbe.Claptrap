@@ -13,14 +13,14 @@ namespace Newbe.Claptrap.StorageProvider.MySql
             _options = options;
         }
 
-        public string GetConnectionString(string dbName)
+        public string GetConnectionString(string connectionName)
         {
-            return _options.StorageConnectionStrings[dbName];
+            return _options.StorageConnectionStrings[connectionName];
         }
 
-        public IDbConnection GetConnection(string dbName)
+        public IDbConnection GetConnection(string connectionName)
         {
-            var re = new MySqlConnection(GetConnectionString(dbName));
+            var re = new MySqlConnection(GetConnectionString(connectionName));
             return re;
         }
     }

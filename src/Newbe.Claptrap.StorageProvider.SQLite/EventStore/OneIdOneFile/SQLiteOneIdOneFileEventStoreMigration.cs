@@ -34,7 +34,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
                 () =>
                     DeployChanges
                         .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(
-                            SQLiteDbNameHelper.OneIdOneFileEventStore(masterClaptrapInfo?.Identity ?? identity)))),
+                            SQLiteConnectionNameHelper.OneIdOneFileEventStore(masterClaptrapInfo?.Identity ?? identity)))),
                 true);
             _migration = factory.Invoke(logger, migrationOptions);
         }

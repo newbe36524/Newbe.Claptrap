@@ -41,7 +41,7 @@ namespace Newbe.Claptrap
             = new List<IClaptrapModuleProvider>();
 
         /// <summary>
-        /// {dbName:connectionString}
+        /// {ConnectionName:connectionString}
         /// </summary>
         public IDictionary<string, string> StorageConnectionStrings { get; set; }
             = new Dictionary<string, string>();

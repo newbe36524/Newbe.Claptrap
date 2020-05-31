@@ -13,23 +13,23 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
 {
     public class SharedTableEventBatchSaver : ISharedTableEventBatchSaver
     {
-        public delegate SharedTableEventBatchSaver Factory(string dbName,
+        public delegate SharedTableEventBatchSaver Factory(string connectionName,
             string schemaName,
             string eventTableName);
 
-        private readonly string _dbName;
+        private readonly string _connectionName;
         private readonly string _schemaName;
         private readonly string _eventTableName;
         private readonly IDbFactory _dbFactory;
         private readonly Subject<SavingItem> _subject = new Subject<SavingItem>();
 
         public SharedTableEventBatchSaver(
-            string dbName,
+            string connectionName,
             string schemaName,
             string eventTableName,
             IDbFactory dbFactory)
         {
-            _dbName = dbName;
+            _connectionName = connectionName;
             _schemaName = schemaName;
             _eventTableName = eventTableName;
             _dbFactory = dbFactory;
@@ -73,7 +73,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
                 })
                 .ToArray();
 
-            await using var db = (NpgsqlConnection) _dbFactory.GetConnection(_dbName);
+            await using var db = (NpgsqlConnection) _dbFactory.GetConnection(_connectionName);
             await db.OpenAsync();
             using var importer =
                 db.BeginBinaryImport(

@@ -7,15 +7,15 @@ namespace Newbe.Claptrap.StorageProvider.MySql
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dbName"></param>
+        /// <param name="connectionName"></param>
         /// <returns></returns>
-        string GetConnectionString(string dbName);
+        string GetConnectionString(string connectionName);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dbName"></param>
+        /// <param name="connectionName"></param>
         /// <returns></returns>
-        IDbConnection GetConnection(string dbName);
+        IDbConnection GetConnection(string connectionName);
     }
 }

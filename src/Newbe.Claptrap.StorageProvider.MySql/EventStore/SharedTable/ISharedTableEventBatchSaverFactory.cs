@@ -2,7 +2,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
     public interface ISharedTableEventBatchSaverFactory
     {
-        ISharedTableEventBatchSaver Create(string dbName,
+        ISharedTableEventBatchSaver Create(string connectionName,
             string schemaName,
             string eventTableName);
     }

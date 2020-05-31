@@ -28,8 +28,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
 
         public async Task<StateEntity?> GetStateSnapshotAsync()
         {
-            var dbName = SQLiteDbNameHelper.OneIdOneFileStateStore(_claptrapDesign, _claptrapIdentity);
-            using var db = _isqLiteDbFactory.GetConnection(dbName);
+            var connectionName = SQLiteConnectionNameHelper.OneIdOneFileStateStore(_claptrapDesign, _claptrapIdentity);
+            using var db = _isqLiteDbFactory.GetConnection(connectionName);
             var ps = new {ClaptrapTypeCode = _claptrapIdentity.TypeCode, ClaptrapId = _claptrapIdentity.Id};
             var re = await db.QueryFirstOrDefaultAsync<StateEntity>(_selectSql, ps);
             if (re == null)

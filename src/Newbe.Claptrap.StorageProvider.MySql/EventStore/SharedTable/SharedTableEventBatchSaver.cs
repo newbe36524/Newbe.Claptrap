@@ -13,11 +13,11 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 {
     public class SharedTableEventBatchSaver : ISharedTableEventBatchSaver
     {
-        public delegate SharedTableEventBatchSaver Factory(string dbName,
+        public delegate SharedTableEventBatchSaver Factory(string connectionName,
             string schemaName,
             string eventTableName);
 
-        private readonly string _dbName;
+        private readonly string _connectionName;
         private readonly string _schemaName;
         private readonly string _eventTableName;
         private readonly IDbFactory _dbFactory;
@@ -25,13 +25,13 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         private readonly Subject<SavingItem> _subject = new Subject<SavingItem>();
 
         public SharedTableEventBatchSaver(
-            string dbName,
+            string connectionName,
             string schemaName,
             string eventTableName,
             IDbFactory dbFactory,
             ILogger<SharedTableEventBatchSaver> logger)
         {
-            _dbName = dbName;
+            _connectionName = connectionName;
             _schemaName = schemaName;
             _eventTableName = eventTableName;
             _dbFactory = dbFactory;
@@ -77,7 +77,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                 .ToArray();
 
             var sql = InitSharedTableInsertManySql(array.Length);
-            using var db = _dbFactory.GetConnection(_dbName);
+            using var db = _dbFactory.GetConnection(_connectionName);
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
             {

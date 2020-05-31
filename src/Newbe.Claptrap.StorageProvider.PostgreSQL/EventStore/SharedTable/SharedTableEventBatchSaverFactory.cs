@@ -16,9 +16,9 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
             _factory = factory;
         }
 
-        public ISharedTableEventBatchSaver Create(string dbName, string schemaName, string eventTableName)
+        public ISharedTableEventBatchSaver Create(string connectionName, string schemaName, string eventTableName)
         {
-            var key = $"{dbName}_{schemaName}_{eventTableName}";
+            var key = $"{connectionName}_{schemaName}_{eventTableName}";
             if (_savers.TryGetValue(key, out var saver))
             {
                 return saver;
@@ -31,7 +31,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
                     return saver;
                 }
 
-                saver = _factory.Invoke(dbName, schemaName, eventTableName);
+                saver = _factory.Invoke(connectionName, schemaName, eventTableName);
                 _savers[key] = saver;
                 return saver;
             }
