@@ -32,13 +32,13 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.DbName)),
+                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)),
                 true);
 
             var migration = factory.Invoke(logger, migrationOptions);
 
             var migrationKey =
-                $"{nameof(PostgreSQLSharedTableStateStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.StateTableName}";
+                $"{nameof(PostgreSQLSharedTableStateStoreMigration)}_{options.ConnectionName}_{options.SchemaName}_{options.StateTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
         }
 

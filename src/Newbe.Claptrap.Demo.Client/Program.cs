@@ -41,12 +41,12 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var rd = new Random();
 
-            var ids = Enumerable.Range(1, 100);
+            var ids = Enumerable.Range(1, 1);
             var sw = Stopwatch.StartNew();
             await Task.WhenAll(ids.SelectMany(x => RunOneAccount(x.ToString())));
             sw.Stop();
             Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms");
-            const int times = 100;
+            const int times = 1;
 
             IEnumerable<Task> RunOneAccount(string accountId)
             {

@@ -16,21 +16,21 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             _logger = logger;
         }
 
-        public string GetConnectionString(string dbName)
+        public string GetConnectionString(string connectionName)
         {
-            var fileName = EnsureDirectoryCreated(dbName);
+            var fileName = EnsureDirectoryCreated(connectionName);
             var re = DbHelper.ConnectionString(fileName);
             return re;
         }
 
-        public IDbConnection GetConnection(string dbName)
+        public IDbConnection GetConnection(string connectionName)
         {
-            var fileName = EnsureDirectoryCreated(dbName);
+            var fileName = EnsureDirectoryCreated(connectionName);
             var conn = new SQLiteConnection(GetConnectionString(fileName));
             return conn;
         }
 
-        private string EnsureDirectoryCreated(string dbName)
+        private string EnsureDirectoryCreated(string connectionName)
         {
             var dataBaseDirectory = GetDataBaseDirectory();
             if (!Directory.Exists(dataBaseDirectory))
@@ -44,7 +44,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
                 _logger.LogInformation("{dir} found, do nothing", dataBaseDirectory);
             }
 
-            var fileName = Path.Combine(dataBaseDirectory, dbName);
+            var fileName = Path.Combine(dataBaseDirectory, connectionName);
             var claptrapDirectory = Directory.GetParent(fileName);
 
             if (!claptrapDirectory.Exists)

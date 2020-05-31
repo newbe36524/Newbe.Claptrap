@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable
 
         public async Task<StateEntity?> GetStateSnapshotAsync()
         {
-            using var db = _dbFactory.GetConnection(_options.DbName);
+            using var db = _dbFactory.GetConnection(_options.ConnectionName);
             var ps = new {ClaptrapTypeCode = _claptrapIdentity.TypeCode, ClaptrapId = _claptrapIdentity.Id};
             var item = await db.QueryFirstOrDefaultAsync<SharedTableStateEntity>(_selectSql, ps);
             if (item == null)

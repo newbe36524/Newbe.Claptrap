@@ -21,25 +21,31 @@ Claptrap and it`s Minions are coming.
   - 时间处理与状态管理
     - [X] 定期保存快照
     - [X] 事件处理异常时恢复状态
-    - [ ] 支持事件UID的单独检查
   - 事件存储支持
     - [x] 内存
     - [x] SQLite
-    - [ ] Mysql
+    - [X] Mysql
     - [ ] MSSQL
-    - [ ] Postgresql
+    - [X] Postgresql
+    - [ ] Oracle
   - 状态存储支持
     - [x] 内存
     - [x] SQLite
-    - [ ] Mysql
+    - [X] Mysql
     - [ ] MSSQL
-    - [ ] Postgresql
+    - [X] Postgresql
+    - [ ] Oracle
+  - 存储通用功能
+    - [x] 存储结构自动迁移
+    - [ ] 可导出存储结构迁移脚本
   - 全球化与本地化
     - [X] 框架
     - [ ] 替换现有所有文本
     - [X] 支持启动时配置
-  - [ ] Minions
-  - [ ] 事件处理广播器与接收器
+  - [X] Minions
+  - 事件处理广播器与接收器
+    - [ ] 基于Orleans直接调用
+    - [ ] RabbitMQ
   - 事件与状态序列化
     - [X] Json
   - Claptrap Design
@@ -52,6 +58,11 @@ Claptrap and it`s Minions are coming.
   - 单元测试
     - [ ] 覆盖率80%以上
     - [ ] 覆盖主要的异常抛出情况
+  - 监控
+    - [ ] 事件处理器
+    - [ ] Claptrap生命周期
+    - [ ] 存储迁移状态
+    - [ ] 存储使用
 - 开发工具
   - [ ] 项目模板
   - 代码样例

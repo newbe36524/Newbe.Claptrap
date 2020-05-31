@@ -29,8 +29,8 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            var dbName = _options.DbName;
-            using var db = _dbFactory.GetConnection(dbName);
+            var connectionName = _options.ConnectionName;
+            using var db = _dbFactory.GetConnection(connectionName);
             var entities = await db.QueryAsync<SharedTableEventEntity>(_selectSql, new
                 {
                     startVersion, endVersion,

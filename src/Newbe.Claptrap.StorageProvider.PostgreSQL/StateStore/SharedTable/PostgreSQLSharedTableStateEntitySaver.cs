@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore.SharedTable
 
         public async Task SaveAsync(StateEntity entity)
         {
-            using var db = _dbFactory.GetConnection(_options.DbName);
+            using var db = _dbFactory.GetConnection(_options.ConnectionName);
             var item = new SharedTableStateEntity
             {
                 claptrap_id = entity.ClaptrapId,

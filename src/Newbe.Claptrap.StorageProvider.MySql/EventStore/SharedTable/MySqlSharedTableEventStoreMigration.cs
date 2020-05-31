@@ -32,11 +32,11 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.MySqlDatabase(dbFactory.GetConnectionString(options.DbName)),
+                        .To.MySqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)),
                 true);
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
-                $"{nameof(MySqlSharedTableEventStoreMigration)}_{options.DbName}_{options.SchemaName}_{options.EventTableName}";
+                $"{nameof(MySqlSharedTableEventStoreMigration)}_{options.ConnectionName}_{options.SchemaName}_{options.EventTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
         }
 

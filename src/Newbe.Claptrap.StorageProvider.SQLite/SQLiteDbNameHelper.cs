@@ -2,7 +2,7 @@ using System.IO;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
-    public static class SQLiteDbNameHelper
+    public static class SQLiteConnectionNameHelper
     {
         public static string OneIdOneFileEventStore(
             IClaptrapIdentity masterOrSelfIdentity)

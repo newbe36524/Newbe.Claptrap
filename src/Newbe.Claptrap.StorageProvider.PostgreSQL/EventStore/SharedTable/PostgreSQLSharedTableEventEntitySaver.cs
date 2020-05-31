@@ -12,7 +12,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
             IPostgreSQLSharedTableEventStoreOptions options,
             ISharedTableEventBatchSaverFactory sharedTableEventBatchSaverFactory)
         {
-            _batchSaver = sharedTableEventBatchSaverFactory.Create(options.DbName,
+            _batchSaver = sharedTableEventBatchSaverFactory.Create(options.ConnectionName,
                 options.SchemaName,
                 options.EventTableName);
         }

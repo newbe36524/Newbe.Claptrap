@@ -13,14 +13,14 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL
             _options = options;
         }
 
-        public string GetConnectionString(string dbName)
+        public string GetConnectionString(string connectionName)
         {
-            return _options.StorageConnectionStrings[dbName];
+            return _options.StorageConnectionStrings[connectionName];
         }
 
-        public IDbConnection GetConnection(string dbName)
+        public IDbConnection GetConnection(string connectionName)
         {
-            var re = new NpgsqlConnection(GetConnectionString(dbName));
+            var re = new NpgsqlConnection(GetConnectionString(connectionName));
             return re;
         }
     }

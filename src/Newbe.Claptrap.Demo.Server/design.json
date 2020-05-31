@@ -39,40 +39,40 @@
       "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "ClaptrapStorageProviderOptions": {
         "EventSaverOptions": {
-          "PostgreSQLEventStoreStrategy": 0,
-          "SchemaName": "claptrap",
-          "EventTableName": "events",
-          "DbName": "claptrap",
+          "MongoDBEventStoreStrategy": 0,
+          "DatabaseName": "claptrap",
+          "CollectionName": "events",
+          "ConnectionName": "claptrap",
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true
         },
         "EventLoaderOptions": {
-          "PostgreSQLEventStoreStrategy": 0,
-          "SchemaName": "claptrap",
-          "EventTableName": "events",
-          "DbName": "claptrap",
+          "MongoDBEventStoreStrategy": 0,
+          "DatabaseName": "claptrap",
+          "CollectionName": "events",
+          "ConnectionName": "claptrap",
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true
         },
         "StateSaverOptions": {
-          "PostgreSQLStateStoreStrategy": 0,
+          "MongoDBStateStoreStrategy": 0,
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
-          "IsAutoMigrationEnabled": true,
-          "SchemaName": "claptrap",
-          "StateTableName": "states",
-          "DbName": "claptrap"
+          "DatabaseName": "claptrap",
+          "CollectionName": "states",
+          "ConnectionName": "claptrap",
+          "IsAutoMigrationEnabled": true
         },
         "StateLoaderOptions": {
-          "PostgreSQLStateStoreStrategy": 0,
+          "MongoDBStateStoreStrategy": 0,
           "InsertManyWindowTimeInMilliseconds": 50,
           "InsertManyWindowCount": 1000,
-          "IsAutoMigrationEnabled": true,
-          "SchemaName": "claptrap",
-          "StateTableName": "states",
-          "DbName": "claptrap"
+          "DatabaseName": "claptrap",
+          "CollectionName": "states",
+          "ConnectionName": "claptrap",
+          "IsAutoMigrationEnabled": true
         }
       }
     },
@@ -111,40 +111,40 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "PostgreSQLEventStoreStrategy": 0,
-        "SchemaName": "claptrap",
-        "EventTableName": "events",
-        "DbName": "claptrap",
+        "MongoDBEventStoreStrategy": 0,
+        "DatabaseName": "claptrap",
+        "CollectionName": "events",
+        "ConnectionName": "claptrap",
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "PostgreSQLEventStoreStrategy": 0,
-        "SchemaName": "claptrap",
-        "EventTableName": "events",
-        "DbName": "claptrap",
+        "MongoDBEventStoreStrategy": 0,
+        "DatabaseName": "claptrap",
+        "CollectionName": "events",
+        "ConnectionName": "claptrap",
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "PostgreSQLStateStoreStrategy": 0,
+        "MongoDBStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
-        "IsAutoMigrationEnabled": true,
-        "SchemaName": "claptrap",
-        "StateTableName": "states",
-        "DbName": "claptrap"
+        "DatabaseName": "claptrap",
+        "CollectionName": "states",
+        "ConnectionName": "claptrap",
+        "IsAutoMigrationEnabled": true
       },
       "StateLoaderOptions": {
-        "PostgreSQLStateStoreStrategy": 0,
+        "MongoDBStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
-        "IsAutoMigrationEnabled": true,
-        "SchemaName": "claptrap",
-        "StateTableName": "states",
-        "DbName": "claptrap"
+        "DatabaseName": "claptrap",
+        "CollectionName": "states",
+        "ConnectionName": "claptrap",
+        "IsAutoMigrationEnabled": true
       }
     }
   },
@@ -186,40 +186,40 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "PostgreSQLEventStoreStrategy": 0,
-        "SchemaName": "claptrap",
-        "EventTableName": "events",
-        "DbName": "claptrap",
+        "MongoDBEventStoreStrategy": 0,
+        "DatabaseName": "claptrap",
+        "CollectionName": "events",
+        "ConnectionName": "claptrap",
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true
       },
       "EventLoaderOptions": {
-        "PostgreSQLEventStoreStrategy": 0,
-        "SchemaName": "claptrap",
-        "EventTableName": "events",
-        "DbName": "claptrap",
+        "MongoDBEventStoreStrategy": 0,
+        "DatabaseName": "claptrap",
+        "CollectionName": "events",
+        "ConnectionName": "claptrap",
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true
       },
       "StateSaverOptions": {
-        "PostgreSQLStateStoreStrategy": 0,
+        "MongoDBStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
-        "IsAutoMigrationEnabled": true,
-        "SchemaName": "claptrap",
-        "StateTableName": "states",
-        "DbName": "claptrap"
+        "DatabaseName": "claptrap",
+        "CollectionName": "states",
+        "ConnectionName": "claptrap",
+        "IsAutoMigrationEnabled": true
       },
       "StateLoaderOptions": {
-        "PostgreSQLStateStoreStrategy": 0,
+        "MongoDBStateStoreStrategy": 0,
         "InsertManyWindowTimeInMilliseconds": 50,
         "InsertManyWindowCount": 1000,
-        "IsAutoMigrationEnabled": true,
-        "SchemaName": "claptrap",
-        "StateTableName": "states",
-        "DbName": "claptrap"
+        "DatabaseName": "claptrap",
+        "CollectionName": "states",
+        "ConnectionName": "claptrap",
+        "IsAutoMigrationEnabled": true
       }
     }
   }

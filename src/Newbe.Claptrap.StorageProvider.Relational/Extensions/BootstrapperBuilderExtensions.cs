@@ -9,9 +9,9 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder AddConnectionString(
             this IClaptrapBootstrapperBuilder builder,
-            string dbName,
+            string connectionName,
             string connectionString) =>
-            builder.ConfigConnectionStrings(dictionary => dictionary[dbName] = connectionString);
+            builder.ConfigConnectionStrings(dictionary => dictionary[connectionName] = connectionString);
 
         public static IClaptrapBootstrapperBuilder ConfigConnectionStrings(
             this IClaptrapBootstrapperBuilder builder,

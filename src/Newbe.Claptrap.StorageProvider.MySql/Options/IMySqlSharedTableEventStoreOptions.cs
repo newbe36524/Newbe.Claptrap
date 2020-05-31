@@ -10,6 +10,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Options
     {
         string SchemaName { get; }
         string EventTableName { get; }
-        string DbName { get; }
+        string ConnectionName { get; }
     }
 }

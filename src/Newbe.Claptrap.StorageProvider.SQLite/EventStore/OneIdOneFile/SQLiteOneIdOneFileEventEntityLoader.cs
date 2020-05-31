@@ -13,7 +13,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
         private readonly IClaptrapIdentity _claptrapIdentity;
         private readonly IDbFactory _dbFactory;
         private readonly string _selectSql;
-        private readonly string _dbName;
+        private readonly string _connectionName;
 
         public SQLiteOneIdOneFileEventEntityLoader(
             IClaptrapIdentity claptrapIdentity,
@@ -25,13 +25,13 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
             _dbFactory = dbFactory;
             _selectSql =
                 $"SELECT * FROM [{eventStoreOptions.EventTableName}] WHERE [version] >= @startVersion AND [version] < @endVersion ORDER BY [version]";
-            _dbName = SQLiteDbNameHelper.OneIdOneFileEventStore(
+            _connectionName = SQLiteConnectionNameHelper.OneIdOneFileEventStore(
                 masterClaptrapInfo?.Identity ?? claptrapIdentity);
         }
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            using var db = _dbFactory.GetConnection(_dbName);
+            using var db = _dbFactory.GetConnection(_connectionName);
             var eventEntities = await db.QueryAsync<EventEntity>(_selectSql, new {startVersion, endVersion});
             var re = eventEntities.ToArray();
             foreach (var eventEntity in re)
