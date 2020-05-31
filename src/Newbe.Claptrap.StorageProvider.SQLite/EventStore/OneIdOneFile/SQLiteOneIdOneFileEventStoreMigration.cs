@@ -22,7 +22,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
             IDbFactory dbFactory,
             DbUpMigration.Factory factory,
             ILogger<SQLiteOneIdOneFileEventStoreMigration> logger,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
                     DeployChanges
                         .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(
                             SQLiteConnectionNameHelper.OneIdOneFileEventStore(masterClaptrapInfo?.Identity ?? identity)))),
-                true);
+                false);
             _migration = factory.Invoke(logger, migrationOptions);
         }
 

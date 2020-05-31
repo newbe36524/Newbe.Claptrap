@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore.SharedCollection
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
             IMongoDBSharedCollectionEventStoreOptions options,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             _dbFactory = dbFactory;
             _options = options;

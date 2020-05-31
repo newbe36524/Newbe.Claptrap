@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
             IMySqlSharedTableEventStoreOptions options,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             _dbFactory = dbFactory;
             _options = options;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Autofac;
+using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
 
@@ -22,6 +23,7 @@ namespace Newbe.Claptrap.Modules
             var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
             var re = new ClaptrapSharedModule(claptrapDesign, identity);
             yield return re;
+            yield return new AppMetricsModule();
         }
 
         public IEnumerable<IClaptrapMasterModule> GetClaptrapMasterClaptrapModules(IClaptrapIdentity identity)
@@ -40,6 +42,20 @@ namespace Newbe.Claptrap.Modules
             yield return re;
         }
 
+        private class AppMetricsModule : Module, IClaptrapSharedModule
+        {
+            public string Name { get; } = "Claptrap Metrics module";
+            public string Description { get; } = "Module for metrics about EventStore and StateStore";
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                builder.RegisterDecorator<MetricsEventLoader, IEventLoader>();
+                builder.RegisterDecorator<MetricsEventSaver, IEventSaver>();
+                builder.RegisterDecorator<MetricsStateLoader, IStateLoader>();
+                builder.RegisterDecorator<MetricsStateSaver, IStateSaver>();
+            }
+        }
 
         private class ClaptrapSharedModule : Module, IClaptrapSharedModule
         {
@@ -82,6 +98,9 @@ namespace Newbe.Claptrap.Modules
                     .As<IClaptrap>()
                     .SingleInstance();
                 builder.RegisterDecorator<AopClaptrap, IClaptrap>(context => true);
+                builder.RegisterType<MetricsClaptrapLifetimeInterceptor>()
+                    .As<IClaptrapLifetimeInterceptor>()
+                    .InstancePerLifetimeScope();
 
                 RegisterComponent<IStateSaver>(_claptrapDesign.StateSaverFactoryType);
                 RegisterComponent<IStateLoader>(_claptrapDesign.StateLoaderFactoryType);

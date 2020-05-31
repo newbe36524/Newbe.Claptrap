@@ -14,6 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.AppMetrics\Newbe.Claptrap.AppMetrics.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Localization\Newbe.Claptrap.Localization.csproj" />
     </ItemGroup>

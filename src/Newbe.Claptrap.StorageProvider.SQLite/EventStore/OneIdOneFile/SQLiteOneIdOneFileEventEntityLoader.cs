@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
             IClaptrapIdentity claptrapIdentity,
             IDbFactory dbFactory,
             ISQLiteOneIdOneFileEventStoreOptions eventStoreOptions,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             _claptrapIdentity = claptrapIdentity;
             _dbFactory = dbFactory;
