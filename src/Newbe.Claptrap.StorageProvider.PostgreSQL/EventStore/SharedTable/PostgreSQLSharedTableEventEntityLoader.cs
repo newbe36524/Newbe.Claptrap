@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
             IPostgreSQLSharedTableEventStoreOptions options,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             _dbFactory = dbFactory;
             _options = options;

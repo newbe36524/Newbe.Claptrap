@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Autofac;
+using Newbe.Claptrap.StorageProvider.Relational.AppMetrics;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
@@ -22,6 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             yield return new RelationalEventLoaderModule(design);
             yield return new RelationalStateLoaderModule(design);
             yield return new RelationalStateSaverModule(design);
+            yield return new AppMetricsModule();
         }
 
         public IEnumerable<IClaptrapMasterModule> GetClaptrapMasterClaptrapModules(IClaptrapIdentity identity)
@@ -33,6 +35,21 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
         public IEnumerable<IClaptrapMinionModule> GetClaptrapMinionModules(IClaptrapIdentity identity)
         {
             yield break;
+        }
+        
+        private class AppMetricsModule : Autofac.Module, IClaptrapSharedModule
+        {
+            public string Name { get; } = "Claptrap Metrics module";
+            public string Description { get; } = "Module for metrics about EventStoreMigration and StateStoreMigration";
+
+            protected override void Load(ContainerBuilder builder)
+            {
+                base.Load(builder);
+                builder.RegisterDecorator<MetricsEventLoaderMigration, IEventLoaderMigration>();
+                builder.RegisterDecorator<MetricsEventSaverMigration, IEventSaverMigration>();
+                builder.RegisterDecorator<MetricsStateLoaderMigration, IStateLoaderMigration>();
+                builder.RegisterDecorator<MetricsStateSaverMigration, IStateSaverMigration>();
+            }
         }
 
         private class RelationalEventSaverModule : Autofac.Module, IClaptrapMasterModule

@@ -1,10 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using App.Metrics;
+using App.Metrics.AspNetCore;
+using App.Metrics.Formatters.Prometheus;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
 using Newtonsoft.Json;
 using Orleans;
@@ -20,6 +26,11 @@ namespace Newbe.Claptrap.Demo.Server
             {
                 Console.WriteLine(eventArgs.ExceptionObject);
             };
+            ClaptrapMetrics.MetricsRoot = new MetricsBuilder()
+                .OutputMetrics.AsPrometheusPlainText()
+                .OutputMetrics.AsPrometheusProtobuf()
+                .Build();
+            var metrics = ClaptrapMetrics.MetricsRoot;
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(context =>
                 {
@@ -49,9 +60,9 @@ namespace Newbe.Claptrap.Demo.Server
                                 // .UseSQLite(sqlite =>
                                 //     sqlite
                                 //         .AsEventStore(eventStore =>
-                                //             eventStore.OneIdentityOneTable())
+                                //             eventStore.OneIdOneTable())
                                 //         .AsStateStore(stateStore =>
-                                //             stateStore.OneIdentityOneTable())
+                                //             stateStore.OneIdOneTable())
                                 // )
                                 // .AddConnectionString("claptrap",
                                 //     mysqlConnectionString)
@@ -86,6 +97,7 @@ namespace Newbe.Claptrap.Demo.Server
                             File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));
                         });
 
+
                     return serviceProviderFactory;
                 })
                 .UseOrleans(siloBuilder =>
@@ -104,6 +116,23 @@ namespace Newbe.Claptrap.Demo.Server
                         // .UseDashboard(options => options.Port = 9000)
                         ;
                 })
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureMetrics(metrics)
+                .UseMetrics(
+                    options =>
+                    {
+                        options.EndpointOptions = endpointsOptions =>
+                        {
+                            endpointsOptions.MetricsTextEndpointOutputFormatter = metrics
+                                .OutputMetricsFormatters
+                                .OfType<MetricsPrometheusTextOutputFormatter>()
+                                .First();
+                            endpointsOptions.MetricsEndpointOutputFormatter = metrics
+                                .OutputMetricsFormatters
+                                .OfType<MetricsPrometheusProtobufOutputFormatter>()
+                                .First();
+                        };
+                    })
                 .RunConsoleAsync();
         }
     }

@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteEvenStoreConfigurator OneIdentityOneTable()
+        public SQLiteEvenStoreConfigurator OneIdOneTable()
         {
             ConfigureOptions(providerOptions =>
             {
