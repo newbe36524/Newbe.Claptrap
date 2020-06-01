@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
             public string AsStringKey()
             {
                 return
-                    $"{nameof(SharedTableEventBatchOperatorKey)}-{_options.ConnectionName}-{_options.SchemaName}-{_options.EventTableName}";
+                    $"{nameof(PostgreSQLSharedTableEventEntitySaver)}-{_options.ConnectionName}-{_options.SchemaName}-{_options.EventTableName}";
             }
         }
 

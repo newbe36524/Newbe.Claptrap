@@ -10,7 +10,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Tools
     {
         public delegate BatchOperator<T> Factory(BatchOperatorOptions<T> options);
 
-        private readonly Subject<SavingItem> _subject = new Subject<SavingItem>();
+        private readonly Subject<BatchItem> _subject = new Subject<BatchItem>();
 
         public BatchOperator(
             BatchOperatorOptions<T> options)
@@ -33,16 +33,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Tools
                     try
                     {
                         await options.DoManyFunc.Invoke(x.Select(a => a.Input)).ConfigureAwait(false);
-                        foreach (var savingItem in x)
+                        foreach (var batchItem in x)
                         {
-                            savingItem.Tcs.SetResult(0);
+                            batchItem.Tcs.SetResult(0);
                         }
                     }
                     catch (Exception e)
                     {
-                        foreach (var savingItem in x)
+                        foreach (var batchItem in x)
                         {
-                            savingItem.Tcs.SetException(e);
+                            batchItem.Tcs.SetException(e);
                         }
                     }
                 }))
@@ -52,16 +52,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Tools
 
         public Task CreateTask(T input)
         {
-            var savingItem = new SavingItem
+            var batchItem = new BatchItem
             {
                 Tcs = new TaskCompletionSource<int>(),
                 Input = input
             };
-            _subject.OnNext(savingItem);
-            return savingItem.Tcs.Task;
+            _subject.OnNext(batchItem);
+            return batchItem.Tcs.Task;
         }
 
-        private struct SavingItem
+        private struct BatchItem
         {
             public T Input { get; set; }
             public TaskCompletionSource<int> Tcs { get; set; }

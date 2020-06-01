@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <EmbeddedResource Include="SqlScripts\EventStore\OneIdOneFile\0001-OneIdOneFile.event.sql" />
+      <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql" />
       <EmbeddedResource Include="SqlScripts\StateStore\OneIdOneFile\0001-OneIdOneFile.state.sql" />
     </ItemGroup>
 

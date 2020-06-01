@@ -4,7 +4,9 @@ using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile;
+using Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
+using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
 using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
@@ -65,6 +67,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                                 typeof(SQLiteOneIdOneFileEventStoreMigration),
                                 typeof(IEventLoaderMigration));
                             break;
+                        case SQLiteEventStoreStrategy.SharedTable:
+                            builder.RegisterType<SQLiteSharedTableEventEntityLoader>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.EventLoaderOptions,
+                                typeof(SQLiteSharedTableEventStoreMigration),
+                                typeof(IEventLoaderMigration));
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -81,6 +92,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                             RegisterIfAutoMigrationEnabled(
                                 options.EventSaverOptions,
                                 typeof(SQLiteOneIdOneFileEventStoreMigration),
+                                typeof(IEventSaverMigration));
+                            break;
+                        case SQLiteEventStoreStrategy.SharedTable:
+                            builder.RegisterType<SQLiteSharedTableEventEntitySaver>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.EventLoaderOptions,
+                                typeof(SQLiteSharedTableEventStoreMigration),
                                 typeof(IEventSaverMigration));
                             break;
                         default:

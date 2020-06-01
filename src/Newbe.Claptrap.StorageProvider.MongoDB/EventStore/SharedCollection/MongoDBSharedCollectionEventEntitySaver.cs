@@ -49,7 +49,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore.SharedCollection
             public string AsStringKey()
             {
                 return
-                    $"{nameof(SharedTableEventBatchOperatorKey)}-{_options.ConnectionName}-{_options.DatabaseName}-{_options.CollectionName}";
+                    $"{nameof(MongoDBSharedCollectionEventEntitySaver)}-{_options.ConnectionName}-{_options.DatabaseName}-{_options.CollectionName}";
             }
         }
 

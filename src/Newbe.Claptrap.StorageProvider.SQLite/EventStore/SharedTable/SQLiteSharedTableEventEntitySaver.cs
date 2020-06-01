@@ -4,20 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.Tools;
+using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable
 {
-    public class MySqlSharedTableEventEntitySaver : IEventEntitySaver<EventEntity>
+    public class SQLiteSharedTableEventEntitySaver : IEventEntitySaver<EventEntity>
     {
         private readonly IBatchOperator<EventEntity> _batchOperator;
 
-        public MySqlSharedTableEventEntitySaver(
+        public SQLiteSharedTableEventEntitySaver(
             BatchOperator<EventEntity>.Factory batchOperatorFactory,
             IDbFactory dbFactory,
-            IMySqlSharedTableEventStoreOptions options,
+            ISQLiteSharedTableEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer)
         {
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
@@ -34,10 +34,10 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         private readonly struct SharedTableEventBatchOperatorKey : IBatchOperatorKey
         {
-            private readonly IMySqlSharedTableEventStoreOptions _options;
+            private readonly ISQLiteSharedTableEventStoreOptions _options;
 
             public SharedTableEventBatchOperatorKey(
-                IMySqlSharedTableEventStoreOptions options)
+                ISQLiteSharedTableEventStoreOptions options)
             {
                 _options = options;
             }
@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             public string AsStringKey()
             {
                 return
-                    $"{nameof(MySqlSharedTableEventEntitySaver)}-{_options.ConnectionName}-{_options.SchemaName}-{_options.EventTableName}";
+                    $"{nameof(SQLiteSharedTableEventEntitySaver)}-{_options.ConnectionName}-{_options.ConnectionName}-{_options.EventTableName}";
             }
         }
 
@@ -56,7 +56,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
 
         private static async Task SaveManyCoreMany(
             IDbFactory dbFactory,
-            IMySqlSharedTableEventStoreOptions options,
+            ISQLiteSharedTableEventStoreOptions options,
             IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
@@ -73,7 +73,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
                 .ToArray();
 
             var sql = InitSharedTableInsertManySql(
-                options.SchemaName,
                 options.EventTableName,
                 array.Length);
             using var db = dbFactory.GetConnection(options.ConnectionName);
@@ -92,12 +91,11 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
         }
 
         private static string InitSharedTableInsertManySql(
-            string schemaName,
             string eventTableName,
             int count)
         {
             string insertManySqlHeader =
-                $"INSERT INTO {schemaName}.{eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES ";
+                $"INSERT INTO {eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES ";
             var valuesSql = Enumerable.Range(0, count)
                 .Select(x =>
                     ValuePartFactory(SharedTableEventEntity.ParameterNames(), x))
