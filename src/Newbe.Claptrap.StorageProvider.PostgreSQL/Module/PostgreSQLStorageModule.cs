@@ -1,5 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Module
 {
@@ -13,13 +12,6 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Module
             base.Load(builder);
             builder.RegisterType<DbFactory>()
                 .As<IDbFactory>()
-                .SingleInstance();
-
-            builder.RegisterType<SharedTableEventBatchSaver>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<SharedTableEventBatchSaverFactory>()
-                .As<ISharedTableEventBatchSaverFactory>()
                 .SingleInstance();
         }
     }

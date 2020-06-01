@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.StorageProvider.MySql.EventStore;
 using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable;

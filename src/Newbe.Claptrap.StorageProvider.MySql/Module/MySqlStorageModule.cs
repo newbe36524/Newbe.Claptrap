@@ -1,5 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Module
 {
@@ -13,13 +12,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             base.Load(builder);
             builder.RegisterType<DbFactory>()
                 .As<IDbFactory>()
-                .SingleInstance();
-
-            builder.RegisterType<SharedTableEventBatchSaver>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<SharedTableEventBatchSaverFactory>()
-                .As<ISharedTableEventBatchSaverFactory>()
                 .SingleInstance();
         }
     }

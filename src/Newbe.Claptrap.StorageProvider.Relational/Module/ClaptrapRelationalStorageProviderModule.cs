@@ -1,6 +1,7 @@
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {
@@ -32,6 +33,12 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
                 .SingleInstance();
 
             builder.RegisterType<DbUpMigration>()
+                .AsSelf()
+                .InstancePerDependency();
+            builder.RegisterType<BatchOperatorContainer>()
+                .As<IBatchOperatorContainer>()
+                .SingleInstance();
+            builder.RegisterGeneric(typeof(BatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
         }

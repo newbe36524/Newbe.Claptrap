@@ -14,13 +14,6 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Module
             builder.RegisterType<DbFactory>()
                 .As<IDbFactory>()
                 .SingleInstance();
-
-            builder.RegisterType<SharedCollectionEventBatchSaver>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<SharedCollectionEventBatchSaverFactory>()
-                .As<ISharedCollectionEventBatchSaverFactory>()
-                .SingleInstance();
         }
     }
 }

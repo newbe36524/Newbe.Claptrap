@@ -1,8 +1,6 @@
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Dapper;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable

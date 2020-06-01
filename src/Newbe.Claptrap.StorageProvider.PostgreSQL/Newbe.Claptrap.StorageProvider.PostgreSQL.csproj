@@ -6,20 +6,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.35"/>
-        <PackageReference Include="dbup-postgresql" Version="4.3.0"/>
-        <PackageReference Include="Npgsql" Version="4.0.5"/>
+        <PackageReference Include="Dapper" Version="2.0.35" />
+        <PackageReference Include="dbup-postgresql" Version="4.3.0" />
+        <PackageReference Include="Npgsql" Version="4.0.5" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj"/>
-        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj"/>
-        <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj"/>
+        <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql"/>
-        <EmbeddedResource Include="SqlScripts\StateStore\SharedTable\0001-SharedTable.state.sql"/>
+        <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql" />
+        <EmbeddedResource Include="SqlScripts\StateStore\SharedTable\0001-SharedTable.state.sql" />
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore.SharedTable;
