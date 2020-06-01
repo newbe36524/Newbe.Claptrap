@@ -21,22 +21,7 @@ Claptrap and it`s Minions are coming.
   - 时间处理与状态管理
     - [X] 定期保存快照
     - [X] 事件处理异常时恢复状态
-  - 事件存储支持
-    - [x] 内存
-    - [x] SQLite
-    - [X] Mysql
-    - [X] Mongo
-    - [X] Postgresql
-    - [ ] MSSQL
-    - [ ] Oracle
-  - 状态存储支持
-    - [x] 内存
-    - [x] SQLite
-    - [X] Mysql
-    - [X] Mongo
-    - [X] Postgresql
-    - [ ] MSSQL
-    - [ ] Oracle
+  - 事件和状态的存储支持，详见下方表格
   - 存储通用功能
     - [x] 存储结构自动迁移
     - [ ] 可导出存储结构迁移脚本
@@ -52,7 +37,6 @@ Claptrap and it`s Minions are coming.
     - [X] Json
   - Claptrap Design
     - [X] 全局 Design
-    - [X] 特定 Identity 自定义 Design
     - [X] 启动时变更 Design
     - [X] 导出
     - [ ] 配置文件式设计 Design
@@ -64,12 +48,32 @@ Claptrap and it`s Minions are coming.
     - [X] Claptrap生命周期
     - [X] 存储迁移状态
     - [X] 存储使用
+  -  [] 链路追踪
 - 开发工具
   - [ ] 项目模板
   - 代码样例
     - [X] [单体式运行](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.OutofOrleans)
     - [X] [Orleans 结合](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.ArticleManager)
     - [ ] Minions
+
+### 事件和状态的存储支持
+
+| 存储方式   | 存储策略                     |
+| ---------- | ---------------------------- |
+| 内存       | One Id One Store             |
+| SQLite     | One Id One File, SharedTable |
+| Mysql      | SharedTable                  |
+| Mongo      | SharedCollection             |
+| Postgresql | SharedTable                  |
+
+定位一个 Claptrap 所需要 Claptrap Identity 包含有 TypeCode 和 Id 两个属性。
+
+| 存储策略                      | 说明                                                                                                                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| One Id One xxx                | 不同的 Claptrap 即 Claptrap Identity 不同，将会独享自己的一份存储区域。名称中的 Id 是 Identity 的缩写。例如：SQLite - One Id One File 即表示每个 Claptrap 拥有单独的数据库文件 |
+| One Type One xxx              | 不同的类型 Claptrap 将会独享自己的一份存储区域。相同类型、不同 id 将会保存在相同的空间                                                                                         |
+| SharedTable, SharedCollection | 所有的 Claptrap 将会共享相同的表或集合来保存数据                                                                                                                               |
+
 
 ## 项目样例
 

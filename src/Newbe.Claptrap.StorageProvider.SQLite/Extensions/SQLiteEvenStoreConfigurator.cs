@@ -30,5 +30,16 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             });
             return this;
         }
+
+        public SQLiteEvenStoreConfigurator SharedTable()
+        {
+            ConfigureOptions(providerOptions =>
+            {
+                var eventOptions = new SQLiteSharedTableEventStoreOptions();
+                providerOptions.EventLoaderOptions = eventOptions;
+                providerOptions.EventSaverOptions = eventOptions;
+            });
+            return this;
+        }
     }
 }

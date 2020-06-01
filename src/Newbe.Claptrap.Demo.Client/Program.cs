@@ -41,18 +41,20 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var rd = new Random();
 
-            var ids = Enumerable.Range(1, 10);
+            // var testSettings = (maxId : 1,maxTimes: 1);
+            // var testSettings = (maxId : 10,maxTimes: 100);
+            var testSettings = (maxId: 100, maxTimes: 100);
+            var ids = Enumerable.Range(1, testSettings.maxId);
             var sw = Stopwatch.StartNew();
             await Task.WhenAll(ids.SelectMany(x => RunOneAccount(x.ToString())));
             sw.Stop();
             Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms");
-            const int times = 100;
 
             IEnumerable<Task> RunOneAccount(string accountId)
             {
                 Debug.Assert(client != null, nameof(client) + " != null");
                 var account = client.GetGrain<IAccount>(accountId);
-                foreach (var task in Enumerable.Range(0, times)
+                foreach (var task in Enumerable.Range(0, testSettings.maxTimes)
                     .Select(i => account.TransferIn(rd.Next(0, 100), Guid.NewGuid().ToString())))
                 {
                     yield return task;

@@ -1,12 +1,10 @@
 -- $StateTableName$
-create table '$StateTableName$'
+CREATE TABLE IF NOT EXISTS '$StateTableName$'
 (
-    claptrapid       text     not null,
-    claptraptypecode text     not null,
-    version          long     not null,
-    statedata        text     not null,
-    updatedtime      datetime not null
+    claptrap_id        text     not null,
+    claptrap_type_code text     not null,
+    version            long     not null,
+    state_data         text     not null,
+    updated_time       datetime not null,
+    CONSTRAINT uid UNIQUE (claptrap_type_code, claptrap_id, version)
 );
-
-create unique index '$StateTableName$_id_typecode_uindex'
-    on '$StateTableName$' ([claptrapid], [claptraptypecode]);

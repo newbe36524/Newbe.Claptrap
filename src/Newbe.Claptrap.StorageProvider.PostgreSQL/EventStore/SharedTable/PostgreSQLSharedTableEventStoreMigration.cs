@@ -32,8 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)),
-                true);
+                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)));
 
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =

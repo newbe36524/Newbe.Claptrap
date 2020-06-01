@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable
             public string AsStringKey()
             {
                 return
-                    $"{nameof(SharedTableEventBatchOperatorKey)}-{_options.ConnectionName}-{_options.SchemaName}-{_options.EventTableName}";
+                    $"{nameof(MySqlSharedTableEventEntitySaver)}-{_options.ConnectionName}-{_options.SchemaName}-{_options.EventTableName}";
             }
         }
 

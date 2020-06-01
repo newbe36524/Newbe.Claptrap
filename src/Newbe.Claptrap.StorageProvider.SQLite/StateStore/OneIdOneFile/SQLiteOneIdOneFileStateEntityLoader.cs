@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
             _claptrapDesign = claptrapDesign;
             _isqLiteDbFactory = isqLiteDbFactory;
             _selectSql =
-                $"SELECT * FROM [{stateStoreOptions.StateTableName}] WHERE [claptraptypecode]=@ClaptrapTypeCode AND [claptrapid]=@ClaptrapId LIMIT 1";
+                $"SELECT * FROM [{stateStoreOptions.StateTableName}] WHERE [claptrap_type_code]=@ClaptrapTypeCode AND [claptrap_id]=@ClaptrapId LIMIT 1";
         }
 
         public async Task<StateEntity?> GetStateSnapshotAsync()
@@ -31,14 +31,20 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
             var connectionName = SQLiteConnectionNameHelper.OneIdOneFileStateStore(_claptrapDesign, _claptrapIdentity);
             using var db = _isqLiteDbFactory.GetConnection(connectionName);
             var ps = new {ClaptrapTypeCode = _claptrapIdentity.TypeCode, ClaptrapId = _claptrapIdentity.Id};
-            var re = await db.QueryFirstOrDefaultAsync<StateEntity>(_selectSql, ps);
-            if (re == null)
+            var item = await db.QueryFirstOrDefaultAsync<OneIdOneFileStateEntity>(_selectSql, ps);
+            if (item == null)
             {
                 return null;
             }
 
-            re.ClaptrapId = _claptrapIdentity.Id;
-            re.ClaptrapTypeCode = _claptrapIdentity.TypeCode;
+            var re = new StateEntity
+            {
+                Version = item.version,
+                ClaptrapId = _claptrapIdentity.Id,
+                StateData = item.state_data,
+                UpdatedTime = item.updated_time,
+                ClaptrapTypeCode = _claptrapIdentity.TypeCode
+            };
             return re;
         }
     }
