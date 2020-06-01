@@ -1,5 +1,4 @@
 using Autofac;
-using Newbe.Claptrap.StorageProvider.MongoDB.EventStore.SharedCollection;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Module
 {

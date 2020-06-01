@@ -5,9 +5,9 @@ using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable;
-using Newbe.Claptrap.StorageProvider.SQLite.Options;
 using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
 using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile;
+using Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -121,6 +121,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                                 typeof(SQLiteOneIdOneFileStateStoreMigration),
                                 typeof(IStateLoaderMigration));
                             break;
+                        case SQLiteStateStoreStrategy.SharedTable:
+                            builder.RegisterType<SQLiteSharedTableStateEntityLoader>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.StateLoaderOptions,
+                                typeof(SQLiteSharedTableStateStoreMigration),
+                                typeof(IStateLoaderMigration));
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -137,6 +146,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                             RegisterIfAutoMigrationEnabled(
                                 options.StateSaverOptions,
                                 typeof(SQLiteOneIdOneFileStateStoreMigration),
+                                typeof(IStateSaverMigration));
+                            break;
+                        case SQLiteStateStoreStrategy.SharedTable:
+                            builder.RegisterType<SQLiteSharedTableStateEntitySaver>()
+                                .AsImplementedInterfaces()
+                                .InstancePerLifetimeScope();
+                            RegisterIfAutoMigrationEnabled(
+                                options.StateSaverOptions,
+                                typeof(SQLiteSharedTableStateStoreMigration),
                                 typeof(IStateSaverMigration));
                             break;
                         default:

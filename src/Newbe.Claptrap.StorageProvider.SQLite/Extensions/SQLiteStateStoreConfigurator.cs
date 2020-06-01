@@ -24,9 +24,20 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
         {
             ConfigureOptions(providerOptions =>
             {
-                var eventOptions = new SQLiteOneIdOneFileStateStoreOptions();
-                providerOptions.StateLoaderOptions = eventOptions;
-                providerOptions.StateSaverOptions = eventOptions;
+                var stateOptions = new SQLiteOneIdOneFileStateStoreOptions();
+                providerOptions.StateLoaderOptions = stateOptions;
+                providerOptions.StateSaverOptions = stateOptions;
+            });
+            return this;
+        }
+
+        public SQLiteStateStoreConfigurator SharedTable()
+        {
+            ConfigureOptions(providerOptions =>
+            {
+                var stateOptions = new SQLiteSharedTableStateStoreOptions();
+                providerOptions.StateLoaderOptions = stateOptions;
+                providerOptions.StateSaverOptions = stateOptions;
             });
             return this;
         }

@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.AppMetrics
 {
     public static class ClaptrapMetrics
     {
-        public static IMetricsRoot MetricsRoot { get; set; } = null!;
+        public static IMetricsRoot MetricsRoot { get; set; } = new MetricsBuilder().Build();
 
         #region EventHandler
 

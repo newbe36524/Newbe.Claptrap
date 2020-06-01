@@ -1,5 +1,3 @@
-using System;
-
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options
 {
     public class SQLiteSharedTableEventStoreOptions :
