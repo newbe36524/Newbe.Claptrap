@@ -23,14 +23,22 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile
             _claptrapDesign = claptrapDesign;
             _isqLiteDbFactory = isqLiteDbFactory;
             _insertSql =
-                $"INSERT OR REPLACE INTO [{stateStoreOptions.StateTableName}] ([claptrapid], [claptraptypecode], [version], [statedata],[updatedtime]) VALUES(@ClaptrapId, @ClaptrapTypeCode, @Version, @StateData, @UpdatedTime)";
+                $"INSERT OR REPLACE INTO [{stateStoreOptions.StateTableName}] ([claptrap_id], [claptrap_type_code], [version], [state_data],[updated_time]) VALUES(@claptrap_id, @claptrap_type_code, @version, @state_data, @updated_time)";
         }
 
         public async Task SaveAsync(StateEntity entity)
         {
             var connectionName = SQLiteConnectionNameHelper.OneIdOneFileStateStore(_claptrapDesign, _claptrapIdentity);
             using var db = _isqLiteDbFactory.GetConnection(connectionName);
-            await db.ExecuteAsync(_insertSql, entity);
+            var item = new OneIdOneFileStateEntity
+            {
+                claptrap_id = entity.ClaptrapId,
+                claptrap_type_code = entity.ClaptrapTypeCode,
+                state_data = entity.StateData,
+                updated_time = entity.UpdatedTime,
+                version = entity.Version
+            };
+            await db.ExecuteAsync(_insertSql, item);
         }
     }
 }

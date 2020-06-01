@@ -49,12 +49,8 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             builder
                 .LogToAutodetectedLog()
                 .WithVariablesEnabled()
+                .JournalTo(new NullJournal())
                 .WithVariables(_options.Variables);
-
-            if (_options.EnableNullJournal)
-            {
-                builder.JournalTo(new NullJournal());
-            }
 
             var dbMigration = builder.Build();
 

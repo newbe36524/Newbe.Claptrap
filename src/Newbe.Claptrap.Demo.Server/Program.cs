@@ -57,13 +57,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 {
                                     typeof(AccountGrain).Assembly
                                 })
-                                // .UseSQLite(sqlite =>
-                                //     sqlite
-                                //         .AsEventStore(eventStore =>
-                                //             eventStore.OneIdOneTable())
-                                //         .AsStateStore(stateStore =>
-                                //             stateStore.OneIdOneTable())
-                                // )
+                                .UseSQLiteAsTestingStorage()
                                 // .AddConnectionString("claptrap",
                                 //     mysqlConnectionString)
                                 // .UseMySql(mysql =>
@@ -82,15 +76,15 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                .AddConnectionString("claptrap",
-                                    mongoConnectionString)
-                                .UseMongoDB(mongoDb =>
-                                    mongoDb
-                                        .AsEventStore(eventStore =>
-                                            eventStore.SharedCollection())
-                                        .AsStateStore(stateStore =>
-                                            stateStore.SharedCollection())
-                                )
+                                // .AddConnectionString("claptrap",
+                                //     mongoConnectionString)
+                                // .UseMongoDB(mongoDb =>
+                                //     mongoDb
+                                //         .AsEventStore(eventStore =>
+                                //             eventStore.SharedCollection())
+                                //         .AsStateStore(stateStore =>
+                                //             stateStore.SharedCollection())
+                                // )
                                 .Build();
                             claptrapBootstrapper.Boot();
                             var store = claptrapBootstrapper.DumpDesignStore();

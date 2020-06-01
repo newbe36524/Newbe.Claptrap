@@ -32,8 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.MySqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)),
-                true);
+                        .To.MySqlDatabase(dbFactory.GetConnectionString(options.ConnectionName)));
 
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =

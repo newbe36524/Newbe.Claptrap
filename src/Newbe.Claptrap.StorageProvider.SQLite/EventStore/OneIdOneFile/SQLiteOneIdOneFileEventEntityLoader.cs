@@ -32,8 +32,17 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
             using var db = _dbFactory.GetConnection(_connectionName);
-            var eventEntities = await db.QueryAsync<EventEntity>(_selectSql, new {startVersion, endVersion});
-            var re = eventEntities.ToArray();
+            var eventEntities =
+                await db.QueryAsync<OneIdOneFileEventEntity>(_selectSql, new {startVersion, endVersion});
+            var re = eventEntities
+                .Select(x => new EventEntity
+                {
+                    Version = x.version,
+                    EventData = x.event_data,
+                    EventTypeCode = x.event_type_code,
+                    CreatedTime = x.created_time,
+                })
+                .ToArray();
             foreach (var eventEntity in re)
             {
                 eventEntity.ClaptrapId = _claptrapIdentity.Id;

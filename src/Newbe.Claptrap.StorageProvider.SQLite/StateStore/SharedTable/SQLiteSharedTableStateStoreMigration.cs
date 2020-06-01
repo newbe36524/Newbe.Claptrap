@@ -32,8 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable
                 },
                 () =>
                     DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(options.ConnectionName))),
-                true);
+                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(options.ConnectionName))));
 
             var migration = factory.Invoke(logger, migrationOptions);
 
