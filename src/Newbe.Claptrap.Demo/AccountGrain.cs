@@ -7,7 +7,6 @@ using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.Account
 namespace Newbe.Claptrap.Demo
 {
     [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
-    [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
     public class AccountGrain : ClaptrapBoxGrain<AccountStateData>, IAccount, IClaptrapGrain
     {

@@ -2,19 +2,14 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
-    public class AccountBalanceChangeEventHandler : IEventHandler
+    public class AccountBalanceChangeEventHandler :
+        NormalEventHandler<AccountInfo, AccountBalanceChangeEvent>
     {
-        public ValueTask DisposeAsync()
+        public override ValueTask HandleEvent(AccountInfo stateData, AccountBalanceChangeEvent eventData,
+            IEventContext eventContext)
         {
+            stateData.Balance = eventData.NewBalance;
             return new ValueTask();
-        }
-
-        public Task<IState> HandleEvent(IEventContext eventContext)
-        {
-            var accountInfo = (AccountInfo) eventContext.State.Data;
-            var accountBalanceChangeEvent = (AccountBalanceChangeEvent) eventContext.Event.Data;
-            accountInfo.Balance = accountBalanceChangeEvent.NewBalance;
-            return Task.FromResult(eventContext.State);
         }
     }
 }

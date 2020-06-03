@@ -4,10 +4,10 @@ using Newbe.Claptrap.Demo.Models;
 namespace Newbe.Claptrap.Demo
 {
     public class TransferAccountBalanceEventHandler
-        : ClaptrapEventHandler<AccountStateData, AccountBalanceChangeEventData>
+        : NormalEventHandler<AccountStateData, AccountBalanceChangeEventData>
     {
-        public override ValueTask HandleEventCore(AccountStateData stateData,
-            AccountBalanceChangeEventData eventData, IEventContext context)
+        public override ValueTask HandleEvent(AccountStateData stateData, AccountBalanceChangeEventData eventData,
+            IEventContext eventContext)
         {
             stateData.Balance += eventData.Diff;
             return new ValueTask();
