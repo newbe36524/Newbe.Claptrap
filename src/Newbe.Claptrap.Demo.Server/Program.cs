@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
+using Newbe.Claptrap.DesignStoreFormatter;
 using Newtonsoft.Json;
 using Orleans;
 using Orleans.Hosting;
@@ -87,8 +89,14 @@ namespace Newbe.Claptrap.Demo.Server
                                 // )
                                 .Build();
                             claptrapBootstrapper.Boot();
-                            var store = claptrapBootstrapper.DumpDesignStore();
-                            File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));
+                            var json = claptrapBootstrapper.DumpDesignAsJson();
+                            File.WriteAllText("design.json", json);
+                            var markdown = claptrapBootstrapper.DumpDesignAsMarkdown(
+                                new DesignStoreMarkdownFormatterOptions
+                                {
+                                    TrimSuffix = ClaptrapCodes.ApplicationDomain
+                                });
+                            File.WriteAllText("design.md", markdown);
                         });
 
 

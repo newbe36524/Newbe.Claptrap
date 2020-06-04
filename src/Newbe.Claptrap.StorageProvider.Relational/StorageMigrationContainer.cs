@@ -15,19 +15,30 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             // ReSharper disable once InconsistentlySynchronizedField
             if (_tasks.TryGetValue(migrationKey, out var task))
             {
-                return task;
+                if (!NeedRestart(task))
+                {
+                    return task;
+                }
             }
 
             lock (_locker)
             {
                 if (_tasks.TryGetValue(migrationKey, out task))
                 {
-                    return task;
+                    if (!NeedRestart(task))
+                    {
+                        return task;
+                    }
                 }
 
                 task = migration.MigrateAsync();
                 _tasks[migrationKey] = task;
                 return task;
+            }
+
+            static bool NeedRestart(Task task)
+            {
+                return task.IsCanceled || task.IsFaulted;
             }
         }
     }

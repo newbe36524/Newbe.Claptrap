@@ -77,50 +77,14 @@ namespace Newbe.Claptrap
         /// </summary>
         Type ClaptrapBoxImplementationType { get; }
 
+        /// <summary>
+        /// Storage Provider Options
+        /// </summary>
         ClaptrapStorageProviderOptions ClaptrapStorageProviderOptions { get; }
-    }
 
-    public class ClaptrapStorageProviderOptions
-    {
-        public IEventSaverOptions EventSaverOptions { get; set; } = null!;
-        public IEventLoaderOptions EventLoaderOptions { get; set; } = null!;
-        public IStateSaverOptions StateSaverOptions { get; set; } = null!;
-        public IStateLoaderOptions StateLoaderOptions { get; set; } = null!;
-    }
-
-    public interface IStorageProviderOptions
-    {
-    }
-
-    public interface IEventSaverOptions : IStorageProviderOptions
-    {
-    }
-
-    public class EmptyEventSaverOptions : IEventSaverOptions
-    {
-    }
-
-    public interface IEventLoaderOptions : IStorageProviderOptions
-    {
-    }
-
-    public class EmptyEventLoaderOptions : IEventLoaderOptions
-    {
-    }
-
-    public interface IStateSaverOptions : IStorageProviderOptions
-    {
-    }
-
-    public class EmptyStateSaverOptions : IStateSaverOptions
-    {
-    }
-
-    public interface IStateLoaderOptions : IStorageProviderOptions
-    {
-    }
-
-    public class EmptyStateLoaderOptions : IStateLoaderOptions
-    {
+        /// <summary>
+        /// Extend Info
+        /// </summary>
+        IDictionary<string, object> ExtendInfos { get; }
     }
 }

@@ -1,8 +1,8 @@
 [
   {
-    "ClaptrapTypeCode": "newbe.claptrap.demo.account__m__balance",
+    "ClaptrapTypeCode": "balance__minion__account.demo.claptrap.newbe",
     "ClaptrapMasterDesign": {
-      "ClaptrapTypeCode": "newbe.claptrap.demo.account",
+      "ClaptrapTypeCode": "account.demo.claptrap.newbe",
       "ClaptrapMasterDesign": null,
       "ClaptrapOptions": {
         "StateSavingOptions": {
@@ -29,10 +29,14 @@
       "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "EventHandlerDesigns": {
-        "newbe.claptrap.demo.account__accountBalanceChanged": {
-          "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+        "accountBalanceChanged__account.demo.claptrap.newbe": {
+          "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
           "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-          "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "ExtendInfos": {
+            "EventDisplayName": "余额变更事件",
+            "EventHandlerDisplayName": "更新余额"
+          }
         }
       },
       "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -66,7 +70,8 @@
           "ConnectionName": "shared/states.db",
           "StateTableName": "states"
         }
-      }
+      },
+      "ExtendInfos": {}
     },
     "ClaptrapOptions": {
       "StateSavingOptions": {
@@ -93,10 +98,14 @@
     "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerDesigns": {
-      "newbe.claptrap.demo.account__accountBalanceChanged": {
-        "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+      "accountBalanceChanged__account.demo.claptrap.newbe": {
+        "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
         "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "ExtendInfos": {
+          "EventDisplayName": "余额变更事件",
+          "EventHandlerDisplayName": "更新余额"
+        }
       }
     },
     "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccountBalanceMinion, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -130,10 +139,13 @@
         "ConnectionName": "shared/states.db",
         "StateTableName": "states"
       }
+    },
+    "ExtendInfos": {
+      "ClaptrapDisplayName": "同步余额"
     }
   },
   {
-    "ClaptrapTypeCode": "newbe.claptrap.demo.account",
+    "ClaptrapTypeCode": "account.demo.claptrap.newbe",
     "ClaptrapMasterDesign": null,
     "ClaptrapOptions": {
       "StateSavingOptions": {
@@ -160,10 +172,14 @@
     "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "EventHandlerDesigns": {
-      "newbe.claptrap.demo.account__accountBalanceChanged": {
-        "EventTypeCode": "newbe.claptrap.demo.account__accountBalanceChanged",
+      "accountBalanceChanged__account.demo.claptrap.newbe": {
+        "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
         "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "ExtendInfos": {
+          "EventDisplayName": "余额变更事件",
+          "EventHandlerDisplayName": "更新余额"
+        }
       }
     },
     "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -197,6 +213,7 @@
         "ConnectionName": "shared/states.db",
         "StateTableName": "states"
       }
-    }
+    },
+    "ExtendInfos": {}
   }
 ]
