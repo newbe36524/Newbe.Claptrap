@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.StorageProvider.MongoDB.EventStore.SharedCollection;
+using Newbe.Claptrap.StorageProvider.MongoDB.EventStore;
 using Newbe.Claptrap.StorageProvider.MongoDB.Options;
-using Newbe.Claptrap.StorageProvider.MongoDB.StateStore.SharedCollection;
+using Newbe.Claptrap.StorageProvider.MongoDB.StateStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
@@ -52,72 +51,44 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Module
             {
                 base.Load(builder);
                 var options = _design.ClaptrapStorageProviderOptions;
-                if (options.EventLoaderOptions is IMongoDBEventLoaderOptions relationalEventLoaderOptions)
+                if (options.EventLoaderOptions is IMongoDBEventLoaderOptions)
                 {
-                    switch (relationalEventLoaderOptions.MongoDBEventStoreStrategy)
-                    {
-                        case MongoDBEventStoreStrategy.SharedCollection:
-                            builder.RegisterType<MongoDBSharedCollectionEventEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            builder.RegisterType<MongoDBSharedCollectionEventStoreMigration>()
-                                .As<IEventLoaderMigration>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MongoDBEventEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    builder.RegisterType<MongoDBEventStoreMigration>()
+                        .As<IEventLoaderMigration>()
+                        .InstancePerLifetimeScope();
                 }
 
-                if (options.EventSaverOptions is IMongoDBEventSaverOptions relationalEventSaverOptions)
+                if (options.EventSaverOptions is IMongoDBEventSaverOptions)
                 {
-                    switch (relationalEventSaverOptions.MongoDBEventStoreStrategy)
-                    {
-                        case MongoDBEventStoreStrategy.SharedCollection:
-                            builder.RegisterType<MongoDBSharedCollectionEventEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            builder.RegisterType<MongoDBSharedCollectionEventStoreMigration>()
-                                .As<IEventSaverMigration>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MongoDBEventEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    builder.RegisterType<MongoDBEventStoreMigration>()
+                        .As<IEventSaverMigration>()
+                        .InstancePerLifetimeScope();
                 }
 
-                if (options.StateLoaderOptions is IMongoDBStateLoaderOptions relationalStateLoaderOptions)
+                if (options.StateLoaderOptions is IMongoDBStateLoaderOptions)
                 {
-                    switch (relationalStateLoaderOptions.MongoDBStateStoreStrategy)
-                    {
-                        case MongoDBStateStoreStrategy.SharedCollection:
-                            builder.RegisterType<MongoDBSharedCollectionStateEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            builder.RegisterType<MongoDBSharedCollectionStateStoreMigration>()
-                                .As<IStateLoaderMigration>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MongoDBStateEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    builder.RegisterType<MongoDBStateStoreMigration>()
+                        .As<IStateLoaderMigration>()
+                        .InstancePerLifetimeScope();
                 }
 
-                if (options.StateSaverOptions is IMongoDBStateSaverOptions relationalStateSaverOptions)
+                if (options.StateSaverOptions is IMongoDBStateSaverOptions)
                 {
-                    switch (relationalStateSaverOptions.MongoDBStateStoreStrategy)
-                    {
-                        case MongoDBStateStoreStrategy.SharedCollection:
-                            builder.RegisterType<MongoDBSharedCollectionStateEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            builder.RegisterType<MongoDBSharedCollectionStateStoreMigration>()
-                                .As<IStateSaverMigration>()
-                                .InstancePerLifetimeScope();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MongoDBStateEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    builder.RegisterType<MongoDBStateStoreMigration>()
+                        .As<IStateSaverMigration>()
+                        .InstancePerLifetimeScope();
                 }
             }
         }

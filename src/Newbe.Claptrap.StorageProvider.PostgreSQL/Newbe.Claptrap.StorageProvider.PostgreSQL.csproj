@@ -18,8 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql" />
-        <EmbeddedResource Include="SqlScripts\StateStore\SharedTable\0001-SharedTable.state.sql" />
+        <EmbeddedResource Include="SqlScripts\EventStore\0001-event.sql" />
+        <EmbeddedResource Include="SqlScripts\StateStore\0001-state.sql" />
     </ItemGroup>
 
 </Project>

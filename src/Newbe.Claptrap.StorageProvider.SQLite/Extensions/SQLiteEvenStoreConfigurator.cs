@@ -22,11 +22,28 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteEvenStoreConfigurator OneIdOneTable()
+        public SQLiteEvenStoreConfigurator SharedTable()
         {
             ConfigureOptions(providerOptions =>
             {
-                var eventOptions = new SQLiteRelationalEventStoreOptions
+                var eventOptions = new SQLiteEventStoreOptions
+                {
+                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
+                        schemaName: "main",
+                        connectionName: "shared/claptrap.events.db",
+                        eventTableName: "events"),
+                };
+                providerOptions.EventLoaderOptions = eventOptions;
+                providerOptions.EventSaverOptions = eventOptions;
+            });
+            return this;
+        }
+
+        public SQLiteEvenStoreConfigurator OneIdOneFile()
+        {
+            ConfigureOptions(providerOptions =>
+            {
+                var eventOptions = new SQLiteEventStoreOptions
                 {
                     RelationalEventStoreLocator = new RelationalEventStoreLocator(
                         schemaName: "main",
@@ -40,11 +57,11 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteEvenStoreConfigurator OneTypeOneTable()
+        public SQLiteEvenStoreConfigurator OneTypeOneFile()
         {
             ConfigureOptions(providerOptions =>
             {
-                var eventOptions = new SQLiteRelationalEventStoreOptions
+                var eventOptions = new SQLiteEventStoreOptions
                 {
                     RelationalEventStoreLocator = new RelationalEventStoreLocator(
                         schemaName: "main",
@@ -58,22 +75,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteEvenStoreConfigurator SharedTable()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new SQLiteRelationalEventStoreOptions
-                {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName: "main",
-                        connectionName: "shared/claptrap.events.db",
-                        eventTableName: "events"),
-                };
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
 
         public SQLiteEvenStoreConfigurator CustomLocator(
             string? schemaName = null,
@@ -85,7 +86,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
         {
             ConfigureOptions(providerOptions =>
             {
-                var eventOptions = new SQLiteRelationalEventStoreOptions
+                var eventOptions = new SQLiteEventStoreOptions
                 {
                     RelationalEventStoreLocator = new RelationalEventStoreLocator(
                         schemaName,

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Bootstrapper

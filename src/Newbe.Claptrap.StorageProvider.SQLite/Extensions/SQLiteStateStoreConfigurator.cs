@@ -22,29 +22,11 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteStateStoreConfigurator OneIdOneTable()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new SQLiteRelationalStateStoreOptions
-                {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName: "main",
-                        connectionNameFunc: identity =>
-                            Path.Combine($"{identity.TypeCode}_{identity.Id}", "stateDb.db"),
-                        stateTableName: "states"),
-                };
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateSaverOptions = stateOptions;
-            });
-            return this;
-        }
-
         public SQLiteStateStoreConfigurator SharedTable()
         {
             ConfigureOptions(providerOptions =>
             {
-                var stateOptions = new SQLiteRelationalStateStoreOptions
+                var stateOptions = new IsqLiteStateStoreOptions
                 {
                     RelationalStateStoreLocator = new RelationalStateStoreLocator(
                         schemaName: "main",
@@ -58,11 +40,30 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteStateStoreConfigurator OneTypeOneTable()
+        public SQLiteStateStoreConfigurator OneIdOneFile()
         {
             ConfigureOptions(providerOptions =>
             {
-                var stateOptions = new SQLiteRelationalStateStoreOptions
+                var stateOptions = new IsqLiteStateStoreOptions
+                {
+                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
+                        schemaName: "main",
+                        connectionNameFunc: identity =>
+                            Path.Combine($"{identity.TypeCode}_{identity.Id}", "stateDb.db"),
+                        stateTableName: "states"),
+                };
+                providerOptions.StateLoaderOptions = stateOptions;
+                providerOptions.StateSaverOptions = stateOptions;
+            });
+            return this;
+        }
+
+
+        public SQLiteStateStoreConfigurator OneTypeOneFile()
+        {
+            ConfigureOptions(providerOptions =>
+            {
+                var stateOptions = new IsqLiteStateStoreOptions
                 {
                     RelationalStateStoreLocator = new RelationalStateStoreLocator(
                         schemaName: "main",
@@ -75,7 +76,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
 
             return this;
         }
-        
+
         public SQLiteStateStoreConfigurator CustomLocator(
             string? schemaName = null,
             string? connectionName = null,
@@ -86,7 +87,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
         {
             ConfigureOptions(providerOptions =>
             {
-                var stateOptions = new SQLiteRelationalStateStoreOptions
+                var stateOptions = new IsqLiteStateStoreOptions
                 {
                     RelationalStateStoreLocator = new RelationalStateStoreLocator(
                         schemaName,

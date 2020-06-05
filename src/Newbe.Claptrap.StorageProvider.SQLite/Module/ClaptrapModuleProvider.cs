@@ -4,7 +4,7 @@ using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore;
-using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
+using Newbe.Claptrap.StorageProvider.SQLite.Options;
 using Newbe.Claptrap.StorageProvider.SQLite.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
@@ -54,45 +54,45 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
                 var options = _design.ClaptrapStorageProviderOptions;
                 if (options.EventLoaderOptions is ISQLiteEventLoaderOptions)
                 {
-                    builder.RegisterType<SQLiteRelationalEventEntityLoader>()
+                    builder.RegisterType<SQLiteEventEntityLoader>()
                         .AsImplementedInterfaces()
                         .InstancePerLifetimeScope();
                     RegisterIfAutoMigrationEnabled(
                         options.EventLoaderOptions,
-                        typeof(SQLiteRelationalEventStoreMigration),
+                        typeof(SQLiteEventStoreMigration),
                         typeof(IEventLoaderMigration));
                 }
 
                 if (options.EventSaverOptions is ISQLiteEventSaverOptions)
                 {
-                    builder.RegisterType<SQLiteRelationalEventEntitySaver>()
+                    builder.RegisterType<SQLiteEventEntitySaver>()
                         .AsImplementedInterfaces()
                         .InstancePerLifetimeScope();
                     RegisterIfAutoMigrationEnabled(
                         options.EventLoaderOptions,
-                        typeof(SQLiteRelationalEventStoreMigration),
+                        typeof(SQLiteEventStoreMigration),
                         typeof(IEventSaverMigration));
                 }
 
                 if (options.StateLoaderOptions is ISQLiteStateLoaderOptions)
                 {
-                    builder.RegisterType<SQLiteRelationalStateEntityLoader>()
+                    builder.RegisterType<SQLiteStateEntityLoader>()
                         .AsImplementedInterfaces()
                         .InstancePerLifetimeScope();
                     RegisterIfAutoMigrationEnabled(
                         options.StateLoaderOptions,
-                        typeof(SQLiteRelationalStateStoreMigration),
+                        typeof(SQLiteStateStoreMigration),
                         typeof(IStateLoaderMigration));
                 }
 
                 if (options.StateSaverOptions is ISQLiteStateSaverOptions)
                 {
-                    builder.RegisterType<SQLiteRelationalStateEntitySaver>()
+                    builder.RegisterType<SQLiteStateEntitySaver>()
                         .AsImplementedInterfaces()
                         .InstancePerLifetimeScope();
                     RegisterIfAutoMigrationEnabled(
                         options.StateSaverOptions,
-                        typeof(SQLiteRelationalStateStoreMigration),
+                        typeof(SQLiteStateStoreMigration),
                         typeof(IStateSaverMigration));
                 }
 

@@ -1,8 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Options
 {
-    public interface IMongoDBStateSaverOptions :
-        IStateStoreStrategyOptions,
-        IStateSaverOptions
+    public interface IMongoDBStateSaverOptions : IStateSaverOptions, IStorageProviderOptions
     {
     }
 }

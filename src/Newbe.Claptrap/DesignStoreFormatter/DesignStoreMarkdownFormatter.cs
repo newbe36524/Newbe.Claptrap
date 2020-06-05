@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 using System.Text;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Extensions;
 
 namespace Newbe.Claptrap.DesignStoreFormatter

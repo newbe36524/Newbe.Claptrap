@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             builder.RegisterBuildCallback(container =>
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
-                SQLiteRelationalEventEntitySaver.RegisterParameters(cache, 1000);
+                SQLiteEventEntitySaver.RegisterParameters(cache, 1000);
             });
         }
     }

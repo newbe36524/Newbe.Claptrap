@@ -14,7 +14,6 @@ using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.DesignStoreFormatter;
-using Newtonsoft.Json;
 using Orleans;
 using Orleans.Hosting;
 
@@ -60,7 +59,7 @@ namespace Newbe.Claptrap.Demo.Server
                                     typeof(AccountGrain).Assembly
                                 })
                                 .UseSQLiteAsTestingStorage()
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     mysqlConnectionString)
                                 // .UseMySql(mysql =>
                                 //     mysql
@@ -69,7 +68,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     postgreSQLConnectionString)
                                 // .UsePostgreSQL(postgreSQL =>
                                 //     postgreSQL
@@ -78,7 +77,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     mongoConnectionString)
                                 // .UseMongoDB(mongoDb =>
                                 //     mongoDb
