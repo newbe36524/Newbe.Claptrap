@@ -5,33 +5,33 @@ using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
-    public class SQLiteSharedTableEventEntityLoader : IEventEntityLoader<EventEntity>
+    public class SQLiteRelationalEventEntityLoader : IEventEntityLoader<EventEntity>
     {
         private readonly IDbFactory _dbFactory;
-        private readonly ISQLiteSharedTableEventStoreOptions _options;
-        private readonly string _selectSql;
         private readonly IClaptrapIdentity _masterOrSelfIdentity;
+        private readonly string _selectSql;
+        private readonly string _connectionName;
 
-        public SQLiteSharedTableEventEntityLoader(
+        public SQLiteRelationalEventEntityLoader(
             IDbFactory dbFactory,
-            IClaptrapIdentity identity,
-            ISQLiteSharedTableEventStoreOptions options,
-            IMasterClaptrapInfo? masterClaptrapInfo = null)
+            ISQLiteRelationalEventStoreOptions options,
+            IMasterOrSelfIdentity masterOrSelfIdentity)
         {
             _dbFactory = dbFactory;
-            _options = options;
-            _masterOrSelfIdentity = masterClaptrapInfo?.Identity ?? identity;
+            _masterOrSelfIdentity = masterOrSelfIdentity.Identity;
+            var storeLocator = options.RelationalEventStoreLocator;
+            _connectionName = storeLocator.GetConnectionName(_masterOrSelfIdentity);
+            var eventTableName = storeLocator.GetEventTableName(_masterOrSelfIdentity);
             _selectSql =
-                $"SELECT * FROM {options.EventTableName} WHERE version >= @startVersion AND version < @endVersion AND claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId ORDER BY version";
+                $"SELECT * FROM {eventTableName} WHERE version >= @startVersion AND version < @endVersion AND claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId ORDER BY version";
         }
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            var connectionName = _options.ConnectionName;
-            using var db = _dbFactory.GetConnection(connectionName);
-            var entities = await db.QueryAsync<SharedTableEventEntity>(_selectSql, new
+            using var db = _dbFactory.GetConnection(_connectionName);
+            var entities = await db.QueryAsync<RelationalEventEntity>(_selectSql, new
             {
                 startVersion,
                 endVersion,

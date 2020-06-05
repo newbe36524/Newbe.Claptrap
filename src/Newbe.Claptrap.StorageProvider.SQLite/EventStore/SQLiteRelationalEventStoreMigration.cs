@@ -8,34 +8,39 @@ using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
-    public class SQLiteSharedTableEventStoreMigration :
+    public class SQLiteRelationalEventStoreMigration :
         IEventLoaderMigration,
         IEventSaverMigration
     {
         private readonly Task _migrationTask;
 
-        public SQLiteSharedTableEventStoreMigration(
-            ILogger<SQLiteSharedTableEventStoreMigration> logger,
+        public SQLiteRelationalEventStoreMigration(
+            ILogger<SQLiteRelationalEventStoreMigration> logger,
             DbUpMigration.Factory factory,
             IDbFactory dbFactory,
             IStorageMigrationContainer storageMigrationContainer,
-            ISQLiteSharedTableEventStoreOptions options)
+            IMasterOrSelfIdentity masterOrSelfIdentity,
+            ISQLiteRelationalEventStoreOptions options)
         {
+            var identity = masterOrSelfIdentity.Identity;
+            var storeLocator = options.RelationalEventStoreLocator;
+            var connectionName = storeLocator.GetConnectionName(identity);
+            var eventTableName = storeLocator.GetEventTableName(identity);
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
-                fileName => fileName.EndsWith("-SharedTable.event.sql"),
+                fileName => fileName.EndsWith("-event.sql"),
                 new Dictionary<string, string>
                 {
-                    {"EventTableName", options.EventTableName},
+                    {"EventTableName", eventTableName},
                 },
                 () =>
                     DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(options.ConnectionName))));
+                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(connectionName))));
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
-                $"{nameof(SQLiteSharedTableEventStoreMigration)}_{options.ConnectionName}_{options.ConnectionName}_{options.EventTableName}";
+                $"{nameof(SQLiteRelationalEventStoreMigration)}_{connectionName}_{eventTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
         }
 

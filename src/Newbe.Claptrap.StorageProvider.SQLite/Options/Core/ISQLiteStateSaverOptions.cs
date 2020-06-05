@@ -1,8 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options.Core
 {
-    public interface ISQLiteStateSaverOptions :
-        ISQLiteStateStoreStrategyOptions,
-        IStateSaverOptions
+    public interface ISQLiteStateSaverOptions : IStateSaverOptions, IStorageProviderOptions
     {
     }
 }

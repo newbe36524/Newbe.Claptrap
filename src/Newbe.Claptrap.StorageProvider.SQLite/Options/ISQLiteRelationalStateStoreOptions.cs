@@ -1,12 +1,13 @@
+using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options
 {
-    public interface ISQLiteOneIdOneFileStateStoreOptions :
+    public interface ISQLiteRelationalStateStoreOptions :
         ISQLiteStateLoaderOptions,
         ISQLiteStateSaverOptions,
-        ISQLiteStorageMigrationOptions
+        ISQLiteStorageMigrationOptions,
+        IRelationalStateStoreLocatorOptions
     {
-        string StateTableName { get; }
     }
 }

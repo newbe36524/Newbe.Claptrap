@@ -3,13 +3,12 @@ using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options
 {
-    public interface ISQLiteSharedTableEventStoreOptions :
+    public interface ISQLiteRelationalEventStoreOptions :
         ISQLiteEventLoaderOptions,
         ISQLiteEventSaverOptions,
         IBatchEventSaverOptions,
-        ISQLiteStorageMigrationOptions
+        ISQLiteStorageMigrationOptions,
+        IRelationalEventStoreLocatorOptions
     {
-        string ConnectionName { get; }
-        string EventTableName { get; }
     }
 }

@@ -7,7 +7,5 @@
     <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.MySql/SqlScripts/StateStore/SharedTable/0001-SharedTable.state.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.PostgreSQL/SqlScripts/EventStore/SharedTable/0001-SharedTable.event.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.PostgreSQL/SqlScripts/StateStore/SharedTable/0001-SharedTable.state.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/EventStore/OneIdOneFile/0001-OneIdOneFile.event.sql" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/Newbe.Claptrap.StorageProvider.SQLite/SqlScripts/StateStore/OneIdOneFile/0001-OneIdOneFile.state.sql" dialect="SQLite" />
   </component>
 </project>

@@ -4,40 +4,45 @@ using System.Threading.Tasks;
 using DbUp;
 using DbUp.SQLite.Helpers;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.StorageProvider.SQLite.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
 {
-    public class SQLiteSharedTableStateStoreMigration :
+    public class SQLiteRelationalStateStoreMigration :
         IStateLoaderMigration,
         IStateSaverMigration
     {
         private readonly Task _migrationTask;
 
-        public SQLiteSharedTableStateStoreMigration(
-            ILogger<SQLiteSharedTableStateStoreMigration> logger,
+        public SQLiteRelationalStateStoreMigration(
+            ILogger<SQLiteRelationalStateStoreMigration> logger,
             DbUpMigration.Factory factory,
             IDbFactory dbFactory,
+            IClaptrapIdentity identity,
             IStorageMigrationContainer storageMigrationContainer,
-            ISQLiteSharedTableStateStoreOptions options)
+            ISQLiteRelationalStateStoreOptions options)
         {
+            var locator = options.RelationalStateStoreLocator;
+            var stateTableName = locator.GetStateTableName(identity);
+            var connectionName = locator.GetConnectionName(identity);
+
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
-                fileName => fileName.EndsWith("-SharedTable.state.sql"),
+                fileName => fileName.EndsWith("-state.sql"),
                 new Dictionary<string, string>
                 {
-                    {"StateTableName", options.StateTableName},
+                    {"StateTableName", stateTableName},
                 },
                 () =>
                     DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(options.ConnectionName))));
+                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(connectionName))));
 
             var migration = factory.Invoke(logger, migrationOptions);
 
             var migrationKey =
-                $"{nameof(SQLiteSharedTableStateStoreMigration)}_{options.ConnectionName}_{options.StateTableName}";
+                $"{nameof(SQLiteRelationalStateStoreMigration)}_{connectionName}_{stateTableName}";
             _migrationTask = storageMigrationContainer.CreateTask(migrationKey, migration);
         }
 

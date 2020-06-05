@@ -20,6 +20,7 @@ namespace Newbe.Claptrap
             return eventContext.State;
         }
 
+        // ReSharper disable once MemberCanBeProtected.Global
         public abstract ValueTask HandleEvent(TStateData stateData, TEventData eventData, IEventContext eventContext);
     }
 }

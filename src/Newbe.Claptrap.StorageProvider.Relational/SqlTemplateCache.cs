@@ -7,18 +7,6 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         private readonly Dictionary<string, Dictionary<int, string>>
             _parameterNames = new Dictionary<string, Dictionary<int, string>>();
 
-        private readonly Dictionary<int, string> _sql = new Dictionary<int, string>();
-
-        public string Get(int key)
-        {
-            return _sql[key];
-        }
-
-        public void Add(int key, string sql)
-        {
-            _sql[key] = sql;
-        }
-
         public string GetParameterName(string name, int index)
         {
             return _parameterNames[name][index];

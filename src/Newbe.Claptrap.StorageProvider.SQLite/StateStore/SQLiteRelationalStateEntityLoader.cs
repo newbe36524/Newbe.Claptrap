@@ -1,35 +1,37 @@
 using System.Threading.Tasks;
 using Dapper;
-using Newbe.Claptrap.StorageProvider.SQLite.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
 {
-    public class SQLiteSharedTableStateEntityLoader
+    public class SQLiteRelationalStateEntityLoader
         : IStateEntityLoader<StateEntity>
     {
         private readonly IClaptrapIdentity _claptrapIdentity;
         private readonly IDbFactory _dbFactory;
-        private readonly ISQLiteSharedTableStateStoreOptions _options;
         private readonly string _selectSql;
+        private readonly string _connectionName;
 
-        public SQLiteSharedTableStateEntityLoader(
+        public SQLiteRelationalStateEntityLoader(
             IClaptrapIdentity claptrapIdentity,
             IDbFactory dbFactory,
-            ISQLiteSharedTableStateStoreOptions options)
+            ISQLiteRelationalStateStoreOptions options)
         {
             _claptrapIdentity = claptrapIdentity;
             _dbFactory = dbFactory;
-            _options = options;
+            var locator = options.RelationalStateStoreLocator;
+            var stateTableName = locator.GetStateTableName(claptrapIdentity);
+            _connectionName = locator.GetConnectionName(claptrapIdentity);
             _selectSql =
-                $"SELECT * FROM {options.StateTableName} WHERE claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId LIMIT 1";
+                $"SELECT * FROM {stateTableName} WHERE claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId LIMIT 1";
         }
 
         public async Task<StateEntity?> GetStateSnapshotAsync()
         {
-            using var db = _dbFactory.GetConnection(_options.ConnectionName);
+            using var db = _dbFactory.GetConnection(_connectionName);
             var ps = new {ClaptrapTypeCode = _claptrapIdentity.TypeCode, ClaptrapId = _claptrapIdentity.Id};
-            var item = await db.QueryFirstOrDefaultAsync<SharedTableStateEntity>(_selectSql, ps);
+            var item = await db.QueryFirstOrDefaultAsync<RelationalStateEntity>(_selectSql, ps);
             if (item == null)
             {
                 return null;

@@ -2,9 +2,9 @@ using System;
 
 // ReSharper disable InconsistentNaming
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 {
-    public class SharedTableStateEntity
+    public class RelationalStateEntity
     {
         public string claptrap_type_code { get; set; } = null!;
         public string claptrap_id { get; set; } = null!;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 // ReSharper disable InconsistentNaming
 
-namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable
+namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
-    public class SharedTableEventEntity
+    public class RelationalEventEntity
     {
         public string claptrap_type_code { get; set; } = null!;
         public string claptrap_id { get; set; } = null!;
@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable
             yield return nameof(created_time);
         }
 
-        public static IEnumerable<(string, Func<SharedTableEventEntity, object>)> ValueFactories()
+        public static IEnumerable<(string, Func<RelationalEventEntity, object>)> ValueFactories()
         {
             yield return (nameof(claptrap_type_code), x => x.claptrap_type_code);
             yield return (nameof(claptrap_id), x => x.claptrap_id);

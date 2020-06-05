@@ -1,8 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options.Core
 {
-    public interface ISQLiteStateLoaderOptions :
-        ISQLiteStateStoreStrategyOptions,
-        IStateLoaderOptions
+    public interface ISQLiteStateLoaderOptions : IStateLoaderOptions, IStorageProviderOptions
     {
     }
 }

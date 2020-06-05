@@ -1,4 +1,6 @@
 using Autofac;
+using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Module
 {
@@ -13,6 +15,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             builder.RegisterType<DbFactory>()
                 .As<IDbFactory>()
                 .SingleInstance();
+
+            builder.RegisterBuildCallback(container =>
+            {
+                var cache = container.Resolve<ISqlTemplateCache>();
+                MySqlSharedTableEventEntitySaver.RegisterParameters(cache, 1000);
+            });
         }
     }
 }

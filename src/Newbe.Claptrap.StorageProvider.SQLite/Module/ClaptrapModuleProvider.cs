@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.SQLite.EventStore.OneIdOneFile;
-using Newbe.Claptrap.StorageProvider.SQLite.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.SQLite.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options.Core;
-using Newbe.Claptrap.StorageProvider.SQLite.StateStore.OneIdOneFile;
-using Newbe.Claptrap.StorageProvider.SQLite.StateStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.SQLite.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -54,112 +52,48 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             {
                 base.Load(builder);
                 var options = _design.ClaptrapStorageProviderOptions;
-                if (options.EventLoaderOptions is ISQLiteEventLoaderOptions relationalEventLoaderOptions)
+                if (options.EventLoaderOptions is ISQLiteEventLoaderOptions)
                 {
-                    switch (relationalEventLoaderOptions.SQLiteEventStoreStrategy)
-                    {
-                        case SQLiteEventStoreStrategy.OneIdOneFile:
-                            builder.RegisterType<SQLiteOneIdOneFileEventEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventLoaderOptions,
-                                typeof(SQLiteOneIdOneFileEventStoreMigration),
-                                typeof(IEventLoaderMigration));
-                            break;
-                        case SQLiteEventStoreStrategy.SharedTable:
-                            builder.RegisterType<SQLiteSharedTableEventEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventLoaderOptions,
-                                typeof(SQLiteSharedTableEventStoreMigration),
-                                typeof(IEventLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<SQLiteRelationalEventEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventLoaderOptions,
+                        typeof(SQLiteRelationalEventStoreMigration),
+                        typeof(IEventLoaderMigration));
                 }
 
-                if (options.EventSaverOptions is ISQLiteEventSaverOptions relationalEventSaverOptions)
+                if (options.EventSaverOptions is ISQLiteEventSaverOptions)
                 {
-                    switch (relationalEventSaverOptions.SQLiteEventStoreStrategy)
-                    {
-                        case SQLiteEventStoreStrategy.OneIdOneFile:
-                            builder.RegisterType<SQLiteOneIdOneFileEventEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventSaverOptions,
-                                typeof(SQLiteOneIdOneFileEventStoreMigration),
-                                typeof(IEventSaverMigration));
-                            break;
-                        case SQLiteEventStoreStrategy.SharedTable:
-                            builder.RegisterType<SQLiteSharedTableEventEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventLoaderOptions,
-                                typeof(SQLiteSharedTableEventStoreMigration),
-                                typeof(IEventSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<SQLiteRelationalEventEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventLoaderOptions,
+                        typeof(SQLiteRelationalEventStoreMigration),
+                        typeof(IEventSaverMigration));
                 }
 
-                if (options.StateLoaderOptions is ISQLiteStateLoaderOptions relationalStateLoaderOptions)
+                if (options.StateLoaderOptions is ISQLiteStateLoaderOptions)
                 {
-                    switch (relationalStateLoaderOptions.SQLiteStateStoreStrategy)
-                    {
-                        case SQLiteStateStoreStrategy.OneIdOneFile:
-                            builder.RegisterType<SQLiteOneIdOneFileStateEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateLoaderOptions,
-                                typeof(SQLiteOneIdOneFileStateStoreMigration),
-                                typeof(IStateLoaderMigration));
-                            break;
-                        case SQLiteStateStoreStrategy.SharedTable:
-                            builder.RegisterType<SQLiteSharedTableStateEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateLoaderOptions,
-                                typeof(SQLiteSharedTableStateStoreMigration),
-                                typeof(IStateLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<SQLiteRelationalStateEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateLoaderOptions,
+                        typeof(SQLiteRelationalStateStoreMigration),
+                        typeof(IStateLoaderMigration));
                 }
 
-                if (options.StateSaverOptions is ISQLiteStateSaverOptions relationalStateSaverOptions)
+                if (options.StateSaverOptions is ISQLiteStateSaverOptions)
                 {
-                    switch (relationalStateSaverOptions.SQLiteStateStoreStrategy)
-                    {
-                        case SQLiteStateStoreStrategy.OneIdOneFile:
-                            builder.RegisterType<SQLiteOneIdOneFileStateEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateSaverOptions,
-                                typeof(SQLiteOneIdOneFileStateStoreMigration),
-                                typeof(IStateSaverMigration));
-                            break;
-                        case SQLiteStateStoreStrategy.SharedTable:
-                            builder.RegisterType<SQLiteSharedTableStateEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateSaverOptions,
-                                typeof(SQLiteSharedTableStateStoreMigration),
-                                typeof(IStateSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<SQLiteRelationalStateEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateSaverOptions,
+                        typeof(SQLiteRelationalStateStoreMigration),
+                        typeof(IStateSaverMigration));
                 }
 
                 void RegisterIfAutoMigrationEnabled(IStorageProviderOptions ops,
