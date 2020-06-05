@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Newbe.Claptrap
 {
@@ -7,5 +8,6 @@ namespace Newbe.Claptrap
         public string EventTypeCode { get; set; } = null!;
         public Type EventDataType { get; set; } = null!;
         public Type EventHandlerType { get; set; } = null!;
+        public IDictionary<string, object> ExtendInfos { get; } = new Dictionary<string, object>();
     }
 }

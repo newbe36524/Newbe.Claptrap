@@ -3,7 +3,7 @@ using System;
 namespace Newbe.Claptrap
 {
     /// <summary>
-    /// Mark on IClaptrapGrain specify the event data types
+    /// Mark on <see cref="IClaptrapBox"/> specify the event 
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = true, Inherited = false)]
     public class ClaptrapEventAttribute : Attribute

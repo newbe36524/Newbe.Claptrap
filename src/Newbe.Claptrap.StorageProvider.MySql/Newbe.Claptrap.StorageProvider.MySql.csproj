@@ -9,6 +9,7 @@
       <PackageReference Include="Autofac" Version="5.2.0" />
       <PackageReference Include="Dapper" Version="2.0.35" />
       <PackageReference Include="dbup-mysql" Version="4.3.0" />
+      <PackageReference Include="MySql.Data" Version="8.0.20" />
     </ItemGroup>
 
     <ItemGroup>
@@ -18,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="SqlScripts\EventStore\SharedTable\0001-SharedTable.event.sql" />
-      <EmbeddedResource Include="SqlScripts\StateStore\SharedTable\0001-SharedTable.state.sql" />
+      <EmbeddedResource Include="SqlScripts\EventStore\0001-event.sql" />
+      <EmbeddedResource Include="SqlScripts\StateStore\0001-state.sql" />
     </ItemGroup>
 
 </Project>

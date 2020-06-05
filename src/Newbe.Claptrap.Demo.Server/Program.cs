@@ -12,7 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
-using Newtonsoft.Json;
+using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
+using Newbe.Claptrap.DesignStoreFormatter;
 using Orleans;
 using Orleans.Hosting;
 
@@ -58,7 +59,7 @@ namespace Newbe.Claptrap.Demo.Server
                                     typeof(AccountGrain).Assembly
                                 })
                                 .UseSQLiteAsTestingStorage()
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     mysqlConnectionString)
                                 // .UseMySql(mysql =>
                                 //     mysql
@@ -67,7 +68,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     postgreSQLConnectionString)
                                 // .UsePostgreSQL(postgreSQL =>
                                 //     postgreSQL
@@ -76,7 +77,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                // .AddConnectionString("claptrap",
+                                // .AddConnectionString(Defaults.ConnectionName,
                                 //     mongoConnectionString)
                                 // .UseMongoDB(mongoDb =>
                                 //     mongoDb
@@ -87,8 +88,14 @@ namespace Newbe.Claptrap.Demo.Server
                                 // )
                                 .Build();
                             claptrapBootstrapper.Boot();
-                            var store = claptrapBootstrapper.DumpDesignStore();
-                            File.WriteAllText("design.json", JsonConvert.SerializeObject(store, Formatting.Indented));
+                            var json = claptrapBootstrapper.DumpDesignAsJson();
+                            File.WriteAllText("design.json", json);
+                            var markdown = claptrapBootstrapper.DumpDesignAsMarkdown(
+                                new DesignStoreMarkdownFormatterOptions
+                                {
+                                    TrimSuffix = ClaptrapCodes.ApplicationDomain
+                                });
+                            File.WriteAllText("design.md", markdown);
                         });
 
 

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
-using Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
@@ -52,76 +52,48 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Module
             {
                 base.Load(builder);
                 var options = _design.ClaptrapStorageProviderOptions;
-                if (options.EventLoaderOptions is IPostgreSQLEventLoaderOptions relationalEventLoaderOptions)
+                if (options.EventLoaderOptions is IPostgreSQLEventLoaderOptions)
                 {
-                    switch (relationalEventLoaderOptions.PostgreSQLEventStoreStrategy)
-                    {
-                        case PostgreSQLEventStoreStrategy.SharedTable:
-                            builder.RegisterType<PostgreSQLSharedTableEventEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventLoaderOptions,
-                                typeof(PostgreSQLSharedTableEventStoreMigration),
-                                typeof(IEventLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<PostgreSQLEventEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventLoaderOptions,
+                        typeof(PostgreSQLEventStoreMigration),
+                        typeof(IEventLoaderMigration));
                 }
 
-                if (options.EventSaverOptions is IPostgreSQLEventSaverOptions relationalEventSaverOptions)
+                if (options.EventSaverOptions is IPostgreSQLEventSaverOptions)
                 {
-                    switch (relationalEventSaverOptions.PostgreSQLEventStoreStrategy)
-                    {
-                        case PostgreSQLEventStoreStrategy.SharedTable:
-                            builder.RegisterType<PostgreSQLSharedTableEventEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventSaverOptions,
-                                typeof(PostgreSQLSharedTableEventStoreMigration),
-                                typeof(IEventSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<PostgreSQLEventEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventSaverOptions,
+                        typeof(PostgreSQLEventStoreMigration),
+                        typeof(IEventSaverMigration));
                 }
 
-                if (options.StateLoaderOptions is IPostgreSQLStateLoaderOptions relationalStateLoaderOptions)
+                if (options.StateLoaderOptions is IPostgreSQLStateLoaderOptions)
                 {
-                    switch (relationalStateLoaderOptions.PostgreSQLStateStoreStrategy)
-                    {
-                        case PostgreSQLStateStoreStrategy.SharedTable:
-                            builder.RegisterType<PostgreSQLSharedTableStateEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateLoaderOptions,
-                                typeof(PostgreSQLSharedTableStateStoreMigration),
-                                typeof(IStateLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<PostgreSQLStateEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateLoaderOptions,
+                        typeof(PostgreSQLStateStoreMigration),
+                        typeof(IStateLoaderMigration));
                 }
 
-                if (options.StateSaverOptions is IPostgreSQLStateSaverOptions relationalStateSaverOptions)
+                if (options.StateSaverOptions is IPostgreSQLStateSaverOptions)
                 {
-                    switch (relationalStateSaverOptions.PostgreSQLStateStoreStrategy)
-                    {
-                        case PostgreSQLStateStoreStrategy.SharedTable:
-                            builder.RegisterType<PostgreSQLSharedTableStateEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateSaverOptions,
-                                typeof(PostgreSQLSharedTableStateStoreMigration),
-                                typeof(IStateSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<PostgreSQLStateEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateSaverOptions,
+                        typeof(PostgreSQLStateStoreMigration),
+                        typeof(IStateSaverMigration));
                 }
 
                 void RegisterIfAutoMigrationEnabled(IStorageProviderOptions ops,

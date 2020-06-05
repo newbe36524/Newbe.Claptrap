@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Newbe.Claptrap.StorageProvider.MySql.EventStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.MySql.EventStore;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.MySql.StateStore.SharedTable;
+using Newbe.Claptrap.StorageProvider.MySql.StateStore;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
@@ -52,76 +52,48 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             {
                 base.Load(builder);
                 var options = _design.ClaptrapStorageProviderOptions;
-                if (options.EventLoaderOptions is IMySqlEventLoaderOptions relationalEventLoaderOptions)
+                if (options.EventLoaderOptions is IMySqlEventLoaderOptions)
                 {
-                    switch (relationalEventLoaderOptions.MySqlEventStoreStrategy)
-                    {
-                        case MySqlEventStoreStrategy.SharedTable:
-                            builder.RegisterType<MySqlSharedTableEventEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventLoaderOptions,
-                                typeof(MySqlSharedTableEventStoreMigration),
-                                typeof(IEventLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MySqlEventEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventLoaderOptions,
+                        typeof(MySqlEventStoreMigration),
+                        typeof(IEventLoaderMigration));
                 }
 
-                if (options.EventSaverOptions is IMySqlEventSaverOptions relationalEventSaverOptions)
+                if (options.EventSaverOptions is IMySqlEventSaverOptions)
                 {
-                    switch (relationalEventSaverOptions.MySqlEventStoreStrategy)
-                    {
-                        case MySqlEventStoreStrategy.SharedTable:
-                            builder.RegisterType<MySqlSharedTableEventEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.EventSaverOptions,
-                                typeof(MySqlSharedTableEventStoreMigration),
-                                typeof(IEventSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MySqlEventEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.EventSaverOptions,
+                        typeof(MySqlEventStoreMigration),
+                        typeof(IEventSaverMigration));
                 }
 
                 if (options.StateLoaderOptions is IMySqlStateLoaderOptions relationalStateLoaderOptions)
                 {
-                    switch (relationalStateLoaderOptions.MySqlStateStoreStrategy)
-                    {
-                        case MySqlStateStoreStrategy.SharedTable:
-                            builder.RegisterType<MySqlSharedTableStateEntityLoader>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateLoaderOptions,
-                                typeof(MySqlSharedTableStateStoreMigration),
-                                typeof(IStateLoaderMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MySqlStateEntityLoader>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateLoaderOptions,
+                        typeof(MySqlStateStoreMigration),
+                        typeof(IStateLoaderMigration));
                 }
 
                 if (options.StateSaverOptions is IMySqlStateSaverOptions relationalStateSaverOptions)
                 {
-                    switch (relationalStateSaverOptions.MySqlStateStoreStrategy)
-                    {
-                        case MySqlStateStoreStrategy.SharedTable:
-                            builder.RegisterType<MySqlSharedTableStateEntitySaver>()
-                                .AsImplementedInterfaces()
-                                .InstancePerLifetimeScope();
-                            RegisterIfAutoMigrationEnabled(
-                                options.StateSaverOptions,
-                                typeof(MySqlSharedTableStateStoreMigration),
-                                typeof(IStateSaverMigration));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    builder.RegisterType<MySqlStateEntitySaver>()
+                        .AsImplementedInterfaces()
+                        .InstancePerLifetimeScope();
+                    RegisterIfAutoMigrationEnabled(
+                        options.StateSaverOptions,
+                        typeof(MySqlStateStoreMigration),
+                        typeof(IStateSaverMigration));
                 }
 
                 void RegisterIfAutoMigrationEnabled(IStorageProviderOptions ops,

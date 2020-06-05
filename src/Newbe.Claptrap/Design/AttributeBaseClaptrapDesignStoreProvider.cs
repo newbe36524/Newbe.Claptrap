@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.Design
 
             var metadata = types
                 .Where(x => x.IsClass && !x.IsAbstract)
-                .Where(x => x.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>() != null)
+                .Where(x => x.GetInterface(nameof(IClaptrapBox)) != null)
                 .Select(implType =>
                 {
                     var interfaceType = implType.GetInterfaces()
@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.Design
                         stateAttr = interfaceType.GetCustomAttribute<ClaptrapStateAttribute>(),
                         eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>().ToArray(),
                         stateInitialFactoryHandlerAttr =
-                            implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
+                            implType?.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
                         eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>().ToArray(),
                         eventStoreAttr = implType.GetCustomAttribute<ClaptrapEventStoreAttribute>(),
                         stateStoreAttr = implType.GetCustomAttribute<ClaptrapStateStoreAttribute>(),
@@ -87,7 +87,7 @@ namespace Newbe.Claptrap.Design
                 var m = metadataDic[design.ClaptrapTypeCode];
                 design.StateDataType = m.stateAttr.StateDataType;
                 design.InitialStateDataFactoryType =
-                    m.stateInitialFactoryHandlerAttr.StateInitialFactoryHandlerType!;
+                    m.stateInitialFactoryHandlerAttr?.StateInitialFactoryHandlerType!;
                 design.StateHolderFactoryType = m.stateHolderAttr?.StateHolderFactory!;
                 design.EventLoaderFactoryType = m.eventStoreAttr?.EventLoaderFactoryType!;
                 design.EventSaverFactoryType = m.eventStoreAttr?.EventSaverFactoryType!;

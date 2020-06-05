@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 namespace Newbe.Claptrap
 {
     public interface IClaptrapEventHandlerDesign
     {
-        public string EventTypeCode { get; }
-        public Type EventDataType { get; }
-        public Type EventHandlerType { get; }
+        string EventTypeCode { get; }
+        Type EventDataType { get; }
+        Type EventHandlerType { get; }
+        IDictionary<string, object> ExtendInfos { get; }
     }
 }

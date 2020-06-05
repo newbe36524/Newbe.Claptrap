@@ -1,8 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Options
 {
-    public interface IPostgreSQLStateLoaderOptions :
-        IStateStoreStrategyOptions,
-        IStateLoaderOptions
+    public interface IPostgreSQLStateLoaderOptions : IStateLoaderOptions, IStorageProviderOptions
     {
     }
 }

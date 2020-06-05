@@ -75,6 +75,10 @@ namespace Newbe.Claptrap.Modules
             protected override void Load(ContainerBuilder builder)
             {
                 base.Load(builder);
+                builder.RegisterType<MasterOrSelfIdentity>()
+                    .As<IMasterOrSelfIdentity>()
+                    .InstancePerLifetimeScope();
+                
                 builder.RegisterInstance(_identity)
                     .SingleInstance();
                 builder.RegisterInstance(_claptrapDesign)
