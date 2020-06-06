@@ -15,6 +15,35 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
+
+        public MySqlStateStoreConfigurator SharedTable(Action<MySqlStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableName = Defaults.StateTableName,
+                }, action);
+
+        public MySqlStateStoreConfigurator OneIdOneTable(Action<MySqlStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.StateTableName}",
+                }, action);
+
+
+        public MySqlStateStoreConfigurator OneTypeOneTable(Action<MySqlStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableNameFunc = id => $"{id.TypeCode}_{Defaults.StateTableName}",
+                }, action);
+
         private MySqlStateStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
         {
@@ -22,53 +51,19 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             return this;
         }
 
-        public MySqlStateStoreConfigurator SharedTable(Action<MySqlStateStoreOptions> options)
-        {
-            ConfigureOptions(providerOptions =>
+        private MySqlStateStoreConfigurator UseLocator(
+            IRelationalStateStoreLocator relationalEventStoreLocator,
+            Action<MySqlStateStoreOptions>? action = null
+        )
+            => ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MySqlStateStoreOptions
                 {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName: Defaults.SchemaName,
-                        connectionName: Defaults.ConnectionName,
-                        stateTableName: Defaults.StateTableName)
+                    RelationalStateStoreLocator = relationalEventStoreLocator,
                 };
-                options(stateOptions);
+                action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;
                 providerOptions.StateSaverOptions = stateOptions;
             });
-            return this;
-        }
-
-        public MySqlStateStoreConfigurator SharedTable()
-        {
-            return SharedTable(options => { });
-        }
-
-        public MySqlStateStoreConfigurator CustomLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? stateTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? stateTableNameFunc = null)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new MySqlStateStoreOptions
-                {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName,
-                        connectionName,
-                        stateTableName,
-                        schemaNameFunc,
-                        connectionNameFunc,
-                        stateTableNameFunc),
-                };
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateLoaderOptions = stateOptions;
-            });
-            return this;
-        }
     }
 }

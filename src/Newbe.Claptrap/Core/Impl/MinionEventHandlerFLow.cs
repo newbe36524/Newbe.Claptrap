@@ -98,75 +98,78 @@ namespace Newbe.Claptrap.Core.Impl
                                 return Disposable.Empty;
                             });
                 })
-                .Select(item =>
-                {
-                    try
-                    {
-                        var context = new EventHandleFlowContext
-                        {
-                            NowState = _stateHolder.DeepCopy(State),
-                            Event = item.Event,
-                            TaskCompletionSource = item.TaskCompletionSource,
-                        };
-                        Debug.Assert(context.Event.Version == context.NowState.NextVersion);
-                        context.EventContext = new EventContext(context.Event, context.NowState);
-                        context.EventHandler = CreateHandler(context.EventContext);
-                        return context;
-                    }
-                    catch (Exception e)
-                    {
-                        item.TaskCompletionSource?.SetException(e);
-                        throw;
-                    }
-                })
-                .Select(context => Observable.FromAsync(
-                    async () =>
-                    {
-                        try
-                        {
-                            await HandleEventCoreAsync().ConfigureAwait(false);
-                            context.TaskCompletionSource?.SetResult(0);
-                        }
-                        catch (Exception e)
-                        {
-                            await HandleException(e).ConfigureAwait(false);
-                            context.TaskCompletionSource?.SetException(e);
-                        }
-
-                        async Task HandleEventCoreAsync()
-                        {
-                            var nextState = await context.EventHandler.HandleEvent(context.EventContext)
-                                .ConfigureAwait(false);
-                            _logger.LogDebug("event handled and updating state");
-                            _logger.LogDebug("start update to {@state}", nextState);
-                            State = nextState;
-                            State.IncreaseVersion();
-                            _stateSavingFlow.OnNewStateCreated(State);
-                            _logger.LogDebug("state version updated : {version}", State.Version);
-                        }
-
-                        async Task HandleException(Exception e)
-                        {
-                            _logger.LogWarning(e,
-                                "there is an exception when handle event : {@event} . start to recover state as strategy : {strategy}",
-                                context.Event,
-                                _stateRecoveryOptions.StateRecoveryStrategy);
-                            switch (_stateRecoveryOptions.StateRecoveryStrategy)
-                            {
-                                case StateRecoveryStrategy.FromStateHolder:
-                                    State = context.NowState;
-                                    break;
-                                case StateRecoveryStrategy.FromStore:
-                                    await _stateRestorer.RestoreAsync();
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                    }))
+                .Select(item => Observable.FromAsync(() => HandleCoreAsync(item)))
                 .Concat()
                 .Subscribe(_ => { },
                     ex => { _logger.LogError(ex, "thrown a exception while handling event"); });
+        }
+
+        private async Task HandleCoreAsync(EventItem item)
+        {
+            var context = CreateContext();
+            try
+            {
+                await HandleEventCoreAsync().ConfigureAwait(false);
+                context.TaskCompletionSource?.SetResult(0);
+            }
+            catch (Exception e)
+            {
+                await HandleException(e).ConfigureAwait(false);
+                context.TaskCompletionSource?.SetException(e);
+            }
+
+            async Task HandleEventCoreAsync()
+            {
+                var nextState = await context.EventHandler.HandleEvent(context.EventContext)
+                    .ConfigureAwait(false);
+                _logger.LogDebug("event handled and updating state");
+                _logger.LogDebug("start update to {@state}", nextState);
+                State = nextState;
+                State.IncreaseVersion();
+                _stateSavingFlow.OnNewStateCreated(State);
+                _logger.LogDebug("state version updated : {version}", State.Version);
+            }
+
+            async Task HandleException(Exception e)
+            {
+                _logger.LogWarning(e,
+                    "there is an exception when handle event : {@event} . start to recover state as strategy : {strategy}",
+                    context.Event,
+                    _stateRecoveryOptions.StateRecoveryStrategy);
+                switch (_stateRecoveryOptions.StateRecoveryStrategy)
+                {
+                    case StateRecoveryStrategy.FromStateHolder:
+                        State = context.NowState;
+                        break;
+                    case StateRecoveryStrategy.FromStore:
+                        await _stateRestorer.RestoreAsync();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            EventHandleFlowContext CreateContext()
+            {
+                try
+                {
+                    var re = new EventHandleFlowContext
+                    {
+                        NowState = _stateHolder.DeepCopy(State),
+                        Event = item.Event,
+                        TaskCompletionSource = item.TaskCompletionSource,
+                    };
+                    Debug.Assert(re.Event.Version == re.NowState.NextVersion);
+                    re.EventContext = new EventContext(re.Event, re.NowState);
+                    re.EventHandler = CreateHandler(re.EventContext);
+                    return re;
+                }
+                catch (Exception e)
+                {
+                    item.TaskCompletionSource?.SetException(e);
+                    throw;
+                }
+            }
         }
 
         public void Deactivate()

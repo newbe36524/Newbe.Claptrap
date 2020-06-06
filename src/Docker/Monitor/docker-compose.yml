@@ -6,7 +6,11 @@ services:
         image: grafana/grafana
         ports:
             - 3000:3000
-    prometheus:
-        image: prom/prometheus
-        ports:
-            - 9090:9090
+    influxdb:
+        image: influxdb
+        ports: 
+            - 19086:8086
+        environment: 
+            INFLUXDB_DB: metricsdatabase
+            INFLUXDB_ADMIN_USER: claptrap
+            INFLUXDB_ADMIN_PASSWORD: claptrap

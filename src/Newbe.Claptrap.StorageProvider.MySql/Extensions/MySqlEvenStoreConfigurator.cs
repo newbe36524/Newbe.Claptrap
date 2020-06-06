@@ -15,6 +15,33 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
+        public MySqlEvenStoreConfigurator SharedTable(Action<MySqlEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventTableName = Defaults.EventTableName
+                }, action);
+
+        public MySqlEvenStoreConfigurator OneIdOneTable(Action<MySqlEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.EventTableName}"
+                }, action);
+
+        public MySqlEvenStoreConfigurator OneTypeOneTable(Action<MySqlEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventTableNameFunc = id => $"{id.TypeCode}_{Defaults.EventTableName}"
+                }, action);
+
         private MySqlEvenStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
         {
@@ -22,53 +49,19 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             return this;
         }
 
-        public MySqlEvenStoreConfigurator SharedTable(Action<MySqlEventStoreOptions> options)
-        {
+        private MySqlEvenStoreConfigurator UseLocator(
+            IRelationalEventStoreLocator relationalEventStoreLocator,
+            Action<MySqlEventStoreOptions>? action = null
+        ) =>
             ConfigureOptions(providerOptions =>
             {
                 var eventOptions = new MySqlEventStoreOptions
                 {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName: Defaults.SchemaName,
-                        connectionName: Defaults.ConnectionName,
-                        eventTableName: Defaults.EventTableName)
+                    RelationalEventStoreLocator = relationalEventStoreLocator,
                 };
-                options(eventOptions);
+                action?.Invoke(eventOptions);
                 providerOptions.EventLoaderOptions = eventOptions;
                 providerOptions.EventSaverOptions = eventOptions;
             });
-            return this;
-        }
-
-        public MySqlEvenStoreConfigurator SharedTable()
-        {
-            return SharedTable(options => { });
-        }
-
-        public MySqlEvenStoreConfigurator CustomLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? eventTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? eventTableNameFunc = null)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new MySqlEventStoreOptions
-                {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName,
-                        connectionName,
-                        eventTableName,
-                        schemaNameFunc,
-                        connectionNameFunc,
-                        eventTableNameFunc),
-                };
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
     }
 }

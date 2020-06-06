@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -50,6 +51,7 @@ namespace Newbe.Claptrap.Tests
             decimal oldBalance;
             decimal nowBalance;
             const decimal diff = 100M;
+            var times = 10;
             await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
             {
                 var factory = lifetimeScope.Resolve<Account.Factory>();
@@ -57,9 +59,10 @@ namespace Newbe.Claptrap.Tests
                 IAccount account = factory.Invoke(id);
                 await account.ActivateAsync();
                 oldBalance = await account.GetBalanceAsync();
-                await account.ChangeBalanceAsync(diff);
+                await Task.WhenAll(Enumerable.Range(0, times)
+                    .Select(i => account.ChangeBalanceAsync(diff)));
                 var balance = await account.GetBalanceAsync();
-                nowBalance = oldBalance + 100;
+                nowBalance = oldBalance + times * 100;
                 balance.Should().Be(nowBalance);
             }
 

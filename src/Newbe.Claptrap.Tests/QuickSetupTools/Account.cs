@@ -23,12 +23,9 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
 
         public Task ChangeBalanceAsync(decimal diff)
         {
-            var accountInfo = (AccountInfo) Claptrap.State.Data;
-            var now = accountInfo.Balance;
             var evt = new AccountBalanceChangeEvent
             {
                 Diff = diff,
-                NewBalance = now + diff
             };
             return Claptrap.HandleEventAsync(new DataEvent(Claptrap.State.Identity, Codes.AccountBalanceChangeEvent,
                 evt));

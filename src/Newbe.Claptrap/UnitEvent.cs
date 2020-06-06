@@ -11,10 +11,9 @@ namespace Newbe.Claptrap
         {
         }
 
-        public UnitEvent(IClaptrapIdentity claptrapIdentity, long version, string eventTypeCode, UnitEventData data)
+        public UnitEvent(IClaptrapIdentity claptrapIdentity, string eventTypeCode, UnitEventData data)
         {
             ClaptrapIdentity = claptrapIdentity;
-            Version = version;
             EventTypeCode = eventTypeCode;
             Data = data;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -7,6 +8,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
 {
     public class SQLiteEvenStoreConfigurator
     {
+        public const string SQLiteSchemaName = "main";
         private readonly ClaptrapStorageProviderOptions _claptrapStorageProviderOptions;
 
         public SQLiteEvenStoreConfigurator(
@@ -15,6 +17,38 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
+
+        public SQLiteEvenStoreConfigurator SharedTable(Action<SQLiteEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = SQLiteSchemaName,
+                    ConnectionName = "shared/claptrap.events.db",
+                    EventTableName = Defaults.EventTableName
+                }, action);
+
+
+        public SQLiteEvenStoreConfigurator OneIdOneFile(Action<SQLiteEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = SQLiteSchemaName,
+                    ConnectionNameFunc = identity =>
+                        Path.Combine($"{identity.TypeCode}_{identity.Id}", "eventDb.db"),
+                    EventTableName = Defaults.EventTableName
+                }, action);
+
+
+        public SQLiteEvenStoreConfigurator OneTypeOneFile(Action<SQLiteEventStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalEventStoreLocator
+                {
+                    SchemaName = SQLiteSchemaName,
+                    ConnectionNameFunc = identity =>
+                        Path.Combine(identity.TypeCode, "eventDb.db"),
+                    EventTableName = Defaults.EventTableName
+                }, action);
+
         private SQLiteEvenStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
         {
@@ -22,80 +56,18 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteEvenStoreConfigurator SharedTable()
+        private SQLiteEvenStoreConfigurator UseLocator(
+            IRelationalEventStoreLocator relationalEventStoreLocator,
+            Action<SQLiteEventStoreOptions>? action = null
+        )
         {
             ConfigureOptions(providerOptions =>
             {
                 var eventOptions = new SQLiteEventStoreOptions
                 {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName: "main",
-                        connectionName: "shared/claptrap.events.db",
-                        eventTableName: "events"),
+                    RelationalEventStoreLocator = relationalEventStoreLocator,
                 };
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
-
-        public SQLiteEvenStoreConfigurator OneIdOneFile()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new SQLiteEventStoreOptions
-                {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName: "main",
-                        connectionNameFunc: masterOrSelfIdentity =>
-                            Path.Combine($"{masterOrSelfIdentity.TypeCode}_{masterOrSelfIdentity.Id}", "eventDb.db"),
-                        eventTableName: "events"),
-                };
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
-
-        public SQLiteEvenStoreConfigurator OneTypeOneFile()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new SQLiteEventStoreOptions
-                {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName: "main",
-                        connectionNameFunc: masterOrSelfIdentity =>
-                            Path.Combine(masterOrSelfIdentity.TypeCode, "eventDb.db"),
-                        eventTableName: "events"),
-                };
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
-
-
-        public SQLiteEvenStoreConfigurator CustomLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? eventTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? eventTableNameFunc = null)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new SQLiteEventStoreOptions
-                {
-                    RelationalEventStoreLocator = new RelationalEventStoreLocator(
-                        schemaName,
-                        connectionName,
-                        eventTableName,
-                        schemaNameFunc,
-                        connectionNameFunc,
-                        eventTableNameFunc),
-                };
+                action?.Invoke(eventOptions);
                 providerOptions.EventLoaderOptions = eventOptions;
                 providerOptions.EventSaverOptions = eventOptions;
             });

@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
-                fileName => fileName.EndsWith("-Relational.event.sql"),
+                fileName => fileName.EndsWith("-event.sql"),
                 new Dictionary<string, string>
                 {
                     {"SchemaName", schemaName},

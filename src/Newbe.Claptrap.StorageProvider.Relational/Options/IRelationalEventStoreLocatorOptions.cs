@@ -5,6 +5,6 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Options
     public interface IRelationalEventStoreLocatorOptions
         : IStorageProviderOptions
     {
-        IRelationalEventStoreLocator RelationalEventStoreLocator { get; }
+        IRelationalEventStoreLocator RelationalEventStoreLocator { get; set; }
     }
 }

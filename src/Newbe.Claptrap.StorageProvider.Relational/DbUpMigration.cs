@@ -33,8 +33,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         public Task MigrateAsync()
         {
-            _ = _init.Value;
-            return Task.CompletedTask;
+            return Task.Run(() => { _ = _init.Value; });
         }
 
         private void CreateOrUpdateDatabase()
