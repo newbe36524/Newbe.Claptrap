@@ -3,7 +3,7 @@ name: Publish dev nuget package to nuget.org
 on:
   push:
     branches: 
-      - master
+      - v*
 
 jobs:
   build:
