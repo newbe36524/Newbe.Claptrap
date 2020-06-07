@@ -1,5 +1,6 @@
 using System;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
@@ -21,47 +22,47 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
             return this;
         }
 
-        public PostgreSQLStateStoreConfigurator SharedTable(Action<PostgreSQLStateStoreOptions> options)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new PostgreSQLStateStoreOptions();
-                options(stateOptions);
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateSaverOptions = stateOptions;
-            });
-            return this;
-        }
+        public PostgreSQLStateStoreConfigurator SharedTable(Action<PostgreSQLStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableName = Defaults.StateTableName,
+                }, action);
 
-        public PostgreSQLStateStoreConfigurator SharedTable()
-        {
-            return SharedTable(options => { });
-        }
-        
-        public PostgreSQLStateStoreConfigurator CustomLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? stateTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? stateTableNameFunc = null)
-        {
+        public PostgreSQLStateStoreConfigurator OneIdOneTable(Action<PostgreSQLStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.StateTableName}",
+                }, action);
+
+
+        public PostgreSQLStateStoreConfigurator OneTypeOneTable(Action<PostgreSQLStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    StateTableNameFunc = id => $"{id.TypeCode}_{Defaults.StateTableName}",
+                }, action);
+
+        private PostgreSQLStateStoreConfigurator UseLocator(
+            IRelationalStateStoreLocator relationalEventStoreLocator,
+            Action<PostgreSQLStateStoreOptions>? action = null
+        ) =>
             ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new PostgreSQLStateStoreOptions
                 {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName,
-                        connectionName,
-                        stateTableName,
-                        schemaNameFunc,
-                        connectionNameFunc,
-                        stateTableNameFunc),
+                    RelationalStateStoreLocator = relationalEventStoreLocator,
                 };
+                action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateLoaderOptions = stateOptions;
+                providerOptions.StateSaverOptions = stateOptions;
             });
-            return this;
-        }
     }
 }

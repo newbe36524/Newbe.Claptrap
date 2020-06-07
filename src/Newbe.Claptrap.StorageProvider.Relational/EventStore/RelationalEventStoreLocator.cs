@@ -4,42 +4,26 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
     public class RelationalEventStoreLocator : IRelationalEventStoreLocator
     {
-        private readonly Func<IClaptrapIdentity, string>? _connectionNameFunc;
-        private readonly Func<IClaptrapIdentity, string>? _eventTableNameFunc;
-        private readonly Func<IClaptrapIdentity, string>? _schemaNameFunc;
-        private readonly string? _schemaName;
-        private readonly string? _connectionName;
-        private readonly string? _eventTableName;
-
-        public RelationalEventStoreLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? eventTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? eventTableNameFunc = null)
-        {
-            _schemaName = schemaName;
-            _connectionName = connectionName;
-            _eventTableName = eventTableName;
-            _schemaNameFunc = schemaNameFunc;
-            _connectionNameFunc = connectionNameFunc;
-            _eventTableNameFunc = eventTableNameFunc;
-        }
+        public Func<IClaptrapIdentity, string>? ConnectionNameFunc { get; set; } = null!;
+        public Func<IClaptrapIdentity, string>? EventTableNameFunc { get; set; } = null!;
+        public Func<IClaptrapIdentity, string>? SchemaNameFunc { get; set; } = null!;
+        public string? SchemaName { get; set; } = null!;
+        public string? ConnectionName { get; set; } = null!;
+        public string? EventTableName { get; set; } = null!;
 
         public string GetConnectionName(IClaptrapIdentity identity)
         {
-            return _connectionNameFunc?.Invoke(identity) ?? _connectionName!;
+            return ConnectionNameFunc?.Invoke(identity) ?? ConnectionName!;
         }
 
         public string GetSchemaName(IClaptrapIdentity identity)
         {
-            return _schemaNameFunc?.Invoke(identity) ?? _schemaName!;
+            return SchemaNameFunc?.Invoke(identity) ?? SchemaName!;
         }
 
         public string GetEventTableName(IClaptrapIdentity identity)
         {
-            return _eventTableNameFunc?.Invoke(identity) ?? _eventTableName!;
+            return EventTableNameFunc?.Invoke(identity) ?? EventTableName!;
         }
     }
 }

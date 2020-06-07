@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS $SchemaName$.$EventTableName$
     event_type_code    TEXT NOT NULL,
     event_data         TEXT null,
     created_time       date NOT NULL,
-    PRIMARY KEY (claptrap_type_code, claptrap_id, version) INCLUDE (event_type_code, event_data, created_time)
+    PRIMARY KEY (claptrap_type_code, claptrap_id, version)
 ) ;

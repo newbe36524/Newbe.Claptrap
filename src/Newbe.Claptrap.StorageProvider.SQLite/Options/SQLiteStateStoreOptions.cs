@@ -2,7 +2,7 @@ using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options
 {
-    public class IsqLiteStateStoreOptions
+    public class SQLiteStateStoreOptions
         : ISQLiteStateStoreOptions
     {
         public bool IsAutoMigrationEnabled { get; set; } = true;

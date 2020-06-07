@@ -17,6 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _eventTableName;
+        private readonly string[] _insertSqls;
 
         public SQLiteEventEntitySaver(
             BatchOperator<EventEntity>.Factory batchOperatorFactory,
@@ -43,7 +44,9 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                             : default,
                         DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
                     }));
+            _insertSqls = InitInsertSql();
         }
+
 
         private readonly struct RelationalEventBatchOperatorKey : IBatchOperatorKey
         {
@@ -70,6 +73,16 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             return _batchOperator.CreateTask(entity);
         }
 
+        private string[] InitInsertSql()
+        {
+            var maxCount = SQLiteEventStoreOptions.SQLiteMaxVariablesCount /
+                           RelationalEventEntity.ParameterNames().Count();
+            var re = Enumerable.Range(0, maxCount)
+                .Select(index => InitRelationalInsertManySql(_eventTableName, index + 1))
+                .ToArray();
+            return re;
+        }
+
         private async Task SaveManyCoreMany(
             IDbFactory dbFactory,
             IEnumerable<EventEntity> entities)
@@ -87,9 +100,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 })
                 .ToArray();
 
-            var sql = InitRelationalInsertManySql(
-                _eventTableName,
-                array.Length);
+            var sql = _insertSqls[items.Length - 1];
             using var db = dbFactory.GetConnection(_connectionName);
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
@@ -104,6 +115,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
             await db.ExecuteAsync(sql, ps);
         }
+
 
         private string InitRelationalInsertManySql(
             string eventTableName,

@@ -4,42 +4,26 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
 {
     public class MongoDBStateStoreLocator : IMongoDBStateStoreLocator
     {
-        private readonly Func<IClaptrapIdentity, string>? _connectionNameFunc;
-        private readonly Func<IClaptrapIdentity, string>? _stateCollectionNameFunc;
-        private readonly Func<IClaptrapIdentity, string>? _databaseNameFunc;
-        private readonly string? _databaseName;
-        private readonly string? _connectionName;
-        private readonly string? _stateCollectionName;
-
-        public MongoDBStateStoreLocator(
-            string? databaseName = null,
-            string? connectionName = null,
-            string? stateCollectionName = null,
-            Func<IClaptrapIdentity, string>? databaseNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? stateCollectionNameFunc = null)
-        {
-            _databaseName = databaseName;
-            _connectionName = connectionName;
-            _stateCollectionName = stateCollectionName;
-            _databaseNameFunc = databaseNameFunc;
-            _connectionNameFunc = connectionNameFunc;
-            _stateCollectionNameFunc = stateCollectionNameFunc;
-        }
+        public Func<IClaptrapIdentity, string>? ConnectionNameFunc { get; set; } = null!;
+        public Func<IClaptrapIdentity, string>? StateCollectionNameFunc { get; set; } = null!;
+        public Func<IClaptrapIdentity, string>? DatabaseNameFunc { get; set; } = null!;
+        public string? DatabaseName { get; set; } = null!;
+        public string? ConnectionName { get; set; } = null!;
+        public string? StateCollectionName { get; set; } = null!;
 
         public string GetConnectionName(IClaptrapIdentity identity)
         {
-            return _connectionNameFunc?.Invoke(identity) ?? _connectionName!;
+            return ConnectionNameFunc?.Invoke(identity) ?? ConnectionName!;
         }
 
         public string GetDatabaseName(IClaptrapIdentity identity)
         {
-            return _databaseNameFunc?.Invoke(identity) ?? _databaseName!;
+            return DatabaseNameFunc?.Invoke(identity) ?? DatabaseName!;
         }
 
         public string GetStateCollectionName(IClaptrapIdentity identity)
         {
-            return _stateCollectionNameFunc?.Invoke(identity) ?? _stateCollectionName!;
+            return StateCollectionNameFunc?.Invoke(identity) ?? StateCollectionName!;
         }
     }
 }

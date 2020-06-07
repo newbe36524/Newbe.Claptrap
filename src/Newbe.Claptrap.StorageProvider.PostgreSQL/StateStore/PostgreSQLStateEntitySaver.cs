@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
             var (connectionName, schemaName, stateTableName) = locator.GetNames(identity);
             _connectionName = connectionName;
             _insertSql =
-                $"INSERT INTO {schemaName}.{stateTableName} (claptrap_type_code,claptrap_id,version,state_data,updated_time) VALUES(@claptrap_type_code, @claptrap_id, @version, @state_data, @updated_time) ON CONFLICT ON CONSTRAINT {schemaName}_pkey DO UPDATE SET version=@version, state_data=@state_data, updated_time=@updated_time;";
+                $"INSERT INTO {schemaName}.{stateTableName} (claptrap_type_code,claptrap_id,version,state_data,updated_time) VALUES(@claptrap_type_code, @claptrap_id, @version, @state_data, @updated_time) ON CONFLICT ON CONSTRAINT {stateTableName}_pkey DO UPDATE SET version=@version, state_data=@state_data, updated_time=@updated_time;";
         }
 
         public async Task SaveAsync(StateEntity entity)

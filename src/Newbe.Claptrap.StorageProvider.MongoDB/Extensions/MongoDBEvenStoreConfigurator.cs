@@ -17,59 +17,57 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
         }
 
         private MongoDBEvenStoreConfigurator ConfigureOptions(
-            Action<ClaptrapStorageProviderOptions> optionsAction)
+            Action<ClaptrapStorageProviderOptions>? optionsAction)
         {
             optionsAction(_claptrapStorageProviderOptions);
             return this;
         }
 
-        public MongoDBEvenStoreConfigurator SharedCollection(Action<MongoDBEventStoreOptions> options)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var eventOptions = new MongoDBEventStoreOptions
+        public MongoDBEvenStoreConfigurator SharedCollection(
+            Action<MongoDBEventStoreOptions>? action = null)
+            =>
+                UseLocator(new MongoDBEventStoreLocator
                 {
-                    MongoDBEventStoreLocator = new MongoDBEventStoreLocator(
-                        databaseName: Defaults.SchemaName,
-                        connectionName: Defaults.ConnectionName,
-                        eventCollectionName: Defaults.EventTableName)
-                };
-                options(eventOptions);
-                providerOptions.EventLoaderOptions = eventOptions;
-                providerOptions.EventSaverOptions = eventOptions;
-            });
-            return this;
-        }
+                    DatabaseName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventCollectionName = Defaults.EventTableName
+                }, action);
 
-        public MongoDBEvenStoreConfigurator SharedCollection()
-        {
-            return SharedCollection(options => { });
-        }
 
-        public MongoDBEvenStoreConfigurator CustomLocator(
-            string? databaseName = null,
-            string? connectionName = null,
-            string? eventCollectionName = null,
-            Func<IClaptrapIdentity, string>? databaseNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? eventCollectionNameFunc = null)
-        {
-            ConfigureOptions(providerOptions =>
+        public MongoDBEvenStoreConfigurator OneIdOneCollection(
+            Action<MongoDBEventStoreOptions>? action = null)
+            =>
+                UseLocator(new MongoDBEventStoreLocator
+                {
+                    DatabaseName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventCollectionNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.EventTableName}"
+                }, action);
+
+
+        public MongoDBEvenStoreConfigurator OneTypeOneCollection(
+            Action<MongoDBEventStoreOptions>? action = null)
+            =>
+                UseLocator(new MongoDBEventStoreLocator
+                {
+                    DatabaseName = Defaults.SchemaName,
+                    ConnectionName = Defaults.ConnectionName,
+                    EventCollectionNameFunc = id => $"{id.TypeCode}_{Defaults.EventTableName}"
+                }, action);
+
+        private MongoDBEvenStoreConfigurator UseLocator(
+            IMongoDBEventStoreLocator locator,
+            Action<MongoDBEventStoreOptions>? action = null
+        )
+            => ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MongoDBEventStoreOptions
                 {
-                    MongoDBEventStoreLocator = new MongoDBEventStoreLocator(
-                        databaseName,
-                        connectionName,
-                        eventCollectionName,
-                        databaseNameFunc,
-                        connectionNameFunc,
-                        eventCollectionNameFunc),
+                    MongoDBEventStoreLocator = locator,
                 };
+                action?.Invoke(stateOptions);
                 providerOptions.EventLoaderOptions = stateOptions;
                 providerOptions.EventSaverOptions = stateOptions;
             });
-            return this;
-        }
     }
 }

@@ -33,65 +33,66 @@ namespace Newbe.Claptrap
         {
             try
             {
-                return CreateCore();
+                var actorScope = BuildClaptrapLifetimeScope(identity);
+                var actor = actorScope.Resolve<IClaptrap>();
+                return actor;
             }
             catch (Exception e)
             {
                 _logger.LogError(e, _l[L001FailedToCreate], identity);
                 throw;
             }
+        }
 
-            IClaptrap CreateCore()
+        public ILifetimeScope BuildClaptrapLifetimeScope(IClaptrapIdentity identity)
+        {
+            var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
+            var actorScope = _lifetimeScope.BeginLifetimeScope(builder =>
             {
-                var claptrapDesign = _claptrapDesignStore.FindDesign(identity);
-                var actorScope = _lifetimeScope.BeginLifetimeScope(builder =>
+                var sharedModules = _claptrapModuleProviders
+                    .SelectMany(x => x.GetClaptrapSharedModules(identity))
+                    .OfType<Module>()
+                    .ToArray();
+                _logger.LogTrace("Found {count} shared modules : {modules}",
+                    sharedModules.Length,
+                    sharedModules);
+                RegisterModules(sharedModules);
+
+                var masterDesign = claptrapDesign.ClaptrapMasterDesign;
+                if (masterDesign != null)
                 {
-                    var sharedModules = _claptrapModuleProviders
-                        .SelectMany(x => x.GetClaptrapSharedModules(identity))
+                    _logger.LogDebug(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
+                    var minionModules = _claptrapModuleProviders
+                        .SelectMany(x => x.GetClaptrapMinionModules(identity))
                         .OfType<Module>()
                         .ToArray();
-                    _logger.LogTrace("Found {count} shared modules : {modules}",
-                        sharedModules.Length,
-                        sharedModules);
-                    RegisterModules(sharedModules);
+                    _logger.LogTrace("Found {count} minion modules : {modules}",
+                        minionModules.Length,
+                        minionModules);
+                    RegisterModules(minionModules);
+                }
+                else
+                {
+                    _logger.LogDebug(_l[L003MasterFound], identity.TypeCode);
+                    var masterModules = _claptrapModuleProviders
+                        .SelectMany(x => x.GetClaptrapMasterClaptrapModules(identity))
+                        .OfType<Module>()
+                        .ToArray();
+                    _logger.LogTrace("Found {count} master claptrap modules : {modules}",
+                        masterModules.Length,
+                        masterModules);
+                    RegisterModules(masterModules);
+                }
 
-                    var masterDesign = claptrapDesign.ClaptrapMasterDesign;
-                    if (masterDesign != null)
+                void RegisterModules(IEnumerable<Module> modules)
+                {
+                    foreach (var module in modules)
                     {
-                        _logger.LogDebug(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
-                        var minionModules = _claptrapModuleProviders
-                            .SelectMany(x => x.GetClaptrapMinionModules(identity))
-                            .OfType<Module>()
-                            .ToArray();
-                        _logger.LogTrace("Found {count} minion modules : {modules}",
-                            minionModules.Length,
-                            minionModules);
-                        RegisterModules(minionModules);
+                        builder.RegisterModule(module);
                     }
-                    else
-                    {
-                        _logger.LogDebug(_l[L003MasterFound], identity.TypeCode);
-                        var masterModules = _claptrapModuleProviders
-                            .SelectMany(x => x.GetClaptrapMasterClaptrapModules(identity))
-                            .OfType<Module>()
-                            .ToArray();
-                        _logger.LogTrace("Found {count} master claptrap modules : {modules}",
-                            masterModules.Length,
-                            masterModules);
-                        RegisterModules(masterModules);
-                    }
-
-                    void RegisterModules(IEnumerable<Module> modules)
-                    {
-                        foreach (var module in modules)
-                        {
-                            builder.RegisterModule(module);
-                        }
-                    }
-                });
-                var actor = actorScope.Resolve<IClaptrap>();
-                return actor;
-            }
+                }
+            });
+            return actorScope;
         }
     }
 }

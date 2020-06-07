@@ -13,67 +13,13 @@
 
 ## 当前项目状态
 
-项目规划中，现所有开发在 develop 分支上进行，如对项目感兴趣或愿意参与项目开发，欢迎通过issue与项目组联系。以下是当前的主要情况
+项目规划中，现所有开发在 develop 分支上进行，如对项目感兴趣或愿意参与项目开发，欢迎通过issue与项目组联系。
 
 Claptrap and it`s Minions are coming.
 
-- 核心功能
-  - 时间处理与状态管理
-    - [X] 定期保存快照
-    - [X] 事件处理异常时恢复状态
-  - 事件和状态的存储支持，详见下方表格
-  - 存储通用功能
-    - [x] 存储结构自动迁移
-    - [ ] 可导出存储结构迁移脚本
-  - 全球化与本地化
-    - [X] 框架
-    - [ ] 替换现有所有文本
-    - [X] 支持启动时配置
-  - [X] Minions
-  - 事件处理广播器与接收器
-    - [X] 基于Orleans直接调用
-    - [ ] RabbitMQ
-  - 事件与状态序列化
-    - [X] Json
-  - Claptrap Design
-    - [X] 全局 Design
-    - [X] 启动时变更 Design
-    - [X] 导出
-    - [ ] 配置文件式设计 Design
-  - 单元测试
-    - [ ] 覆盖率80%以上
-    - [ ] 覆盖主要的异常抛出情况
-  - 指标监控
-    - [X] 事件处理器
-    - [X] Claptrap生命周期
-    - [X] 存储迁移状态
-    - [X] 存储使用
-  -  [] 链路追踪
-- 开发工具
-  - [ ] 项目模板
-  - 代码样例
-    - [X] [单体式运行](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.OutofOrleans)
-    - [X] [Orleans 结合](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.ArticleManager)
-    - [ ] Minions
+项目的当前内容和更新都可以在[Woking.md](docs/Working.md)中找到。
 
-### 事件和状态的存储支持
-
-| 存储方式   | 存储策略                     |
-| ---------- | ---------------------------- |
-| 内存       | One Id One Store             |
-| SQLite     | One Id One File, SharedTable |
-| Mysql      | SharedTable                  |
-| Mongo      | SharedCollection             |
-| Postgresql | SharedTable                  |
-
-定位一个 Claptrap 所需要 Claptrap Identity 包含有 TypeCode 和 Id 两个属性。
-
-| 存储策略                      | 说明                                                                                                                                                                           |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| One Id One xxx                | 不同的 Claptrap 即 Claptrap Identity 不同，将会独享自己的一份存储区域。名称中的 Id 是 Identity 的缩写。例如：SQLite - One Id One File 即表示每个 Claptrap 拥有单独的数据库文件 |
-| One Type One xxx              | 不同的类型 Claptrap 将会独享自己的一份存储区域。相同类型、不同 id 将会保存在相同的空间                                                                                         |
-| SharedTable, SharedCollection | 所有的 Claptrap 将会共享相同的表或集合来保存数据                                                                                                                               |
-
+目前我们还需要更多的成员加入我们来完成这项工作，无论您对哪方便感兴趣，我们相信您都可以在这里找到适合你的参与点。[您可以点击此处来查看目前我们的成员需求。](docs/Teams.md)
 
 ## 项目样例
 

@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
             var stateTableName = locator.GetStateTableName(identity);
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
-                fileName => fileName.EndsWith("-Relational.state.sql"),
+                fileName => fileName.EndsWith("-state.sql"),
                 new Dictionary<string, string>
                 {
                     {"SchemaName", schemaName},

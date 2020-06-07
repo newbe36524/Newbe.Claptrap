@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -15,6 +16,38 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
+
+        public SQLiteStateStoreConfigurator SharedTable(
+            Action<SQLiteStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Consts.SQLiteSchemaName,
+                    ConnectionName = "shared/states.db",
+                    StateTableName = Defaults.StateTableName,
+                }, action);
+
+        public SQLiteStateStoreConfigurator OneIdOneFile(
+            Action<SQLiteStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Consts.SQLiteSchemaName,
+                    ConnectionNameFunc = identity => Path.Combine($"{identity.TypeCode}_{identity.Id}", "stateDb.db"),
+                    StateTableName = Defaults.StateTableName,
+                }, action);
+
+
+        public SQLiteStateStoreConfigurator OneTypeOneFile(
+            Action<SQLiteStateStoreOptions>? action = null)
+            =>
+                UseLocator(new RelationalStateStoreLocator
+                {
+                    SchemaName = Consts.SQLiteSchemaName,
+                    ConnectionNameFunc = identity => Path.Combine($"{identity.TypeCode}", "stateDb.db"),
+                    StateTableName = Defaults.StateTableName,
+                }, action);
+
         private SQLiteStateStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
         {
@@ -22,83 +55,20 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        public SQLiteStateStoreConfigurator SharedTable()
+        private SQLiteStateStoreConfigurator UseLocator(
+            IRelationalStateStoreLocator relationalEventStoreLocator,
+            Action<SQLiteStateStoreOptions>? action = null
+        )
         {
             ConfigureOptions(providerOptions =>
             {
-                var stateOptions = new IsqLiteStateStoreOptions
+                var stateOptions = new SQLiteStateStoreOptions
                 {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName: "main",
-                        connectionName: "shared/states.db",
-                        stateTableName: "states"),
+                    RelationalStateStoreLocator = relationalEventStoreLocator,
                 };
+                action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;
                 providerOptions.StateSaverOptions = stateOptions;
-            });
-
-            return this;
-        }
-
-        public SQLiteStateStoreConfigurator OneIdOneFile()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new IsqLiteStateStoreOptions
-                {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName: "main",
-                        connectionNameFunc: identity =>
-                            Path.Combine($"{identity.TypeCode}_{identity.Id}", "stateDb.db"),
-                        stateTableName: "states"),
-                };
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateSaverOptions = stateOptions;
-            });
-            return this;
-        }
-
-
-        public SQLiteStateStoreConfigurator OneTypeOneFile()
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new IsqLiteStateStoreOptions
-                {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName: "main",
-                        connectionNameFunc: identity => Path.Combine($"{identity.TypeCode}", "stateDb.db"),
-                        stateTableName: "states"),
-                };
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateSaverOptions = stateOptions;
-            });
-
-            return this;
-        }
-
-        public SQLiteStateStoreConfigurator CustomLocator(
-            string? schemaName = null,
-            string? connectionName = null,
-            string? stateTableName = null,
-            Func<IClaptrapIdentity, string>? schemaNameFunc = null,
-            Func<IClaptrapIdentity, string>? connectionNameFunc = null,
-            Func<IClaptrapIdentity, string>? stateTableNameFunc = null)
-        {
-            ConfigureOptions(providerOptions =>
-            {
-                var stateOptions = new IsqLiteStateStoreOptions
-                {
-                    RelationalStateStoreLocator = new RelationalStateStoreLocator(
-                        schemaName,
-                        connectionName,
-                        stateTableName,
-                        schemaNameFunc,
-                        connectionNameFunc,
-                        stateTableNameFunc),
-                };
-                providerOptions.StateLoaderOptions = stateOptions;
-                providerOptions.StateLoaderOptions = stateOptions;
             });
             return this;
         }

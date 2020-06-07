@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using App.Metrics;
 using App.Metrics.AspNetCore;
+using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Formatters.Prometheus;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +16,7 @@ using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.DesignStoreFormatter;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Orleans;
 using Orleans.Hosting;
 
@@ -21,6 +24,7 @@ namespace Newbe.Claptrap.Demo.Server
 {
     class Program
     {
+        private static Timer _timer;
         public static Task Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
@@ -30,7 +34,29 @@ namespace Newbe.Claptrap.Demo.Server
             ClaptrapMetrics.MetricsRoot = new MetricsBuilder()
                 .OutputMetrics.AsPrometheusPlainText()
                 .OutputMetrics.AsPrometheusProtobuf()
+                .Report
+                .ToInfluxDb(options =>
+                {
+                    options.InfluxDb.Database = "metricsdatabase";
+                    options.InfluxDb.CreateDataBaseIfNotExists = true;
+                    options.InfluxDb.UserName = "claptrap";
+                    options.InfluxDb.Password = "claptrap";
+                    options.InfluxDb.BaseUri = new Uri("http://127.0.0.1:19086");
+                    options.InfluxDb.CreateDataBaseIfNotExists = true;
+                    options.HttpPolicy.BackoffPeriod = TimeSpan.FromSeconds(30);
+                    options.HttpPolicy.FailuresBeforeBackoff = 5;
+                    options.HttpPolicy.Timeout = TimeSpan.FromSeconds(10);
+                    options.MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter();
+                    options.FlushInterval = TimeSpan.FromSeconds(20);
+                })
                 .Build();
+     
+            _timer= new Timer(1000);
+            _timer.Elapsed += (sender, eventArgs) =>
+            {
+                Task.WhenAll(ClaptrapMetrics.MetricsRoot.ReportRunner.RunAllAsync()).Wait();
+            };
+            _timer.Start();
             var metrics = ClaptrapMetrics.MetricsRoot;
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(context =>
