@@ -113,5 +113,20 @@ namespace Newbe.Claptrap.Tests
             var claptrap = mocker.Create<AopClaptrap>();
             Assert.ThrowsAsync<Exception>(() => claptrap.HandleEventAsync(testEvent));
         }
+        
+        [Test]
+        public async Task HandleEventAsyncWithInterceptorException()
+        {
+            using var mocker = AutoMockHelper.Create();
+            var testEvent = new TestEvent();
+            mocker.Mock<IClaptrapLifetimeInterceptor>()
+                .Setup(x => x.HandlingEventAsync(testEvent))
+                .Returns(Task.FromException<Exception>(new Exception()));
+            mocker.Mock<IClaptrap>()
+                .Setup(x => x.HandleEventAsync(testEvent))
+                .Returns(Task.CompletedTask);
+            var claptrap = mocker.Create<AopClaptrap>();
+            await claptrap.HandleEventAsync(testEvent);
+        }
     }
 }

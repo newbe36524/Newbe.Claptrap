@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Demo.Server
 {
     class Program
     {
-        private static Timer _timer;
+        private static Timer? _timer;
         public static Task Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>

@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Newbe.Claptrap
 {
     /// <summary>
     /// This event is used for load test
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UnitEvent : IEvent
     {
         public UnitEvent()

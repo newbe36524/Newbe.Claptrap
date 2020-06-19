@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using static Newbe.Claptrap.LK.L0003EmptyEventHandledNotifier;
 
 namespace Newbe.Claptrap.Notifiers
 {
+    [ExcludeFromCodeCoverage]
     public class EmptyEventNotifier : IEventNotifier
     {
         public delegate EmptyEventNotifier Factory(IClaptrapIdentity identity);

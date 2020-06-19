@@ -3,7 +3,6 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
-using Newbe.Claptrap.MemoryStore;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
@@ -27,10 +26,6 @@ namespace Newbe.Claptrap.Tests
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),
-                EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
-                EventSaverFactoryType = typeof(MemoryEventStoreFactory),
-                StateLoaderFactoryType = typeof(MemoryStateStoreFactory),
-                StateSaverFactoryType = typeof(MemoryStateStoreFactory),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory)
             };
@@ -73,10 +68,6 @@ namespace Newbe.Claptrap.Tests
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),
-                EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
-                EventSaverFactoryType = typeof(MemoryEventStoreFactory),
-                StateLoaderFactoryType = typeof(MemoryStateStoreFactory),
-                StateSaverFactoryType = typeof(MemoryStateStoreFactory),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory)
             };
@@ -94,10 +85,6 @@ namespace Newbe.Claptrap.Tests
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
                 StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
                 StateDataType = typeof(TestStateData),
-                EventLoaderFactoryType = typeof(MemoryEventStoreFactory),
-                EventSaverFactoryType = typeof(MemoryEventStoreFactory),
-                StateLoaderFactoryType = typeof(MemoryStateStoreFactory),
-                StateSaverFactoryType = typeof(MemoryStateStoreFactory),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),
                 ClaptrapMasterDesign = masterDesign

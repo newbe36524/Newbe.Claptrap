@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS $SchemaName$.$StateTableName$
     version            INT8     NOT NULL,
     state_data         TEXT null,
     updated_time       date NOT NULL,
-    PRIMARY KEY (claptrap_type_code, claptrap_id, version)
+    PRIMARY KEY (claptrap_type_code, claptrap_id)
 ) ;

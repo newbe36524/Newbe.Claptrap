@@ -96,6 +96,10 @@ namespace Newbe.Claptrap.Tests
                         .AsImplementedInterfaces()
                         .SingleInstance();
                     builder.RegisterBuildCallback(scope => scope.Resolve<IStateAccessor>().State = state);
+                    builder.RegisterInstance(new EventLoadingOptions
+                    {
+                        LoadingCountInOneBatch = 1000
+                    });
                 });
 
             mocker.Mock<IStateHolder>()

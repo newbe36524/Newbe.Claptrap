@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap
 {
+    [ExcludeFromCodeCoverage]
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class EmptyEventHandler : IEventHandler
     {
         private readonly ILogger<EmptyEventHandler> _logger;

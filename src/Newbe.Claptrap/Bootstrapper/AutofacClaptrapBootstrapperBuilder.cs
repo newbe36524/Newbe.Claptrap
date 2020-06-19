@@ -67,26 +67,64 @@ namespace Newbe.Claptrap.Bootstrapper
 
             IClaptrapBootstrapper BuildCore()
             {
+                var container = CreateContainerForScanning();
+                IClaptrapDesignStore? claptrapDesignStore = null;
+                claptrapDesignStore = CreateClaptrapDesignStore(container);
+
+                IClaptrapApplicationModule[]? applicationModules = null;
+                applicationModules = ScanApplicationModules(container, claptrapDesignStore);
+
+                var autofacModules = applicationModules
+                    .OfType<Module>()
+                    .ToArray();
+
+                _logger.LogInformation(
+                    "Filtered and found {count} Autofac modules : {modules}",
+                    autofacModules.Length,
+                    autofacModules);
+
+                var providers = ScanClaptrapModuleProviders();
+
+                _applicationBuilder.RegisterTypes(providers)
+                    .As<IClaptrapModuleProvider>();
+
+                var claptrapBootstrapper =
+                    new AutofacClaptrapBootstrapper(_applicationBuilder,
+                        autofacModules
+                            .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
+                        claptrapDesignStore);
+
+                return claptrapBootstrapper;
+            }
+
+            IContainer CreateContainerForScanning()
+            {
                 var builder = new ContainerBuilder();
                 builder.RegisterModule<ClaptrapDesignScanningModule>();
                 builder.RegisterModule(new LoggingModule(_loggerFactory));
                 builder.RegisterModule(new LocalizationModule(Options.CultureInfo));
                 builder.RegisterInstance(Options);
                 var container = builder.Build();
-                IClaptrapDesignStore? claptrapDesignStore = null;
-                using (var scope = container.BeginLifetimeScope())
-                {
-                    var factory = scope.Resolve<IClaptrapDesignStoreFactory>();
-                    var validator = scope.Resolve<IClaptrapDesignStoreValidator>();
-                    claptrapDesignStore =
-                        CreateClaptrapDesignStore(
-                            factory,
-                            validator,
-                            Options.DesignTypes ?? throw new ArgumentNullException());
-                }
+                return container;
+            }
 
-                IClaptrapApplicationModule[]? applicationModules = null;
-                using (var scope = container.BeginLifetimeScope(innerBuilder =>
+            IClaptrapDesignStore CreateClaptrapDesignStore(ILifetimeScope container)
+            {
+                using var scope = container.BeginLifetimeScope();
+                var factory = scope.Resolve<IClaptrapDesignStoreFactory>();
+                var validator = scope.Resolve<IClaptrapDesignStoreValidator>();
+                var claptrapDesignStore = this.CreateClaptrapDesignStore(
+                    factory,
+                    validator,
+                    Options.DesignTypes ?? throw new ArgumentNullException());
+
+                return claptrapDesignStore;
+            }
+
+            IClaptrapApplicationModule[] ScanApplicationModules(ILifetimeScope container,
+                IClaptrapDesignStore claptrapDesignStore)
+            {
+                using var scope = container.BeginLifetimeScope(innerBuilder =>
                 {
                     var providerTypes = Options.ModuleTypes
                         .Where(x => x.IsClass && !x.IsAbstract)
@@ -99,39 +137,32 @@ namespace Newbe.Claptrap.Bootstrapper
                         .As<IClaptrapApplicationModuleProvider>()
                         .InstancePerLifetimeScope();
                     innerBuilder.RegisterInstance(claptrapDesignStore);
-                }))
-                {
-                    var moduleProviders =
-                        scope.Resolve<IEnumerable<IClaptrapApplicationModuleProvider>>();
-                    applicationModules = moduleProviders
-                        .SelectMany(x =>
-                        {
-                            var ms = x.GetClaptrapApplicationModules().ToArray();
-                            _logger.LogDebug("Found {count} claptrap application modules from {type} : {modules}",
-                                ms.Length,
-                                x,
-                                ms.Select(a => a.Name));
-                            return ms;
-                        })
-                        .ToArray();
-
-                    _logger.LogInformation(
-                        "Scanned {typesCount}, and found {count} claptrap application modules : {modules}",
-                        Options.ModuleTypes.Count(),
-                        applicationModules.Length,
-                        applicationModules.Select(x => x.Name));
-                }
-
-                var autofacModules = applicationModules
-                    .OfType<Module>()
+                });
+                var moduleProviders =
+                    scope.Resolve<IEnumerable<IClaptrapApplicationModuleProvider>>();
+                var applicationModules = moduleProviders
+                    .SelectMany(x =>
+                    {
+                        var ms = x.GetClaptrapApplicationModules().ToArray();
+                        _logger.LogDebug("Found {count} claptrap application modules from {type} : {modules}",
+                            ms.Length,
+                            x,
+                            ms.Select(a => a.Name));
+                        return ms;
+                    })
                     .ToArray();
 
                 _logger.LogInformation(
-                    "Filtered and found {count} Autofac modules : {modules}",
-                    autofacModules.Length,
-                    autofacModules);
+                    "Scanned {typesCount}, and found {count} claptrap application modules : {modules}",
+                    Options.ModuleTypes.Count(),
+                    applicationModules.Length,
+                    applicationModules.Select(x => x.Name));
 
-                // TODO move
+                return applicationModules;
+            }
+
+            Type[] ScanClaptrapModuleProviders()
+            {
                 var providers = Options.ModuleTypes
                     .Where(x => x.IsClass && !x.IsAbstract)
                     .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName) != null)
@@ -141,17 +172,7 @@ namespace Newbe.Claptrap.Bootstrapper
                     Options.ModuleTypes.Count(),
                     providers.Length,
                     providers);
-
-                _applicationBuilder.RegisterTypes(providers)
-                    .As<IClaptrapModuleProvider>();
-
-                var claptrapBootstrapper =
-                    new AutofacClaptrapBootstrapper(_applicationBuilder,
-                        autofacModules
-                            .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
-                        claptrapDesignStore);
-
-                return claptrapBootstrapper;
+                return providers;
             }
         }
 

@@ -75,7 +75,13 @@ namespace Newbe.Claptrap.Core.Impl
             async Task HandleEventCoreAsync()
             {
                 await SaveEvent(context.Event);
-                var nextState = await context.EventHandler.HandleEvent(context.EventContext);
+                IState nextState;
+                await using (var handler = context.EventHandler)
+                {
+                    nextState = await handler.HandleEvent(context.EventContext)
+                        .ConfigureAwait(false);
+                }
+
                 _logger.LogDebug("event handled and updating state");
                 _logger.LogDebug("start update to {@state}", nextState);
                 State = nextState;

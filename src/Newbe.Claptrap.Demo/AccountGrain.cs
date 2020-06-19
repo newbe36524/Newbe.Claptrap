@@ -21,7 +21,7 @@ namespace Newbe.Claptrap.Demo
             {
                 Diff = +amount
             };
-            var dataEvent = this.CreateEvent(accountBalanceChangeEventData, uid);
+            var dataEvent = this.CreateEvent(accountBalanceChangeEventData);
             return Claptrap.HandleEventAsync(dataEvent);
         }
 

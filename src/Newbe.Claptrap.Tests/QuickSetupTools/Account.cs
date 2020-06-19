@@ -35,5 +35,10 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
         {
             return Claptrap.ActivateAsync();
         }
+
+        public Task DeactivateAsync()
+        {
+            return Claptrap.DeactivateAsync();
+        }
     }
 }

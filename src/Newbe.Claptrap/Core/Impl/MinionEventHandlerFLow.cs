@@ -18,6 +18,7 @@ namespace Newbe.Claptrap.Core.Impl
         private readonly IStateRestorer _stateRestorer;
         private readonly IStateSavingFlow _stateSavingFlow;
         private readonly StateRecoveryOptions _stateRecoveryOptions;
+        private readonly EventLoadingOptions _eventLoadingOptions;
         private readonly ILogger<MasterEventHandlerFLow> _logger;
 
         private IDisposable _eventHandleFlow = null!;
@@ -37,6 +38,7 @@ namespace Newbe.Claptrap.Core.Impl
             IStateRestorer stateRestorer,
             IStateSavingFlow stateSavingFlow,
             StateRecoveryOptions stateRecoveryOptions,
+            EventLoadingOptions eventLoadingOptions,
             ILogger<MasterEventHandlerFLow> logger)
         {
             _stateAccessor = stateAccessor;
@@ -46,6 +48,7 @@ namespace Newbe.Claptrap.Core.Impl
             _stateRestorer = stateRestorer;
             _stateSavingFlow = stateSavingFlow;
             _stateRecoveryOptions = stateRecoveryOptions;
+            _eventLoadingOptions = eventLoadingOptions;
             _logger = logger;
             _incomingEventsSeq = new Subject<EventItem>();
         }
@@ -74,8 +77,7 @@ namespace Newbe.Claptrap.Core.Impl
                         Observable.Create<EventItem>(
                             async observer =>
                             {
-                                // TODO config
-                                const int step = 1000;
+                                var step = _eventLoadingOptions.LoadingCountInOneBatch;
                                 var versionCount = item.Event.Version - State.NextVersion;
                                 var pageCount = (int) Math.Ceiling(versionCount * 1.0 / step);
                                 for (var i = 0; i < pageCount; i++)
@@ -120,8 +122,13 @@ namespace Newbe.Claptrap.Core.Impl
 
             async Task HandleEventCoreAsync()
             {
-                var nextState = await context.EventHandler.HandleEvent(context.EventContext)
-                    .ConfigureAwait(false);
+                IState nextState;
+                await using (var handler = context.EventHandler)
+                {
+                    nextState = await handler.HandleEvent(context.EventContext)
+                        .ConfigureAwait(false);
+                }
+
                 _logger.LogDebug("event handled and updating state");
                 _logger.LogDebug("start update to {@state}", nextState);
                 State = nextState;

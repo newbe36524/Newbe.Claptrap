@@ -62,6 +62,7 @@ namespace Newbe.Claptrap.Tests
                 await Task.WhenAll(Enumerable.Range(0, times)
                     .Select(i => account.ChangeBalanceAsync(diff)));
                 var balance = await account.GetBalanceAsync();
+                await account.DeactivateAsync();
                 nowBalance = oldBalance + times * 100;
                 balance.Should().Be(nowBalance);
             }

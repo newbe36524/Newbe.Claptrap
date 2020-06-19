@@ -23,7 +23,6 @@ namespace Newbe.Claptrap.Modules
             yield return new ToolsModule();
             yield return new NormalBoxModule();
             yield return new ClaptrapFactoryModule();
-            yield return new MemoryStorageModule();
         }
     }
 }

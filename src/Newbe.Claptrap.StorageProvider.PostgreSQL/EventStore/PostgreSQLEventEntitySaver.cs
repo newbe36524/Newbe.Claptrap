@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                         BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                             ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
                             : default,
-                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, options, entities)
+                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 
@@ -73,7 +73,6 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
 
         private async Task SaveManyCoreMany(
             IDbFactory factory,
-            IPostgreSQLEventStoreOptions options,
             IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
@@ -91,18 +90,18 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
 
             await using var db = (NpgsqlConnection) factory.GetConnection(_connectionName);
             await db.OpenAsync();
-            using var importer =
+            await using var importer =
                 db.BeginBinaryImport(
                     $"COPY {_schemaName}.{_eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) FROM STDIN (FORMAT BINARY)");
             foreach (var entity in items)
             {
-                importer.StartRow();
-                importer.Write(entity.claptrap_type_code);
-                importer.Write(entity.claptrap_id);
-                importer.Write(entity.version, NpgsqlDbType.Bigint);
-                importer.Write(entity.event_type_code);
-                importer.Write(entity.event_data);
-                importer.Write(entity.created_time, NpgsqlDbType.Date);
+                await importer.StartRowAsync();
+                await importer.WriteAsync(entity.claptrap_type_code);
+                await importer.WriteAsync(entity.claptrap_id);
+                await importer.WriteAsync(entity.version, NpgsqlDbType.Bigint);
+                await importer.WriteAsync(entity.event_type_code);
+                await importer.WriteAsync(entity.event_data);
+                await importer.WriteAsync(entity.created_time, NpgsqlDbType.Date);
             }
 
             importer.Complete();

@@ -83,7 +83,8 @@ namespace Newbe.Claptrap.Core
                     {
                         try
                         {
-                            await action.Invoke(interceptor);
+                            await action.Invoke(interceptor)
+                                .ConfigureAwait(false);
                         }
                         catch (Exception e)
                         {

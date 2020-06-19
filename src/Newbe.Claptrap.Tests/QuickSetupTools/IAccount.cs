@@ -9,5 +9,6 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
         Task<decimal> GetBalanceAsync();
         Task ChangeBalanceAsync(decimal diff);
         Task ActivateAsync();
+        Task DeactivateAsync();
     }
 }

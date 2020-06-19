@@ -1,7 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Newbe.Claptrap
 {
+    [ExcludeFromCodeCoverage]
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class UnitState : IState
     {
         public IClaptrapIdentity Identity { get; } = null!;
