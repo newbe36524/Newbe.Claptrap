@@ -41,9 +41,9 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var rd = new Random();
 
-            // var testSettings = (maxId : 1,maxTimes: 1);
+            var testSettings = (maxId : 1,maxTimes: 1);
             // var testSettings = (maxId : 10,maxTimes: 100);
-            var testSettings = (maxId: 100, maxTimes: 100);
+            // var testSettings = (maxId: 100, maxTimes: 100);
             var ids = Enumerable.Range(1, testSettings.maxId);
             var sw = Stopwatch.StartNew();
             await Task.WhenAll(ids.SelectMany(x => RunOneAccount(x.ToString())));

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>Newbe.Claptrap.Orleans</RootNamespace>
+        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.0.0" />
+        <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.2.0" />
+        <PackageReference Include="App.Metrics.AspNetCore" Version="4.0.0" />
+        <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="4.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj" />
+    </ItemGroup>
+</Project>

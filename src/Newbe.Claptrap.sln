@@ -70,6 +70,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "92_Burn", "92_Burn", "{379E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.CapacityBurning", "Newbe.Claptrap.CapacityBurning\Newbe.Claptrap.CapacityBurning.csproj", "{17853A98-272C-4A5C-9138-DA0EA3D95F13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans.Hosting", "Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj", "{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,6 +170,10 @@ Global
 		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7067F9F7-0633-43ED-BD69-427F9211C433} = {B22E7AD3-A4C5-4304-8AF7-6D42625E9C0D}
@@ -193,5 +199,6 @@ Global
 		{506E3D27-EF16-48A1-A61F-00347C71546A} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{47305051-2F64-4AF5-A96B-744F407445FB} = {09CAE040-79A2-4D36-B1C8-A88FE1FB116E}
 		{17853A98-272C-4A5C-9138-DA0EA3D95F13} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
+		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
 	EndGlobalSection
 EndGlobal

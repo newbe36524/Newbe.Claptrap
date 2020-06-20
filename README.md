@@ -1,4 +1,5 @@
-# Newbe.Claptrap
+![Newbe.Claptrap](/docs/main_banner.png)
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -65,3 +66,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## 图标
+
+本项目目前使用的图标均来自于[The Noun Project](https://thenounproject.com/)。您可以在[/docs/noun_source](/docs/noun_source)中查看各个部分的版权信息。

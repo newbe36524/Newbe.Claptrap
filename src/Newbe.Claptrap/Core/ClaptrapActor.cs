@@ -53,7 +53,7 @@ namespace Newbe.Claptrap.Core
             catch (Exception e)
             {
                 _logger.LogError(e, _l[L001FailedToActivate], _claptrapIdentity);
-                throw new ActivateFailException(e, State.Identity);
+                throw new ActivateFailException(e, _claptrapIdentity);
             }
         }
 

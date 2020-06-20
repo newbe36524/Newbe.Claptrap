@@ -28,18 +28,18 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void ActivateAsyncWithException()
         {
-            using var mocker = AutoMockHelper.Create();
+            var identity = TestClaptrapIdentity.Instance;
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
+            {
+                builder.RegisterInstance(identity)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+            });
             mocker.Mock<IEventHandledNotificationFlow>()
                 .Setup(x => x.Activate());
             mocker.Mock<IStateRestorer>()
                 .Setup(x => x.RestoreAsync())
                 .Returns(() => throw new Exception("some exception"));
-            mocker.Mock<IStateAccessor>()
-                .SetupGet(x => x.State)
-                .Returns(new TestState
-                {
-                    Identity = TestClaptrapIdentity.Instance
-                });
             IClaptrap claptrap = mocker.Create<ClaptrapActor>();
             Assert.ThrowsAsync<ActivateFailException>(() => claptrap.ActivateAsync());
         }

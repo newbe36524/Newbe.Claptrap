@@ -1,64 +1,50 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
-using App.Metrics;
-using App.Metrics.AspNetCore;
-using App.Metrics.Formatters.InfluxDB;
-using App.Metrics.Formatters.Prometheus;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.DesignStoreFormatter;
-using Newbe.Claptrap.StorageProvider.Relational;
-using Orleans;
-using Orleans.Hosting;
+using NLog.Web;
 
 namespace Newbe.Claptrap.Demo.Server
 {
     class Program
     {
-        private static Timer? _timer;
-        public static Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
             {
-                Console.WriteLine(eventArgs.ExceptionObject);
-            };
-            ClaptrapMetrics.MetricsRoot = new MetricsBuilder()
-                .OutputMetrics.AsPrometheusPlainText()
-                .OutputMetrics.AsPrometheusProtobuf()
-                .Report
-                .ToInfluxDb(options =>
+                logger.Debug("init main");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception exception)
+            {
+                //NLog: catch setup errors
+                logger.Error(exception, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                NLog.LogManager.Shutdown();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .UseOrleansClaptrap()
+                .ConfigureLogging(logging =>
                 {
-                    options.InfluxDb.Database = "metricsdatabase";
-                    options.InfluxDb.CreateDataBaseIfNotExists = true;
-                    options.InfluxDb.UserName = "claptrap";
-                    options.InfluxDb.Password = "claptrap";
-                    options.InfluxDb.BaseUri = new Uri("http://127.0.0.1:19086");
-                    options.InfluxDb.CreateDataBaseIfNotExists = true;
-                    options.HttpPolicy.BackoffPeriod = TimeSpan.FromSeconds(30);
-                    options.HttpPolicy.FailuresBeforeBackoff = 5;
-                    options.HttpPolicy.Timeout = TimeSpan.FromSeconds(10);
-                    options.MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter();
-                    options.FlushInterval = TimeSpan.FromSeconds(20);
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
                 })
-                .Build();
-     
-            _timer= new Timer(1000);
-            _timer.Elapsed += (sender, eventArgs) =>
-            {
-                Task.WhenAll(ClaptrapMetrics.MetricsRoot.ReportRunner.RunAllAsync()).Wait();
-            };
-            _timer.Start();
-            var metrics = ClaptrapMetrics.MetricsRoot;
-            return Host.CreateDefaultBuilder(args)
+                .UseNLog()
                 .UseServiceProviderFactory(context =>
                 {
                     var serviceProviderFactory = new AutofacServiceProviderFactory(
@@ -66,7 +52,6 @@ namespace Newbe.Claptrap.Demo.Server
                         {
                             var collection = new ServiceCollection().AddLogging(logging =>
                             {
-                                logging.AddConsole();
                                 logging.SetMinimumLevel(LogLevel.Debug);
                             });
                             var buildServiceProvider = collection.BuildServiceProvider();
@@ -80,13 +65,12 @@ namespace Newbe.Claptrap.Demo.Server
                                 "mongodb://root:claptrap@localhost/claptrap?authSource=admin";
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
+                                .AddDefaultConfiguration(context)
                                 .ScanClaptrapDesigns(new[]
                                 {
                                     typeof(AccountGrain).Assembly
                                 })
                                 .UseSQLiteAsTestingStorage()
-                                // .AddConnectionString(Defaults.ConnectionName,
-                                //     mysqlConnectionString)
                                 // .UseMySql(mysql =>
                                 //     mysql
                                 //         .AsEventStore(eventStore =>
@@ -94,17 +78,13 @@ namespace Newbe.Claptrap.Demo.Server
                                 //         .AsStateStore(stateStore =>
                                 //             stateStore.SharedTable())
                                 // )
-                                // .AddConnectionString(Defaults.ConnectionName,
-                                //     postgreSQLConnectionString)
-                                // .UsePostgreSQL(postgreSQL =>
-                                //     postgreSQL
-                                //         .AsEventStore(eventStore =>
-                                //             eventStore.SharedTable())
-                                //         .AsStateStore(stateStore =>
-                                //             stateStore.SharedTable())
-                                // )
-                                // .AddConnectionString(Defaults.ConnectionName,
-                                //     mongoConnectionString)
+                                .UsePostgreSQL(postgreSQL =>
+                                    postgreSQL
+                                        .AsEventStore(eventStore =>
+                                            eventStore.SharedTable())
+                                        .AsStateStore(stateStore =>
+                                            stateStore.SharedTable())
+                                )
                                 // .UseMongoDB(mongoDb =>
                                 //     mongoDb
                                 //         .AsEventStore(eventStore =>
@@ -126,41 +106,6 @@ namespace Newbe.Claptrap.Demo.Server
 
 
                     return serviceProviderFactory;
-                })
-                .UseOrleans(siloBuilder =>
-                {
-                    siloBuilder
-                        .UseLocalhostClustering()
-                        .ConfigureLogging(logging =>
-                        {
-                            logging.SetMinimumLevel(LogLevel.Debug);
-                            logging.AddFilter(
-                                (s, level) => s.StartsWith("Microsoft.Orleans") && level >= LogLevel.Error);
-                            logging.AddFilter((s, level) => s.Contains("Claptrap") && level >= LogLevel.Error);
-                        })
-                        .ConfigureApplicationParts(manager =>
-                            manager.AddFromDependencyContext().WithReferences())
-                        // .UseDashboard(options => options.Port = 9000)
-                        ;
-                })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .ConfigureMetrics(metrics)
-                .UseMetrics(
-                    options =>
-                    {
-                        options.EndpointOptions = endpointsOptions =>
-                        {
-                            endpointsOptions.MetricsTextEndpointOutputFormatter = metrics
-                                .OutputMetricsFormatters
-                                .OfType<MetricsPrometheusTextOutputFormatter>()
-                                .First();
-                            endpointsOptions.MetricsEndpointOutputFormatter = metrics
-                                .OutputMetricsFormatters
-                                .OfType<MetricsPrometheusProtobufOutputFormatter>()
-                                .First();
-                        };
-                    })
-                .RunConsoleAsync();
-        }
+                });
     }
 }

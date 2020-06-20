@@ -30,7 +30,7 @@ Task Build -depends Nuget -Description "build sln" {
     }   
 }
 
-Task Test -depends Build -Description "run tests"{
+Task Test -depends Build -Description "run tests" {
     Exec {
         dotnet test -c $deployMode Newbe.Claptrap.sln
     }  
@@ -44,11 +44,11 @@ Task Pack -depends Test -Description "pack" {
 
 Task PackTemplate -depends Init -Description "pack template package" {
     Exec {
-        Get-ChildItem "Newbe.Claptrap.Template" bin -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
-        Get-ChildItem "Newbe.Claptrap.Template" obj -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
-        Get-ChildItem "Newbe.Claptrap.Template" ".vs" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
-        Get-ChildItem "Newbe.Claptrap.Template" ".idea" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
-        Get-ChildItem "Newbe.Claptrap.Template" "*.user" -Force -Recurse | ForEach-Object {Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" bin -Force -Recurse | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" obj -Force -Recurse | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" ".vs" -Force -Recurse | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" ".idea" -Force -Recurse | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+        Get-ChildItem "Newbe.Claptrap.Template" "*.user" -Force -Recurse | ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
         . $nugetexe pack "Newbe.Claptrap.Template\Newbe.Claptrap.Template.nuspec" -Version $templateVersion -OutputDirectory $releaseDir
     }
 }
@@ -60,4 +60,10 @@ Task NugetPushNuget  -Description "push package to nuget" {
         }
     }
     Write-Output "build completed, now is $( Get-Date )"
+}
+
+Task CopyIcon -description "Copy icons to sub directory" {
+    Get-ChildItem -Recurse -Filter icon.png | ForEach-Object {
+        Copy-Item icon.png $_.FullName -ErrorAction SilentlyContinue
+    }
 }

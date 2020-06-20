@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             }
             else
             {
-                _logger.LogInformation("{dir} found, do nothing", dataBaseDirectory);
+                _logger.LogDebug("{dir} found, do nothing", dataBaseDirectory);
             }
 
             var fileName = Path.Combine(dataBaseDirectory, connectionName);
@@ -55,7 +55,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             }
             else
             {
-                _logger.LogInformation("{dir} found, do nothing", claptrapDirectory);
+                _logger.LogDebug("{dir} found, do nothing", claptrapDirectory);
             }
 
             return fileName;
