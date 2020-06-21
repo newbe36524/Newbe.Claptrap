@@ -1,13 +1,12 @@
 using System;
-using System.Threading.Tasks;
-using System.Timers;
+using System.Linq;
+using System.Net;
 using App.Metrics;
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Formatters.Prometheus;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Orleans;
 using Orleans;
 using Orleans.Hosting;
@@ -17,16 +16,8 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class HostExtensions
     {
-        private static Timer? _timer;
-
         public static IHostBuilder UseOrleansClaptrap(this IHostBuilder hostBuilder)
         {
-            // _timer = new Timer(1000);
-            // _timer.Elapsed += (sender, eventArgs) =>
-            // {
-            //     Task.WhenAll(ClaptrapMetrics.MetricsRoot.ReportRunner.RunAllAsync()).Wait();
-            // };
-            // _timer.Start();
             hostBuilder.UseOrleans((context, builder) =>
                 {
                     var claptrapOptions = new ClaptrapServeringOptions();
@@ -40,10 +31,11 @@ namespace Microsoft.Extensions.Hosting
                                       ?? defaultGatewayPort;
                     var siloPort = claptrapOptionsOrleans.SiloPort
                                    ?? defaultSiloPort;
+                    var ip = Dns.GetHostEntry(hostname).AddressList.First();
                     builder
                         .ConfigureDefaults()
                         .UseLocalhostClustering()
-                        .ConfigureEndpoints(hostname, siloPort, gatewayPort)
+                        .ConfigureEndpoints(ip, siloPort, gatewayPort)
                         .ConfigureApplicationParts(manager =>
                             manager.AddFromDependencyContext().WithReferences());
                 })
