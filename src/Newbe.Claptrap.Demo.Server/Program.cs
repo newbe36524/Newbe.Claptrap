@@ -9,6 +9,7 @@ using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.DesignStoreFormatter;
 using NLog.Web;
+using Orleans;
 
 namespace Newbe.Claptrap.Demo.Server
 {
@@ -39,6 +40,10 @@ namespace Newbe.Claptrap.Demo.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .UseOrleansClaptrap()
+                .UseOrleans(builder =>
+                {
+                    builder.UseDashboard(options => options.Port = 9000);
+                })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
@@ -70,7 +75,7 @@ namespace Newbe.Claptrap.Demo.Server
                                 {
                                     typeof(AccountGrain).Assembly
                                 })
-                                .UseSQLiteAsTestingStorage()
+                                // .UseSQLiteAsTestingStorage()
                                 // .UseMySql(mysql =>
                                 //     mysql
                                 //         .AsEventStore(eventStore =>

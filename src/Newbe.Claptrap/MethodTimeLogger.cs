@@ -10,7 +10,6 @@ namespace Newbe.Claptrap
 
         public static void Log(MethodBase methodBase, TimeSpan elapsed, string message)
         {
-            Console.WriteLine($"{methodBase.Name} cost {elapsed}");
             var logger = LoggerFactory?.CreateLogger(typeof(MethodTimeLogger));
             logger?.LogTrace("{type}.{method} cost {time}", methodBase.DeclaringType, methodBase.Name, elapsed);
         }
