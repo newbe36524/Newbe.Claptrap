@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,12 +32,8 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
             var key = new RelationalEventBatchOperatorKey(_connectionName, _schemaName, _eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
                 key, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<EventEntity>
+                    new BatchOperatorOptions<EventEntity>(options)
                     {
-                        BufferCount = options.InsertManyWindowCount,
-                        BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
-                            ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
-                            : default,
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
         }

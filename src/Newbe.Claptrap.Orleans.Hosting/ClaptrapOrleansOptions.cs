@@ -1,5 +1,3 @@
-using System;
-
 namespace Newbe.Claptrap.Orleans
 {
     public class ClaptrapOrleansOptions

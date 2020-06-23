@@ -2,7 +2,6 @@ using System;
 using Newbe.Claptrap.StorageProvider.MongoDB.Options;
 using Newbe.Claptrap.StorageProvider.MongoDB.StateStore;
 using Newbe.Claptrap.StorageProvider.Relational;
-using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
 {

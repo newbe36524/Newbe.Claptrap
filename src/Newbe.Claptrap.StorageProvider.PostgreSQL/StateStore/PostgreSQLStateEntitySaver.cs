@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
 using Newbe.Claptrap.StorageProvider.Relational.Extensions;
-using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
@@ -24,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
             IBatchOperatorContainer batchOperatorContainer,
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
-            IRelationalStateStoreLocatorOptions options)
+            IPostgreSQLStateStoreOptions options)
         {
             var locator = options.RelationalStateStoreLocator;
             var (connectionName, schemaName, stateTableName) = locator.GetNames(identity);
@@ -35,11 +34,8 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
             var key = new RelationalStateBatchOperatorKey(_connectionName, _schemaName, _stateTableName);
             _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
                 key, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<StateEntity>
+                    new BatchOperatorOptions<StateEntity>(options)
                     {
-                        // TODO config
-                        BufferCount = 100,
-                        BufferTime = TimeSpan.FromMilliseconds(50),
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(dbFactory, entities, (string) cacheData![UpsertSqlKey]),
                         CacheDataFunc = CacheDataFunc

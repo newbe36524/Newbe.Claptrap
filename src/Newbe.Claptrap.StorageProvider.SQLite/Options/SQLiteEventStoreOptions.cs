@@ -1,4 +1,3 @@
-using System.Linq;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,12 +37,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 _eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
                 key, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<EventEntity>
+                    new BatchOperatorOptions<EventEntity>(options)
                     {
-                        BufferCount = options.InsertManyWindowCount,
-                        BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
-                            ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
-                            : default,
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
         }

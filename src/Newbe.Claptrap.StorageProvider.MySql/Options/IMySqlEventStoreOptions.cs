@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Options
     public interface IMySqlEventStoreOptions :
         IMySqlEventLoaderOptions,
         IMySqlEventSaverOptions,
-        IBatchEventSaverOptions,
+        IBatchSaverOptions,
         IRelationalEventStoreLocatorOptions,
         IMySqlMigrationOptions
     {

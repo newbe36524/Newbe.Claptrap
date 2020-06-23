@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Options
     public interface ISQLiteEventStoreOptions :
         ISQLiteEventLoaderOptions,
         ISQLiteEventSaverOptions,
-        IBatchEventSaverOptions,
+        IBatchSaverOptions,
         ISQLiteStorageMigrationOptions,
         IRelationalEventStoreLocatorOptions
     {

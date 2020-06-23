@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Options
     public interface IPostgreSQLStateStoreOptions :
         IPostgreSQLStateLoaderOptions,
         IPostgreSQLStateSaverOptions,
-        IBatchEventSaverOptions,
+        IBatchSaverOptions,
         IRelationalStateStoreLocatorOptions,
         IPostgreSQLMigrationOptions
     {

@@ -1,18 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newbe.Claptrap.StorageProvider.Relational.Options;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Tools
 {
     public class BatchOperatorOptions<T>
     {
-        public TimeSpan? BufferTime { get; set; } = TimeSpan.FromMilliseconds(20);
-        public int? BufferCount { get; set; } = 1000;
+        public BatchOperatorOptions(
+            IBatchSaverOptions options)
+        {
+            BufferCount = options.InsertManyWindowCount;
+            BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
+                ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
+                : default;
+        }
+
+        public TimeSpan? BufferTime { get; set; }
+        public int? BufferCount { get; set; }
 
         /// <summary>
         /// Cache data func for create cache data while invoking DoManyFunc. e.g insert sql
         /// </summary>
-        public Func<IReadOnlyDictionary<string, object>>? CacheDataFunc { get; set; } = null!;
+        public Func<IReadOnlyDictionary<string, object>>? CacheDataFunc { get; set; }
 
         public DoMany DoManyFunc { get; set; } = null!;
 

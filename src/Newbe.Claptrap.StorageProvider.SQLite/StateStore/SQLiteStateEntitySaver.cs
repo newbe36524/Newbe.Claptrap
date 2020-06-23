@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,11 +37,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                 stateTableName);
             _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
                 operatorKey, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<StateEntity>
+                    new BatchOperatorOptions<StateEntity>(options)
                     {
-                        // TODO config
-                        BufferCount = 100,
-                        BufferTime = TimeSpan.FromMilliseconds(50),
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(sqLiteDbFactory, entities, (string[]) cacheData![UpsertSqlKey]),
                         CacheDataFunc = CacheDataFunc
