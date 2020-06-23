@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                         BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                             ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
                             : default,
-                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 

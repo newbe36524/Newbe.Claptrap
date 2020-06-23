@@ -1,43 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational.Extensions;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
+using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
 {
     public class PostgreSQLStateEntitySaver :
         IStateEntitySaver<StateEntity>
     {
-        private readonly IDbFactory _dbFactory;
-        private readonly string _insertSql;
+        public const string UpsertSqlKey = nameof(UpsertSqlKey);
+        private readonly IBatchOperator<StateEntity> _batchOperator;
         private readonly string _connectionName;
+        private readonly string _schemaName;
+        private readonly string _stateTableName;
 
         public PostgreSQLStateEntitySaver(
+            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            IBatchOperatorContainer batchOperatorContainer,
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
             IRelationalStateStoreLocatorOptions options)
         {
-            _dbFactory = dbFactory;
             var locator = options.RelationalStateStoreLocator;
             var (connectionName, schemaName, stateTableName) = locator.GetNames(identity);
             _connectionName = connectionName;
-            _insertSql =
-                $"INSERT INTO {schemaName}.{stateTableName} (claptrap_type_code,claptrap_id,version,state_data,updated_time) VALUES(@claptrap_type_code, @claptrap_id, @version, @state_data, @updated_time) ON CONFLICT ON CONSTRAINT {stateTableName}_pkey DO UPDATE SET version=@version, state_data=@state_data, updated_time=@updated_time;";
+            _schemaName = schemaName;
+            _stateTableName = stateTableName;
+
+            var key = new RelationalStateBatchOperatorKey(_connectionName, _schemaName, _stateTableName);
+            _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
+                key, () => batchOperatorFactory.Invoke(
+                    new BatchOperatorOptions<StateEntity>
+                    {
+                        // TODO config
+                        BufferCount = 100,
+                        BufferTime = TimeSpan.FromMilliseconds(50),
+                        DoManyFunc = (entities, cacheData) =>
+                            SaveManyCoreMany(dbFactory, entities, (string) cacheData![UpsertSqlKey]),
+                        CacheDataFunc = CacheDataFunc
+                    }));
         }
 
-        public async Task SaveAsync(StateEntity entity)
+        private IReadOnlyDictionary<string, object> CacheDataFunc()
         {
-            using var db = _dbFactory.GetConnection(_connectionName);
-            var item = new RelationalStateEntity
+            return new Dictionary<string, object>
             {
-                claptrap_id = entity.ClaptrapId,
-                claptrap_type_code = entity.ClaptrapTypeCode,
-                state_data = entity.StateData,
-                updated_time = entity.UpdatedTime,
-                version = entity.Version,
+                {
+                    UpsertSqlKey,
+                    $"INSERT INTO {_schemaName}.{_stateTableName} (claptrap_type_code,claptrap_id,version,state_data,updated_time) SELECT (unnest(@claptrap_type_code), unnest(@claptrap_id), unnest(@version), unnest(@state_data), unnest(@updated_time)) ON CONFLICT ON CONSTRAINT {_stateTableName}_pkey DO UPDATE SET version=excluded.version, state_data=excluded.state_data, updated_time=excluded.updated_time;"
+                }
             };
-            await db.ExecuteAsync(_insertSql, item);
+        }
+
+        private readonly struct RelationalStateBatchOperatorKey : IBatchOperatorKey
+        {
+            private readonly string _connectionName;
+            private readonly string _schemaName;
+            private readonly string _stateTableName;
+
+            public RelationalStateBatchOperatorKey(
+                string connectionName,
+                string schemaName,
+                string stateTableName)
+            {
+                _connectionName = connectionName;
+                _schemaName = schemaName;
+                _stateTableName = stateTableName;
+            }
+
+            public string AsStringKey()
+            {
+                return
+                    $"{nameof(PostgreSQLStateEntitySaver)}-{_connectionName}-{_schemaName}-{_stateTableName}";
+            }
+        }
+
+        private async Task SaveManyCoreMany(IDbFactory factory, IEnumerable<StateEntity> entities, string upsertSql)
+        {
+            var array = entities as StateEntity[] ?? entities.ToArray();
+            var items = array
+                .Select(x => new RelationalStateEntity
+                {
+                    claptrap_id = x.ClaptrapId,
+                    claptrap_type_code = x.ClaptrapTypeCode,
+                    version = x.Version,
+                    state_data = x.StateData,
+                    updated_time = x.UpdatedTime,
+                })
+                .ToArray();
+
+            using var db = factory.GetConnection(_connectionName);
+            await db.ExecuteAsync(upsertSql, items);
+        }
+
+        public Task SaveAsync(StateEntity entity)
+        {
+            return _batchOperator.CreateTask(entity);
         }
     }
 }

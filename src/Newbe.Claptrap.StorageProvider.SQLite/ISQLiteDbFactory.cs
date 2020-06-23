@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
-    public interface IDbFactory
+    public interface ISQLiteDbFactory
     {
         /// <summary>
         /// 

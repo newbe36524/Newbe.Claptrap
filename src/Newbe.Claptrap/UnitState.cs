@@ -7,9 +7,9 @@ namespace Newbe.Claptrap
     // ReSharper disable once ClassNeverInstantiated.Global
     public class UnitState : IState
     {
-        public IClaptrapIdentity Identity { get; } = null!;
-        public IStateData Data { get; } = null!;
-        public long Version { get; private set; }
+        public IClaptrapIdentity Identity { get; set; } = null!;
+        public IStateData Data { get; set; } = null!;
+        public long Version { get; set; } = 0;
 
         public void IncreaseVersion()
         {

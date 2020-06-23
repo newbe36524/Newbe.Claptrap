@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using MethodTimer;
 using Microsoft.Extensions.Logging;
 using static Newbe.Claptrap.LK.L0006ClaptrapFactory;
 
@@ -29,6 +30,7 @@ namespace Newbe.Claptrap
             _claptrapModuleProviders = claptrapModuleProviders;
         }
 
+        [Time]
         public IClaptrap Create(IClaptrapIdentity identity)
         {
             try
@@ -61,7 +63,7 @@ namespace Newbe.Claptrap
                 var masterDesign = claptrapDesign.ClaptrapMasterDesign;
                 if (masterDesign != null)
                 {
-                    _logger.LogDebug(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
+                    _logger.LogTrace(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
                     var minionModules = _claptrapModuleProviders
                         .SelectMany(x => x.GetClaptrapMinionModules(identity))
                         .OfType<Module>()
@@ -73,7 +75,7 @@ namespace Newbe.Claptrap
                 }
                 else
                 {
-                    _logger.LogDebug(_l[L003MasterFound], identity.TypeCode);
+                    _logger.LogTrace(_l[L003MasterFound], identity.TypeCode);
                     var masterModules = _claptrapModuleProviders
                         .SelectMany(x => x.GetClaptrapMasterClaptrapModules(identity))
                         .OfType<Module>()

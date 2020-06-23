@@ -44,7 +44,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                         BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                             ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
                             : default,
-                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 
@@ -103,9 +103,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             {
                 foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories())
                 {
-                    var RelationalEventEntity = items[i];
+                    var eventEntity = items[i];
                     var name = _sqlTemplateCache.GetParameterName(parameterName, i);
-                    ps.Add(name, valueFunc(RelationalEventEntity));
+                    ps.Add(name, valueFunc(eventEntity));
                 }
             }
 

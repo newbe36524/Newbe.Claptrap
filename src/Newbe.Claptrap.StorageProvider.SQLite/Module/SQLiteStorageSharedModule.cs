@@ -1,6 +1,7 @@
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.SQLite.EventStore;
+using Newbe.Claptrap.StorageProvider.SQLite.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
@@ -12,14 +13,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<DbFactory>()
-                .As<IDbFactory>()
+            builder.RegisterType<SQLiteDbFactory>()
+                .As<ISQLiteDbFactory>()
                 .SingleInstance();
-            
+
             builder.RegisterBuildCallback(container =>
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
                 SQLiteEventEntitySaver.RegisterParameters(cache, 1000);
+                SQLiteStateEntitySaver.RegisterParameters(cache, 1000);
             });
         }
     }

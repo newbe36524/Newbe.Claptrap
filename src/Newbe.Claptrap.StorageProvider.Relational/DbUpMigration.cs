@@ -38,40 +38,55 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         private void CreateOrUpdateDatabase()
         {
-            var builder = _options.UpgradeEngineBuilderFactory();
-            foreach (var scriptAssembly in _options.ScriptAssemblies)
+            if (_options.SharedConnection != null)
             {
-                builder
-                    .WithScriptsEmbeddedInAssembly(scriptAssembly, _options.ScriptSelector);
-            }
-
-            builder
-                .LogToAutodetectedLog()
-                .WithVariablesEnabled()
-                .JournalTo(new NullJournal())
-                .WithVariables(_options.Variables);
-
-            var dbMigration = builder.Build();
-
-            var result = dbMigration.PerformUpgrade();
-
-            if (!result.Successful)
-            {
-                throw new Exception(
-                    "db migration failed",
-                    result.Error);
-            }
-
-            if (result.Scripts.Any())
-            {
-                _logger.LogInformation("db migration is success.");
+                using (_options.SharedConnection)
+                {
+                    MigrationCore();
+                }
             }
             else
             {
-                _logger.LogDebug("db schema is latest, do nothing to migration");
+                MigrationCore();
             }
 
-            _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
+            void MigrationCore()
+            {
+                var builder = _options.UpgradeEngineBuilderFactory();
+                foreach (var scriptAssembly in _options.ScriptAssemblies)
+                {
+                    builder
+                        .WithScriptsEmbeddedInAssembly(scriptAssembly, _options.ScriptSelector);
+                }
+
+                builder
+                    .LogToAutodetectedLog()
+                    .WithVariablesEnabled()
+                    .JournalTo(new NullJournal())
+                    .WithVariables(_options.Variables);
+
+                var dbMigration = builder.Build();
+
+                var result = dbMigration.PerformUpgrade();
+
+                if (!result.Successful)
+                {
+                    throw new Exception(
+                        "db migration failed",
+                        result.Error);
+                }
+
+                if (result.Scripts.Any())
+                {
+                    _logger.LogInformation("db migration is success.");
+                }
+                else
+                {
+                    _logger.LogDebug("db schema is latest, do nothing to migration");
+                }
+
+                _logger.LogDebug("db migration log:{log}", WriteExecutedScriptsToOctopusTaskSummary(result));
+            }
         }
 
         private static string WriteExecutedScriptsToOctopusTaskSummary(DatabaseUpgradeResult result)

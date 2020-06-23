@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalStateStoreLocator
                 {
                     SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionName = "shared/states.db",
+                    ConnectionName = "shared/claptrap.states.db",
                     StateTableName = Defaults.StateTableName,
                 }, action);
 

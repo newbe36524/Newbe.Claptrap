@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
-    public class DbFactory : IDbFactory
+    public class SQLiteDbFactory : ISQLiteDbFactory
     {
-        private readonly ILogger<DbFactory> _logger;
+        private readonly ILogger<SQLiteDbFactory> _logger;
 
-        public DbFactory(
-            ILogger<DbFactory> logger)
+        public SQLiteDbFactory(
+            ILogger<SQLiteDbFactory> logger)
         {
             _logger = logger;
         }
@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             }
             else
             {
-                _logger.LogDebug("{dir} found, do nothing", dataBaseDirectory);
+                _logger.LogTrace("{dir} found, do nothing", dataBaseDirectory);
             }
 
             var fileName = Path.Combine(dataBaseDirectory, connectionName);
@@ -55,7 +55,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             }
             else
             {
-                _logger.LogDebug("{dir} found, do nothing", claptrapDirectory);
+                _logger.LogTrace("{dir} found, do nothing", claptrapDirectory);
             }
 
             return fileName;
@@ -65,6 +65,15 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         {
             var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "claptrapStorage");
             return dir;
+        }
+
+        public static void RemoveDataBaseDirectory()
+        {
+            var dir = GetDataBaseDirectory();
+            if (Directory.Exists(dir))
+            {
+                Directory.Delete(dir, true);
+            }
         }
     }
 }

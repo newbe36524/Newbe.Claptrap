@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
         public SQLiteStateStoreMigration(
             ILogger<SQLiteStateStoreMigration> logger,
             DbUpMigration.Factory factory,
-            IDbFactory dbFactory,
+            ISQLiteDbFactory sqLiteDbFactory,
             IClaptrapIdentity identity,
             IStorageMigrationContainer storageMigrationContainer,
             ISQLiteStateStoreOptions options)
@@ -27,6 +27,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             var locator = options.RelationalStateStoreLocator;
             var stateTableName = locator.GetStateTableName(identity);
             var connectionName = locator.GetConnectionName(identity);
+            var dbConnection = sqLiteDbFactory.GetConnection(connectionName);
 
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
@@ -37,7 +38,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                 },
                 () =>
                     DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(connectionName))));
+                        .To.SQLiteDatabase(new SharedConnection(dbConnection)),
+                dbConnection);
 
             var migration = factory.Invoke(logger, migrationOptions);
 
