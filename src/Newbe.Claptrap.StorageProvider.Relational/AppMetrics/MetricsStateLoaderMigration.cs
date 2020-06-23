@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.AppMetrics
 
         public async Task MigrateAsync()
         {
-            using var timer = ClaptrapMetrics.MeasureStateLoaderMigration(_identity);
+            using var _ = ClaptrapMetrics.MeasureStateLoaderMigration(_identity);
             await _stateLoaderMigration.MigrateAsync();
         }
     }

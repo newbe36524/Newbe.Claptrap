@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
         }
 
         private MongoDBEvenStoreConfigurator ConfigureOptions(
-            Action<ClaptrapStorageProviderOptions>? optionsAction)
+            Action<ClaptrapStorageProviderOptions> optionsAction)
         {
             optionsAction(_claptrapStorageProviderOptions);
             return this;

@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         public async Task SaveAsync(IState state)
         {
-            using var timer = ClaptrapMetrics.MeasureStateSaver(Identity);
+            using var _ = ClaptrapMetrics.MeasureStateSaver(Identity);
             await _stateSaver.SaveAsync(state);
         }
     }
