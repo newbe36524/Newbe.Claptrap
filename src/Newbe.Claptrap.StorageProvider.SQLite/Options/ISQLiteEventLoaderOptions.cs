@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.SQLite.Options
 {
-    public interface ISQLiteEventLoaderOptions : IEventLoaderOptions, IStorageProviderOptions
+    public interface ISQLiteEventLoaderOptions : IEventLoaderOptions
     {
     }
 }

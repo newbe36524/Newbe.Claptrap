@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Options
 {
-    public interface IMongoDBEventLoaderOptions : IEventLoaderOptions, IStorageProviderOptions
+    public interface IMongoDBEventLoaderOptions : IEventLoaderOptions
     {
     }
 }
