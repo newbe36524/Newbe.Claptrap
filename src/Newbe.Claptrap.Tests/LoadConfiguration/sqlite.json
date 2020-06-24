@@ -1,0 +1,12 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "SQLite"
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "SQLite"
+    }
+  }
+}

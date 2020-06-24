@@ -1,0 +1,13 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;",
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "SQLite"
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MySql"
+    }
+  }
+}

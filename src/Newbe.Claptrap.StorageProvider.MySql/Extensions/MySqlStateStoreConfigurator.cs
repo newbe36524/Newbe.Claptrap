@@ -1,6 +1,5 @@
 using System;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
@@ -31,7 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    StateTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.StateTableName}",
+                    StateTableName = $"[TypeCode]_[Id]_{Defaults.StateTableName}",
                 }, action);
 
 
@@ -41,17 +40,17 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    StateTableNameFunc = id => $"{id.TypeCode}_{Defaults.StateTableName}",
+                    StateTableName = $"[TypeCode]_{Defaults.StateTableName}",
                 }, action);
 
-        private MySqlStateStoreConfigurator ConfigureOptions(
+        public MySqlStateStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
         {
             optionsAction(_claptrapStorageProviderOptions);
             return this;
         }
 
-        private MySqlStateStoreConfigurator UseLocator(
+        public MySqlStateStoreConfigurator UseLocator(
             IRelationalStateStoreLocator relationalEventStoreLocator,
             Action<MySqlStateStoreOptions>? action = null
         )

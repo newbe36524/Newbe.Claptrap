@@ -8,17 +8,17 @@ using Newbe.Claptrap.CapacityBurning.Grains;
 
 namespace Newbe.Claptrap.CapacityBurning
 {
-    public class EventSavingBurningService : IBurningService
+    public class StateSavingBurningService : IBurningService
     {
-        public delegate EventSavingBurningService Factory(EventSavingBurningOptions options);
+        public delegate StateSavingBurningService Factory(StateSavingBurningOptions options);
 
-        private readonly EventSavingBurningOptions _options;
-        private readonly ILogger<EventSavingBurningService> _logger;
+        private readonly StateSavingBurningOptions _options;
+        private readonly ILogger<StateSavingBurningService> _logger;
         private readonly ClaptrapFactory _claptrapFactory;
 
-        public EventSavingBurningService(
-            EventSavingBurningOptions options,
-            ILogger<EventSavingBurningService> logger,
+        public StateSavingBurningService(
+            StateSavingBurningOptions options,
+            ILogger<StateSavingBurningService> logger,
             ClaptrapFactory claptrapFactory)
         {
             _options = options;
@@ -44,15 +44,16 @@ namespace Newbe.Claptrap.CapacityBurning
 
         [Time]
         private static async Task RunOneBatch(
-            IEnumerable<(ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)> eventSavers,
+            IEnumerable<(ClaptrapIdentity id, ILifetimeScope lifetimeScope, IStateSaver saver)> eventSavers,
             int fromVersion, int batchSize)
         {
             var tasks = eventSavers
                 .SelectMany(x =>
                     Enumerable.Range(fromVersion, batchSize)
-                        .Select(version => x.saver.SaveEventAsync(new UnitEvent(x.id, Codes.BurningEvent,
-                            new UnitEvent.UnitEventData())
+                        .Select(version => x.saver.SaveAsync(new UnitState
                         {
+                            Data = new UnitState.UnitStateData(),
+                            Identity = x.id,
                             Version = version
                         }))
                 )
@@ -61,13 +62,13 @@ namespace Newbe.Claptrap.CapacityBurning
         }
 
         [Time]
-        private static (ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)[] CreateEventSavers(
+        private static (ClaptrapIdentity id, ILifetimeScope lifetimeScope, IStateSaver saver)[] CreateEventSavers(
             IEnumerable<(ClaptrapIdentity id, ILifetimeScope lifetimeScope)> lifetimeScopes)
         {
             var eventSavers = lifetimeScopes
                 .Select(x => (x.id,
                     x.lifetimeScope,
-                    saver: x.lifetimeScope.Resolve<IEventSaver>()))
+                    saver: x.lifetimeScope.Resolve<IStateSaver>()))
                 .ToArray();
             return eventSavers;
         }

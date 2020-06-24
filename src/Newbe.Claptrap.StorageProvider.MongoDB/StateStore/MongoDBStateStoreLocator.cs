@@ -1,29 +1,37 @@
-using System;
-
 namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
 {
     public class MongoDBStateStoreLocator : IMongoDBStateStoreLocator
     {
-        public Func<IClaptrapIdentity, string>? ConnectionNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? StateCollectionNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? DatabaseNameFunc { get; set; } = null!;
-        public string? DatabaseName { get; set; } = null!;
-        public string? ConnectionName { get; set; } = null!;
-        public string? StateCollectionName { get; set; } = null!;
+        public string DatabaseName { get; set; } = null!;
+        public string ConnectionName { get; set; } = null!;
+        public string StateCollectionName { get; set; } = null!;
 
         public string GetConnectionName(IClaptrapIdentity identity)
         {
-            return ConnectionNameFunc?.Invoke(identity) ?? ConnectionName!;
+            return FormatString(DatabaseName, identity);
         }
 
         public string GetDatabaseName(IClaptrapIdentity identity)
         {
-            return DatabaseNameFunc?.Invoke(identity) ?? DatabaseName!;
+            return FormatString(ConnectionName, identity);
         }
 
         public string GetStateCollectionName(IClaptrapIdentity identity)
         {
-            return StateCollectionNameFunc?.Invoke(identity) ?? StateCollectionName!;
+            return FormatString(StateCollectionName, identity);
+        }
+
+        private static string FormatString(string source, IClaptrapIdentity identity)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                return string.Empty;
+            }
+
+            var result = source
+                .Replace("[Id]", identity.Id)
+                .Replace("[TypeCode]", identity.TypeCode);
+            return result;
         }
     }
 }

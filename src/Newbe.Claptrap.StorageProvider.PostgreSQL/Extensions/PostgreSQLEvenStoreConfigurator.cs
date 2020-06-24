@@ -1,6 +1,5 @@
 using System;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
@@ -37,7 +36,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.EventTableName}"
+                    EventTableName = $"[TypeCode]_[Id]_{Defaults.EventTableName}",
                 }, action);
 
         public PostgreSQLEvenStoreConfigurator OneTypeOneTable(Action<PostgreSQLEventStoreOptions>? action = null)
@@ -46,13 +45,12 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventTableNameFunc = id => $"{id.TypeCode}_{Defaults.EventTableName}"
+                    EventTableName = $"[TypeCode]_{Defaults.EventTableName}",
                 }, action);
 
-        private PostgreSQLEvenStoreConfigurator UseLocator(
+        public PostgreSQLEvenStoreConfigurator UseLocator(
             IRelationalEventStoreLocator relationalEventStoreLocator,
-            Action<PostgreSQLEventStoreOptions>? action = null
-        )
+            Action<PostgreSQLEventStoreOptions>? action = null)
         {
             ConfigureOptions(providerOptions =>
             {

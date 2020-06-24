@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.StorageProvider.Relational
+namespace Newbe.Claptrap
 {
     /// <summary>
     /// Some default values

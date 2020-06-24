@@ -40,10 +40,7 @@ namespace Newbe.Claptrap.Demo.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .UseOrleansClaptrap()
-                .UseOrleans(builder =>
-                {
-                    builder.UseDashboard(options => options.Port = 9000);
-                })
+                .UseOrleans(builder => { builder.UseDashboard(options => options.Port = 9000); })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
@@ -62,12 +59,6 @@ namespace Newbe.Claptrap.Demo.Server
                             var buildServiceProvider = collection.BuildServiceProvider();
                             var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
-                            const string mysqlConnectionString =
-                                "Server=localhost;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;";
-                            const string postgreSQLConnectionString =
-                                "Server=localhost;Port=5432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;";
-                            const string mongoConnectionString =
-                                "mongodb://root:claptrap@localhost/claptrap?authSource=admin";
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
                                 .AddDefaultConfiguration(context)
@@ -75,28 +66,6 @@ namespace Newbe.Claptrap.Demo.Server
                                 {
                                     typeof(AccountGrain).Assembly
                                 })
-                                // .UseSQLiteAsTestingStorage()
-                                // .UseMySql(mysql =>
-                                //     mysql
-                                //         .AsEventStore(eventStore =>
-                                //             eventStore.SharedTable())
-                                //         .AsStateStore(stateStore =>
-                                //             stateStore.SharedTable())
-                                // )
-                                .UsePostgreSQL(postgreSQL =>
-                                    postgreSQL
-                                        .AsEventStore(eventStore =>
-                                            eventStore.SharedTable())
-                                        .AsStateStore(stateStore =>
-                                            stateStore.SharedTable())
-                                )
-                                // .UseMongoDB(mongoDb =>
-                                //     mongoDb
-                                //         .AsEventStore(eventStore =>
-                                //             eventStore.SharedCollection())
-                                //         .AsStateStore(stateStore =>
-                                //             stateStore.SharedCollection())
-                                // )
                                 .Build();
                             claptrapBootstrapper.Boot();
                             var json = claptrapBootstrapper.DumpDesignAsJson();
@@ -108,7 +77,6 @@ namespace Newbe.Claptrap.Demo.Server
                                 });
                             File.WriteAllText("design.md", markdown);
                         });
-
 
                     return serviceProviderFactory;
                 });

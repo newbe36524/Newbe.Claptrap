@@ -381,22 +381,12 @@
       "pointradius": 2,
       "points": true,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "application__claptrap_eventsaver_timer.mean {ClaptrapTypeCode: burning.claptrap.newbe}",
-          "yaxis": 1
-        },
-        {
-          "alias": "time",
-          "yaxis": 2
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "alias": "time",
           "groupBy": [
             {
               "params": [
@@ -409,6 +399,12 @@
                 "ClaptrapTypeCode"
               ],
               "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
             }
           ],
           "measurement": "application__claptrap_eventsaver_timer",
@@ -420,7 +416,7 @@
             [
               {
                 "params": [
-                  "mean"
+                  "p99"
                 ],
                 "type": "field"
               },
@@ -433,7 +429,6 @@
           "tags": []
         },
         {
-          "alias": "count derivative",
           "groupBy": [
             {
               "params": [
@@ -443,9 +438,9 @@
             },
             {
               "params": [
-                "ClaptrapTypeCode"
+                "null"
               ],
-              "type": "tag"
+              "type": "fill"
             }
           ],
           "measurement": "application__claptrap_eventsaver_timer",
@@ -474,43 +469,6 @@
             ]
           ],
           "tags": []
-        },
-        {
-          "alias": "count",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "ClaptrapTypeCode"
-              ],
-              "type": "tag"
-            }
-          ],
-          "measurement": "application__claptrap_eventsaver_timer",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "count.hist"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
         }
       ],
       "thresholds": [],
@@ -534,7 +492,7 @@
       "yaxes": [
         {
           "format": "short",
-          "label": "count",
+          "label": null,
           "logBase": 10,
           "max": null,
           "min": null,
@@ -542,7 +500,7 @@
         },
         {
           "format": "short",
-          "label": "time",
+          "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
@@ -723,14 +681,20 @@
       },
       "percentage": false,
       "pointradius": 2,
-      "points": true,
+      "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "time",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
+          "alias": "time",
           "groupBy": [
             {
               "params": [
@@ -771,6 +735,86 @@
             ]
           ],
           "tags": []
+        },
+        {
+          "alias": "count",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "application__claptrap_statesaver_timer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count.hist"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "count derivative",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "application__claptrap_statesaver_timer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "count.hist"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "derivative"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "thresholds": [],
@@ -793,16 +837,17 @@
       },
       "yaxes": [
         {
+          "decimals": null,
           "format": "short",
-          "label": null,
-          "logBase": 1,
+          "label": "count",
+          "logBase": 10,
           "max": null,
           "min": null,
           "show": true
         },
         {
-          "format": "short",
-          "label": null,
+          "format": "ms",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1362,7 +1407,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -1381,5 +1426,5 @@
   "timezone": "",
   "title": "Claptrap",
   "uid": "rDxbZDiMz",
-  "version": 2
+  "version": 3
 }

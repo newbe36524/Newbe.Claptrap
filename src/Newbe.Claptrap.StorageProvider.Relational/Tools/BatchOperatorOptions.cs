@@ -10,10 +10,10 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Tools
         public BatchOperatorOptions(
             IBatchSaverOptions options)
         {
-            BufferCount = options.InsertManyWindowCount;
+            BufferCount = options.InsertManyWindowCount ?? 200;
             BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                 ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
-                : default;
+                : TimeSpan.FromMilliseconds(50);
         }
 
         public TimeSpan? BufferTime { get; set; }

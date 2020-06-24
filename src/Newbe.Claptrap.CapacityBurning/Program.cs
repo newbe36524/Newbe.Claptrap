@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.CapacityBurning.Grains;
 using Newbe.Claptrap.CapacityBurning.Module;
-using Newbe.Claptrap.DesignStoreFormatter;
 using NLog.Web;
 
 namespace Newbe.Claptrap.CapacityBurning

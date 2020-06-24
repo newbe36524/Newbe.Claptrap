@@ -22,8 +22,19 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="LoadConfiguration\*.json" />
+      <Content Include="LoadConfiguration\*.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

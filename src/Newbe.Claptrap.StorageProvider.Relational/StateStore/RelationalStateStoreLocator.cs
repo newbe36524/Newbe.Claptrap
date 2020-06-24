@@ -1,29 +1,37 @@
-using System;
-
 namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 {
     public class RelationalStateStoreLocator : IRelationalStateStoreLocator
     {
-        public Func<IClaptrapIdentity, string>? ConnectionNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? StateTableNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? SchemaNameFunc { get; set; } = null!;
-        public string? SchemaName { get; set; } = null!;
-        public string? ConnectionName { get; set; } = null!;
-        public string? StateTableName { get; set; } = null!;
+        public string SchemaName { get; set; } = Defaults.SchemaName;
+        public string ConnectionName { get; set; } = Defaults.ConnectionName;
+        public string StateTableName { get; set; } = Defaults.StateTableName;
 
         public string GetConnectionName(IClaptrapIdentity identity)
         {
-            return ConnectionNameFunc?.Invoke(identity) ?? ConnectionName!;
+            return FormatString(ConnectionName, identity);
         }
 
         public string GetSchemaName(IClaptrapIdentity identity)
         {
-            return SchemaNameFunc?.Invoke(identity) ?? SchemaName!;
+            return FormatString(SchemaName, identity);
         }
 
         public string GetStateTableName(IClaptrapIdentity identity)
         {
-            return StateTableNameFunc?.Invoke(identity) ?? StateTableName!;
+            return FormatString(StateTableName, identity);
+        }
+
+        private static string FormatString(string source, IClaptrapIdentity identity)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                return string.Empty;
+            }
+
+            var result = source
+                .Replace("[Id]", identity.Id)
+                .Replace("[TypeCode]", identity.TypeCode);
+            return result;
         }
     }
 }

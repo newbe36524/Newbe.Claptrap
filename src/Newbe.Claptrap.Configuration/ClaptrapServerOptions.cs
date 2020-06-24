@@ -1,6 +1,6 @@
-namespace Newbe.Claptrap.Orleans
+namespace Newbe.Claptrap
 {
-    public class ClaptrapServeringOptions
+    public class ClaptrapServerOptions
     {
         public const string ConfigurationSectionName = "Claptrap";
         public string DefaultConnectionString { get; set; } = null!;
@@ -10,5 +10,10 @@ namespace Newbe.Claptrap.Orleans
 
         public ClaptrapAppMetricsInfluxDbOptions MetricsInfluxDb { get; set; } =
             new ClaptrapAppMetricsInfluxDbOptions();
+
+        public ConnectionStrings ConnectionStrings { get; set; } = new ConnectionStrings();
+        public StorageOptions EventStore { get; set; } = new StorageOptions();
+        public StorageOptions StateStore { get; set; } = new StorageOptions();
+        public StorageOptions Storage { get; set; } = new StorageOptions();
     }
 }

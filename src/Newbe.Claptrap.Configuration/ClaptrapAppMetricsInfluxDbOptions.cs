@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Orleans
+namespace Newbe.Claptrap
 {
     public class ClaptrapAppMetricsInfluxDbOptions
     {

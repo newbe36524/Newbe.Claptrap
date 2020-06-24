@@ -13,6 +13,8 @@ namespace Newbe.Claptrap.CapacityBurning.Module
                 .AsSelf();
             builder.RegisterType<EventSavingBurningService>()
                 .AsSelf();
+            builder.RegisterType<StateSavingBurningService>()
+                .AsSelf();
 
             MethodTimeLogger.LogLevel = LogLevel.Information;
         }

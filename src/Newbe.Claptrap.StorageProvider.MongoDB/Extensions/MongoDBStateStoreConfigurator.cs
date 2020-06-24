@@ -1,7 +1,6 @@
 using System;
 using Newbe.Claptrap.StorageProvider.MongoDB.Options;
 using Newbe.Claptrap.StorageProvider.MongoDB.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
 {
@@ -40,7 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
                 {
                     DatabaseName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    StateCollectionNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.StateTableName}"
+                    StateCollectionName = $"[TypeCode]_[Id]_{Defaults.StateTableName}",
                 }, action);
 
 
@@ -51,10 +50,10 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
                 {
                     DatabaseName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    StateCollectionNameFunc = id => $"{id.TypeCode}_{Defaults.StateTableName}"
+                    StateCollectionName = $"[TypeCode]_{Defaults.StateTableName}",
                 }, action);
 
-        private MongoDBStateStoreConfigurator UseLocator(
+        public MongoDBStateStoreConfigurator UseLocator(
             IMongoDBStateStoreLocator locator,
             Action<MongoDBStateStoreOptions>? action = null
         )
