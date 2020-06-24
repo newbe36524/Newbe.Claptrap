@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.CapacityBurning
+namespace Newbe.Claptrap.CapacityBurning.Grains
 {
     [ClaptrapState(typeof(UnitState.UnitStateData), Codes.Burning)]
     [ClaptrapEvent(typeof(UnitEvent.UnitEventData), Codes.BurningEvent)]

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Box;
 
-namespace Newbe.Claptrap.CapacityBurning
+namespace Newbe.Claptrap.CapacityBurning.Grains
 {
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(UnitEventHandler), Codes.BurningEvent)]

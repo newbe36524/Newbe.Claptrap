@@ -1,4 +1,4 @@
-namespace Newbe.Claptrap.CapacityBurning
+namespace Newbe.Claptrap.CapacityBurning.Grains
 {
     public static class Codes
     {

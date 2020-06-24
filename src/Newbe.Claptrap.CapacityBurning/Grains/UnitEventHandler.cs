@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.CapacityBurning
+namespace Newbe.Claptrap.CapacityBurning.Grains
 {
     public class UnitEventHandler :
         NormalEventHandler<UnitState.UnitStateData, UnitEvent.UnitEventData>
