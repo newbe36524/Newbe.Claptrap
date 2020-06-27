@@ -1,6 +1,7 @@
-using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newbe.Claptrap.CapacityBurning.Services;
 
 namespace Newbe.Claptrap.CapacityBurning.Controllers
 {
@@ -15,16 +16,17 @@ namespace Newbe.Claptrap.CapacityBurning.Controllers
             _factory = factory;
         }
 
-        public async Task<ContentResult> Get()
+        [HttpGet]
+        public async Task<ContentResult> Get([FromQuery] EventSavingBurningOptions options)
         {
-            var service = _factory.Invoke(new EventSavingBurningOptions
-            {
-                UserIdCount = 10,
-                BatchCount = 100,
-                BatchSize = 1000
-            });
+            var service = (IBurningService) _factory.Invoke(options);
+            await service.PrepareAsync();
+            var sw = Stopwatch.StartNew();
             await service.StartAsync();
-            return Content(DateTime.Now.ToString("f"));
+            sw.Stop();
+            var cost = sw.ElapsedMilliseconds;
+            await service.CleanAsync();
+            return Content($"{cost} ms");
         }
     }
 }

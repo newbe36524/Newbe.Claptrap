@@ -127,7 +127,7 @@ namespace Newbe.Claptrap.Tests
             var states = Enumerable.Range(0, times)
                 .Select(x => new UnitState
                 {
-                    Data = new UnitState.UnitStateData(),
+                    Data = UnitState.UnitStateData.Create(),
                     Identity = id,
                     Version = x
                 })
@@ -159,7 +159,7 @@ namespace Newbe.Claptrap.Tests
                         id,
                         state = new UnitState
                         {
-                            Data = new UnitState.UnitStateData(),
+                            Data = UnitState.UnitStateData.Create(),
                             Identity = id,
                             Version = 100
                         }

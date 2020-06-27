@@ -1,67 +1,83 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Autofac;
 using MethodTimer;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newbe.Claptrap.CapacityBurning.Grains;
 
-namespace Newbe.Claptrap.CapacityBurning
+namespace Newbe.Claptrap.CapacityBurning.Services
 {
     public class EventSavingBurningService : IBurningService
     {
         public delegate EventSavingBurningService Factory(EventSavingBurningOptions options);
 
         private readonly EventSavingBurningOptions _options;
+        private readonly IOptions<BurningDatabaseOptions> _burningDatabaseOptions;
         private readonly ILogger<EventSavingBurningService> _logger;
+        private readonly IDataBaseService _dataBaseService;
         private readonly ClaptrapFactory _claptrapFactory;
+        private (ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)[] _savers;
 
         public EventSavingBurningService(
             EventSavingBurningOptions options,
+            IOptions<BurningDatabaseOptions> burningDatabaseOptions,
             ILogger<EventSavingBurningService> logger,
+            IDataBaseService dataBaseService,
             ClaptrapFactory claptrapFactory)
         {
             _options = options;
+            _burningDatabaseOptions = burningDatabaseOptions;
             _logger = logger;
+            _dataBaseService = dataBaseService;
             _claptrapFactory = claptrapFactory;
         }
 
-        public async Task StartAsync()
+        public async Task PrepareAsync()
         {
             _logger.LogInformation(" start {name} with options {@options}",
                 nameof(EventSavingBurningService),
                 _options);
+            await _dataBaseService.StartAsync(_burningDatabaseOptions.Value.DatabaseType, _options.PreparingSleepInSec);
 
             var lifetimeScopes = CreateLifetimeScopes();
-            var eventSavers = CreateEventSavers(lifetimeScopes);
-
-            for (var i = 0; i < _options.BatchCount; i++)
-            {
-                var fromVersion = _options.BatchSize * i;
-                await RunOneBatch(eventSavers, fromVersion, _options.BatchSize);
-            }
+            var savers = CreateSavers(lifetimeScopes);
+            _savers = savers;
         }
 
-        [Time]
-        private static async Task RunOneBatch(
-            IEnumerable<(ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)> eventSavers,
-            int fromVersion, int batchSize)
+        public async Task CleanAsync()
         {
-            var tasks = eventSavers
-                .SelectMany(x =>
-                    Enumerable.Range(fromVersion, batchSize)
-                        .Select(version => x.saver.SaveEventAsync(new UnitEvent(x.id, Codes.BurningEvent,
-                            new UnitEvent.UnitEventData())
+            await _dataBaseService.CleanAsync(_burningDatabaseOptions.Value.DatabaseType);
+        }
+
+        public async Task StartAsync()
+        {
+            var task = Enumerable.Range(0, _options.BatchCount)
+                .ToObservable()
+                .SelectMany(i => Enumerable.Range(_options.BatchSize * i, _options.BatchSize))
+                .SelectMany(version =>
+                {
+                    return _savers.Select(eventSaver =>
+                    {
+                        var (id, _, saver) = eventSaver;
+                        return Observable.FromAsync(() => saver.SaveEventAsync(new UnitEvent(id,
+                            Codes.BurningEvent,
+                            UnitEvent.UnitEventData.Create())
                         {
                             Version = version
-                        }))
-                )
-                .ToArray();
-            await Task.WhenAll(tasks);
+                        }));
+                    });
+                })
+                .Merge(_options.ConcurrentCount)
+                .ToTask();
+            await task;
         }
 
         [Time]
-        private static (ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)[] CreateEventSavers(
+        private static (ClaptrapIdentity id, ILifetimeScope lifetimeScope, IEventSaver saver)[] CreateSavers(
             IEnumerable<(ClaptrapIdentity id, ILifetimeScope lifetimeScope)> lifetimeScopes)
         {
             var eventSavers = lifetimeScopes

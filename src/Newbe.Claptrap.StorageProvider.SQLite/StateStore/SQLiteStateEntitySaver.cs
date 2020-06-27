@@ -87,7 +87,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             IEnumerable<StateEntity> entities,
             IReadOnlyList<string> upsertSql)
         {
-            var array = entities as StateEntity[] ?? entities.ToArray();
+            var array = StateEntity.DistinctWithVersion(entities).ToArray();
             var items = array
                 .Select(x => new RelationalStateEntity
                 {

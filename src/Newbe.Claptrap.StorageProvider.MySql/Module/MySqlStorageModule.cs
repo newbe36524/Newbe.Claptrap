@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             builder.RegisterBuildCallback(container =>
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
-                MySqlEventEntitySaver.RegisterParameters(cache, 1000);
+                MySqlEventEntitySaver.RegisterParameters(cache, 2000);
             });
         }
     }

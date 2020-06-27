@@ -10,6 +10,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     </ItemGroup>
 
@@ -20,6 +23,9 @@
         <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,12 +39,16 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Update="Properties\launchSettings.json">
+      <Content Update="Claptrap\*.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Update="Properties\launchSettings.json">
+      <None Remove="Docker\**" />
+      <Content Include="Docker\**">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Claptrap\claptrap.sqlite.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

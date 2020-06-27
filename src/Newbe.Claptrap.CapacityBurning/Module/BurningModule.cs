@@ -1,5 +1,6 @@
 using Autofac;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.CapacityBurning.Services;
 
 namespace Newbe.Claptrap.CapacityBurning.Module
 {
@@ -15,6 +16,12 @@ namespace Newbe.Claptrap.CapacityBurning.Module
                 .AsSelf();
             builder.RegisterType<StateSavingBurningService>()
                 .AsSelf();
+            builder.RegisterType<DockerComposeService>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterType<DataBaseService>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
 
             MethodTimeLogger.LogLevel = LogLevel.Information;
         }

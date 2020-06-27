@@ -46,9 +46,16 @@ namespace Newbe.Claptrap.Bootstrapper
                     void ConfigMore(PostgreSQLEventStoreOptions options)
                     {
                         options.IsAutoMigrationEnabled = storageOptions.IsAutoMigrationEnabled;
-                        options.InsertManyWindowTimeInMilliseconds =
-                            storageOptions.InsertManyWindowTimeInMilliseconds;
-                        options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
+                        if (storageOptions.InsertManyWindowTimeInMilliseconds.HasValue)
+                        {
+                            options.InsertManyWindowTimeInMilliseconds =
+                                storageOptions.InsertManyWindowTimeInMilliseconds;
+                        }
+
+                        if (storageOptions.InsertManyWindowCount.HasValue)
+                        {
+                            options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
+                        }
                     }
                 }));
 

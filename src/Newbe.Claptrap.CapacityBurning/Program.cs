@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.CapacityBurning.Grains;
 using Newbe.Claptrap.CapacityBurning.Module;
+using Newbe.Claptrap.CapacityBurning.Services;
 using NLog.Web;
 
 namespace Newbe.Claptrap.CapacityBurning
@@ -49,6 +51,22 @@ namespace Newbe.Claptrap.CapacityBurning
                 })
                 .UseNLog()
                 .UseOrleansClaptrap()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    var configBuilder = new ConfigurationBuilder();
+                    configBuilder.AddJsonFile("appsettings.json");
+                    var config = configBuilder.Build();
+                    var options = new BurningDatabaseOptions();
+                    config.GetSection("BurningDatabase").Bind(options);
+                    builder.AddJsonFile($"Claptrap/claptrap.{options.DatabaseType:G}.json");
+                })
+                .ConfigureServices((context, collection) =>
+                {
+                    collection.Configure<BurningDatabaseOptions>(options =>
+                    {
+                        context.Configuration.GetSection("BurningDatabase").Bind(options);
+                    });
+                })
                 .UseServiceProviderFactory(context =>
                 {
                     var serviceProviderFactory = new AutofacServiceProviderFactory(
@@ -68,7 +86,6 @@ namespace Newbe.Claptrap.CapacityBurning
                                 {
                                     typeof(Burning).Assembly
                                 })
-                                .UseSQLiteAsTestingStorage()
                                 .Build();
                             claptrapBootstrapper.Boot();
                         });

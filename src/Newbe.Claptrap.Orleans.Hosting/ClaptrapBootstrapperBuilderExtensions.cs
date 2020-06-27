@@ -42,6 +42,7 @@ namespace Newbe.Claptrap.Bootstrapper
                     InvokeFactory();
                     break;
                 case DatabaseType.Known:
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(options), "unsupported database type");
             }
@@ -60,6 +61,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 {
                     method.Invoke(null, new object[] {builder, options});
                 }
+                // TODO log about missing method
             }
         }
 
@@ -74,6 +76,7 @@ namespace Newbe.Claptrap.Bootstrapper
                     InvokeFactory();
                     break;
                 case DatabaseType.Known:
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(options), "unsupported database type");
             }

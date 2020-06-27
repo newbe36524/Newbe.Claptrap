@@ -31,4 +31,6 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         /// </summary>
         public IDbConnection? SharedConnection { get; }
     }
+    
+
 }

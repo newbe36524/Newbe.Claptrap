@@ -78,14 +78,15 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
 
         private async Task SaveManyCoreMany(IDbFactory factory, IEnumerable<StateEntity> entities, string upsertSql)
         {
-            var array = entities as StateEntity[] ?? entities.ToArray();
+            var items = StateEntity.DistinctWithVersion(entities).ToArray();
+
             var data = new
             {
-                claptrap_id = array.Select(x => x.ClaptrapId).ToArray(),
-                claptrap_type_code = array.Select(x => x.ClaptrapTypeCode).ToArray(),
-                version = array.Select(x => x.Version).ToArray(),
-                state_data = array.Select(x => x.StateData).ToArray(),
-                updated_time = array.Select(x => x.UpdatedTime).ToArray(),
+                claptrap_id = items.Select(x => x.ClaptrapId).ToArray(),
+                claptrap_type_code = items.Select(x => x.ClaptrapTypeCode).ToArray(),
+                version = items.Select(x => x.Version).ToArray(),
+                state_data = items.Select(x => x.StateData).ToArray(),
+                updated_time = items.Select(x => x.UpdatedTime).ToArray(),
             };
             using var db = factory.GetConnection(_connectionName);
             await db.ExecuteAsync(upsertSql, data);
