@@ -31,39 +31,17 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             _schemaName = locator.GetSchemaName(identity);
             _eventTableName = locator.GetEventTableName(identity);
             _sqlTemplateCache = sqlTemplateCache;
-            var key = new RelationalEventBatchOperatorKey(
-                _connectionName,
-                _schemaName,
-                _eventTableName);
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(MySqlEventEntitySaver))
+                .With(_connectionName)
+                .With(_schemaName)
+                .With(_eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
-                key, () => batchOperatorFactory.Invoke(
+                operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
-        }
-
-        private readonly struct RelationalEventBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _schemaName;
-            private readonly string _eventTableName;
-
-            public RelationalEventBatchOperatorKey(
-                string connectionName,
-                string schemaName,
-                string eventTableName)
-            {
-                _connectionName = connectionName;
-                _schemaName = schemaName;
-                _eventTableName = eventTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(MySqlEventEntitySaver)}-{_connectionName}-{_schemaName}-{_eventTableName}";
-            }
         }
 
         public Task SaveAsync(EventEntity entity)

@@ -31,9 +31,14 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
             _schemaName = schemaName;
             _stateTableName = stateTableName;
 
-            var key = new RelationalStateBatchOperatorKey(_connectionName, _schemaName, _stateTableName);
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(PostgreSQLStateEntitySaver))
+                .With(_connectionName)
+                .With(_schemaName)
+                .With(_stateTableName);
+
             _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
-                key, () => batchOperatorFactory.Invoke(
+                operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<StateEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
@@ -51,29 +56,6 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
                     $"INSERT INTO {_schemaName}.{_stateTableName} (claptrap_type_code, claptrap_id, version, state_data, updated_time) VALUES (unnest(@claptrap_type_code), unnest(@claptrap_id), unnest(@version), unnest(@state_data), unnest(@updated_time)) ON CONFLICT ON CONSTRAINT {_stateTableName}_pkey DO UPDATE SET version=excluded.version, state_data=excluded.state_data, updated_time=excluded.updated_time;"
                 }
             };
-        }
-
-        private readonly struct RelationalStateBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _schemaName;
-            private readonly string _stateTableName;
-
-            public RelationalStateBatchOperatorKey(
-                string connectionName,
-                string schemaName,
-                string stateTableName)
-            {
-                _connectionName = connectionName;
-                _schemaName = schemaName;
-                _stateTableName = stateTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(PostgreSQLStateEntitySaver)}-{_connectionName}-{_schemaName}-{_stateTableName}";
-            }
         }
 
         private async Task SaveManyCoreMany(IDbFactory factory, IEnumerable<StateEntity> entities, string upsertSql)

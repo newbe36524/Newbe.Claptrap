@@ -29,9 +29,14 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
             _connectionName = connectionName;
             _schemaName = schemaName;
             _eventTableName = eventTableName;
-            var key = new RelationalEventBatchOperatorKey(_connectionName, _schemaName, _eventTableName);
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(PostgreSQLEventEntitySaver))
+                .With(_connectionName)
+                .With(_schemaName)
+                .With(_eventTableName);
+
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
-                key, () => batchOperatorFactory.Invoke(
+                operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
@@ -41,29 +46,6 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
         public Task SaveAsync(EventEntity entity)
         {
             return _batchOperator.CreateTask(entity);
-        }
-
-        private readonly struct RelationalEventBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _schemaName;
-            private readonly string _eventTableName;
-
-            public RelationalEventBatchOperatorKey(
-                string connectionName,
-                string schemaName,
-                string eventTableName)
-            {
-                _connectionName = connectionName;
-                _schemaName = schemaName;
-                _eventTableName = eventTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(PostgreSQLEventEntitySaver)}-{_connectionName}-{_schemaName}-{_eventTableName}";
-            }
         }
 
         private async Task SaveManyCoreMany(

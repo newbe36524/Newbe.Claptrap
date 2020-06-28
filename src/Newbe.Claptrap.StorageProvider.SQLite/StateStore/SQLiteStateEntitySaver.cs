@@ -32,9 +32,12 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             var stateTableName = locator.GetStateTableName(identity);
             _stateTableName = stateTableName;
             _connectionName = locator.GetConnectionName(identity);
-            var operatorKey = new RelationalStateBatchOperatorKey(
-                _connectionName,
-                stateTableName);
+
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(SQLiteStateEntitySaver))
+                .With(_connectionName)
+                .With(stateTableName);
+
             _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<StateEntity>(options)
@@ -51,26 +54,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             {
                 {UpsertSqlKey, InitUpsertSql(_stateTableName)}
             };
-        }
-
-        private readonly struct RelationalStateBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _stateTableName;
-
-            public RelationalStateBatchOperatorKey(
-                string connectionName,
-                string stateTableName)
-            {
-                _connectionName = connectionName;
-                _stateTableName = stateTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(SQLiteStateEntitySaver)}-{_connectionName}-{_stateTableName}";
-            }
         }
 
         private string[] InitUpsertSql(string stateTableName)

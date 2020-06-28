@@ -27,37 +27,17 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
             _connectionName = locator.GetConnectionName(identity);
             _databaseName = locator.GetDatabaseName(identity);
             _stateCollectionName = locator.GetStateCollectionName(identity);
-
-            var key = new StateBatchOperatorKey(_connectionName, _databaseName, _stateCollectionName);
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(MongoDBStateEntitySaver))
+                .With(_connectionName)
+                .With(_databaseName)
+                .With(_stateCollectionName);
             _batchOperator = (IBatchOperator<StateEntity>) batchOperatorContainer.GetOrAdd(
-                key, () => batchOperatorFactory.Invoke(
+                operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<StateEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
-        }
-
-        private readonly struct StateBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _databaseName;
-            private readonly string _stateCollectionName;
-
-            public StateBatchOperatorKey(
-                string connectionName,
-                string databaseName,
-                string stateCollectionName)
-            {
-                _connectionName = connectionName;
-                _databaseName = databaseName;
-                _stateCollectionName = stateCollectionName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(MongoDBStateEntitySaver)}-{_connectionName}-{_databaseName}-{_stateCollectionName}";
-            }
         }
 
         private async Task SaveManyCoreMany(

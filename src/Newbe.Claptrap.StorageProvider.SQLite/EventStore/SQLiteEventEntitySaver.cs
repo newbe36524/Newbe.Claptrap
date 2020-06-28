@@ -30,9 +30,11 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(identity);
             _eventTableName = storeLocator.GetEventTableName(identity);
-            var operatorKey = new RelationalEventBatchOperatorKey(
-                _connectionName,
-                _eventTableName);
+
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(SQLiteEventEntitySaver))
+                .With(_connectionName)
+                .With(_eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
@@ -49,27 +51,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             {
                 {InsertSqlKey, InitInsertSql()}
             };
-        }
-
-
-        private readonly struct RelationalEventBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _eventTableName;
-
-            public RelationalEventBatchOperatorKey(
-                string connectionName,
-                string eventTableName)
-            {
-                _connectionName = connectionName;
-                _eventTableName = eventTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(SQLiteEventEntitySaver)}-{_connectionName}-{_eventTableName}";
-            }
         }
 
         public Task SaveAsync(EventEntity entity)
