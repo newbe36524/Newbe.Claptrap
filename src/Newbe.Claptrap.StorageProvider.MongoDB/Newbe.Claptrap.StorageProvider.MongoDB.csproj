@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj" />
       <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
     </ItemGroup>

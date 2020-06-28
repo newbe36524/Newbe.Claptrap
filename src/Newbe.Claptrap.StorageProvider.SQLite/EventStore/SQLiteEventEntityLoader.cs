@@ -9,17 +9,17 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
     public class SQLiteEventEntityLoader : IEventEntityLoader<EventEntity>
     {
-        private readonly IDbFactory _dbFactory;
+        private readonly ISQLiteDbFactory _sqLiteDbFactory;
         private readonly IClaptrapIdentity _masterOrSelfIdentity;
         private readonly string _selectSql;
         private readonly string _connectionName;
 
         public SQLiteEventEntityLoader(
-            IDbFactory dbFactory,
+            ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
             IMasterOrSelfIdentity masterOrSelfIdentity)
         {
-            _dbFactory = dbFactory;
+            _sqLiteDbFactory = sqLiteDbFactory;
             _masterOrSelfIdentity = masterOrSelfIdentity.Identity;
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(_masterOrSelfIdentity);
@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            using var db = _dbFactory.GetConnection(_connectionName);
+            using var db = _sqLiteDbFactory.GetConnection(_connectionName);
             var entities = await db.QueryAsync<RelationalEventEntity>(_selectSql, new
             {
                 startVersion,

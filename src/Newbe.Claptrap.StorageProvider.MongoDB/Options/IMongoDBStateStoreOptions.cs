@@ -7,7 +7,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Options
         IMongoDBStateSaverOptions,
         IMongoDBMigrationOptions,
         IMongoDBStateStoreLocatorOptions,
-        IBatchEventSaverOptions
+        IBatchSaverOptions
     {
     
     }

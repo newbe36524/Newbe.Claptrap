@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -17,7 +15,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             _claptrapStorageProviderOptions = claptrapStorageProviderOptions;
         }
 
-
         public SQLiteEvenStoreConfigurator SharedTable(Action<SQLiteEventStoreOptions>? action = null)
             =>
                 UseLocator(new RelationalEventStoreLocator
@@ -33,8 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalEventStoreLocator
                 {
                     SchemaName = SQLiteSchemaName,
-                    ConnectionNameFunc = identity =>
-                        Path.Combine($"{identity.TypeCode}_{identity.Id}", "eventDb.db"),
+                    ConnectionName = $"[TypeCode]_[Id]/eventDb.db",
                     EventTableName = Defaults.EventTableName
                 }, action);
 
@@ -44,8 +40,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalEventStoreLocator
                 {
                     SchemaName = SQLiteSchemaName,
-                    ConnectionNameFunc = identity =>
-                        Path.Combine(identity.TypeCode, "eventDb.db"),
+                    ConnectionName = $"[TypeCode]/eventDb.db",
                     EventTableName = Defaults.EventTableName
                 }, action);
 
@@ -56,7 +51,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        private SQLiteEvenStoreConfigurator UseLocator(
+        public SQLiteEvenStoreConfigurator UseLocator(
             IRelationalEventStoreLocator relationalEventStoreLocator,
             Action<SQLiteEventStoreOptions>? action = null
         )

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
+using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.Modules
 {
@@ -12,6 +13,11 @@ namespace Newbe.Claptrap.Modules
             builder.RegisterType<SystemClock>()
                 .As<IClock>()
                 .SingleInstance();
+            builder.RegisterBuildCallback(scope =>
+            {
+                var loggerFactory = scope.Resolve<ILoggerFactory>();
+                MethodTimeLogger.LoggerFactory = loggerFactory;
+            });
         }
 
         public string Name { get; } = "Tools and utils";

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +12,16 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
     public class SQLiteEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        public const string InsertSqlKey = nameof(InsertSqlKey);
         private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _eventTableName;
-        private readonly string[] _insertSqls;
 
         public SQLiteEventEntitySaver(
             BatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
-            IDbFactory dbFactory,
+            ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer,
             ISqlTemplateCache sqlTemplateCache)
@@ -31,41 +30,27 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(identity);
             _eventTableName = storeLocator.GetEventTableName(identity);
-            var operatorKey = new RelationalEventBatchOperatorKey(
-                _connectionName,
-                _eventTableName);
+
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(SQLiteEventEntitySaver))
+                .With(_connectionName)
+                .With(_eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
                 operatorKey, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<EventEntity>
+                    new BatchOperatorOptions<EventEntity>(options)
                     {
-                        BufferCount = options.InsertManyWindowCount,
-                        BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
-                            ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
-                            : default,
-                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) =>
+                            SaveManyCoreMany(sqLiteDbFactory, entities, (string[]) cacheData![InsertSqlKey]),
+                        CacheDataFunc = CacheDataFunc
                     }));
-            _insertSqls = InitInsertSql();
         }
 
-
-        private readonly struct RelationalEventBatchOperatorKey : IBatchOperatorKey
+        private IReadOnlyDictionary<string, object> CacheDataFunc()
         {
-            private readonly string _connectionName;
-            private readonly string _eventTableName;
-
-            public RelationalEventBatchOperatorKey(
-                string connectionName,
-                string eventTableName)
+            return new Dictionary<string, object>
             {
-                _connectionName = connectionName;
-                _eventTableName = eventTableName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(SQLiteEventEntitySaver)}-{_connectionName}-{_eventTableName}";
-            }
+                {InsertSqlKey, InitInsertSql()}
+            };
         }
 
         public Task SaveAsync(EventEntity entity)
@@ -83,9 +68,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             return re;
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory dbFactory,
-            IEnumerable<EventEntity> entities)
+        private async Task SaveManyCoreMany(ISQLiteDbFactory sqLiteDbFactory,
+            IEnumerable<EventEntity> entities, IReadOnlyList<string> insertSql)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
             var items = array
@@ -100,8 +84,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 })
                 .ToArray();
 
-            var sql = _insertSqls[items.Length - 1];
-            using var db = dbFactory.GetConnection(_connectionName);
+            var sql = insertSql[items.Length - 1];
+            using var db = sqLiteDbFactory.GetConnection(_connectionName);
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
             {
@@ -115,7 +99,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
             await db.ExecuteAsync(sql, ps);
         }
-
 
         private string InitRelationalInsertManySql(
             string eventTableName,

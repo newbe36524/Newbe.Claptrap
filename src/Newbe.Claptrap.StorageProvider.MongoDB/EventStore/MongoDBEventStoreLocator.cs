@@ -1,29 +1,37 @@
-using System;
-
 namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
 {
     public class MongoDBEventStoreLocator : IMongoDBEventStoreLocator
     {
-        public Func<IClaptrapIdentity, string>? ConnectionNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? EventCollectionNameFunc { get; set; } = null!;
-        public Func<IClaptrapIdentity, string>? DatabaseNameFunc { get; set; } = null!;
-        public string? DatabaseName { get; set; } = null!;
-        public string? ConnectionName { get; set; } = null!;
-        public string? EventCollectionName { get; set; } = null!;
+        public string DatabaseName { get; set; } = null!;
+        public string ConnectionName { get; set; } = null!;
+        public string EventCollectionName { get; set; } = null!;
 
         public string GetConnectionName(IClaptrapIdentity identity)
         {
-            return ConnectionNameFunc?.Invoke(identity) ?? ConnectionName!;
+            return FormatString(DatabaseName, identity);
         }
 
         public string GetDatabaseName(IClaptrapIdentity identity)
         {
-            return DatabaseNameFunc?.Invoke(identity) ?? DatabaseName!;
+            return FormatString(ConnectionName, identity);
         }
 
         public string GetEventCollectionName(IClaptrapIdentity identity)
         {
-            return EventCollectionNameFunc?.Invoke(identity) ?? EventCollectionName!;
+            return FormatString(EventCollectionName, identity);
+        }
+
+        private static string FormatString(string source, IClaptrapIdentity identity)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                return string.Empty;
+            }
+
+            var result = source
+                .Replace("[Id]", identity.Id)
+                .Replace("[TypeCode]", identity.TypeCode);
+            return result;
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
@@ -30,7 +29,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventTableNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.EventTableName}"
+                    EventTableName = $"[TypeCode]_[Id]_{Defaults.EventTableName}",
                 }, action);
 
         public MySqlEvenStoreConfigurator OneTypeOneTable(Action<MySqlEventStoreOptions>? action = null)
@@ -39,7 +38,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                 {
                     SchemaName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventTableNameFunc = id => $"{id.TypeCode}_{Defaults.EventTableName}"
+                    EventTableName = $"[TypeCode]_{Defaults.EventTableName}",
                 }, action);
 
         private MySqlEvenStoreConfigurator ConfigureOptions(
@@ -49,10 +48,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             return this;
         }
 
-        private MySqlEvenStoreConfigurator UseLocator(
+        public MySqlEvenStoreConfigurator UseLocator(
             IRelationalEventStoreLocator relationalEventStoreLocator,
-            Action<MySqlEventStoreOptions>? action = null
-        ) =>
+            Action<MySqlEventStoreOptions>? action = null) =>
             ConfigureOptions(providerOptions =>
             {
                 var eventOptions = new MySqlEventStoreOptions

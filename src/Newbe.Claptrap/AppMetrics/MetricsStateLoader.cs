@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         public async Task<IState?> GetStateSnapshotAsync()
         {
-            using var timer = ClaptrapMetrics.MeasureStateLoader(Identity);
+            using var _ = ClaptrapMetrics.MeasureStateLoader(Identity);
             return await _stateLoader.GetStateSnapshotAsync();
         }
     }

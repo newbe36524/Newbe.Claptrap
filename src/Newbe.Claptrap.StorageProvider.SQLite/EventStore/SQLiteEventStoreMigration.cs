@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         public SQLiteEventStoreMigration(
             ILogger<SQLiteEventStoreMigration> logger,
             DbUpMigration.Factory factory,
-            IDbFactory dbFactory,
+            ISQLiteDbFactory sqLiteDbFactory,
             IStorageMigrationContainer storageMigrationContainer,
             IMasterOrSelfIdentity masterOrSelfIdentity,
             ISQLiteEventStoreOptions options)
@@ -28,6 +28,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             var storeLocator = options.RelationalEventStoreLocator;
             var connectionName = storeLocator.GetConnectionName(identity);
             var eventTableName = storeLocator.GetEventTableName(identity);
+            var dbConnection = sqLiteDbFactory.GetConnection(connectionName);
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
                 fileName => fileName.EndsWith("-event.sql"),
@@ -35,9 +36,9 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 {
                     {"EventTableName", eventTableName},
                 },
-                () =>
-                    DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbFactory.GetConnection(connectionName))));
+                () => DeployChanges
+                    .To.SQLiteDatabase(new SharedConnection(dbConnection)),
+                dbConnection);
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
                 $"{nameof(SQLiteEventStoreMigration)}_{connectionName}_{eventTableName}";

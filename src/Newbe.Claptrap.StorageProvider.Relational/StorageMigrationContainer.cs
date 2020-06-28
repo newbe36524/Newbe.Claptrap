@@ -33,10 +33,10 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             _logger.LogTrace("{migrationKey} migration coming", item.MigrationKey);
             if (_tasks.TryGetValue(item.MigrationKey, out var task))
             {
-                _logger.LogDebug("{migrationKey} task found", item.MigrationKey);
+                _logger.LogTrace("{migrationKey} task found", item.MigrationKey);
                 if (!NeedRestart(task))
                 {
-                    _logger.LogDebug("{migrationKey} no need restart. current status : {status}",
+                    _logger.LogTrace("{migrationKey} no need restart. current status : {status}",
                         item.MigrationKey,
                         task.Status);
                     return task.ContinueWith(UpdateTcs);
@@ -52,7 +52,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             {
                 if (migrationTask.IsCompletedSuccessfully)
                 {
-                    _logger.LogDebug("{migrationKey} success", item.MigrationKey);
+                    _logger.LogTrace("{migrationKey} success", item.MigrationKey);
                     item.Tcs.SetResult(0);
                 }
                 else

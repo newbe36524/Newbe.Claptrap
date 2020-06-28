@@ -43,56 +43,44 @@
       "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
       "ClaptrapStorageProviderOptions": {
         "EventSaverOptions": {
-          "InsertManyWindowTimeInMilliseconds": 50,
-          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
           "RelationalEventStoreLocator": {
-            "ConnectionNameFunc": null,
-            "EventTableNameFunc": null,
-            "SchemaNameFunc": null,
-            "SchemaName": "claptrap",
-            "ConnectionName": "claptrap",
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.events.db",
             "EventTableName": "claptrap_events"
-          }
+          },
+          "InsertManyWindowTimeInMilliseconds": 30,
+          "InsertManyWindowCount": 100
         },
         "EventLoaderOptions": {
-          "InsertManyWindowTimeInMilliseconds": 50,
-          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
           "RelationalEventStoreLocator": {
-            "ConnectionNameFunc": null,
-            "EventTableNameFunc": null,
-            "SchemaNameFunc": null,
-            "SchemaName": "claptrap",
-            "ConnectionName": "claptrap",
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.events.db",
             "EventTableName": "claptrap_events"
-          }
+          },
+          "InsertManyWindowTimeInMilliseconds": 30,
+          "InsertManyWindowCount": 100
         },
         "StateSaverOptions": {
-          "InsertManyWindowTimeInMilliseconds": 50,
-          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
           "RelationalStateStoreLocator": {
-            "ConnectionNameFunc": null,
-            "StateTableNameFunc": null,
-            "SchemaNameFunc": null,
-            "SchemaName": "claptrap",
-            "ConnectionName": "claptrap",
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.states.db",
             "StateTableName": "claptrap_states"
-          }
+          },
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 100
         },
         "StateLoaderOptions": {
-          "InsertManyWindowTimeInMilliseconds": 50,
-          "InsertManyWindowCount": 1000,
           "IsAutoMigrationEnabled": true,
           "RelationalStateStoreLocator": {
-            "ConnectionNameFunc": null,
-            "StateTableNameFunc": null,
-            "SchemaNameFunc": null,
-            "SchemaName": "claptrap",
-            "ConnectionName": "claptrap",
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.states.db",
             "StateTableName": "claptrap_states"
-          }
+          },
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 100
         }
       },
       "ExtendInfos": {}
@@ -136,56 +124,44 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalEventStoreLocator": {
-          "ConnectionNameFunc": null,
-          "EventTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
           "EventTableName": "claptrap_events"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
       },
       "EventLoaderOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalEventStoreLocator": {
-          "ConnectionNameFunc": null,
-          "EventTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
           "EventTableName": "claptrap_events"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
       },
       "StateSaverOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalStateStoreLocator": {
-          "ConnectionNameFunc": null,
-          "StateTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
           "StateTableName": "claptrap_states"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
       },
       "StateLoaderOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalStateStoreLocator": {
-          "ConnectionNameFunc": null,
-          "StateTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
           "StateTableName": "claptrap_states"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
       }
     },
     "ExtendInfos": {
@@ -234,56 +210,44 @@
     "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "ClaptrapStorageProviderOptions": {
       "EventSaverOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalEventStoreLocator": {
-          "ConnectionNameFunc": null,
-          "EventTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
           "EventTableName": "claptrap_events"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
       },
       "EventLoaderOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalEventStoreLocator": {
-          "ConnectionNameFunc": null,
-          "EventTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
           "EventTableName": "claptrap_events"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
       },
       "StateSaverOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalStateStoreLocator": {
-          "ConnectionNameFunc": null,
-          "StateTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
           "StateTableName": "claptrap_states"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
       },
       "StateLoaderOptions": {
-        "InsertManyWindowTimeInMilliseconds": 50,
-        "InsertManyWindowCount": 1000,
         "IsAutoMigrationEnabled": true,
         "RelationalStateStoreLocator": {
-          "ConnectionNameFunc": null,
-          "StateTableNameFunc": null,
-          "SchemaNameFunc": null,
-          "SchemaName": "claptrap",
-          "ConnectionName": "claptrap",
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
           "StateTableName": "claptrap_states"
-        }
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
       }
     },
     "ExtendInfos": {}

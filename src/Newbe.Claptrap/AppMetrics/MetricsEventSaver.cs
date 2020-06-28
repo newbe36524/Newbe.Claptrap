@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         public async Task SaveEventAsync(IEvent @event)
         {
-            using var timer = ClaptrapMetrics.MeasureEventSaver(Identity);
+            using var _ = ClaptrapMetrics.MeasureEventSaver(Identity);
             await _eventSaver.SaveEventAsync(@event);
         }
     }

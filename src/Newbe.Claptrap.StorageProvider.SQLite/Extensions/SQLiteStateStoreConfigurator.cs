@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -23,7 +21,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalStateStoreLocator
                 {
                     SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionName = "shared/states.db",
+                    ConnectionName = "shared/claptrap.states.db",
                     StateTableName = Defaults.StateTableName,
                 }, action);
 
@@ -33,7 +31,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalStateStoreLocator
                 {
                     SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionNameFunc = identity => Path.Combine($"{identity.TypeCode}_{identity.Id}", "stateDb.db"),
+                    ConnectionName = $"[TypeCode]_[Id]/stateDb.db",
                     StateTableName = Defaults.StateTableName,
                 }, action);
 
@@ -44,7 +42,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                 UseLocator(new RelationalStateStoreLocator
                 {
                     SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionNameFunc = identity => Path.Combine($"{identity.TypeCode}", "stateDb.db"),
+                    ConnectionName = $"[TypeCode]/stateDb.db",
                     StateTableName = Defaults.StateTableName,
                 }, action);
 
@@ -55,7 +53,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             return this;
         }
 
-        private SQLiteStateStoreConfigurator UseLocator(
+        public SQLiteStateStoreConfigurator UseLocator(
             IRelationalStateStoreLocator relationalEventStoreLocator,
             Action<SQLiteStateStoreOptions>? action = null
         )

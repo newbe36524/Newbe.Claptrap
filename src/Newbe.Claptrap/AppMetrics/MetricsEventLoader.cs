@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         public async Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
-            using var timer = ClaptrapMetrics.MeasureEventLoader(Identity);
+            using var _ = ClaptrapMetrics.MeasureEventLoader(Identity);
             return await _eventLoader.GetEventsAsync(startVersion, endVersion);
         }
     }

@@ -1,20 +1,100 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.CapacityBurning.Grains;
+using Newbe.Claptrap.CapacityBurning.Module;
+using Newbe.Claptrap.CapacityBurning.Services;
+using NLog.Web;
 
 namespace Newbe.Claptrap.CapacityBurning
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
+        {
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
+            {
+                logger.Debug("init main");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception exception)
+            {
+                //NLog: catch setup errors
+                logger.Error(exception, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                NLog.LogManager.Shutdown();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                })
+                .UseNLog()
+                .UseOrleansClaptrap()
+                .ConfigureAppConfiguration(builder =>
+                {
+                    var configBuilder = new ConfigurationBuilder();
+                    configBuilder.AddJsonFile("appsettings.json");
+                    var config = configBuilder.Build();
+                    var options = new BurningDatabaseOptions();
+                    config.GetSection("BurningDatabase").Bind(options);
+                    builder.AddJsonFile($"Claptrap/claptrap.{options.DatabaseType:G}.json");
+                })
+                .ConfigureServices((context, collection) =>
+                {
+                    collection.Configure<BurningDatabaseOptions>(options =>
+                    {
+                        context.Configuration.GetSection("BurningDatabase").Bind(options);
+                    });
+                })
+                .UseServiceProviderFactory(context =>
+                {
+                    var serviceProviderFactory = new AutofacServiceProviderFactory(
+                        builder =>
+                        {
+                            builder.RegisterModule<BurningModule>();
+
+                            var collection = new ServiceCollection()
+                                .AddLogging(logging => { logging.SetMinimumLevel(LogLevel.Debug); });
+                            var buildServiceProvider = collection.BuildServiceProvider();
+                            var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
+                            var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
+                            var claptrapBootstrapper = bootstrapperBuilder
+                                .ScanClaptrapModule()
+                                .AddDefaultConfiguration(context)
+                                .ScanClaptrapDesigns(new[]
+                                {
+                                    typeof(Burning).Assembly
+                                })
+                                .Build();
+                            claptrapBootstrapper.Boot();
+                        });
+
+
+                    return serviceProviderFactory;
+                });
+
+        public static async Task Old()
         {
             var services = new ServiceCollection();
             services.AddLogging(logging =>
@@ -47,7 +127,7 @@ namespace Newbe.Claptrap.CapacityBurning
                 .ToArray();
             await Task.WhenAll(burnings.Select(x => x.ActivateAsync()));
             Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to activate all");
-            
+
             var total = Stopwatch.StartNew();
             var rd = new Random();
             for (var i = 0; i < 1_000_000; i++)
@@ -63,7 +143,7 @@ namespace Newbe.Claptrap.CapacityBurning
                 await Task.WhenAll(tasks);
                 Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms, {i}");
             }
-            
+
             Console.WriteLine($"total cost {total.ElapsedMilliseconds} ms");
 
             // var container = containerBuilder.Build();

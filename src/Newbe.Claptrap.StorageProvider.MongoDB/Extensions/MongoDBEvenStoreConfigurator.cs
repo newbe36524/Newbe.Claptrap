@@ -1,8 +1,6 @@
 using System;
 using Newbe.Claptrap.StorageProvider.MongoDB.EventStore;
 using Newbe.Claptrap.StorageProvider.MongoDB.Options;
-using Newbe.Claptrap.StorageProvider.MongoDB.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
 {
@@ -17,7 +15,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
         }
 
         private MongoDBEvenStoreConfigurator ConfigureOptions(
-            Action<ClaptrapStorageProviderOptions>? optionsAction)
+            Action<ClaptrapStorageProviderOptions> optionsAction)
         {
             optionsAction(_claptrapStorageProviderOptions);
             return this;
@@ -41,7 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
                 {
                     DatabaseName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventCollectionNameFunc = id => $"{id.TypeCode}_{id.Id}_{Defaults.EventTableName}"
+                    EventCollectionName = $"[TypeCode]_[Id]_{Defaults.EventTableName}",
                 }, action);
 
 
@@ -52,13 +50,12 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
                 {
                     DatabaseName = Defaults.SchemaName,
                     ConnectionName = Defaults.ConnectionName,
-                    EventCollectionNameFunc = id => $"{id.TypeCode}_{Defaults.EventTableName}"
+                    EventCollectionName = $"[TypeCode]_{Defaults.EventTableName}",
                 }, action);
 
-        private MongoDBEvenStoreConfigurator UseLocator(
+        public MongoDBEvenStoreConfigurator UseLocator(
             IMongoDBEventStoreLocator locator,
-            Action<MongoDBEventStoreOptions>? action = null
-        )
+            Action<MongoDBEventStoreOptions>? action = null)
             => ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MongoDBEventStoreOptions

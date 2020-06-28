@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,45 +26,23 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
             _connectionName = locator.GetConnectionName(identity);
             _databaseName = locator.GetDatabaseName(identity);
             _eventCollectionName = locator.GetEventCollectionName(identity);
-            var key = new SharedTableEventBatchOperatorKey(_connectionName, _databaseName, _eventCollectionName);
+
+            var operatorKey = new BatchOperatorKey()
+                .With(nameof(MongoDBEventEntitySaver))
+                .With(_connectionName)
+                .With(_databaseName)
+                .With(_eventCollectionName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
-                key, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<EventEntity>
+                operatorKey, () => batchOperatorFactory.Invoke(
+                    new BatchOperatorOptions<EventEntity>(options)
                     {
-                        BufferCount = options.InsertManyWindowCount,
-                        BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
-                            ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
-                            : default,
-                        DoManyFunc = entities => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 
         public Task SaveAsync(EventEntity entity)
         {
             return _batchOperator.CreateTask(entity);
-        }
-
-        private readonly struct SharedTableEventBatchOperatorKey : IBatchOperatorKey
-        {
-            private readonly string _connectionName;
-            private readonly string _databaseName;
-            private readonly string _eventCollectionName;
-
-            public SharedTableEventBatchOperatorKey(
-                string connectionName,
-                string databaseName,
-                string eventCollectionName)
-            {
-                _connectionName = connectionName;
-                _databaseName = databaseName;
-                _eventCollectionName = eventCollectionName;
-            }
-
-            public string AsStringKey()
-            {
-                return
-                    $"{nameof(MongoDBEventEntitySaver)}-{_connectionName}-{_databaseName}-{_eventCollectionName}";
-            }
         }
 
         private async Task SaveManyCoreMany(

@@ -4,7 +4,7 @@ namespace Newbe.Claptrap
     {
         public MasterOrSelfIdentity(
             IClaptrapIdentity identity,
-            IMasterClaptrapInfo masterClaptrapInfo = null)
+            IMasterClaptrapInfo? masterClaptrapInfo = null)
         {
             Identity = masterClaptrapInfo?.Identity ?? identity;
         }

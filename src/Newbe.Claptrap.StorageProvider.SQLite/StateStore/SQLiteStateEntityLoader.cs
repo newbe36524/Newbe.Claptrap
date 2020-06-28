@@ -9,17 +9,17 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
         : IStateEntityLoader<StateEntity>
     {
         private readonly IClaptrapIdentity _claptrapIdentity;
-        private readonly IDbFactory _dbFactory;
+        private readonly ISQLiteDbFactory _sqLiteDbFactory;
         private readonly string _selectSql;
         private readonly string _connectionName;
 
         public SQLiteStateEntityLoader(
             IClaptrapIdentity claptrapIdentity,
-            IDbFactory dbFactory,
+            ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteStateStoreOptions options)
         {
             _claptrapIdentity = claptrapIdentity;
-            _dbFactory = dbFactory;
+            _sqLiteDbFactory = sqLiteDbFactory;
             var locator = options.RelationalStateStoreLocator;
             var stateTableName = locator.GetStateTableName(claptrapIdentity);
             _connectionName = locator.GetConnectionName(claptrapIdentity);
@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
 
         public async Task<StateEntity?> GetStateSnapshotAsync()
         {
-            using var db = _dbFactory.GetConnection(_connectionName);
+            using var db = _sqLiteDbFactory.GetConnection(_connectionName);
             var ps = new {ClaptrapTypeCode = _claptrapIdentity.TypeCode, ClaptrapId = _claptrapIdentity.Id};
             var item = await db.QueryFirstOrDefaultAsync<RelationalStateEntity>(_selectSql, ps);
             if (item == null)

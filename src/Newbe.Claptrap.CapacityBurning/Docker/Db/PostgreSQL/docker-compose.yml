@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+    postgres:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: claptrap
+        ports:
+            - 35432:5432
+        volumes:
+            - ./postgresql:/docker-entrypoint-initdb.d
+            - ./data:/var/lib/postgresql/data
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 38090:8080

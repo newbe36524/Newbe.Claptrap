@@ -13,16 +13,18 @@ namespace Newbe.Claptrap
         {
         }
 
-        public UnitEvent(IClaptrapIdentity claptrapIdentity, string eventTypeCode, UnitEventData data)
+        public UnitEvent(IClaptrapIdentity claptrapIdentity, string eventTypeCode, IEventData data)
         {
             ClaptrapIdentity = claptrapIdentity;
             EventTypeCode = eventTypeCode;
             Data = data;
         }
 
+        public const string TypeCode = "unit_event";
+
         public IClaptrapIdentity ClaptrapIdentity { get; } = null!;
         public long Version { get; set; }
-        public string EventTypeCode { get; } = null!;
+        public string EventTypeCode { get; } = TypeCode;
         public IEventData Data { get; } = null!;
 
         public class UnitEventData : IEventData

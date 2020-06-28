@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,25 +40,24 @@ namespace Newbe.Claptrap.Demo.Client
             Console.WriteLine("connected");
             var rd = new Random();
 
-            var testSettings = (maxId : 1,maxTimes: 1);
+            // var testSettings = (maxId : 1,maxTimes: 1);
             // var testSettings = (maxId : 10,maxTimes: 100);
-            // var testSettings = (maxId: 100, maxTimes: 100);
+            var testSettings = (maxId: 100, maxTimes: 100000);
             var ids = Enumerable.Range(1, testSettings.maxId);
             var sw = Stopwatch.StartNew();
-            await Task.WhenAll(ids.SelectMany(x => RunOneAccount(x.ToString())));
+            var accounts = ids.Select(x => client.GetGrain<IAccount>(x.ToString())).ToArray();
+            var pageSize = 50;
+            var pageCount = testSettings.maxTimes / pageSize;
+            for (var i = 0; i < pageCount; i++)
+            {
+                var tasks = Enumerable.Range(0, pageSize)
+                    .SelectMany(i => accounts.Select(a => a.TransferIn(rd.Next(0, 100), Guid.NewGuid().ToString())));
+                await Task.WhenAll(tasks);
+            }
+
             sw.Stop();
             Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms");
 
-            IEnumerable<Task> RunOneAccount(string accountId)
-            {
-                Debug.Assert(client != null, nameof(client) + " != null");
-                var account = client.GetGrain<IAccount>(accountId);
-                foreach (var task in Enumerable.Range(0, testSettings.maxTimes)
-                    .Select(i => account.TransferIn(rd.Next(0, 100), Guid.NewGuid().ToString())))
-                {
-                    yield return task;
-                }
-            }
             // var random = new Random();
             // var sw = Stopwatch.StartNew();
             // var round = 0;

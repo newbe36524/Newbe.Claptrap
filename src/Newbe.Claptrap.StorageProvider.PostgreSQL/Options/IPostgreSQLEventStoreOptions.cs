@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Options
     public interface IPostgreSQLEventStoreOptions :
         IPostgreSQLEventLoaderOptions,
         IPostgreSQLEventSaverOptions,
-        IBatchEventSaverOptions,
+        IBatchSaverOptions,
         IRelationalEventStoreLocatorOptions,
         IPostgreSQLMigrationOptions
     {

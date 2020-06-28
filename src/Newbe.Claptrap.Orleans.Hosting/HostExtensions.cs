@@ -7,7 +7,7 @@ using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Formatters.Prometheus;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Newbe.Claptrap.Orleans;
+using Newbe.Claptrap;
 using Orleans;
 using Orleans.Hosting;
 
@@ -17,21 +17,26 @@ namespace Microsoft.Extensions.Hosting
     public static class HostExtensions
     {
         public static IHostBuilder UseOrleansClaptrap(this IHostBuilder hostBuilder)
-        {
-            hostBuilder.UseOrleans((context, builder) =>
+            => hostBuilder
+                .UseOrleans((context, builder) =>
                 {
-                    var claptrapOptions = new ClaptrapServeringOptions();
-                    var config = context.Configuration.GetSection(ClaptrapServeringOptions.ConfigurationSectionName);
+                    var claptrapOptions = new ClaptrapServerOptions();
+                    var config =
+                        context.Configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);
                     config.Bind(claptrapOptions);
                     var claptrapOptionsOrleans = claptrapOptions.Orleans;
                     var hostname = claptrapOptionsOrleans.Hostname ?? "localhost";
+                    if (!IPAddress.TryParse(hostname, out var ip))
+                    {
+                        ip = Dns.GetHostEntry(hostname).AddressList.First();
+                    }
+
                     const int defaultGatewayPort = 30000;
                     const int defaultSiloPort = 11111;
                     var gatewayPort = claptrapOptionsOrleans.GatewayPort
                                       ?? defaultGatewayPort;
                     var siloPort = claptrapOptionsOrleans.SiloPort
                                    ?? defaultSiloPort;
-                    var ip = Dns.GetHostEntry(hostname).AddressList.First();
                     builder
                         .ConfigureDefaults()
                         .UseLocalhostClustering()
@@ -41,8 +46,9 @@ namespace Microsoft.Extensions.Hosting
                 })
                 .ConfigureMetricsWithDefaults((context, builder) =>
                 {
-                    var claptrapOptions = new ClaptrapServeringOptions();
-                    var config = context.Configuration.GetSection(ClaptrapServeringOptions.ConfigurationSectionName);
+                    var claptrapOptions = new ClaptrapServerOptions();
+                    var config =
+                        context.Configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);
                     config.Bind(claptrapOptions);
                     var metricsInfluxDbOptions = claptrapOptions.MetricsInfluxDb;
                     if (metricsInfluxDbOptions != null)
@@ -72,7 +78,8 @@ namespace Microsoft.Extensions.Hosting
                                                                  ?? TimeSpan.FromSeconds(10);
                                     options.FlushInterval = metricsInfluxDbOptions?.FlushInterval
                                                             ?? TimeSpan.FromSeconds(20);
-                                    options.MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter();
+                                    options.MetricsOutputFormatter =
+                                        new MetricsInfluxDbLineProtocolOutputFormatter();
                                 });
                         }
                     }
@@ -85,9 +92,5 @@ namespace Microsoft.Extensions.Hosting
                             new MetricsPrometheusTextOutputFormatter();
                     };
                 });
-
-
-            return hostBuilder;
-        }
     }
 }

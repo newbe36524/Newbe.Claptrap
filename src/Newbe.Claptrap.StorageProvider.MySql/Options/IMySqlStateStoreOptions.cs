@@ -5,7 +5,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Options
     public interface IMySqlStateStoreOptions :
         IMySqlStateLoaderOptions,
         IMySqlStateSaverOptions,
-        IBatchEventSaverOptions,
+        IBatchSaverOptions,
         IRelationalStateStoreLocatorOptions,
         IMySqlMigrationOptions
     {
