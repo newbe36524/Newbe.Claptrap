@@ -22,6 +22,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />

@@ -142,7 +142,6 @@ namespace Newbe.Claptrap.Tests
         [TestCase(10)]
         [TestCase(100)]
         [TestCase(1000)]
-        [TestCase(10000)]
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();

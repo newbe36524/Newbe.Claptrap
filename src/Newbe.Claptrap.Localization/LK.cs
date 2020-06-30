@@ -91,20 +91,6 @@ namespace Newbe.Claptrap
 
         #endregion
 
-        #region L0003EmptyEventHandledNotifier
-
-        public static class L0003EmptyEventHandledNotifier
-        {
-            public const string Prefix = nameof(LK) + ".L0003.";
-
-            /// <summary>
-            /// Event handled notification received at empty notifier. identity {identity}, event version: {version}, event type code : {eventTypeCode}
-            /// </summary>
-            public static string L001EventHandled { get; internal set; }
-        }
-
-        #endregion
-
         #region L0004EventHandledNotificationFlow
 
         public static class L0004EventHandledNotificationFlow

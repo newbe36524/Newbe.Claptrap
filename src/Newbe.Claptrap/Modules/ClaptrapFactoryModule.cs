@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Autofac;
-using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Modules
 {
@@ -21,17 +20,6 @@ namespace Newbe.Claptrap.Modules
             builder.RegisterType<DesignBaseEventHandlerFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<NoChangeStateHolder>()
-                .AsSelf()
-                .SingleInstance();
-            builder.RegisterType<NoChangeStateHolderFactory>()
-                .AsSelf()
-                .SingleInstance();
-
-            builder.RegisterType<EmptyEventCenter>()
-                .As<IEventCenter>()
-                .SingleInstance();
         }
     }
 }

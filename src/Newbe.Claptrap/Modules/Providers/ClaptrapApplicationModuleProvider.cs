@@ -18,11 +18,13 @@ namespace Newbe.Claptrap.Modules
 
         public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
         {
-            yield return new ClaptrapCustomerModule(_claptrapDesignStore,
-                _loggerFactory.CreateLogger<ClaptrapCustomerModule>());
+            yield return new ClaptrapCustomizationModule(_claptrapDesignStore,
+                _loggerFactory.CreateLogger<ClaptrapCustomizationModule>());
             yield return new ToolsModule();
             yield return new NormalBoxModule();
             yield return new ClaptrapFactoryModule();
+            yield return new NoChangeStateHolderModule();
+            yield return new CompoundEventNotifierModule();
         }
     }
 }

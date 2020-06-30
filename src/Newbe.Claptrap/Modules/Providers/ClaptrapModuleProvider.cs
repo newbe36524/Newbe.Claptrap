@@ -78,7 +78,7 @@ namespace Newbe.Claptrap.Modules
                 builder.RegisterType<MasterOrSelfIdentity>()
                     .As<IMasterOrSelfIdentity>()
                     .InstancePerLifetimeScope();
-                
+
                 builder.RegisterInstance(_identity)
                     .SingleInstance();
                 builder.RegisterInstance(_claptrapDesign)
@@ -216,6 +216,7 @@ namespace Newbe.Claptrap.Modules
                         .SingleInstance();
                 }
 
+                RegisterComponent<IEventNotifier>(_claptrapDesign.EventNotifierFactoryType);
                 RegisterComponent<IEventLoader>(_claptrapDesign.EventLoaderFactoryType);
                 RegisterComponent<IEventSaver>(_claptrapDesign.EventSaverFactoryType);
                 builder.RegisterType<MasterEventHandlerFLow>()
@@ -224,16 +225,6 @@ namespace Newbe.Claptrap.Modules
                 builder.RegisterType<EventHandledNotificationFlow>()
                     .AsImplementedInterfaces()
                     .SingleInstance();
-
-
-                // TODO move
-                builder.RegisterType<EventCenterEventNotifier>()
-                    .AsSelf()
-                    .InstancePerDependency();
-                builder.RegisterType<EventCenterEventHandledNotifierFactory>()
-                    .AsSelf()
-                    .SingleInstance();
-                RegisterComponent<IEventNotifier>(typeof(EventCenterEventHandledNotifierFactory));
 
                 void RegisterComponent<TComponent>(Type factoryType)
                     where TComponent : class, IClaptrapComponent
