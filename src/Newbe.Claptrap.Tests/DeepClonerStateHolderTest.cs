@@ -43,11 +43,11 @@ namespace Newbe.Claptrap.Tests
             public List<int> List { get; set; }
             public IClaptrapIdentity Identity { get; }
             public IStateData Data { get; }
-            public long Version { get; }
+            public long Version { get; private set; }
 
             public void IncreaseVersion()
             {
-                throw new System.NotImplementedException();
+                Version++;
             }
         }
     }

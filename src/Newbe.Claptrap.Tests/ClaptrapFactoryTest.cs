@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Autofac;
@@ -109,6 +110,21 @@ namespace Newbe.Claptrap.Tests
             actor.Should().NotBeNull();
         }
 
+        [Test]
+        public void DesignNotFound()
+        {
+            var actorIdentity = TestClaptrapIdentity.Instance;
+            var claptrapDesignStore = new ClaptrapDesignStore();
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
+            {
+                builder.RegisterInstance(claptrapDesignStore)
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
+            });
+
+            var actorFactory = mocker.Create<ClaptrapFactory>();
+            Assert.Throws<ClaptrapDesignNotFoundException>(() => actorFactory.Create(actorIdentity));
+        }
 
         private class TestStateData : IStateData
         {

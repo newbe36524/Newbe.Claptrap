@@ -11,8 +11,8 @@
         <PackageReference Include="Autofac.Extras.Moq" Version="5.0.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.5" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
         <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
@@ -22,6 +22,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
@@ -32,7 +33,31 @@
 
     <ItemGroup>
       <None Remove="LoadConfiguration\*.json" />
+      <Content Include="db_configs\claptrap.mongodb.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Include="db_configs\claptrap.mysql.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Include="db_configs\claptrap.postgresql.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Include="db_configs\claptrap.sqlite.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
       <Content Include="LoadConfiguration\*.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="appsettings.json" />
+      <Content Include="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

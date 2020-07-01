@@ -21,11 +21,11 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
             var locator = options.RelationalStateStoreLocator;
             _connectionName = locator.GetConnectionName(identity);
             var schemaName = locator.GetSchemaName(identity);
-            var eventTableName = locator.GetStateTableName(identity);
+            var tableName = locator.GetStateTableName(identity);
             _identity = identity;
             _dbFactory = dbFactory;
             _selectSql =
-                $"SELECT * FROM {schemaName}.{eventTableName} WHERE claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId LIMIT 1";
+                $"SELECT * FROM {schemaName}.{tableName} WHERE claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId LIMIT 1";
         }
 
         public async Task<StateEntity?> GetStateSnapshotAsync()

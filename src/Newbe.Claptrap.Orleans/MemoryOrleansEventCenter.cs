@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.EventCenter;
 using Orleans;
 
 namespace Newbe.Claptrap.Orleans
@@ -39,7 +40,15 @@ namespace Newbe.Claptrap.Orleans
                         foreach (var design in designs)
                         {
                             var grainInterfaceType = design.ClaptrapBoxInterfaceType;
+                            _logger.LogTrace(
+                                "try to activate claptrap box grain in type : {type}, id : {id}",
+                                design.ClaptrapBoxInterfaceType,
+                                identity.Id);
                             var grain = (IClaptrapMinionGrain) _grainFactory.GetGrain(grainInterfaceType, identity.Id);
+                            _logger.LogTrace(
+                                "success to activate claptrap grain box in type : {type}, id : {id}",
+                                design.ClaptrapBoxInterfaceType,
+                                identity.Id);
                             yield return grain.MasterEventReceivedAsync(@event);
                         }
                     }
@@ -51,7 +60,9 @@ namespace Newbe.Claptrap.Orleans
             }
             else
             {
-                // TODO log
+                _logger.LogTrace(
+                    "can not found minion design in design store for type code : {typeCode}",
+                    identity.TypeCode);
             }
         }
     }

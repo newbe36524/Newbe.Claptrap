@@ -79,7 +79,11 @@ namespace Newbe.Claptrap.Core.Impl
                             var handler = CreateHandler(eventContext);
                             var newState = await handler.HandleEvent(eventContext);
                             _logger.LogDebug("start update to {@state}", newState);
-                            Debug.Assert(newState.NextVersion == eventContext.Event.Version);
+                            Debug.Assert(newState.NextVersion == eventContext.Event.Version,
+                                "newState.NextVersion == eventContext.Event.Version failed",
+                                "newState.NextVersion:{0} eventContext.Event.Version:{1}",
+                                newState.NextVersion,
+                                eventContext.Event.Version);
                             State = newState;
                             State.IncreaseVersion();
                         }

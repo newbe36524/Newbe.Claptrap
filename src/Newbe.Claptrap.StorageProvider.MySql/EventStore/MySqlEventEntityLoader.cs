@@ -24,9 +24,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             var locator = options.RelationalEventStoreLocator;
             _connectionName = locator.GetConnectionName(_masterOrSelfIdentity);
             var schemaName = locator.GetSchemaName(_masterOrSelfIdentity);
-            var eventTableName = locator.GetEventTableName(_masterOrSelfIdentity);
+            var tableName = locator.GetEventTableName(_masterOrSelfIdentity);
             _selectSql =
-                $"SELECT * FROM {schemaName}.{eventTableName} WHERE version >= @startVersion AND version < @endVersion AND claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId ORDER BY version";
+                $"SELECT * FROM {schemaName}.{tableName} WHERE version >= @startVersion AND version < @endVersion AND claptrap_type_code=@ClaptrapTypeCode AND claptrap_id=@ClaptrapId ORDER BY version";
         }
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)

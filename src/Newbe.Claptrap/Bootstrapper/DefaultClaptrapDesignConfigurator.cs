@@ -1,4 +1,5 @@
 using System;
+using Newbe.Claptrap.EventNotifier;
 using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Bootstrapper
@@ -42,7 +43,10 @@ namespace Newbe.Claptrap.Bootstrapper
                     x => x.StateHolderFactoryType = typeof(NoChangeStateHolderFactory))
                 .ConfigureClaptrapDesign(
                     x => x.EventHandlerFactoryFactoryType == null,
-                    x => x.EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory));
+                    x => x.EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory))
+                .ConfigureClaptrapDesign(
+                    x => x.EventNotifierFactoryType == null,
+                    x => x.EventNotifierFactoryType = typeof(CompoundEventNotifierFactory));
             builder
                 .ConfigureClaptrapDesign(
                     x => true,

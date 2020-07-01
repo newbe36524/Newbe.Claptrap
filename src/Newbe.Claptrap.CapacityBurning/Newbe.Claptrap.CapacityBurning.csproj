@@ -17,15 +17,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MethodTimer.Fody" Version="3.1.2" />
+        <PackageReference Include="Fody" Version="6.2.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="MethodTimer.Fody" Version="3.1.2" >
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-        <PackageReference Include="NLog" Version="4.6.7" />
-        <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.4" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.0" />
+        <PackageReference Include="NLog" Version="4.7.2" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,6 +54,11 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Update="Claptrap\claptrap.sqlite.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Properties\launchSettings.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

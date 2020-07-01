@@ -119,12 +119,17 @@ namespace Newbe.Claptrap.Design
                         ? null!
                         : new StateSavingOptions
                         {
-                            SavingWindowTime = m.StateSavingOptionsAttribute.SavingWindowTime,
+                            SavingWindowTime =
+                                m.StateSavingOptionsAttribute.SavingWindowTimeInMillionSeconds.HasValue &&
+                                m.StateSavingOptionsAttribute.SavingWindowTimeInMillionSeconds > 0
+                                    ? TimeSpan.FromMilliseconds(m.StateSavingOptionsAttribute
+                                        .SavingWindowTimeInMillionSeconds.Value)
+                                    : default(TimeSpan?),
                             SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
                             SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
                         }
                 };
-                // TODO EventHandlerFactoryFactoryType 
+                // TODO EventHandlerFactoryFactoryType from attribute
                 // find more event from attribute
                 // attribute will be found on master design 
                 ClaptrapEventAttribute[] eventAttrs = design.ClaptrapMasterDesign != null

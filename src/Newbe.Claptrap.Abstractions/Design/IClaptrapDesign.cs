@@ -63,6 +63,11 @@ namespace Newbe.Claptrap
         Type EventHandlerFactoryFactoryType { get; set; }
 
         /// <summary>
+        /// Factory type for <see cref="IEventNotifier"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>
+        /// </summary>
+        Type EventNotifierFactoryType { get; set; }
+
+        /// <summary>
         /// Event handler designs for how to handle event
         /// </summary>
         IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; }

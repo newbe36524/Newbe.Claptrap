@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap
 {
+    [ExcludeFromCodeCoverage]
     public static class MethodTimeLogger
     {
         public static ILoggerFactory? LoggerFactory { get; internal set; } = null!;

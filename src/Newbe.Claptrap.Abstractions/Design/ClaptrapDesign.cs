@@ -16,6 +16,7 @@ namespace Newbe.Claptrap
         public Type InitialStateDataFactoryType { get; set; } = null!;
         public Type StateHolderFactoryType { get; set; } = null!;
         public Type EventHandlerFactoryFactoryType { get; set; } = null!;
+        public Type EventNotifierFactoryType { get; set; } = null!;
         public IReadOnlyDictionary<string, IClaptrapEventHandlerDesign> EventHandlerDesigns { get; set; } = null!;
         public Type ClaptrapBoxInterfaceType { get; set; } = null!;
         public Type ClaptrapBoxImplementationType { get; set; } = null!;
