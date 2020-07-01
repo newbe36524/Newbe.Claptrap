@@ -5,26 +5,38 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.StorageProvider.SQLite;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
     [SingleThreaded]
-    public class QuickSetupTest
+    public abstract class QuickSetupTestBase
     {
-        public QuickSetupTest()
+        public DatabaseType DatabaseType { get; set; }
+
+        protected QuickSetupTestBase()
         {
-            SQLiteDbFactory.RemoveDataBaseDirectory();
+            // ReSharper disable once VirtualMemberCallInConstructor
+            Init();
         }
 
-        private static IContainer BuildContainer()
+        protected abstract void Init();
+
+        private IContainer BuildContainer()
         {
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"Claptrap/claptrap.{DatabaseType:G}.json")
+                .AddEnvironmentVariables();
+            var config = configBuilder.Build();
+
             var services = new ServiceCollection();
             services.AddLogging(logging =>
             {
@@ -41,6 +53,7 @@ namespace Newbe.Claptrap.Tests
                 .InstancePerDependency();
             var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory(), containerBuilder);
             var claptrapBootstrapper = builder
+                .AddDefaultConfiguration(config)
                 .ScanClaptrapDesigns(new[]
                 {
                     typeof(IAccount),
@@ -49,7 +62,6 @@ namespace Newbe.Claptrap.Tests
                     typeof(AccountMinion),
                 })
                 .ScanClaptrapModule()
-                .UseSQLiteAsTestingStorage()
                 .Build();
             claptrapBootstrapper.Boot();
 
@@ -145,7 +157,7 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
-            var logger = lifetimeScope.Resolve<ILogger<QuickSetupTest>>();
+            var logger = lifetimeScope.Resolve<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
             var sw = Stopwatch.StartNew();
 

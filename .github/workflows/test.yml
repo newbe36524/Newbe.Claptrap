@@ -1,0 +1,35 @@
+name: Claptrap build
+
+on:
+  push:
+    branches: 
+      - feature/ut
+env:
+    Claptrap__DefaultConnectionString: "Server=localhost;Database=root;Uid=root;Pwd=root;Pooling=True;"
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet restore
+    - name: Build
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet build --configuration Release --no-restore
+    - name: Test
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings -- NUnit.Where="Category == MySql"
