@@ -6,6 +6,8 @@ on:
       - master
       - develop
       - feature/ci
+      - feature/ut
+
   pull_request: 
     branches: 
       - master
@@ -15,46 +17,41 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    container: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: claptrap
+      mysql:
+        image: mysql
+        ports:
+          - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: claptrap
+          MYSQL_DATABASE: claptrap
+          MYSQL_USER: claptrap
+          MYSQL_PASSWORD: claptrap
+      postgres:
+        image: postgres:12.3-alpine
+        env:
+          POSTGRES_PASSWORD: claptrap
+          POSTGRES_DB: claptrap
+        ports:
+          - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
     - uses: actions/checkout@v2
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
-
-    - uses: getong/mongo-action@v1.1
-      with:
-        mongo version: '4.2-bionic'
-        host port: 27999
-        mongo username: 'root'
-        mongo password: 'claptrap'
-
-    - uses: mirromutth/mysql-action@v1.1
-      with:
-        host port: 33306 # Optional, default value is 3306. The port of host
-        container port: 3306 # Optional, default value is 3306. The port of container
-        character set server: 'utf8mb4' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
-        collation server: 'utf8mb4_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-        mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
-        mysql database: 'claptrap' # Optional, default value is "test". The specified database which will be create
-        mysql root password: claptrap # Required if "mysql user" is empty, default is empty. The root superuser password
-        # mysql user: 'claptrap' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-        # mysql password: claptrap # Required if "mysql user" exists. The password for the "mysql user"
-
-    - name: Setup Postgres database
-      uses: Daniel-Marynicz/postgresql-action@master
-      with:
-        postgres_image_tag: 12-alpine
-        app_user: claptrap
-        app_user_password: claptrap
-        app_db: claptrap
-        postgres_extensions: uuid-ossp ltree
-        exposed_postgres_port: 35432
-
     - name: Install dependencies
       run: |
         cd $GITHUB_WORKSPACE/src

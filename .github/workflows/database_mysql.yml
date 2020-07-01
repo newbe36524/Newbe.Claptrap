@@ -4,7 +4,6 @@ on:
   push:
     branches: 
       - feature/database_mysql
-      - feature/ut
     
 jobs:
   build:
