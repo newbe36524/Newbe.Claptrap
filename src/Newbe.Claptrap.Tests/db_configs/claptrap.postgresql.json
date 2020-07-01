@@ -1,6 +1,6 @@
 {
   "Claptrap": {
-    "DefaultConnectionString": "Server=postgres;Port=5432;Database=claptrap;User Id=claptrap;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;",
+    "DefaultConnectionString": "Server=postgres;Port=5432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;",
     "EventStore": {
       "Strategy": "SharedTable",
       "DatabaseType": "PostgreSQL",

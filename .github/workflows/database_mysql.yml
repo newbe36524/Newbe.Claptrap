@@ -19,7 +19,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: claptrap
           MYSQL_DATABASE: claptrap
           MYSQL_USER: claptrap
-          MYSQL_USER: claptrap
+          MYSQL_PASSWORD: claptrap
     steps:
     - uses: actions/checkout@v2
       with:

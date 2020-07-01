@@ -14,7 +14,6 @@ jobs:
         image: postgres:12.3-alpine
         env:
           POSTGRES_PASSWORD: claptrap
-          POSTGRES_USER: claptrap
           POSTGRES_DB: claptrap
         ports:
           - 5432
