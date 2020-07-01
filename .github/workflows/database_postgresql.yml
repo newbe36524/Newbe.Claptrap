@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
     services:
       postgres:
         image: postgres:12.3-alpine
