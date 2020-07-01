@@ -28,10 +28,6 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
     - name: Build
       run: |
         dotnet build $GITHUB_WORKSPACE/src --configuration Release
