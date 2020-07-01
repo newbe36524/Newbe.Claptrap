@@ -18,7 +18,7 @@
     </PropertyGroup>
     <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
         <None Include="icon.png" Pack="true" PackagePath=""/>
-        <PackageReference Include="Fody" Version="6.1.1">
+        <PackageReference Include="Fody" Version="6.2.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Visualize.Fody" Version="1.2.0">
