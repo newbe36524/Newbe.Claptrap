@@ -8,9 +8,34 @@ on:
     
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres:12.3-alpine
+        environment:
+          POSTGRES_PASSWORD: claptrap
+          POSTGRES_USER: claptrap
+          POSTGRES_DB: claptrap
+        ports:
+          - 35432:5432
+        volumes:
+          - ./postgresql:/docker-entrypoint-initdb.d
+      mysql:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        ports:
+          - 33306:3306
+        environment:
+          MYSQL_ROOT_PASSWORD: claptrap
+        volumes:
+          - ./mysql:/docker-entrypoint-initdb.d
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: claptrap
     steps:
     - uses: actions/checkout@v2
       with:
@@ -27,35 +52,3 @@ jobs:
       run: |
         dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == PostgreSQL"
 
-    services:
-
-      postgres:
-        image: postgres:12.3-alpine
-        restart: always
-        environment:
-          POSTGRES_PASSWORD: claptrap
-          POSTGRES_USER: claptrap
-          POSTGRES_DB: claptrap
-        ports:
-          - 35432:5432
-        volumes:
-          - ./postgresql:/docker-entrypoint-initdb.d
-      mysql:
-        image: mysql
-        command: --default-authentication-plugin=mysql_native_password
-        restart: always
-        ports:
-          - 33306:3306
-        environment:
-          MYSQL_ROOT_PASSWORD: claptrap
-        volumes:
-          - ./mysql:/docker-entrypoint-initdb.d
-  
-      mongo:
-        image: mongo
-        restart: always
-        ports:
-          - 27017:27017
-        environment:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: claptrap
