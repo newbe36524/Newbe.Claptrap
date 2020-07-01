@@ -1,6 +1,6 @@
 {
   "Claptrap": {
-    "DefaultConnectionString": "Server=localhost;Port=33306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;MinimumPoolSize=10;maximumpoolsize=50;",
+    "DefaultConnectionString": "Server=mysql;Port=3306;Database=claptrap;Uid=claptrap;Pwd=claptrap;Pooling=True;MinimumPoolSize=10;maximumpoolsize=50;",
     "EventStore": {
       "Strategy": "SharedTable",
       "DatabaseType": "MySql",

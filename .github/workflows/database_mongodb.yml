@@ -4,23 +4,25 @@ on:
   push:
     branches: 
       - feature/database_mongodb
+      - feature/ut
     
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: claptrap
     steps:
     - uses: actions/checkout@v2
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - uses: getong/mongo-action@v1.1
-      with:
-        mongo version: '4.2-bionic'
-        host port: 27999
-        mongo username: 'root'
-        mongo password: 'claptrap'
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
