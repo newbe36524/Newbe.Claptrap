@@ -3,7 +3,7 @@ name: Claptrap build
 on:
   push:
     branches: 
-      - feature/uttt
+      - feature/database_mysql
     
 jobs:
   build:
