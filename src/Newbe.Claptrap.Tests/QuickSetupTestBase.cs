@@ -76,11 +76,12 @@ namespace Newbe.Claptrap.Tests
             decimal nowBalance;
             const decimal diff = 100M;
             const int times = 10;
+            const string testId = "HandleEventAsync";
             await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
             {
                 var factory = lifetimeScope.Resolve<Account.Factory>();
-                var id = new ClaptrapIdentity("1", Codes.Account);
-                IAccount account = factory.Invoke(id);
+                var claptrapIdentity = new ClaptrapIdentity(testId, Codes.Account);
+                IAccount account = factory.Invoke(claptrapIdentity);
                 await account.ActivateAsync();
                 oldBalance = await account.GetBalanceAsync();
                 await Task.WhenAll(Enumerable.Range(0, times)
@@ -96,8 +97,8 @@ namespace Newbe.Claptrap.Tests
             await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
             {
                 var factory = lifetimeScope.Resolve<AccountMinion.Factory>();
-                var id = new ClaptrapIdentity("1", Codes.AccountMinion);
-                IAccountMinion account = factory.Invoke(id);
+                var claptrapIdentity = new ClaptrapIdentity(testId, Codes.AccountMinion);
+                IAccountMinion account = factory.Invoke(claptrapIdentity);
                 await account.ActivateAsync();
                 var balance = await account.GetBalanceAsync();
                 balance.Should().Be(nowBalance);
@@ -164,14 +165,14 @@ namespace Newbe.Claptrap.Tests
             var data = Enumerable.Range(0, claptrapCount)
                 .Select(accountId =>
                 {
-                    var id = new ClaptrapIdentity(accountId.ToString(), Codes.Account);
+                    var claptrapIdentity = new ClaptrapIdentity($"acc{accountId}", Codes.Account);
                     return new
                     {
-                        id,
+                        id = claptrapIdentity,
                         state = new UnitState
                         {
                             Data = UnitState.UnitStateData.Create(),
-                            Identity = id,
+                            Identity = claptrapIdentity,
                             Version = 100
                         }
                     };
