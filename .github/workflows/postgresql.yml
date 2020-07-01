@@ -3,7 +3,7 @@ name: Claptrap build
 on:
   push:
     branches: 
-      - feature/utt
+      - feature/ut
     
 jobs:
   build:
@@ -15,12 +15,15 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - uses: getong/mongo-action@v1.1
+    - name: Setup Postgres database
+      uses: Daniel-Marynicz/postgresql-action@master
       with:
-        mongo version: '4.2-bionic'
-        host port: 27999
-        mongo username: 'root'
-        mongo password: 'claptrap'
+        postgres_image_tag: 12-alpine
+        app_user: claptrap
+        app_user_password: claptrap
+        app_db: claptrap
+        postgres_extensions: uuid-ossp ltree
+        exposed_postgres_port: 35432
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -30,4 +33,4 @@ jobs:
         dotnet build $GITHUB_WORKSPACE/src --configuration Release
     - name: Test
       run: |
-        dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == MongoDB"
+        dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == PostgreSQL"
