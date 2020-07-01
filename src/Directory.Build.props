@@ -18,6 +18,8 @@
     </PropertyGroup>
     <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
         <None Include="icon.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Fody" Version="6.2.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
