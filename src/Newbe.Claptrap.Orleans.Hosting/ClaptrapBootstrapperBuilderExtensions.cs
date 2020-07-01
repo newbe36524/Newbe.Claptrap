@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Orleans.ApplicationParts;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
@@ -39,6 +41,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 case DatabaseType.PostgreSQL:
                 case DatabaseType.MySql:
                 case DatabaseType.MongoDB:
+                    Assembly.Load($"Newbe.Claptrap.StorageProvider.{options.DatabaseType:G}");
                     InvokeFactory();
                     break;
                 case DatabaseType.Known:
@@ -61,6 +64,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 {
                     method.Invoke(null, new object[] {builder, options});
                 }
+
                 // TODO log about missing method
             }
         }
@@ -73,6 +77,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 case DatabaseType.PostgreSQL:
                 case DatabaseType.MySql:
                 case DatabaseType.MongoDB:
+                    Assembly.Load($"Newbe.Claptrap.StorageProvider.{options.DatabaseType:G}");
                     InvokeFactory();
                     break;
                 case DatabaseType.Known:
