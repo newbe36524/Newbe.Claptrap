@@ -66,7 +66,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
                     .WithVariables(_options.Variables);
 
                 var dbMigration = builder.Build();
-
+ 
                 var result = dbMigration.PerformUpgrade();
 
                 if (!result.Successful)
