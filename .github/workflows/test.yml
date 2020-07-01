@@ -4,8 +4,6 @@ on:
   push:
     branches: 
       - feature/ut
-env:
-    Claptrap__DefaultConnectionString: "Server=localhost;Port=33306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
     
 jobs:
   build:
@@ -26,8 +24,8 @@ jobs:
         mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
         mysql database: 'claptrap' # Optional, default value is "test". The specified database which will be create
         mysql root password: claptrap # Required if "mysql user" is empty, default is empty. The root superuser password
-        mysql user: 'claptrap' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-        mysql password: claptrap # Required if "mysql user" exists. The password for the "mysql user"
+        # mysql user: 'claptrap' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        # mysql password: claptrap # Required if "mysql user" exists. The password for the "mysql user"
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
