@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.Tests
             var configBuilder = new ConfigurationBuilder();
             configBuilder
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"Claptrap/{DatabaseType:G}.json")
+                .AddJsonFile($"db_configs/claptrap.{DatabaseType:G}.json".ToLower())
                 .AddEnvironmentVariables();
             var config = configBuilder.Build();
 

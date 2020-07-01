@@ -33,22 +33,22 @@
 
     <ItemGroup>
       <None Remove="LoadConfiguration\*.json" />
-      <Content Include="Claptrap\claptrap.mongodb.json">
+      <Content Include="db_configs\claptrap.mongodb.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="Claptrap\claptrap.mysql.json">
+      <Content Include="db_configs\claptrap.mysql.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="Claptrap\claptrap.postgresql.json">
+      <Content Include="db_configs\claptrap.postgresql.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="Claptrap\claptrap.sqlite.json">
+      <Content Include="db_configs\claptrap.sqlite.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
