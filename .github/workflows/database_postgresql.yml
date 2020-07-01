@@ -25,7 +25,6 @@ jobs:
           --health-retries 5
       mysql:
         image: mysql
-        command: --default-authentication-plugin=mysql_native_password
         ports:
           - 33306:3306
         env:
