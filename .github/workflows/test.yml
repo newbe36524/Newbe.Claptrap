@@ -5,7 +5,7 @@ on:
     branches: 
       - feature/ut
 env:
-    Claptrap__DefaultConnectionString: "Server=localhost;Port=3800;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
+    Claptrap__DefaultConnectionString: "Server=localhost;Port=33306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
     
 jobs:
   build:
