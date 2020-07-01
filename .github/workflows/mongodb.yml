@@ -1,0 +1,32 @@
+name: Claptrap build
+
+on:
+  push:
+    branches: 
+      - feature/ut
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+        - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: 4.2
+          mongodb-replica-set: claptrap
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Build
+      run: |
+        dotnet build $GITHUB_WORKSPACE/src --configuration Release
+    - name: Test
+      run: |
+        dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == MongoDB"
