@@ -2,8 +2,8 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
     public static class Codes
     {
-        public const string Account = "account.claptrap.newbe";
-        public const string AccountMinion = "balance.minions.account.claptrap.newbe";
-        public const string AccountBalanceChangeEvent = "balanceChange.events.account.claptrap.newbe";
+        public const string Account = "account_claptrap_newbe";
+        public const string AccountMinion = "balance_minions_account_claptrap_newbe";
+        public const string AccountBalanceChangeEvent = "balanceChange_events_account_claptrap_newbe";
     }
 }

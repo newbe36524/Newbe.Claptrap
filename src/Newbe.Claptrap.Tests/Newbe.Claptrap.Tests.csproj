@@ -33,7 +33,7 @@
 
     <ItemGroup>
       <None Remove="LoadConfiguration\*.json" />
-      <Content Include="db_configs\claptrap.mongodb.oneIdonetable.json">
+      <Content Include="db_configs\claptrap.mongodb.oneidonetable.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -58,7 +58,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="db_configs\claptrap.mysql.oneIdonetable.json">
+      <Content Include="db_configs\claptrap.mysql.oneidonetable.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -78,7 +78,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="db_configs\claptrap.postgresql.oneIdonetable.json">
+      <Content Include="db_configs\claptrap.postgresql.oneidonetable.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -93,7 +93,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
-      <Content Include="db_configs\claptrap.sqlite.oneIdonetable.json">
+      <Content Include="db_configs\claptrap.sqlite.oneidonetable.json">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
