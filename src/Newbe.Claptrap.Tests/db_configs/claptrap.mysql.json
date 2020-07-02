@@ -1,15 +1,5 @@
 {
   "Claptrap": {
-    "DefaultConnectionString": "Server=mysql;Port=3306;Database=claptrap;Uid=claptrap;Pwd=claptrap;Pooling=True;MinimumPoolSize=10;maximumpoolsize=50;",
-    "EventStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "MySql",
-      "InsertManyWindowCount": 1500
-    },
-    "StateStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "MySql",
-      "InsertManyWindowCount": 1500
-    }
+    "DefaultConnectionString": "Server=mysql;Port=3306;Database=claptrap;Uid=claptrap;Pwd=claptrap;Pooling=True;MinimumPoolSize=10;maximumpoolsize=50;"
   }
 }

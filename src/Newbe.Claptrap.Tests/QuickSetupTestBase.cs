@@ -18,10 +18,15 @@ namespace Newbe.Claptrap.Tests
     [SingleThreaded]
     public abstract class QuickSetupTestBase
     {
-        public DatabaseType DatabaseType { get; set; }
+        public DatabaseType DatabaseType { get; }
+        public RelationLocatorStrategy Strategy { get; }
 
-        protected QuickSetupTestBase()
+        protected QuickSetupTestBase(
+            DatabaseType databaseType,
+            RelationLocatorStrategy strategy)
         {
+            DatabaseType = databaseType;
+            Strategy = strategy;
             // ReSharper disable once VirtualMemberCallInConstructor
             Init();
         }
@@ -34,6 +39,7 @@ namespace Newbe.Claptrap.Tests
             configBuilder
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"db_configs/claptrap.{DatabaseType:G}.json".ToLower())
+                .AddJsonFile($"db_configs/claptrap.{DatabaseType:G}.{Strategy:G}.json".ToLower())
                 .AddEnvironmentVariables();
             var config = configBuilder.Build();
 
@@ -109,7 +115,6 @@ namespace Newbe.Claptrap.Tests
         [TestCase("account10", 10)]
         [TestCase("account100", 100)]
         [TestCase("account1000", 1000)]
-        [TestCase("account10000", 10000)]
         public async Task SaveEventAsync(string accountId, int count)
         {
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
@@ -140,7 +145,6 @@ namespace Newbe.Claptrap.Tests
         [TestCase("account10", 10)]
         [TestCase("account100", 100)]
         [TestCase("account1000", 1000)]
-        [TestCase("account10000", 10000)]
         public async Task SaveStateOneClaptrapAsync(string accountId, int times)
         {
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
@@ -170,7 +174,6 @@ namespace Newbe.Claptrap.Tests
         [Theory]
         [TestCase(10)]
         [TestCase(100)]
-        [TestCase(1000)]
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
             var stateVersion = 100;

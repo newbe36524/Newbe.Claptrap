@@ -36,8 +36,8 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
                     {"StateTableName", stateTableName},
                 },
                 () =>
-                    DeployChanges
-                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(connectionName)));
+                    (DeployChanges
+                        .To.PostgresqlDatabase(dbFactory.GetConnectionString(connectionName)), null));
 
             var migration = factory.Invoke(logger, migrationOptions);
 

@@ -37,8 +37,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                     {"EventTableName", eventTableName},
                 },
                 () =>
-                    DeployChanges
-                        .To.MySqlDatabase(dbFactory.GetConnectionString(connectionName)));
+                    (DeployChanges
+                        .To.MySqlDatabase(dbFactory.GetConnectionString(connectionName)), null));
             var migration = factory.Invoke(logger, migrationOptions);
             var migrationKey =
                 $"{nameof(MySqlEventStoreMigration)}_{connectionName}_{schemaName}_{eventTableName}";

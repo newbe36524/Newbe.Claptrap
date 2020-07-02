@@ -1,0 +1,14 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "OneTypeOneTable",
+      "DatabaseType": "PostgreSQL",
+      "InsertManyWindowCount": 2000
+    },
+    "StateStore": {
+      "Strategy": "OneTypeOneTable",
+      "DatabaseType": "PostgreSQL",
+      "InsertManyWindowCount": 2000
+    }
+  }
+}

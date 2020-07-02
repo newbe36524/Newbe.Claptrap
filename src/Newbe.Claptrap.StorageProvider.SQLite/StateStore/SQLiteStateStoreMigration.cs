@@ -27,7 +27,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             var locator = options.RelationalStateStoreLocator;
             var stateTableName = locator.GetStateTableName(identity);
             var connectionName = locator.GetConnectionName(identity);
-            var dbConnection = sqLiteDbFactory.GetConnection(connectionName);
 
             var migrationOptions = new DbUpMigrationOptions(
                 new[] {Assembly.GetExecutingAssembly()},
@@ -37,9 +36,11 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                     {"StateTableName", stateTableName},
                 },
                 () =>
-                    DeployChanges
-                        .To.SQLiteDatabase(new SharedConnection(dbConnection)),
-                dbConnection);
+                {
+                    var dbConnection = sqLiteDbFactory.GetConnection(connectionName);
+                    var builder = DeployChanges.To.SQLiteDatabase(new SharedConnection(dbConnection));
+                    return (builder, dbConnection);
+                });
 
             var migration = factory.Invoke(logger, migrationOptions);
 
