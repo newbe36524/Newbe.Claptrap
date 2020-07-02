@@ -1,3 +1,4 @@
+using System;
 using Newbe.Claptrap.StorageProvider.SQLite;
 using NUnit.Framework;
 
@@ -14,6 +15,7 @@ namespace Newbe.Claptrap.Tests
 
         protected override void Init()
         {
+            SQLiteDbFactory.SetDataBaseDirectoryName(nameof(SQLiteSharedTableQuickSetupTest));
             SQLiteDbFactory.RemoveDataBaseDirectory();
         }
     }
@@ -29,6 +31,7 @@ namespace Newbe.Claptrap.Tests
 
         protected override void Init()
         {
+            SQLiteDbFactory.SetDataBaseDirectoryName(nameof(SQLiteOneTypeOneTableQuickSetupTest));
             SQLiteDbFactory.RemoveDataBaseDirectory();
         }
     }
@@ -44,6 +47,7 @@ namespace Newbe.Claptrap.Tests
 
         protected override void Init()
         {
+            SQLiteDbFactory.SetDataBaseDirectoryName(nameof(SQLiteOneIdOneTableQuickSetupTest));
             SQLiteDbFactory.RemoveDataBaseDirectory();
         }
     }

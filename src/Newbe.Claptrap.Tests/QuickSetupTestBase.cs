@@ -82,7 +82,7 @@ namespace Newbe.Claptrap.Tests
             decimal nowBalance;
             const decimal diff = 100M;
             const int times = 10;
-            const string testId = "HandleEventAsync";
+            const string testId = "testId";
             await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
             {
                 var factory = lifetimeScope.Resolve<Account.Factory>();

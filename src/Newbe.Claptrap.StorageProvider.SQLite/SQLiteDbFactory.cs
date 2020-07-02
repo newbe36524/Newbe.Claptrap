@@ -61,10 +61,19 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             return fileName;
         }
 
+        private const string DataBaseDirectoryEnvKeyName = "CLAPTRAP_STORAGE";
+
         private static string GetDataBaseDirectory()
         {
-            var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "claptrapStorage");
+            var dirName = Environment.GetEnvironmentVariable(DataBaseDirectoryEnvKeyName);
+            dirName ??= "claptrapStorage";
+            var dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dirName);
             return dir;
+        }
+
+        public static void SetDataBaseDirectoryName(string name)
+        {
+            Environment.SetEnvironmentVariable(DataBaseDirectoryEnvKeyName, name);
         }
 
         public static void RemoveDataBaseDirectory()
