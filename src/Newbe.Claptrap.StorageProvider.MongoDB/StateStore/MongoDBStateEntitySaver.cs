@@ -63,9 +63,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
             var upsertModels = items.Select(x =>
             {
                 var filter = new ExpressionFilterDefinition<MongoStateEntity>(entity =>
-                    entity.claptrap_id == x.claptrap_id
-                    && entity.claptrap_type_code == x.claptrap_type_code
-                    && entity.version > x.version);
+                    entity.claptrap_id == x.claptrap_id && entity.claptrap_type_code == x.claptrap_type_code);
                 return new ReplaceOneModel<MongoStateEntity>(filter, x)
                 {
                     IsUpsert = true,
