@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
         private readonly string _tableName;
         private readonly string _schemaName;
 
-        private static readonly ConcurrentDictionary<int, string> UpsertSqlCache =
+        private readonly ConcurrentDictionary<int, string> _upsertSqlCache =
             new ConcurrentDictionary<int, string>();
 
         public MySqlStateEntitySaver(
@@ -84,7 +84,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 
         private string GetUpsertSql(string schemaName, string tableName, int count)
         {
-            var sql = UpsertSqlCache.GetOrAdd(count, CreateUpsertSql);
+            var sql = _upsertSqlCache.GetOrAdd(count, CreateUpsertSql);
             return sql;
 
 

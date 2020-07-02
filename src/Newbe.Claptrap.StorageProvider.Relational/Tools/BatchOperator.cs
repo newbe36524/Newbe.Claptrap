@@ -64,6 +64,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Tools
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError(e, "failed to run batch operation");
                     foreach (var batchItem in x)
                     {
                         batchItem.Tcs.SetException(e);
