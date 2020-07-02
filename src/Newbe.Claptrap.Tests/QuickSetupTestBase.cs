@@ -113,17 +113,28 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveEventAsync(string accountId, int count)
         {
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
+            var logger = lifetimeScope.Resolve<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
             var id = new ClaptrapIdentity(accountId, Codes.Account);
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
-            var eventSaver = buildClaptrapLifetimeScope.Resolve<IEventSaver>();
-            var tasks = Enumerable.Range(0, count)
-                .Select(x => eventSaver.SaveEventAsync(
+            var saver = buildClaptrapLifetimeScope.Resolve<IEventSaver>();
+            var tasks = Enumerable.Range(Defaults.EventStartingVersion, count)
+                .Select(x => saver.SaveEventAsync(
                     new UnitEvent(id, UnitEvent.TypeCode, new UnitEvent.UnitEventData())
                     {
                         Version = x
                     }));
             await Task.WhenAll(tasks);
+
+            var loader = buildClaptrapLifetimeScope.Resolve<IEventLoader>();
+            const int eventBeginVersion = Defaults.StateStartingVersion + 1;
+            var eventEndVersion = eventBeginVersion + count;
+            var events = await loader.GetEventsAsync(eventBeginVersion, eventEndVersion);
+            var versions = events.Select(x => x.Version);
+            logger.LogInformation("version from event loader : {version}", versions);
+            versions.Should().BeInAscendingOrder()
+                .And.OnlyHaveUniqueItems()
+                .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
         }
 
         [TestCase("account10", 10)]
@@ -136,19 +147,24 @@ namespace Newbe.Claptrap.Tests
             var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
             var id = new ClaptrapIdentity(accountId, Codes.Account);
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
-            var eventSaver = buildClaptrapLifetimeScope.Resolve<IStateSaver>();
-            var states = Enumerable.Range(0, times)
+            var saver = buildClaptrapLifetimeScope.Resolve<IStateSaver>();
+            var states = Enumerable.Range(Defaults.StateStartingVersion, times)
                 .Select(x => new UnitState
                 {
                     Data = UnitState.UnitStateData.Create(),
                     Identity = id,
                     Version = x
                 })
-                .AsParallel()
                 .ToArray();
             var tasks = states
-                .Select(x => eventSaver.SaveAsync(x));
+                .Select(x => saver.SaveAsync(x));
             await Task.WhenAll(tasks);
+
+            var loader = buildClaptrapLifetimeScope.Resolve<IStateLoader>();
+            var state = await loader.GetStateSnapshotAsync();
+            Debug.Assert(state != null, nameof(state) + " != null");
+            state.Should().NotBeNull();
+            state.Version.Should().Be(times - 1);
         }
 
         [Theory]
@@ -157,6 +173,7 @@ namespace Newbe.Claptrap.Tests
         [TestCase(1000)]
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
+            var stateVersion = 100;
             await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
             var logger = lifetimeScope.Resolve<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
@@ -173,7 +190,7 @@ namespace Newbe.Claptrap.Tests
                         {
                             Data = UnitState.UnitStateData.Create(),
                             Identity = claptrapIdentity,
-                            Version = 100
+                            Version = stateVersion
                         }
                     };
                 })
@@ -195,7 +212,6 @@ namespace Newbe.Claptrap.Tests
                         lifetimeScope = buildClaptrapLifetimeScope,
                     };
                 })
-                .AsParallel()
                 .ToArray();
 
             sw.Stop();
@@ -205,16 +221,15 @@ namespace Newbe.Claptrap.Tests
             var items = lifetimes.Select(d =>
                 {
                     var id = d.id;
-                    var eventSaver = d.lifetimeScope.Resolve<IStateSaver>();
+                    var saver = d.lifetimeScope.Resolve<IStateSaver>();
                     return new
                     {
                         id,
                         d.state,
-                        eventSaver,
+                        saver,
                         d.lifetimeScope,
                     };
                 })
-                .AsParallel()
                 .ToArray();
 
             sw.Stop();
@@ -222,12 +237,21 @@ namespace Newbe.Claptrap.Tests
             sw.Restart();
 
             var tasks = items
-                .Select(item => item.eventSaver.SaveAsync(item.state));
+                .Select(item => item.saver.SaveAsync(item.state));
             await Task.WhenAll(tasks);
-            Parallel.ForEach(items, item => { item.lifetimeScope.Dispose(); });
 
             sw.Stop();
             logger.LogInformation("cost {time} ms to save items", sw.ElapsedMilliseconds);
+
+            foreach (var item in items)
+            {
+                var loader = item.lifetimeScope.Resolve<IStateLoader>();
+                var state = await loader.GetStateSnapshotAsync();
+                Debug.Assert(state != null, nameof(state) + " != null");
+                state.Version.Should().Be(item.state.Version);
+            }
+
+            Parallel.ForEach(items, item => { item.lifetimeScope.Dispose(); });
         }
     }
 }

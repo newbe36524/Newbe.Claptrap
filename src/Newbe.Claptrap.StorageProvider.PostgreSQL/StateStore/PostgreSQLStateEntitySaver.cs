@@ -53,7 +53,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
             {
                 {
                     UpsertSqlKey,
-                    $"INSERT INTO {_schemaName}.{_stateTableName} (claptrap_type_code, claptrap_id, version, state_data, updated_time) VALUES (unnest(@claptrap_type_code), unnest(@claptrap_id), unnest(@version), unnest(@state_data), unnest(@updated_time)) ON CONFLICT ON CONSTRAINT {_stateTableName}_pkey DO UPDATE SET version=excluded.version, state_data=excluded.state_data, updated_time=excluded.updated_time;"
+                    $"INSERT INTO {_schemaName}.{_stateTableName} (claptrap_type_code, claptrap_id, version, state_data, updated_time) VALUES (unnest(@claptrap_type_code), unnest(@claptrap_id), unnest(@version), unnest(@state_data), unnest(@updated_time)) ON CONFLICT ON CONSTRAINT {_stateTableName}_pkey DO UPDATE SET version = excluded.version, state_data = excluded.state_data, updated_time = excluded.updated_time WHERE excluded.version > version;"
                 }
             };
         }
