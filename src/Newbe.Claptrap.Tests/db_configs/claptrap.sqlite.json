@@ -1,12 +1,12 @@
 {
   "Claptrap": {
     "EventStore": {
-      "Strategy": "SharedTable",
+      "Strategy": "OneTypeOneTable",
       "DatabaseType": "SQLite",
       "InsertManyWindowCount": 100
     },
     "StateStore": {
-      "Strategy": "SharedTable",
+      "Strategy": "OneTypeOneTable",
       "DatabaseType": "SQLite",
       "InsertManyWindowCount": 100
     }

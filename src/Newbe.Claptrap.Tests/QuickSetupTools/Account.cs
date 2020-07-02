@@ -5,6 +5,7 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(AccountBalanceChangeEventHandler), Codes.AccountBalanceChangeEvent)]
+    [ClaptrapEventHandler(typeof(UnitEventHandler), UnitEvent.TypeCode)]
     public class Account : NormalClaptrapBox, IAccount
     {
         public new delegate Account Factory(IClaptrapIdentity identity);

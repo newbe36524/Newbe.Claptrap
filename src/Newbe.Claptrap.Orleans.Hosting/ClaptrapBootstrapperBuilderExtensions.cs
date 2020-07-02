@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Orleans.ApplicationParts;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper

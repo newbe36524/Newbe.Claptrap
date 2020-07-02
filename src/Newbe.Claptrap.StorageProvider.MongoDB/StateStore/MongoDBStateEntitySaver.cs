@@ -66,7 +66,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
                     entity.claptrap_id == x.claptrap_id && entity.claptrap_type_code == x.claptrap_type_code);
                 return new ReplaceOneModel<MongoStateEntity>(filter, x)
                 {
-                    IsUpsert = true
+                    IsUpsert = true,
                 };
             });
             await collection.BulkWriteAsync(upsertModels);

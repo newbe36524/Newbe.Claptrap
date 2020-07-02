@@ -5,7 +5,7 @@ namespace Newbe.Claptrap
     /// <summary>
     /// Mark on <see cref="IClaptrapBox"/> implementation class to specify the event handler types
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class ClaptrapEventHandlerAttribute : Attribute
     {
         public Type EventHandlerType { get; set; }

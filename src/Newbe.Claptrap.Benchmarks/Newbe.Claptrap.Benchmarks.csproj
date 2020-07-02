@@ -5,6 +5,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
         <Nullable>disable</Nullable>
+        <SonarQubeExclude>true</SonarQubeExclude>
     </PropertyGroup>
 
     <ItemGroup>

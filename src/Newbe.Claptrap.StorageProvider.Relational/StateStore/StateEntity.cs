@@ -35,13 +35,14 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
         public static IEnumerable<StateEntity> DistinctWithVersion(IEnumerable<StateEntity> entities)
         {
             var array = entities as StateEntity[] ?? entities.ToArray();
-            var set = new HashSet<StateEntity>(array.Length, StateEntity.ClaptrapTypeCodeClaptrapIdComparer);
-            foreach (var stateEntity in array)
+            var set = new HashSet<StateEntity>(array.Length, ClaptrapTypeCodeClaptrapIdComparer);
+            foreach (var stateEntity in array.OrderBy(x => x.Version))
             {
                 if (set.TryGetValue(stateEntity, out var old))
                 {
                     if (old.Version < stateEntity.Version)
                     {
+                        set.Remove(old);
                         set.Add(stateEntity);
                     }
                 }
