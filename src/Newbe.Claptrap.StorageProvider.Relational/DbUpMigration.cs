@@ -38,21 +38,11 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         private void CreateOrUpdateDatabase()
         {
-            if (_options.SharedConnection != null)
-            {
-                using (_options.SharedConnection)
-                {
-                    MigrationCore();
-                }
-            }
-            else
-            {
-                MigrationCore();
-            }
+            MigrationCore();
 
             void MigrationCore()
             {
-                var builder = _options.UpgradeEngineBuilderFactory();
+                var (builder, dbConnection) = _options.UpgradeEngineBuilderFactory();
                 foreach (var scriptAssembly in _options.ScriptAssemblies)
                 {
                     builder
@@ -66,8 +56,9 @@ namespace Newbe.Claptrap.StorageProvider.Relational
                     .WithVariables(_options.Variables);
 
                 var dbMigration = builder.Build();
- 
+
                 var result = dbMigration.PerformUpgrade();
+                dbConnection?.Dispose();
 
                 if (!result.Successful)
                 {

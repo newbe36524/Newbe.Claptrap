@@ -11,26 +11,17 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         public DbUpMigrationOptions(IEnumerable<Assembly> scriptAssemblies,
             Func<string, bool> scriptSelector,
             Dictionary<string, string> variables,
-            Func<UpgradeEngineBuilder> upgradeEngineBuilderFactory,
-            IDbConnection? sharedConnection = null)
+            Func<(UpgradeEngineBuilder builder, IDbConnection? dbConnection)> upgradeEngineBuilderFactory)
         {
             ScriptAssemblies = scriptAssemblies;
             ScriptSelector = scriptSelector;
             Variables = variables;
             UpgradeEngineBuilderFactory = upgradeEngineBuilderFactory;
-            SharedConnection = sharedConnection;
         }
 
         public IEnumerable<Assembly> ScriptAssemblies { get; }
         public Func<string, bool> ScriptSelector { get; }
         public Dictionary<string, string> Variables { get; }
-        public Func<UpgradeEngineBuilder> UpgradeEngineBuilderFactory { get; }
-
-        /// <summary>
-        /// Connection from out scope. It will be dispose if migration done
-        /// </summary>
-        public IDbConnection? SharedConnection { get; }
+        public Func<(UpgradeEngineBuilder builder, IDbConnection? dbConnection)> UpgradeEngineBuilderFactory { get; }
     }
-    
-
 }

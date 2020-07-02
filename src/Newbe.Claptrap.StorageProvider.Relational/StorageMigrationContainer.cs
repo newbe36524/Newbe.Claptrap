@@ -23,7 +23,17 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             _logger = logger;
             _subject = new Subject<MigrationItem>();
             _migrationHandler = _subject
-                .Select(item => Observable.FromAsync(() => MigrateAsync(item)))
+                .Select(item => Observable.FromAsync(async () =>
+                {
+                    try
+                    {
+                        await MigrateAsync(item);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "failed to migrate storage");
+                    }
+                }))
                 .Concat()
                 .Subscribe();
         }

@@ -7,20 +7,19 @@ services:
         restart: always
         environment:
             POSTGRES_PASSWORD: claptrap
-            POSTGRES_DB: claptrap
         ports:
             - 5432:5432
+        volumes:
+            - ./postgresql:/docker-entrypoint-initdb.d
     mysql:
         image: mysql
-        command: --default-authentication-plugin=mysql_native_password
         restart: always
         ports:
             - 3306:3306
         environment:
             MYSQL_ROOT_PASSWORD: claptrap
-            MYSQL_DATABASE: claptrap
-            MYSQL_USER: claptrap
-            MYSQL_PASSWORD: claptrap
+        volumes:
+            - ./mysql:/docker-entrypoint-initdb.d
 
     adminer:
         image: adminer
