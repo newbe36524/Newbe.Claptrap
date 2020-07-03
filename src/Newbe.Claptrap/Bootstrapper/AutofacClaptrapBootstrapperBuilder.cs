@@ -5,6 +5,7 @@ using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Design;
+using Newbe.Claptrap.Extensions;
 using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
 using Newtonsoft.Json;
@@ -69,6 +70,13 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 var container = CreateContainerForScanning();
                 IClaptrapDesignStore? claptrapDesignStore = null;
+                // minion can save nothing
+                this.ConfigureClaptrapDesign(x => x.IsMinion(),
+                    x =>
+                    {
+                        x.EventSaverFactoryType = typeof(EmptyEventSaverFactory);
+                        x.ClaptrapStorageProviderOptions.EventSaverOptions = new EmptyEventSaverOptions();
+                    });
                 claptrapDesignStore = CreateClaptrapDesignStore(container);
 
                 IClaptrapApplicationModule[]? applicationModules = null;

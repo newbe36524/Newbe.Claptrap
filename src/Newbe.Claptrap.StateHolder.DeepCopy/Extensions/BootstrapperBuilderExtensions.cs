@@ -1,7 +1,6 @@
-// ReSharper disable once CheckNamespace
-
 using System;
 
+// ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
 {
     public static class BootstrapperBuilderExtensions
