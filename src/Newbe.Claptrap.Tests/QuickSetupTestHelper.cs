@@ -8,12 +8,13 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NLog.Extensions.Logging;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Newbe.Claptrap.Tests
 {
     public static class QuickSetupTestHelper
     {
-        public static IServiceProvider BuildContainer(
+        public static IHost BuildHost(
             DatabaseType databaseType,
             RelationLocatorStrategy strategy,
             IEnumerable<string> configJsonFilenames,
@@ -65,7 +66,7 @@ namespace Newbe.Claptrap.Tests
                         .InstancePerDependency();
                 });
             var host = hostBuilder.Build();
-            return host.Services;
+            return host;
         }
     }
 }

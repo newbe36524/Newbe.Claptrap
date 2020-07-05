@@ -14,6 +14,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
         private readonly IConnectionManager _connectionManager;
         private readonly MqSender.Factory _mqSenderFactory;
         private IReadOnlyDictionary<string, MqSender>? _senders;
+        private IConnection? _connection;
 
         public MQSenderManager(
             IClaptrapDesignStore claptrapDesignStore,
@@ -31,7 +32,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
             void InitCore()
             {
-                var connection = _connectionManager.CreateConnection();
+                _connection = _connectionManager.CreateConnection();
                 _senders = _claptrapDesignStore
                     .Where(x => !x.IsMinion())
                     .ToDictionary(x => x.ClaptrapTypeCode, x =>
@@ -39,9 +40,9 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
                         var exchangeName = TopicHelper.GetExchangeName(x.ClaptrapTypeCode);
                         var topics = x.EventHandlerDesigns
                             .ToDictionary(a => a.Key, a => TopicHelper.GetRouteKey(x.ClaptrapTypeCode, a.Key));
-                        using var model = connection.CreateModel();
+                        using var model = _connection.CreateModel();
                         model.ExchangeDeclare(exchangeName, ExchangeType.Topic);
-                        var mqSender = _mqSenderFactory.Invoke(exchangeName, topics, connection);
+                        var mqSender = _mqSenderFactory.Invoke(exchangeName, topics, _connection);
                         return mqSender;
                     });
             }
@@ -61,11 +62,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
         public void Dispose()
         {
-            Debug.Assert(_senders != null, nameof(_senders) + " != null");
-            foreach (var (_, sender) in _senders)
-            {
-                sender.Dispose();
-            }
+            _connectionManager.Dispose();
         }
     }
 }

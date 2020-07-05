@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 {
-    public class MqSender : IMQSender, IDisposable
+    public class MqSender : IMQSender
     {
         public delegate MqSender Factory(string exchange,
             IReadOnlyDictionary<string, string> topics,
@@ -18,6 +19,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
         private readonly IConnection _connection;
         private readonly IEventStringSerializer _eventStringSerializer;
         private readonly IMessageSerializer _messageSerializer;
+        private readonly ILogger<MqSender> _logger;
         private readonly IOptions<ClaptrapServerOptions> _options;
         private readonly IBatchOperator<IEvent> _batchOperator;
 
@@ -29,6 +31,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             IMessageSerializer messageSerializer,
             BatchOperator<IEvent>.Factory batchOperatorFactory,
             IBatchOperatorContainer batchOperatorContainer,
+            ILogger<MqSender> logger,
             IOptions<ClaptrapServerOptions> options)
         {
             _exchange = exchange;
@@ -36,6 +39,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             _connection = connection;
             _eventStringSerializer = eventStringSerializer;
             _messageSerializer = messageSerializer;
+            _logger = logger;
             _options = options;
             var operatorKey = new BatchOperatorKey()
                 .With(nameof(MqSender))
@@ -57,28 +61,53 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
             void SendManyCode()
             {
-                using var model = _connection.CreateModel();
-
-                var batch = model.CreateBasicPublishBatch();
-                foreach (var @event in entities)
+                try
                 {
-                    var eventString = _eventStringSerializer.Serialize(@event);
-                    var bytes = _messageSerializer.Serialize(eventString);
-                    var basicProperties = model.CreateBasicProperties();
-                    basicProperties.ContentType = "application/json";
-
-                    var (encoding, body) =
-                        CompressData(bytes, _options.Value?.RabbitMQ?.CompressType ?? CompressType.None);
-                    basicProperties.ContentEncoding = encoding;
-                    batch.Add(_exchange, _topics[@event.EventTypeCode], true, basicProperties, body);
+                    SendCore();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "failed to send message to rabbit mq");
                 }
 
-                batch.Publish();
+                void SendCore()
+                {
+                    using var model = _connection.CreateModel();
+
+                    var batch = model.CreateBasicPublishBatch();
+                    var count = 0;
+                    foreach (var @event in entities)
+                    {
+                        var eventString = _eventStringSerializer.Serialize(@event);
+                        var bytes = _messageSerializer.Serialize(eventString);
+                        var basicProperties = model.CreateBasicProperties();
+                        basicProperties.ContentType = "application/json";
+
+                        var compressType = _options.Value?.RabbitMQ?.CompressType ?? CompressType.None;
+                        var (encoding, body) = CompressData(bytes, compressType);
+                        if (compressType != CompressType.None)
+                        {
+                            _logger.LogTrace("message size : {from} -> {to} diif : {diff}",
+                                bytes.Length,
+                                body.Length,
+                                bytes.Length - body.Length);
+                        }
+
+                        basicProperties.ContentEncoding = encoding;
+                        batch.Add(_exchange, _topics[@event.EventTypeCode], true, basicProperties, body);
+                        count++;
+                    }
+
+                    batch.Publish();
+                    _logger.LogDebug("sent {count} message to rabbit mq", count);
+                    model.Close();
+                }
             }
         }
 
-        private static (string? encoding, byte[] data) CompressData(byte[] source, CompressType type)
+        private (string? encoding, byte[] data) CompressData(byte[] source, CompressType type)
         {
+            _logger.LogTrace("compress type : {type}", type);
             if (type == CompressType.None)
             {
                 return ("utf8", source);
@@ -96,18 +125,11 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-
-            throw new ArgumentOutOfRangeException(nameof(type), type, "unsupported compress type");
         }
 
         public Task SendTopicAsync(IEvent @event)
         {
             return _batchOperator.CreateTask(@event);
-        }
-
-        public void Dispose()
-        {
-            _connection.Dispose();
         }
     }
 }

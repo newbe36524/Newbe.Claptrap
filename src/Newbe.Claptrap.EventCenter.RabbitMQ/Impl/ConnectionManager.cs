@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
@@ -7,13 +8,16 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
     public class ConnectionManager : IConnectionManager, IDisposable
     {
         private readonly IOptions<ClaptrapServerOptions> _options;
+        private readonly ILogger<ConnectionManager> _logger;
         private readonly Lazy<IConnection> _connectionFactory;
         private IConnection? _connection;
 
         public ConnectionManager(
-            IOptions<ClaptrapServerOptions> options)
+            IOptions<ClaptrapServerOptions> options,
+            ILogger<ConnectionManager> logger)
         {
             _options = options;
+            _logger = logger;
             _connectionFactory = new Lazy<IConnection>(ValueFactory);
         }
 
@@ -25,9 +29,18 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
                 DispatchConsumersAsync = true,
                 Uri = uri
             };
-            var connection = connectionFactory.CreateConnection();
-            _connection = connection;
-            return connection;
+            try
+            {
+                _logger.LogTrace("try to connect rabbit mq");
+                var connection = connectionFactory.CreateConnection();
+                _connection = connection;
+                return connection;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "failed to connect rabbit mq");
+                throw;
+            }
         }
 
         public IConnection CreateConnection()
@@ -37,6 +50,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
         public void Dispose()
         {
+            _connection?.Close();
             _connection?.Dispose();
         }
     }

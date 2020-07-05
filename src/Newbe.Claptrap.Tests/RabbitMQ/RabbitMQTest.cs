@@ -15,13 +15,12 @@ using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests.rabbit
 {
-    [SingleThreaded]
     [Category("RabbitMQ"), Explicit]
     public class RabbitMQTest
     {
         private IEnumerable<string> AppsettingsFilenames
         {
-            get { yield return "rabbit/appsettings.json"; }
+            get { yield return "RabbitMQ/appsettings.json"; }
         }
 
         [TestCase(CompressType.None)]
@@ -31,11 +30,11 @@ namespace Newbe.Claptrap.Tests.rabbit
         {
             var random = new Random();
             var minionLocator = new TestMinionLocator();
-            var container = QuickSetupTestHelper.BuildContainer(
+            using var host = QuickSetupTestHelper.BuildHost(
                 DatabaseType.SQLite,
                 RelationLocatorStrategy.SharedTable,
                 AppsettingsFilenames.Concat(new[]
-                    {$"rabbit/appsettings.{compressType.ToString("G").ToLower()}.json"}),
+                    {$"RabbitMQ/appsettings.{compressType.ToString("G").ToLower()}.json"}),
                 builder =>
                 {
                     builder.RegisterInstance(minionLocator)
@@ -43,6 +42,7 @@ namespace Newbe.Claptrap.Tests.rabbit
                         .SingleInstance();
                 });
 
+            var container = host.Services;
             var subscriberManager = container.GetRequiredService<IMQSubscriberManager>();
             await subscriberManager.StartAsync();
 
@@ -59,7 +59,7 @@ namespace Newbe.Claptrap.Tests.rabbit
                 Version = 1
             };
             await eventCenter.SendToMinionsAsync(id1, evt);
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             minionLocator.ConcurrentBag.Count.Should().Be(2);
             var dic = minionLocator.ConcurrentBag.ToDictionary(x => x.Identity);
@@ -72,6 +72,8 @@ namespace Newbe.Claptrap.Tests.rabbit
             AssertEvent(balanceHistoryMinionId, balanceHistoryMinionItem);
 
             await subscriberManager.CloseAsync();
+            await container.GetRequiredService<IMQSenderManager>().CloseAsync();
+            await host.StopAsync();
 
             void AssertEvent(ClaptrapIdentity minionId, ReceivedItem item)
             {
@@ -92,11 +94,11 @@ namespace Newbe.Claptrap.Tests.rabbit
         [TestCase(10000)]
         public async Task MultipleSent(int count)
         {
-            var container = QuickSetupTestHelper.BuildContainer(
+            using var host = QuickSetupTestHelper.BuildHost(
                 DatabaseType.SQLite,
                 RelationLocatorStrategy.SharedTable,
                 AppsettingsFilenames);
-
+            var container = host.Services;
             var subscriberManager = container.GetRequiredService<IMQSubscriberManager>();
             await subscriberManager.StartAsync();
 
@@ -118,8 +120,9 @@ namespace Newbe.Claptrap.Tests.rabbit
             await task;
             await Task.Delay(TimeSpan.FromSeconds(5));
             await subscriberManager.CloseAsync();
+            await container.GetRequiredService<IMQSenderManager>().CloseAsync();
+            await host.StopAsync();
         }
-
 
         private class ReceivedItem
         {
