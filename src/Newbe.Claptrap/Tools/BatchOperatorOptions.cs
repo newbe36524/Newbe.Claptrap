@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newbe.Claptrap.StorageProvider.Relational.Options;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public class BatchOperatorOptions<T>
     {
+        public BatchOperatorOptions()
+        {
+        }
+
         public BatchOperatorOptions(
-            IBatchSaverOptions options)
+            IBatchOptions options)
         {
             BufferCount = options.InsertManyWindowCount ?? 200;
             BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue

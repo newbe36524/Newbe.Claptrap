@@ -5,9 +5,14 @@ using App.Metrics;
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Formatters.Prometheus;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap;
+using Newbe.Claptrap.Bootstrapper;
 using Orleans;
 using Orleans.Hosting;
 
@@ -16,6 +21,42 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class HostExtensions
     {
+        public static IHostBuilder UseClaptrap(this IHostBuilder hostBuilder,
+            Action<IClaptrapBootstrapperBuilder> builderAction,
+            Action<ContainerBuilder>? containerBuilderAction = null)
+        {
+            return hostBuilder
+                .ConfigureServices((context, collection) =>
+                {
+                    var configSection =
+                        context.Configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);
+                    collection.Configure<ClaptrapServerOptions>(configSection);
+                })
+                .UseServiceProviderFactory(context =>
+                {
+                    var serviceProviderFactory = new AutofacServiceProviderFactory(
+                        builder =>
+                        {
+                            containerBuilderAction?.Invoke(builder);
+                            var collection = new ServiceCollection().AddLogging(logging =>
+                            {
+                                logging.SetMinimumLevel(LogLevel.Debug);
+                            });
+                            var buildServiceProvider = collection.BuildServiceProvider();
+                            var loggerFactory = buildServiceProvider.GetService<ILoggerFactory>();
+                            var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
+                            bootstrapperBuilder
+                                .ScanClaptrapModule()
+                                .AddConfiguration(context);
+                            builderAction.Invoke(bootstrapperBuilder);
+                            var claptrapBootstrapper = bootstrapperBuilder.Build();
+                            claptrapBootstrapper.Boot();
+                        });
+
+                    return serviceProviderFactory;
+                });
+        }
+
         public static IHostBuilder UseOrleansClaptrap(this IHostBuilder hostBuilder)
             => hostBuilder
                 .UseOrleans((context, builder) =>

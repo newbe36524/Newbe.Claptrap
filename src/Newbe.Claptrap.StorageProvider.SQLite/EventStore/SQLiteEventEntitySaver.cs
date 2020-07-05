@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
@@ -37,7 +36,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 .With(_eventTableName);
             _batchOperator = (IBatchOperator<EventEntity>) batchOperatorContainer.GetOrAdd(
                 operatorKey, () => batchOperatorFactory.Invoke(
-                    new BatchOperatorOptions<EventEntity>(options)
+                     new BatchOperatorOptions<EventEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(sqLiteDbFactory, entities, (string[]) cacheData![InsertSqlKey]),

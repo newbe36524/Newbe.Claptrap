@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
@@ -26,9 +27,12 @@ namespace Newbe.Claptrap.Demo
             return Task.FromResult(re);
         }
 
-        public Task MasterEventReceivedAsync(IEvent @event)
+        public async Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
         {
-            return Claptrap.HandleEventAsync(@event);
+            foreach (var @event in events)
+            {
+                await Claptrap.HandleEventAsync(@event);
+            }
         }
 
         public Task WakeAsync()

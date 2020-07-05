@@ -26,19 +26,19 @@ namespace Newbe.Claptrap.Tests.LoadConfiguration
             containerBuilder.RegisterType<Account>()
                 .AsSelf()
                 .InstancePerDependency();
-            containerBuilder.RegisterType<AccountMinion>()
+            containerBuilder.RegisterType<AccountBalanceMinion>()
                 .AsSelf()
                 .InstancePerDependency();
             var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory(), containerBuilder);
             var claptrapBootstrapper = builder
                 .ScanClaptrapModule()
-                .AddDefaultConfiguration(configuration)
+                .AddConfiguration(configuration)
                 .ScanClaptrapDesigns(new[]
                 {
                     typeof(IAccount),
                     typeof(Account),
-                    typeof(IAccountMinion),
-                    typeof(AccountMinion),
+                    typeof(IAccountBalanceMinion),
+                    typeof(AccountBalanceMinion),
                 })
                 .Build();
             claptrapBootstrapper.Boot();

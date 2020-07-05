@@ -6,7 +6,6 @@ using Dapper;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {

@@ -22,11 +22,6 @@ namespace Newbe.Claptrap.EventCenter.Modules.Providers
                 builder.RegisterType<EventCenterEventNotifier>()
                     .As<IEventNotifierHandler>()
                     .InstancePerDependency();
-
-                builder.RegisterType<EmptyEventCenter>()
-                    .As<IEventCenter>()
-                    .IfNotRegistered(typeof(IEventCenter))
-                    .SingleInstance();
             }
         }
     }

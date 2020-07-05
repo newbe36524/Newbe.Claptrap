@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Newbe.Claptrap.StorageProvider.MongoDB.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
 {

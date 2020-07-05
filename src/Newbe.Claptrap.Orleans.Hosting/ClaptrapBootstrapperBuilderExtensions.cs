@@ -10,11 +10,11 @@ namespace Newbe.Claptrap.Bootstrapper
 {
     public static class ClaptrapBootstrapperBuilderExtensions
     {
-        public static IClaptrapBootstrapperBuilder AddDefaultConfiguration(
+        public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder, HostBuilderContext context)
-            => AddDefaultConfiguration(builder, context.Configuration);
+            => AddConfiguration(builder, context.Configuration);
 
-        public static IClaptrapBootstrapperBuilder AddDefaultConfiguration(
+        public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder,
             IConfiguration configuration)
         {

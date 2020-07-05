@@ -1,10 +1,9 @@
-using System;
 using Newbe.Claptrap.StorageProvider.SQLite;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
-    [Category(nameof(DatabaseType.SQLite))]
+    [Category(nameof(DatabaseType.SQLite)), Explicit]
     public class SQLiteSharedTableQuickSetupTest : QuickSetupTestBase
     {
         public SQLiteSharedTableQuickSetupTest() : base(
@@ -20,7 +19,7 @@ namespace Newbe.Claptrap.Tests
         }
     }
 
-    [Category(nameof(DatabaseType.SQLite))]
+    [Category(nameof(DatabaseType.SQLite)), Explicit]
     public class SQLiteOneTypeOneTableQuickSetupTest : QuickSetupTestBase
     {
         public SQLiteOneTypeOneTableQuickSetupTest() : base(
@@ -36,7 +35,7 @@ namespace Newbe.Claptrap.Tests
         }
     }
 
-    [Category(nameof(DatabaseType.SQLite))]
+    [Category(nameof(DatabaseType.SQLite)), Explicit]
     public class SQLiteOneIdOneTableQuickSetupTest : QuickSetupTestBase
     {
         public SQLiteOneIdOneTableQuickSetupTest() : base(

@@ -3,14 +3,14 @@ using Newbe.Claptrap.Box;
 
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
-    [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(AccountBalanceChangeEventHandler), Codes.AccountBalanceChangeEvent)]
     [ClaptrapEventHandler(typeof(EmptyEventHandler), UnitEvent.TypeCode)]
-    public class AccountMinion : NormalClaptrapBox, IAccountMinion
+    public class AccountBalanceMinion :
+        NormalClaptrapBox<AccountInfo>, IAccountBalanceMinion
     {
-        public new delegate AccountMinion Factory(IClaptrapIdentity identity);
+        public new delegate AccountBalanceMinion Factory(IClaptrapIdentity identity);
 
-        public AccountMinion(IClaptrapIdentity identity, IClaptrapFactory claptrapFactory) : base(identity,
+        public AccountBalanceMinion(IClaptrapIdentity identity, IClaptrapFactory claptrapFactory) : base(identity,
             claptrapFactory)
         {
         }

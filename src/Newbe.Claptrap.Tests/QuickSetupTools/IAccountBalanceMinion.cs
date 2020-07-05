@@ -1,0 +1,26 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Newbe.Claptrap.Tests.QuickSetupTools
+{
+    [ClaptrapMinion(Codes.Account)]
+    [ClaptrapState(typeof(AccountInfo), Codes.AccountBalanceMinion)]
+    public interface IAccountBalanceMinion
+    {
+        Task<decimal> GetBalanceAsync();
+        Task ActivateAsync();
+    }
+
+    [ClaptrapMinion(Codes.Account)]
+    [ClaptrapState(typeof(AccountBalanceHistoryInfo), Codes.AccountBalanceHistoryMinion)]
+    public interface IAccountHistoryBalanceMinion
+    {
+        Task<IEnumerable<decimal>> GetBalanceHistoryAsync();
+    }
+    
+
+    public class AccountBalanceHistoryInfo : IStateData
+    {
+        public Queue<decimal> Balances { get; set; }
+    }
+}

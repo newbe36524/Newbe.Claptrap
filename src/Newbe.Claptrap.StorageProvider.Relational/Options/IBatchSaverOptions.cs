@@ -1,8 +1,6 @@
 namespace Newbe.Claptrap.StorageProvider.Relational.Options
 {
-    public interface IBatchSaverOptions
+    public interface IBatchSaverOptions : IBatchOptions
     {
-        int? InsertManyWindowTimeInMilliseconds { get; }
-        int? InsertManyWindowCount { get; }
     }
 }

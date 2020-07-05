@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -170,6 +169,7 @@ namespace Newbe.Claptrap.Core.Impl
                     {
                         throw new VersionErrorException(re.NowState.Version, re.Event.Version);
                     }
+
                     re.EventContext = new EventContext(re.Event, re.NowState);
                     re.EventHandler = CreateHandler(re.EventContext);
                     return re;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public class BatchOperatorContainer : IBatchOperatorContainer
     {

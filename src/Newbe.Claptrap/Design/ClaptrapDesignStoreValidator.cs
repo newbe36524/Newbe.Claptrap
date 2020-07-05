@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newbe.Claptrap.Extensions;
 using SmartFormat;
 using static Newbe.Claptrap.LK.L0007ClaptrapDesignStoreValidator;
 
@@ -88,6 +89,31 @@ namespace Newbe.Claptrap.Design
                     yield return ValidateClaptrapComponent<IEventHandlerFactory>(design.EventHandlerFactoryFactoryType,
                         nameof(design.EventHandlerFactoryFactoryType));
 
+                    IEnumerable<string> ValidateMasterDesign(IClaptrapDesign minionDesign)
+                    {
+                        if (!minionDesign.IsMinion())
+                        {
+                            yield break;
+                        }
+
+                        var masterDesign = minionDesign.ClaptrapMasterDesign;
+                        foreach (var (key, _) in masterDesign.EventHandlerDesigns)
+                        {
+                            if (!minionDesign.EventHandlerDesigns.TryGetValue(key, out var handlerDesign))
+                            {
+                                yield return Smart.Format(_l[L003MissingEventHandleInMinion], new
+                                {
+                                    eventTypeCode = key,
+                                    claptrapTypeCode = minionDesign.ClaptrapTypeCode,
+                                    handlerName = nameof(EmptyEventHandler)
+                                });
+                            }
+
+                            yield return ValidateTypeNotNull(handlerDesign.EventHandlerType,
+                                $"{handlerDesign.EventTypeCode} -> {nameof(handlerDesign.EventHandlerType)}");
+                        }
+                    }
+
                     string ValidateClaptrapComponent<TComponent>(Type type, string name)
                     {
                         return type == null
@@ -102,28 +128,6 @@ namespace Newbe.Claptrap.Design
                         return type == null
                             ? Smart.Format(_l[L001ValueCannotBeNull], new {name})
                             : string.Empty;
-                    }
-
-                    IEnumerable<string> ValidateMasterDesign(IClaptrapDesign minionDesign)
-                    {
-                        if (minionDesign.ClaptrapMasterDesign == null)
-                        {
-                            // it is not a minion design
-                            yield break;
-                        }
-
-                        foreach (var (key, _) in minionDesign.ClaptrapMasterDesign.EventHandlerDesigns)
-                        {
-                            if (!minionDesign.EventHandlerDesigns.ContainsKey(key))
-                            {
-                                yield return Smart.Format(_l[L003MissingEventHandleInMinion], new
-                                {
-                                    eventTypeCode = key,
-                                    claptrapTypeCode = minionDesign.ClaptrapTypeCode,
-                                    handlerName = nameof(EmptyEventHandler)
-                                });
-                            }
-                        }
                     }
                 }
             }

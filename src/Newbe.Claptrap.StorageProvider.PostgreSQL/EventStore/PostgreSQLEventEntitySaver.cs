@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.Extensions;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 using Npgsql;
 using NpgsqlTypes;
 

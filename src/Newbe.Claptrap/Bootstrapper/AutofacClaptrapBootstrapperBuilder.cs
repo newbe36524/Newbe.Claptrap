@@ -96,6 +96,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 _applicationBuilder.RegisterTypes(providers)
                     .As<IClaptrapModuleProvider>();
 
+
                 var claptrapBootstrapper =
                     new AutofacClaptrapBootstrapper(_applicationBuilder,
                         autofacModules

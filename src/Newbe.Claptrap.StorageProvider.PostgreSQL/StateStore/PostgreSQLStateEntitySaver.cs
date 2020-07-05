@@ -5,7 +5,6 @@ using Dapper;
 using Newbe.Claptrap.StorageProvider.PostgreSQL.Options;
 using Newbe.Claptrap.StorageProvider.Relational.Extensions;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
 {
