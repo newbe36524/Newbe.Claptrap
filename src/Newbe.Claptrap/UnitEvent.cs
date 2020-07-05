@@ -47,5 +47,10 @@ namespace Newbe.Claptrap
                 };
             }
         }
+
+        public static UnitEvent Create(IClaptrapIdentity identity)
+        {
+            return new UnitEvent(identity, TypeCode, UnitEventData.Create());
+        }
     }
 }

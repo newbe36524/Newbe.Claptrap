@@ -66,33 +66,6 @@ namespace Newbe.Claptrap.Design
             }
         }
 
-        private readonly struct StructClaptrapIdentity : IClaptrapIdentity
-        {
-            public StructClaptrapIdentity(IClaptrapIdentity identity)
-            {
-                Id = identity.Id;
-                TypeCode = identity.TypeCode;
-            }
-
-            public bool Equals(IClaptrapIdentity other)
-            {
-                return Id == other.Id && TypeCode == other.TypeCode;
-            }
-
-            public override bool Equals(object? obj)
-            {
-                return obj is StructClaptrapIdentity other && Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Id, TypeCode);
-            }
-
-            public string Id { get; }
-            public string TypeCode { get; }
-        }
-
         public IEnumerator<IClaptrapDesign> GetEnumerator()
         {
             return _globalDic.Values.Cast<IClaptrapDesign>().GetEnumerator();

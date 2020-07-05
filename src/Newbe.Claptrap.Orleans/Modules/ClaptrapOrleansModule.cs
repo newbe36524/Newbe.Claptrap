@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extras.AggregateService;
+using Newbe.Claptrap.EventCenter;
 
 namespace Newbe.Claptrap.Orleans.Modules
 {
@@ -17,6 +18,12 @@ namespace Newbe.Claptrap.Orleans.Modules
             builder.RegisterType<OrleansMinionActivator>()
                 .As<IMinionActivator>()
                 .SingleInstance();
+            builder.RegisterType<MinionLocator>()
+                .As<IMinionLocator>()
+                .SingleInstance();
+            builder.RegisterType<GrainMinionProxy>()
+                .AsSelf()
+                .InstancePerDependency();
             builder.RegisterAggregateService<IClaptrapGrainCommonService>();
         }
     }

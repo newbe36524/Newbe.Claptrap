@@ -19,6 +19,10 @@ namespace Newbe.Claptrap.DataSerializer.Json.Modules
             builder.RegisterType<JsonStateDataStringSerializer>()
                 .As<IStateDataStringSerializer>()
                 .SingleInstance();
+
+            builder.RegisterType<JsonEventStringSerializer>()
+                .As<IEventStringSerializer>()
+                .SingleInstance();
         }
     }
 }

@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Newbe.Claptrap
 {
+    [ExcludeFromCodeCoverage]
     public class DeepClonerStateHolderFactory : IClaptrapComponentFactory<IStateHolder>
     {
         private readonly DeepClonerStateHolder.Factory _deepClonerStateHolderFactory;

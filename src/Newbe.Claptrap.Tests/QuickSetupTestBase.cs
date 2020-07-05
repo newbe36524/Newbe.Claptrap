@@ -1,15 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
@@ -20,6 +18,7 @@ namespace Newbe.Claptrap.Tests
     {
         public DatabaseType DatabaseType { get; }
         public RelationLocatorStrategy Strategy { get; }
+        public IHost Host { get; set; }
 
         protected QuickSetupTestBase(
             DatabaseType databaseType,
@@ -31,48 +30,29 @@ namespace Newbe.Claptrap.Tests
             Init();
         }
 
+        protected virtual IEnumerable<string> AppsettingsFilenames { get; } = Enumerable.Empty<string>();
+
         protected abstract void Init();
 
-        private IContainer BuildContainer()
+        protected virtual Task OnContainerBuilt(IServiceProvider container)
         {
-            var configBuilder = new ConfigurationBuilder();
-            configBuilder
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"db_configs/claptrap.{DatabaseType:G}.json".ToLower())
-                .AddJsonFile($"db_configs/claptrap.{DatabaseType:G}.{Strategy:G}.json".ToLower())
-                .AddEnvironmentVariables();
-            var config = configBuilder.Build();
+            return Task.CompletedTask;
+        }
 
-            var services = new ServiceCollection();
-            services.AddLogging(logging =>
-            {
-                logging.SetMinimumLevel(LogLevel.Information);
-                logging.AddConsole();
-            });
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.Populate(services);
-            containerBuilder.RegisterType<Account>()
-                .AsSelf()
-                .InstancePerDependency();
-            containerBuilder.RegisterType<AccountMinion>()
-                .AsSelf()
-                .InstancePerDependency();
-            var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory(), containerBuilder);
-            var claptrapBootstrapper = builder
-                .AddDefaultConfiguration(config)
-                .ScanClaptrapDesigns(new[]
-                {
-                    typeof(IAccount),
-                    typeof(Account),
-                    typeof(IAccountMinion),
-                    typeof(AccountMinion),
-                })
-                .ScanClaptrapModule()
-                .Build();
-            claptrapBootstrapper.Boot();
+        protected virtual Task OnStopHost(IHost host)
+        {
+            return Task.CompletedTask;
+        }
 
-            var container = containerBuilder.Build();
-            return container;
+        private IServiceProvider BuildService()
+        {
+            var host = QuickSetupTestHelper.BuildHost(
+                DatabaseType,
+                Strategy,
+                AppsettingsFilenames);
+            Host = host;
+            OnContainerBuilt(host.Services).Wait();
+            return host.Services;
         }
 
         [Test]
@@ -83,9 +63,9 @@ namespace Newbe.Claptrap.Tests
             const decimal diff = 100M;
             const int times = 10;
             const string testId = "testId";
-            await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
+            using (var lifetimeScope = BuildService().CreateScope())
             {
-                var factory = lifetimeScope.Resolve<Account.Factory>();
+                var factory = lifetimeScope.ServiceProvider.GetRequiredService<Account.Factory>();
                 var claptrapIdentity = new ClaptrapIdentity(testId, Codes.Account);
                 IAccount account = factory.Invoke(claptrapIdentity);
                 await account.ActivateAsync();
@@ -100,16 +80,19 @@ namespace Newbe.Claptrap.Tests
 
             Console.WriteLine($"balance change: {oldBalance} + {diff} = {nowBalance}");
 
-            await using (var lifetimeScope = BuildContainer().BeginLifetimeScope())
+            using (var lifetimeScope = BuildService().CreateScope())
             {
-                var factory = lifetimeScope.Resolve<AccountMinion.Factory>();
-                var claptrapIdentity = new ClaptrapIdentity(testId, Codes.AccountMinion);
-                IAccountMinion account = factory.Invoke(claptrapIdentity);
-                await account.ActivateAsync();
-                var balance = await account.GetBalanceAsync();
+                var factory = lifetimeScope.ServiceProvider.GetService<AccountBalanceMinion.Factory>();
+                var claptrapIdentity = new ClaptrapIdentity(testId, Codes.AccountBalanceMinion);
+                IAccountBalanceMinion accountBalance = factory.Invoke(claptrapIdentity);
+                await accountBalance.ActivateAsync();
+                var balance = await accountBalance.GetBalanceAsync();
                 balance.Should().Be(nowBalance);
                 Console.WriteLine($"balance from minion {balance}");
             }
+
+            await OnStopHost(Host);
+            await Host.StopAsync();
         }
 
         [TestCase("account10", 10)]
@@ -117,9 +100,9 @@ namespace Newbe.Claptrap.Tests
         [TestCase("account1000", 1000)]
         public async Task SaveEventAsync(string accountId, int count)
         {
-            await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
-            var logger = lifetimeScope.Resolve<ILogger<QuickSetupTestBase>>();
-            var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
+            using var lifetimeScope = BuildService().CreateScope();
+            var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
+            var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();
             var id = new ClaptrapIdentity(accountId, Codes.Account);
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
             var saver = buildClaptrapLifetimeScope.Resolve<IEventSaver>();
@@ -140,6 +123,8 @@ namespace Newbe.Claptrap.Tests
             versions.Should().BeInAscendingOrder()
                 .And.OnlyHaveUniqueItems()
                 .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
+            await OnStopHost(Host);
+            await Host.StopAsync();
         }
 
         [TestCase("account10", 10)]
@@ -147,8 +132,8 @@ namespace Newbe.Claptrap.Tests
         [TestCase("account1000", 1000)]
         public async Task SaveStateOneClaptrapAsync(string accountId, int times)
         {
-            await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
-            var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
+            using var lifetimeScope = BuildService().CreateScope();
+            var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();
             var id = new ClaptrapIdentity(accountId, Codes.Account);
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
             var saver = buildClaptrapLifetimeScope.Resolve<IStateSaver>();
@@ -169,6 +154,8 @@ namespace Newbe.Claptrap.Tests
             Debug.Assert(state != null, nameof(state) + " != null");
             state.Should().NotBeNull();
             state.Version.Should().Be(times - 1);
+            await OnStopHost(Host);
+            await Host.StopAsync();
         }
 
         [Theory]
@@ -177,9 +164,9 @@ namespace Newbe.Claptrap.Tests
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
             var stateVersion = 100;
-            await using var lifetimeScope = BuildContainer().BeginLifetimeScope();
-            var logger = lifetimeScope.Resolve<ILogger<QuickSetupTestBase>>();
-            var factory = (ClaptrapFactory) lifetimeScope.Resolve<IClaptrapFactory>();
+            using var lifetimeScope = BuildService().CreateScope();
+            var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
+            var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();
             var sw = Stopwatch.StartNew();
 
             var data = Enumerable.Range(0, claptrapCount)
@@ -255,6 +242,8 @@ namespace Newbe.Claptrap.Tests
             }
 
             Parallel.ForEach(items, item => { item.lifetimeScope.Dispose(); });
+            await OnStopHost(Host);
+            await Host.StopAsync();
         }
     }
 }

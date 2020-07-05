@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
@@ -9,11 +10,11 @@ namespace Newbe.Claptrap.Bootstrapper
 {
     public static class ClaptrapBootstrapperBuilderExtensions
     {
-        public static IClaptrapBootstrapperBuilder AddDefaultConfiguration(
+        public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder, HostBuilderContext context)
-            => AddDefaultConfiguration(builder, context.Configuration);
+            => AddConfiguration(builder, context.Configuration);
 
-        public static IClaptrapBootstrapperBuilder AddDefaultConfiguration(
+        public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder,
             IConfiguration configuration)
         {
@@ -59,12 +60,11 @@ namespace Newbe.Claptrap.Bootstrapper
                                 x.Name.Contains("BootstrapperBuilderExtensions") && x.GetMethod(methodName) != null)
                     .Select(x => x.GetMethod(methodName))
                     .FirstOrDefault();
-                if (method != null)
-                {
-                    method.Invoke(null, new object[] {builder, options});
-                }
-
-                // TODO log about missing method
+                Debug.Assert(method != null,
+                    "method != null failed",
+                    "failed to find method {0}, please add the specific data storage assembly",
+                    methodName);
+                method.Invoke(null, new object[] {builder, options});
             }
         }
 
@@ -95,10 +95,11 @@ namespace Newbe.Claptrap.Bootstrapper
                                 x.Name.Contains("BootstrapperBuilderExtensions") && x.GetMethod(methodName) != null)
                     .Select(x => x.GetMethod(methodName))
                     .FirstOrDefault();
-                if (method != null)
-                {
-                    method.Invoke(null, new object[] {builder, options});
-                }
+                Debug.Assert(method != null,
+                    "method != null failed",
+                    "failed to find method {0}, please add the specific data storage assembly",
+                    methodName);
+                method.Invoke(null, new object[] {builder, options});
             }
         }
     }

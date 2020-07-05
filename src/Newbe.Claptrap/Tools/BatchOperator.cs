@@ -6,7 +6,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public class BatchOperator<T> : IBatchOperator<T>
     {

@@ -4,27 +4,27 @@ namespace Newbe.Claptrap
 {
     public class VersionErrorException : Exception
     {
-        public VersionErrorException(ulong nowStateVersion, ulong eventVersion)
+        public VersionErrorException(long nowStateVersion, long eventVersion)
             : this($"version error, current state version : {nowStateVersion}, eventVersion : {eventVersion}",
                 nowStateVersion,
                 eventVersion)
         {
         }
 
-        public VersionErrorException(string message, ulong nowStateVersion, ulong eventVersion) : base(message)
+        public VersionErrorException(string message, long nowStateVersion, long eventVersion) : base(message)
         {
             NowStateVersion = nowStateVersion;
             EventVersion = eventVersion;
         }
 
-        public VersionErrorException(string message, Exception innerException, ulong nowStateVersion,
-            ulong eventVersion) : base(message, innerException)
+        public VersionErrorException(string message, Exception innerException, long nowStateVersion,
+            long eventVersion) : base(message, innerException)
         {
             NowStateVersion = nowStateVersion;
             EventVersion = eventVersion;
         }
 
-        public ulong NowStateVersion { get; }
-        public ulong EventVersion { get; }
+        public long NowStateVersion { get; }
+        public long EventVersion { get; }
     }
 }

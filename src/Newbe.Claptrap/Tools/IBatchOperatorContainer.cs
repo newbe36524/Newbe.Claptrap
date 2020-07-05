@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public interface IBatchOperatorContainer
     {

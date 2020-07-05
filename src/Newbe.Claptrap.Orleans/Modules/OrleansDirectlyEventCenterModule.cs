@@ -11,7 +11,7 @@ namespace Newbe.Claptrap.Orleans.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<MemoryOrleansEventCenter>()
+            builder.RegisterType<OrleansEventCenter>()
                 .As<IEventCenter>()
                 .SingleInstance();
         }

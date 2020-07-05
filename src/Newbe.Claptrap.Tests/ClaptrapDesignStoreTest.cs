@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
 using NUnit.Framework;
@@ -68,6 +69,21 @@ namespace Newbe.Claptrap.Tests
             claptrapDesignStore.AddOrReplace(design);
             var claptrapDesign = claptrapDesignStore.FindDesign(new TestClaptrapIdentity("456", typeCode));
             claptrapDesign.Should().Be(design);
+        }
+
+        [Test]
+        public void Remove()
+        {
+            using var mocker = AutoMockHelper.Create();
+            var claptrapDesignStore = mocker.Create<ClaptrapDesignStore>();
+            const string typeCode = "testCode";
+            var design = new ClaptrapDesign
+            {
+                ClaptrapTypeCode = typeCode
+            };
+            claptrapDesignStore.AddOrReplace(design);
+            claptrapDesignStore.Remove(x => x.ClaptrapTypeCode == typeCode);
+            claptrapDesignStore.ToArray().Should().BeEmpty();
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public class BatchOperatorKey : IBatchOperatorKey
     {

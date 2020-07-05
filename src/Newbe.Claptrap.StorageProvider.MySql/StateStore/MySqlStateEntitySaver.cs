@@ -7,7 +7,6 @@ using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.Options;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.StorageProvider.Relational.Tools
+namespace Newbe.Claptrap
 {
     public interface IBatchOperator<in T> :
         IBatchOperator

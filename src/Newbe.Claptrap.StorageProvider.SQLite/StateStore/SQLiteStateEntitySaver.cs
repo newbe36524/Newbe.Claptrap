@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Dapper;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore

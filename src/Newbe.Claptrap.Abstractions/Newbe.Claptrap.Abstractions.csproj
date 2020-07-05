@@ -6,9 +6,4 @@
         <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
-    <ItemGroup>
-      
-      
-    </ItemGroup>
-
 </Project>

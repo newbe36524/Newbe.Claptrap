@@ -1,7 +1,6 @@
 using Autofac;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
-using Newbe.Claptrap.StorageProvider.Relational.Tools;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {

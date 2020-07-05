@@ -47,6 +47,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+          - 5672
     steps:
     - uses: actions/checkout@v2
       with:
@@ -60,7 +64,7 @@ jobs:
       uses: Secbyte/dotnet-sonarscanner@v2.3
       with:
         buildCommand: dotnet build $GITHUB_WORKSPACE/src --configuration Release
-        testCommand: dotnet test $GITHUB_WORKSPACE/src --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="namespace =~ ^Newbe"
+        testCommand: dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="namespace =~ ^Newbe"
         projectKey: newbe36524_Newbe.Claptrap
         projectName: Newbe.Claptrap
         sonarOrganisation: newbe36524

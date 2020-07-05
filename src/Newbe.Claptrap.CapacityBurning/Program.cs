@@ -81,7 +81,7 @@ namespace Newbe.Claptrap.CapacityBurning
                             var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, builder);
                             var claptrapBootstrapper = bootstrapperBuilder
                                 .ScanClaptrapModule()
-                                .AddDefaultConfiguration(context)
+                                .AddConfiguration(context)
                                 .ScanClaptrapDesigns(new[]
                                 {
                                     typeof(Burning).Assembly
