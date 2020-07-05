@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/dotnet/core/sdk:3.1.301-bionic
     services:
-      postgres:
+      rabbitmq:
         image: rabbitmq:3-management-alpine
         ports:
           - 5672

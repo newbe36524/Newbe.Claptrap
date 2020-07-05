@@ -7,6 +7,7 @@ on:
       - develop
       - feature/ci
       - feature/ut
+      - feature/rabbitmq
 
   pull_request: 
     branches: 
@@ -47,6 +48,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+          - 5672
     steps:
     - uses: actions/checkout@v2
       with:
