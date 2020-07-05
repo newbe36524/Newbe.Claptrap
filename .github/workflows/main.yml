@@ -7,7 +7,6 @@ on:
       - develop
       - feature/ci
       - feature/ut
-      - feature/rabbitmq
 
   pull_request: 
     branches: 

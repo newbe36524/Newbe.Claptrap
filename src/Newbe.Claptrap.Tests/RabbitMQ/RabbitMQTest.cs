@@ -15,6 +15,7 @@ using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests.RabbitMQ
 {
+    [SingleThreaded]
     [Category("RabbitMQ"), Explicit]
     public class RabbitMQTest
     {
@@ -115,6 +116,7 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
                 .Merge()
                 .ToTask();
             await task;
+            await Task.Delay(TimeSpan.FromSeconds(5));
             await subscriberManager.CloseAsync();
         }
 
