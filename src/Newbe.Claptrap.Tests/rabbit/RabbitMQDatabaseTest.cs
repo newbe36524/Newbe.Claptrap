@@ -12,7 +12,7 @@ namespace Newbe.Claptrap.Tests.rabbit
     {
         protected override IEnumerable<string> AppsettingsFilenames
         {
-            get { yield return "RabbitMQ/appsettings.json"; }
+            get { yield return "rabbit/appsettings.json"; }
         }
 
         protected override async Task OnContainerBuilt(IServiceProvider container)
