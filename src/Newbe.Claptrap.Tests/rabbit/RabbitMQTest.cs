@@ -59,7 +59,7 @@ namespace Newbe.Claptrap.Tests.rabbit
                 Version = 1
             };
             await eventCenter.SendToMinionsAsync(id1, evt);
-            await Task.Delay(TimeSpan.FromSeconds(3));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             minionLocator.ConcurrentBag.Count.Should().Be(2);
             var dic = minionLocator.ConcurrentBag.ToDictionary(x => x.Identity);
