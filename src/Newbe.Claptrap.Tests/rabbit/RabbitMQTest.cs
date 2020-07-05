@@ -13,7 +13,7 @@ using Newbe.Claptrap.EventCenter.RabbitMQ;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests.RabbitMQ
+namespace Newbe.Claptrap.Tests.rabbit
 {
     [SingleThreaded]
     [Category("RabbitMQ"), Explicit]
@@ -21,7 +21,7 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
     {
         private IEnumerable<string> AppsettingsFilenames
         {
-            get { yield return "RabbitMQ/appsettings.json"; }
+            get { yield return "rabbit/appsettings.json"; }
         }
 
         [TestCase(CompressType.None)]
@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
                 DatabaseType.SQLite,
                 RelationLocatorStrategy.SharedTable,
                 AppsettingsFilenames.Concat(new[]
-                    {$"RabbitMQ/appsettings.{compressType.ToString("G").ToLower()}.json"}),
+                    {$"rabbit/appsettings.{compressType.ToString("G").ToLower()}.json"}),
                 builder =>
                 {
                     builder.RegisterInstance(minionLocator)

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newbe.Claptrap.EventCenter.RabbitMQ;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests.RabbitMQ
+namespace Newbe.Claptrap.Tests.rabbit
 {
     [Category("RabbitMQ"), Explicit]
     public class RabbitMQDatabaseTest : SQLiteSharedTableQuickSetupTest
