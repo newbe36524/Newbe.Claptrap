@@ -55,7 +55,7 @@ namespace Newbe.Claptrap.Tests.LoadConfiguration
         public void LoadConfigurationFromJson(string jsonFileName)
         {
             var builder = new ConfigurationBuilder();
-            builder.AddJsonFile($"LoadConfiguration/{jsonFileName}.json");
+            builder.AddJsonFile($"configs/load_db_config/{jsonFileName}.json");
             var configuration = builder.Build();
             var container = BuildContainer(configuration);
             var scope = container.BeginLifetimeScope();

@@ -35,14 +35,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="**\*.json" />
-        <Content Include="**\*.json">
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
         <None Remove="nlog.config" />
         <Content Include="nlog.config">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="configs\**\*.json" />
+        <Content Include="configs\**\*.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

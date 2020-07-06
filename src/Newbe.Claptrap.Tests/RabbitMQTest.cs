@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
     {
         private IEnumerable<string> AppsettingsFilenames
         {
-            get { yield return "RabbitMQ/appsettings.json"; }
+            get { yield return "configs/rabbitmq/appsettings.json"; }
         }
 
         [TestCase(CompressType.None)]
@@ -34,7 +34,7 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
                 DatabaseType.SQLite,
                 RelationLocatorStrategy.SharedTable,
                 AppsettingsFilenames.Concat(new[]
-                    {$"RabbitMQ/appsettings.{compressType.ToString("G").ToLower()}.json"}),
+                    {$"configs/rabbitmq/appsettings.{compressType.ToString("G").ToLower()}.json"}),
                 builder =>
                 {
                     builder.RegisterInstance(minionLocator)

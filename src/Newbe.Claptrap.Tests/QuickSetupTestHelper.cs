@@ -34,9 +34,9 @@ namespace Newbe.Claptrap.Tests
                 .ConfigureAppConfiguration(configurationBuilder =>
                 {
                     configurationBuilder
-                        .AddJsonFile("appsettings.json")
-                        .AddJsonFile($"db_configs/claptrap.{databaseType:G}.json".ToLower())
-                        .AddJsonFile($"db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
+                        .AddJsonFile("configs/appsettings.json")
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.json".ToLower())
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
                     foreach (var filename in configJsonFilenames)
                     {
                         configurationBuilder.AddJsonFile(filename);
