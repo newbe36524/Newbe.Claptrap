@@ -5,6 +5,6 @@ namespace Newbe.Claptrap
         /// <summary>
         /// max event load in one batch
         /// </summary>
-        public int LoadingCountInOneBatch { get; set; }
+        public int LoadingCountInOneBatch { get; set; } = 1000;
     }
 }

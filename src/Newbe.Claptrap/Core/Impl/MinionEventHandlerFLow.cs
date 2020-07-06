@@ -1,6 +1,5 @@
 using System;
-using System.Linq;
-using System.Reactive.Disposables;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -55,71 +54,75 @@ namespace Newbe.Claptrap.Core.Impl
         public void Activate()
         {
             _eventHandleFlow = _incomingEventsSeq
-                .SelectMany(item =>
-                {
-                    if (State.NextVersion == item.Event.Version)
-                    {
-                        return Observable.Return(item);
-                    }
-
-                    if (item.Event.Version < State.NextVersion)
-                    {
-                        item.TaskCompletionSource!.SetResult(0);
-                        return Observable.Empty<EventItem>();
-                    }
-
-
-                    return LoadEventFromLoader()
-                        .Concat(Observable.Return(item));
-
-                    IObservable<EventItem> LoadEventFromLoader() =>
-                        Observable.Create<EventItem>(
-                            async observer =>
-                            {
-                                var step = _eventLoadingOptions.LoadingCountInOneBatch;
-                                var versionCount = item.Event.Version - State.NextVersion;
-                                var pageCount = (int) Math.Ceiling(versionCount * 1.0 / step);
-                                for (var i = 0; i < pageCount; i++)
-                                {
-                                    var left = State.NextVersion + i * step;
-                                    var right = Math.Min(State.NextVersion + (i + 1) * step, item.Event.Version);
-                                    var events = await _eventLoader.GetEventsAsync(left, right);
-                                    var items = events.Select(@event => new EventItem
-                                    {
-                                        Event = @event,
-                                        TaskCompletionSource = null
-                                    }).ToArray();
-                                    foreach (var eventItem in items)
-                                    {
-                                        observer.OnNext(eventItem);
-                                    }
-                                }
-
-                                observer.OnCompleted();
-                                return Disposable.Empty;
-                            });
-                })
                 .Select(item => Observable.FromAsync(() => HandleCoreAsync(item)))
                 .Concat()
                 .Subscribe(_ => { },
                     ex => { _logger.LogError(ex, "thrown a exception while handling event"); });
         }
 
-        private async Task HandleCoreAsync(EventItem item)
+        private async Task HandleCoreAsync(EventItem sourceItem)
+        {
+            try
+            {
+                await foreach (var one in AllEvents(sourceItem.Event))
+                {
+                    await HandleOne(one);
+                }
+
+                sourceItem.TaskCompletionSource.SetResult(0);
+            }
+            catch (Exception e)
+            {
+                sourceItem.TaskCompletionSource.SetException(e);
+                throw;
+            }
+
+            async IAsyncEnumerable<IEvent> AllEvents(IEvent evt)
+            {
+                if (State.NextVersion == evt.Version)
+                {
+                    yield return evt;
+                    yield break;
+                }
+
+                if (evt.Version < State.NextVersion)
+                {
+                    yield break;
+                }
+
+                var step = _eventLoadingOptions.LoadingCountInOneBatch;
+                var versionCount = evt.Version - State.NextVersion;
+                var pageCount = (int) Math.Ceiling(versionCount * 1.0 / step);
+                for (var i = 0; i < pageCount; i++)
+                {
+                    // State.NextVersion will change after move to next page, so i is not used in this loop
+                    var left = State.NextVersion;
+                    var right = Math.Min(State.NextVersion + step, evt.Version);
+                    var events = await _eventLoader.GetEventsAsync(left, right);
+                    foreach (var eventItem in events)
+                    {
+                        yield return eventItem;
+                    }
+                }
+
+                yield return evt;
+            }
+        }
+
+        private async Task HandleOne(IEvent evt)
         {
             var context = CreateContext();
             try
             {
-                await HandleEventCoreAsync().ConfigureAwait(false);
-                context.TaskCompletionSource?.SetResult(0);
+                await HandleEventCoreAsync(context).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 await HandleException(e).ConfigureAwait(false);
-                context.TaskCompletionSource?.SetException(e);
+                throw;
             }
 
-            async Task HandleEventCoreAsync()
+            async Task HandleEventCoreAsync(EventHandleFlowContext context)
             {
                 IState nextState;
                 await using (var handler = context.EventHandler)
@@ -140,7 +143,7 @@ namespace Newbe.Claptrap.Core.Impl
             {
                 _logger.LogWarning(e,
                     "there is an exception when handle event : {@event} . start to recover state as strategy : {strategy}",
-                    context.Event,
+                    evt,
                     _stateRecoveryOptions.StateRecoveryStrategy);
                 switch (_stateRecoveryOptions.StateRecoveryStrategy)
                 {
@@ -157,28 +160,19 @@ namespace Newbe.Claptrap.Core.Impl
 
             EventHandleFlowContext CreateContext()
             {
-                try
+                var re = new EventHandleFlowContext
                 {
-                    var re = new EventHandleFlowContext
-                    {
-                        NowState = _stateHolder.DeepCopy(State),
-                        Event = item.Event,
-                        TaskCompletionSource = item.TaskCompletionSource,
-                    };
-                    if (re.Event.Version != re.NowState.NextVersion)
-                    {
-                        throw new VersionErrorException(re.NowState.Version, re.Event.Version);
-                    }
+                    NowState = _stateHolder.DeepCopy(State),
+                    Event = evt,
+                };
+                if (re.Event.Version != re.NowState.NextVersion)
+                {
+                    throw new VersionErrorException(re.NowState.Version, re.Event.Version);
+                }
 
-                    re.EventContext = new EventContext(re.Event, re.NowState);
-                    re.EventHandler = CreateHandler(re.EventContext);
-                    return re;
-                }
-                catch (Exception e)
-                {
-                    item.TaskCompletionSource?.SetException(e);
-                    throw;
-                }
+                re.EventContext = new EventContext(re.Event, re.NowState);
+                re.EventHandler = CreateHandler(re.EventContext);
+                return re;
             }
         }
 
@@ -208,7 +202,6 @@ namespace Newbe.Claptrap.Core.Impl
             public IEvent Event { get; set; } = null!;
             public IEventContext EventContext { get; set; } = null!;
             public IEventHandler EventHandler { get; set; } = null!;
-            public TaskCompletionSource<int>? TaskCompletionSource { get; set; } = null!;
         }
 
         private IEventHandler CreateHandler(IEventContext eventContext)
@@ -222,7 +215,7 @@ namespace Newbe.Claptrap.Core.Impl
         private struct EventItem
         {
             public IEvent Event { get; set; }
-            public TaskCompletionSource<int>? TaskCompletionSource { get; set; }
+            public TaskCompletionSource<int> TaskCompletionSource { get; set; }
         }
     }
 }

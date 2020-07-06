@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
@@ -80,6 +82,75 @@ namespace Newbe.Claptrap.Tests
             });
             state.Version.Should().Be(1000,
                 "do nothing as event version 1000 lte state next version 1000 , skip the event");
+        }
+
+        [Test]
+        public async Task ConcurrentMixOrder()
+        {
+            const int targetVersion = 10000;
+            IState state = new TestState
+            {
+                Version = 500
+            };
+            using var mocker = AutoMockHelper.Create(
+                builderAction: builder =>
+                {
+                    builder.RegisterType<StateAccessor>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                    builder.RegisterBuildCallback(scope => scope.Resolve<IStateAccessor>().State = state);
+                    builder.RegisterInstance(new EventLoadingOptions
+                    {
+                        LoadingCountInOneBatch = 1000
+                    });
+                });
+            var sourceEvents = Enumerable.Range(0, targetVersion + 1).Select(x => new TestEvent
+            {
+                Version = x
+            }).ToArray();
+            var sendingEvents = sourceEvents.ToList();
+            Shuffle(sendingEvents);
+
+            mocker.Mock<IEventLoader>()
+                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
+                .Returns<long, long>((left, right) => Task.FromResult(sourceEvents
+                    .Skip((int) left)
+                    .Take((int) (right - left))
+                    .Cast<IEvent>()))
+                .Callback<long, long>((left, right) => Console.WriteLine($"left {left} right {right}"));
+
+            mocker.Mock<IStateHolder>()
+                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
+                .Returns(state);
+
+            mocker.Mock<IEventHandlerFactory>()
+                .Setup(x => x.Create(It.IsAny<IEventContext>()))
+                .Returns(new TestHandler());
+
+            mocker.Mock<IStateSavingFlow>()
+                .Setup(x => x.OnNewStateCreated(It.IsAny<IState>()));
+
+            var flow = mocker.Create<MinionEventHandlerFLow>();
+
+            flow.Activate();
+
+            await Task.WhenAll(sendingEvents.Select(flow.OnNewEventReceived));
+            state.Version.Should().Be(targetVersion);
+        }
+
+        private static readonly Random Rd = new Random();
+
+        private static void Shuffle<T>(IList<T> list)
+        {
+            var n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                var k = Rd.Next(n + 1);
+                var value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
 
         [Test]

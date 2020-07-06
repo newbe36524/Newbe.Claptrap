@@ -4,7 +4,10 @@ on:
   push:
     branches: 
       - feature/rabbitmq
-    
+
+env:
+  Claptrap__RabbitMQ__Uri: amqp://guest:guest@rabbitmq:5672/%2f
+
 jobs:
   build:
     runs-on: ubuntu-latest

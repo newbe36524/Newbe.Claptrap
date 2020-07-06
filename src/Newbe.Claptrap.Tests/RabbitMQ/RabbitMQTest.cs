@@ -13,7 +13,7 @@ using Newbe.Claptrap.EventCenter.RabbitMQ;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests.rabbit
+namespace Newbe.Claptrap.Tests.RabbitMQ
 {
     [Category("RabbitMQ"), Explicit]
     public class RabbitMQTest
@@ -61,8 +61,8 @@ namespace Newbe.Claptrap.Tests.rabbit
             await eventCenter.SendToMinionsAsync(id1, evt);
             await Task.Delay(TimeSpan.FromSeconds(3));
 
-            minionLocator.ConcurrentBag.Count.Should().Be(2);
-            var dic = minionLocator.ConcurrentBag.ToDictionary(x => x.Identity);
+            minionLocator.Queue.Count.Should().Be(2);
+            var dic = minionLocator.Queue.ToDictionary(x => x.Identity);
             var balanceMinionId = new ClaptrapIdentity(id1.Id, Codes.AccountBalanceMinion);
             var balanceMinionItem = dic[balanceMinionId];
             AssertEvent(balanceMinionId, balanceMinionItem);
@@ -94,10 +94,17 @@ namespace Newbe.Claptrap.Tests.rabbit
         [TestCase(10000)]
         public async Task MultipleSent(int count)
         {
+            var minionLocator = new TestMinionLocator();
             using var host = QuickSetupTestHelper.BuildHost(
                 DatabaseType.SQLite,
                 RelationLocatorStrategy.SharedTable,
-                AppsettingsFilenames);
+                AppsettingsFilenames,
+                builder =>
+                {
+                    builder.RegisterInstance(minionLocator)
+                        .As<IMinionLocator>()
+                        .SingleInstance();
+                });
             var container = host.Services;
             var subscriberManager = container.GetRequiredService<IMQSubscriberManager>();
             await subscriberManager.StartAsync();
@@ -115,13 +122,24 @@ namespace Newbe.Claptrap.Tests.rabbit
                     return unitEvent;
                 })
                 .Select(e => Observable.FromAsync(() => eventCenter.SendToMinionsAsync(id, e)))
-                .Merge()
+                .Merge(100)
                 .ToTask();
             await task;
             await Task.Delay(TimeSpan.FromSeconds(5));
             await subscriberManager.CloseAsync();
             await container.GetRequiredService<IMQSenderManager>().CloseAsync();
             await host.StopAsync();
+
+            var receivedItems = minionLocator.Queue.ToArray();
+            var itemGroup = receivedItems
+                .GroupBy(x => x.Identity);
+            foreach (var grouping in itemGroup)
+            {
+                grouping
+                    .Select(x => x.Event.Version)
+                    .Should()
+                    .BeEquivalentTo(Enumerable.Range(0, count));
+            }
         }
 
         private class ReceivedItem
@@ -138,21 +156,21 @@ namespace Newbe.Claptrap.Tests.rabbit
 
         private class TestMinionLocator : IMinionLocator
         {
-            public ConcurrentBag<ReceivedItem> ConcurrentBag { get; } = new ConcurrentBag<ReceivedItem>();
+            public ConcurrentQueue<ReceivedItem> Queue { get; } = new ConcurrentQueue<ReceivedItem>();
 
             public IMinionProxy CreateProxy(IClaptrapIdentity minionId)
             {
-                return new TestMinionProxy(minionId, ConcurrentBag);
+                return new TestMinionProxy(minionId, Queue);
             }
 
             private class TestMinionProxy : IMinionProxy
             {
                 private readonly IClaptrapIdentity _minionIdentity;
-                private readonly ConcurrentBag<ReceivedItem> _bag;
+                private readonly ConcurrentQueue<ReceivedItem> _bag;
 
                 public TestMinionProxy(
                     IClaptrapIdentity minionIdentity,
-                    ConcurrentBag<ReceivedItem> bag)
+                    ConcurrentQueue<ReceivedItem> bag)
                 {
                     _minionIdentity = minionIdentity;
                     _bag = bag;
@@ -162,7 +180,7 @@ namespace Newbe.Claptrap.Tests.rabbit
                 {
                     foreach (var @event in events)
                     {
-                        _bag.Add(new ReceivedItem
+                        _bag.Enqueue(new ReceivedItem
                         {
                             Event = @event,
                             Identity = _minionIdentity
