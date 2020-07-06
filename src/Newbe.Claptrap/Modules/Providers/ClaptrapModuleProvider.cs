@@ -172,6 +172,9 @@ namespace Newbe.Claptrap.Modules
                 builder.RegisterType<MinionEventHandlerFLow>()
                     .AsImplementedInterfaces()
                     .SingleInstance();
+                builder.RegisterType<EmptyEventHandledNotificationFlow>()
+                    .AsImplementedInterfaces()
+                    .SingleInstance();
 
                 void RegisterComponent<TComponent>(Type factoryType)
                     where TComponent : class, IClaptrapComponent

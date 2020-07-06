@@ -34,11 +34,8 @@ namespace Newbe.Claptrap.Demo.Server
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .UseClaptrap(typeof(AccountGrain).Assembly)
                 .UseOrleansClaptrap()
-                .UseClaptrap(builder => builder.ScanClaptrapDesigns(new[]
-                {
-                    typeof(AccountGrain).Assembly
-                }))
                 .UseOrleans(builder => { builder.UseDashboard(options => options.Port = 9000); })
                 .ConfigureLogging(logging =>
                 {

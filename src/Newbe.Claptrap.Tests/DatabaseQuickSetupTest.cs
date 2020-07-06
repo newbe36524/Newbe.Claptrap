@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
-    [Category(nameof(DatabaseType.SQLite)), Explicit]
+    [Category(nameof(DatabaseType.SQLite))]
     public class SQLiteSharedTableQuickSetupTest : QuickSetupTestBase
     {
         public SQLiteSharedTableQuickSetupTest() : base(

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using App.Metrics;
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.InfluxDB;
@@ -21,6 +23,11 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class HostExtensions
     {
+        public static IHostBuilder UseClaptrap(this IHostBuilder hostBuilder,
+            params Assembly[] assemblies)
+            =>
+                hostBuilder.UseClaptrap(builder => builder.ScanClaptrapDesigns(assemblies));
+
         public static IHostBuilder UseClaptrap(this IHostBuilder hostBuilder,
             Action<IClaptrapBootstrapperBuilder> builderAction,
             Action<ContainerBuilder>? containerBuilderAction = null)
