@@ -52,6 +52,48 @@ namespace Newbe.Claptrap.Tests
         }
 
         [Test]
+        public void MissingVersion()
+        {
+            IState state = new TestState
+            {
+                Version = 0
+            };
+            using var mocker = AutoMockHelper.Create(
+                builderAction: builder =>
+                {
+                    builder.RegisterType<StateAccessor>()
+                        .AsImplementedInterfaces()
+                        .SingleInstance();
+                    builder.RegisterBuildCallback(scope => scope.Resolve<IStateAccessor>().State = state);
+                });
+
+            mocker.Mock<IStateHolder>()
+                .Setup(x => x.DeepCopy(It.IsAny<IState>()))
+                .Returns(state);
+
+            mocker.Mock<IEventHandlerFactory>()
+                .SetupSequence(x => x.Create(It.IsAny<IEventContext>()))
+                .Returns(new TestHandler());
+
+            mocker.Mock<IEventLoader>()
+                .Setup(x => x.GetEventsAsync(It.IsAny<long>(), It.IsAny<long>()))
+                .Returns<long, long>((left, right) => Task.FromResult(Enumerable.Empty<IEvent>()));
+
+            var flow = mocker.Create<MinionEventHandlerFLow>();
+
+            flow.Activate();
+            const int handlingVersion = 1000;
+            Assert.ThrowsAsync<VersionErrorException>(async () =>
+            {
+                await flow.OnNewEventReceived(new TestEvent
+                {
+                    Version = handlingVersion
+                });
+            }, $"should be thrown : missing version between {state.Version} and {handlingVersion}");
+        }
+
+
+        [Test]
         public async Task HandleVersionOlderEvent()
         {
             IState state = new TestState
