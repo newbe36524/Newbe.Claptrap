@@ -6,6 +6,7 @@ using FluentAssertions;
 using HelloClaptrap.Actors.Cart.Events;
 using HelloClaptrap.Models.Cart;
 using HelloClaptrap.Models.Cart.Events;
+using Newbe.Claptrap;
 using NUnit.Framework;
 
 namespace HelloClaptrap.Actors.Tests.Cart.Events

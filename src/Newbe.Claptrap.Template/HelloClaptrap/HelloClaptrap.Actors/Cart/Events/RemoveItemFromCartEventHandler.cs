@@ -11,19 +11,22 @@ namespace HelloClaptrap.Actors.Cart.Events
         public override ValueTask HandleEvent(CartState stateData, RemoveItemFromCartEvent eventData,
             IEventContext eventContext)
         {
-            if (stateData.Items == null)
+            var items = stateData.Items;
+
+            if (items == null)
             {
                 return new ValueTask();
             }
 
-            if (stateData.Items.TryGetValue(eventData.SkuId, out var oldCount))
+            var skuId = eventData.SkuId;
+            if (items.TryGetValue(skuId, out var oldCount))
             {
                 oldCount -= eventData.Count;
             }
 
             if (oldCount <= 0)
             {
-                stateData.Items.Remove(eventData.SkuId);
+                items.Remove(skuId);
             }
 
             return new ValueTask();

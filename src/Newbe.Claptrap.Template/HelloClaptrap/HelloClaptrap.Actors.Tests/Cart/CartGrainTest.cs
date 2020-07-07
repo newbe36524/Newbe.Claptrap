@@ -3,6 +3,8 @@ using Autofac.Extras.Moq;
 using FluentAssertions;
 using HelloClaptrap.Actors.Cart;
 using HelloClaptrap.Models.Cart;
+using Newbe.Claptrap;
+using Newbe.Claptrap.Orleans;
 using NUnit.Framework;
 
 namespace HelloClaptrap.Actors.Tests.Cart
@@ -14,8 +16,8 @@ namespace HelloClaptrap.Actors.Tests.Cart
         {
             using var mocker = AutoMock.GetStrict();
 
-            mocker.Mock<CartGrain>()
-                .Setup(x => x.StateData)
+            mocker.Mock<IClaptrapGrainCommonService>()
+                .Setup(x => x.ClaptrapAccessor.Claptrap.State.Data)
                 .Returns(new CartState());
 
             var handler = mocker.Create<CartGrain>();

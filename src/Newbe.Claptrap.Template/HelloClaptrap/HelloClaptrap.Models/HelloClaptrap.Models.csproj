@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newbe.Claptrap.Abstractions" Version="0.3.8-alpha.gecc8a868f4" />
+      <PackageReference Include="Newbe.Claptrap.Abstractions" Version="0.3.16-alpha.g1517ff130a" />
     </ItemGroup>
 
 </Project>
