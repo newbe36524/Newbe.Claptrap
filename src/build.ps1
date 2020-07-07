@@ -53,7 +53,7 @@ Task PackTemplate -depends Init -Description "pack template package" {
     }
 }
 
-Task NugetPushNuget  -Description "push package to nuget" {
+Task NugetPushNuget -Description "push package to nuget" {
     Get-ChildItem $releaseDir *.nupkg | ForEach-Object {
         Exec {
             dotnet nuget push "$releaseDir$_" -s https://www.nuget.org/

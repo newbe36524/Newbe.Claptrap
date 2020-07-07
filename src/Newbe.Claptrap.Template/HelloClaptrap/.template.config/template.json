@@ -1,14 +1,17 @@
 {
-    "$schema": "http://json.schemastore.org/template",
-    "author": "newbe36524",
-    "classifications": [ "Console" ], 
-    "name": "Hello Newbe.Clatrap",
-    "identity": "hello.newbe.claptrap",         
-    "shortName": "hello.newbe.claptrap",
-    "tags": {
-      "language": "C#",
-      "type":"project"
-    },
-    "sourceName": "HelloClaptrap",
-    "preferNameDirectory": true
+  "$schema": "http://json.schemastore.org/template",
+  "author": "newbe36524",
+  "classifications": [
+    "Console",
+    "Common"
+  ],
+  "name": "Newbe.Clatrap Quick Setup",
+  "identity": "newbe.claptrap.hello",
+  "shortName": "newbe.claptrap",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "HelloClaptrap",
+  "preferNameDirectory": true
 }

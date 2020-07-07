@@ -7,7 +7,7 @@
     <owners>newbe36524</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/newbe36524/Newbe.Claptrap</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/Newbe36524/Newbe.Mahua.Framework/master/logo.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/newbe36524/Newbe.Claptrap/develop/docs/main_banner.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern.
     This package is one part of that project. Please check the source repository for more details.
@@ -18,6 +18,6 @@ https://github.com/newbe36524/Newbe.Claptrap</description>
     </packageTypes>
   </metadata>
   <files>
-    <file src="HelloClaptrap\**" target="content/HelloClaptrap" exclude="HelloClaptrap\NuGet.config"></file>
+    <file src="HelloClaptrap\**" target="content/HelloClaptrap"></file>
   </files>
 </package>
