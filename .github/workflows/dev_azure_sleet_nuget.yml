@@ -5,6 +5,8 @@ on:
     branches: 
       - develop
       - feature/ci
+      - feature/ut
+
 
 jobs:
   build:
