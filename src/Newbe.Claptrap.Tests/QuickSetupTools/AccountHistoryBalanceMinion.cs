@@ -10,8 +10,10 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
         NormalClaptrapBox<AccountBalanceHistoryInfo>, IAccountHistoryBalanceMinion
     {
         public AccountHistoryBalanceMinion(IClaptrapIdentity identity,
-            IClaptrapFactory claptrapFactory) : base(identity,
-            claptrapFactory)
+            IClaptrapFactory claptrapFactory,
+            IClaptrapAccessor claptrapAccessor) : base(identity,
+            claptrapFactory,
+            claptrapAccessor)
         {
         }
 

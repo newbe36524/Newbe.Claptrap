@@ -5,6 +5,8 @@ using Newbe.Claptrap.StorageProvider.SQLite;
 using Newbe.Claptrap.StorageProvider.SQLite.Extensions;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
 {

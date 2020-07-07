@@ -1,28 +1,40 @@
+using System;
+
 namespace Newbe.Claptrap.Box
 {
     public class NormalClaptrapBox : IClaptrapBox
     {
+        private readonly IClaptrapAccessor _claptrapAccessor;
+
         public delegate NormalClaptrapBox Factory(IClaptrapIdentity identity);
 
-        public NormalClaptrapBox(
+        private readonly Lazy<IClaptrap> _createFromFactory;
+
+        protected NormalClaptrapBox(
             IClaptrapIdentity identity,
-            IClaptrapFactory claptrapFactory)
+            IClaptrapFactory claptrapFactory,
+            IClaptrapAccessor claptrapAccessor)
         {
-            Claptrap = claptrapFactory.Create(identity);
+            _claptrapAccessor = claptrapAccessor;
+            _createFromFactory = new Lazy<IClaptrap>(() =>
+                _claptrapAccessor.Claptrap ??= claptrapFactory.Create(identity)
+            );
         }
 
-        public IClaptrap Claptrap { get; }
+        public IClaptrap Claptrap => _claptrapAccessor.Claptrap ?? _createFromFactory.Value;
     }
 
     public class NormalClaptrapBox<TStateData> : NormalClaptrapBox
         where TStateData : IStateData
     {
-        public NormalClaptrapBox(IClaptrapIdentity identity,
-            IClaptrapFactory claptrapFactory) : base(identity,
-            claptrapFactory)
+        protected NormalClaptrapBox(IClaptrapIdentity identity,
+            IClaptrapFactory claptrapFactory,
+            IClaptrapAccessor claptrapAccessor) : base(identity,
+            claptrapFactory,
+            claptrapAccessor)
         {
         }
 
-        public TStateData StateData => (TStateData) Claptrap.State.Data;
+        public TStateData StateData => (TStateData) Claptrap!.State.Data;
     }
 }

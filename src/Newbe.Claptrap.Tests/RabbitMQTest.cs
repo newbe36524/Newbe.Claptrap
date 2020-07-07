@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.EventCenter;
 using Newbe.Claptrap.EventCenter.RabbitMQ;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests.RabbitMQ
+namespace Newbe.Claptrap.Tests
 {
     [Category("RabbitMQ"), Explicit]
     public class RabbitMQTest
@@ -40,7 +41,9 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
                     builder.RegisterInstance(minionLocator)
                         .As<IMinionLocator>()
                         .SingleInstance();
-                });
+                }, builder =>
+                    builder.UseRabbitMQ(rabbitmq => rabbitmq.AsEventCenter())
+            );
 
             var container = host.Services;
             var subscriberManager = container.GetRequiredService<IMQSubscriberManager>();
@@ -104,7 +107,9 @@ namespace Newbe.Claptrap.Tests.RabbitMQ
                     builder.RegisterInstance(minionLocator)
                         .As<IMinionLocator>()
                         .SingleInstance();
-                });
+                }, builder =>
+                    builder.UseRabbitMQ(rabbitmq => rabbitmq.AsEventCenter())
+            );
             var container = host.Services;
             var subscriberManager = container.GetRequiredService<IMQSubscriberManager>();
             await subscriberManager.StartAsync();

@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
-    public class AccountInfo : IStateData
+    public class AccountState : IStateData
     {
         public decimal Balance { get; set; }
     }

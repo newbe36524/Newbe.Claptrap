@@ -21,5 +21,10 @@ namespace Newbe.Claptrap
         /// options about minions of this claptrap. null if this claptrap isn`t a minion claptrap
         /// </summary>
         public MinionActivationOptions MinionActivationOptions { get; set; } = null!;
+
+        /// <summary>
+        /// options about event center of this claptrap.
+        /// </summary>
+        public EventCenterOptions EventCenterOptions { get; set; } = null!;
     }
 }

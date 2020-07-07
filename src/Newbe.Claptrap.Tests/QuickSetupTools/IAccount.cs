@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
-    [ClaptrapState(typeof(AccountInfo), Codes.Account)]
+    [ClaptrapState(typeof(AccountState), Codes.Account)]
     [ClaptrapEvent(typeof(AccountBalanceChangeEvent), Codes.AccountBalanceChangeEvent)]
     [ClaptrapEvent(typeof(UnitEvent.UnitEventData), UnitEvent.TypeCode)]
     public interface IAccount

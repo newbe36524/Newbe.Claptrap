@@ -46,11 +46,16 @@ namespace Newbe.Claptrap.Bootstrapper
                     x => x.EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory))
                 .ConfigureClaptrapDesign(
                     x => x.EventNotifierFactoryType == null,
-                    x => x.EventNotifierFactoryType = typeof(CompoundEventNotifierFactory));
-            builder
+                    x => x.EventNotifierFactoryType = typeof(CompoundEventNotifierFactory))
                 .ConfigureClaptrapDesign(
                     x => true,
                     DisplayInfoFiller.FillDisplayInfo)
+                .ConfigureClaptrapDesign(
+                    x => x.ClaptrapOptions.EventCenterOptions == null,
+                    x => x.ClaptrapOptions.EventCenterOptions = new EventCenterOptions
+                    {
+                        EventCenterType = EventCenterType.None,
+                    })
                 ;
         }
     }

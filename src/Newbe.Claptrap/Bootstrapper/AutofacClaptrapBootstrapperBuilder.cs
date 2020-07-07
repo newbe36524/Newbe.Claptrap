@@ -69,6 +69,7 @@ namespace Newbe.Claptrap.Bootstrapper
             IClaptrapBootstrapper BuildCore()
             {
                 var container = CreateContainerForScanning();
+                
                 IClaptrapDesignStore? claptrapDesignStore = null;
                 // minion can save nothing
                 this.ConfigureClaptrapDesign(x => x.IsMinion(),
@@ -137,18 +138,18 @@ namespace Newbe.Claptrap.Bootstrapper
                 {
                     var providerTypes = Options.ModuleTypes
                         .Where(x => x.IsClass && !x.IsAbstract)
-                        .Where(x => x.GetInterface(typeof(IClaptrapApplicationModuleProvider).FullName) != null)
+                        .Where(x => x.GetInterface(typeof(IClaptrapApplicationModulesProvider).FullName) != null)
                         .ToArray();
                     _logger.LogDebug("Found type {providerTypes} as {name}",
                         providerTypes,
-                        nameof(IClaptrapApplicationModuleProvider));
+                        nameof(IClaptrapApplicationModulesProvider));
                     innerBuilder.RegisterTypes(providerTypes)
-                        .As<IClaptrapApplicationModuleProvider>()
+                        .As<IClaptrapApplicationModulesProvider>()
                         .InstancePerLifetimeScope();
                     innerBuilder.RegisterInstance(claptrapDesignStore);
                 });
                 var moduleProviders =
-                    scope.Resolve<IEnumerable<IClaptrapApplicationModuleProvider>>();
+                    scope.Resolve<IEnumerable<IClaptrapApplicationModulesProvider>>();
                 var applicationModules = moduleProviders
                     .SelectMany(x =>
                     {

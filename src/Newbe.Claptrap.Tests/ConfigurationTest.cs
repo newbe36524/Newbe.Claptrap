@@ -9,7 +9,7 @@ using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Tests.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests.LoadConfiguration
+namespace Newbe.Claptrap.Tests
 {
     public class ConfigurationTest
     {

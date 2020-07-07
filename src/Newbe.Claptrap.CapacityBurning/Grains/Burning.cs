@@ -12,8 +12,10 @@ namespace Newbe.Claptrap.CapacityBurning.Grains
         public new delegate Burning Factory(IClaptrapIdentity identity);
 
         public Burning(IClaptrapIdentity identity,
-            IClaptrapFactory claptrapFactory) : base(identity,
-            claptrapFactory)
+            IClaptrapFactory claptrapFactory,
+            IClaptrapAccessor claptrapAccessor) : base(identity,
+            claptrapFactory,
+            claptrapAccessor)
         {
             _identity = identity;
         }

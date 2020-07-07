@@ -8,8 +8,6 @@ namespace Newbe.Claptrap.Orleans
         IClaptrapBoxGrain<TStateData>
         where TStateData : IStateData
     {
-        private IClaptrapBox? _box;
-
         protected ClaptrapBoxGrain(
             IClaptrapGrainCommonService claptrapGrainCommonService)
         {
@@ -18,31 +16,19 @@ namespace Newbe.Claptrap.Orleans
 
         public IClaptrapGrainCommonService ClaptrapGrainCommonService { get; }
 
-        public IClaptrap Claptrap
-        {
-            get
-            {
-                Debug.Assert(_box != null, nameof(_box) + " != null");
-                return _box.Claptrap;
-            }
-        }
+        public IClaptrap Claptrap =>
+            ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap!;
 
-        public TStateData StateData
-        {
-            get
-            {
-                Debug.Assert(_box != null, nameof(_box) + " != null");
-                return (TStateData) _box.Claptrap.State.Data;
-            }
-        }
+        public TStateData StateData =>
+            (TStateData) ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap!.State.Data;
 
         public override async Task OnActivateAsync()
         {
             var actorTypeCode = ClaptrapGrainCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
             var grainActorIdentity = new ClaptrapIdentity(this.GetPrimaryKeyString(), actorTypeCode);
-            var box = ClaptrapGrainCommonService.BoxFactory.Create(grainActorIdentity);
-            await box.Claptrap.ActivateAsync();
-            _box = box;
+            var claptrap = ClaptrapGrainCommonService.ClaptrapFactory.Create(grainActorIdentity);
+            await claptrap.ActivateAsync();
+            ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap = claptrap;
         }
 
         public override Task OnDeactivateAsync()

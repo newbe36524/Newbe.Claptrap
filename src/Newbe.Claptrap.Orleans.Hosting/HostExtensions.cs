@@ -44,7 +44,6 @@ namespace Microsoft.Extensions.Hosting
                     var serviceProviderFactory = new AutofacServiceProviderFactory(
                         builder =>
                         {
-                            containerBuilderAction?.Invoke(builder);
                             var collection = new ServiceCollection().AddLogging(logging =>
                             {
                                 logging.SetMinimumLevel(LogLevel.Debug);
@@ -58,6 +57,7 @@ namespace Microsoft.Extensions.Hosting
                             builderAction.Invoke(bootstrapperBuilder);
                             var claptrapBootstrapper = bootstrapperBuilder.Build();
                             claptrapBootstrapper.Boot();
+                            containerBuilderAction?.Invoke(builder);
                         });
 
                     return serviceProviderFactory;
@@ -68,6 +68,7 @@ namespace Microsoft.Extensions.Hosting
             => hostBuilder
                 .UseOrleans((context, builder) =>
                 {
+                    // TODO try to enable claptrap orleans event center
                     var claptrapOptions = new ClaptrapServerOptions();
                     var config =
                         context.Configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);

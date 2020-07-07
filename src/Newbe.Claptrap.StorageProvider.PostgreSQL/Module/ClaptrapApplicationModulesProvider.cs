@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Module
 {
-    public class ClaptrapApplicationModuleProvider : IClaptrapApplicationModuleProvider
+    public class ClaptrapApplicationModulesProvider : IClaptrapApplicationModulesProvider
     {
         public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
         {

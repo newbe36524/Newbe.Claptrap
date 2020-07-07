@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
     [ClaptrapMinion(Codes.Account)]
-    [ClaptrapState(typeof(AccountInfo), Codes.AccountBalanceMinion)]
+    [ClaptrapState(typeof(AccountState), Codes.AccountBalanceMinion)]
     public interface IAccountBalanceMinion
     {
         Task<decimal> GetBalanceAsync();

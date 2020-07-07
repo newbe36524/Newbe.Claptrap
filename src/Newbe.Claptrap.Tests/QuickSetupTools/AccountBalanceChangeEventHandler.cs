@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 namespace Newbe.Claptrap.Tests.QuickSetupTools
 {
     public class AccountBalanceChangeEventHandler :
-        NormalEventHandler<AccountInfo, AccountBalanceChangeEvent>
+        NormalEventHandler<AccountState, AccountBalanceChangeEvent>
     {
-        public override ValueTask HandleEvent(AccountInfo stateData, AccountBalanceChangeEvent eventData,
+        public override ValueTask HandleEvent(AccountState stateData, AccountBalanceChangeEvent eventData,
             IEventContext eventContext)
         {
             stateData.Balance += eventData.Diff;

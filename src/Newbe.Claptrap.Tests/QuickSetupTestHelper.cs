@@ -18,7 +18,8 @@ namespace Newbe.Claptrap.Tests
             DatabaseType databaseType,
             RelationLocatorStrategy strategy,
             IEnumerable<string> configJsonFilenames,
-            Action<ContainerBuilder> builderAction = null)
+            Action<ContainerBuilder> builderAction = null,
+            Action<IClaptrapBootstrapperBuilder> bootstrapperAction = null)
         {
             var hostBuilder = new HostBuilder();
             hostBuilder
@@ -55,6 +56,7 @@ namespace Newbe.Claptrap.Tests
                         typeof(IAccountHistoryBalanceMinion),
                         typeof(AccountHistoryBalanceMinion)
                     });
+                    bootstrapperAction?.Invoke(bootstrapperBuilder);
                 }, containerBuilder =>
                 {
                     builderAction?.Invoke(containerBuilder);

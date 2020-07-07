@@ -1,29 +1,23 @@
 using System.Collections.Generic;
 using Autofac;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Module = Autofac.Module;
 
 namespace Newbe.Claptrap.EventCenter.RabbitMQ.Modules.Providers
 {
     public class ClaptrapModuleProvider : IClaptrapModuleProvider
     {
-        private readonly ILogger<ClaptrapModuleProvider> _logger;
-        private readonly IOptions<ClaptrapServerOptions> _options;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
 
         public ClaptrapModuleProvider(
-            ILogger<ClaptrapModuleProvider> logger,
-            IOptions<ClaptrapServerOptions> options)
+            IClaptrapDesignStore claptrapDesignStore)
         {
-            _logger = logger;
-            _options = options;
+            _claptrapDesignStore = claptrapDesignStore;
         }
 
         public IEnumerable<IClaptrapMasterModule> GetClaptrapMasterClaptrapModules(IClaptrapIdentity identity)
         {
-            var enabled = _options.Value.RabbitMQ?.Enabled;
-            _logger.LogTrace("RabbitMQ Enabled : {value}", enabled);
-            if (enabled == true)
+            var design = _claptrapDesignStore.FindDesign(identity);
+            if (design.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.RabbitMQ)
             {
                 yield return new ClaptrapSharedModule();
             }
@@ -31,8 +25,8 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Modules.Providers
 
         private class ClaptrapSharedModule : Module, IClaptrapMasterModule
         {
-            public string Name { get; } = "Claptrap shared module";
-            public string Description { get; } = "Module for claptrap and minion shared components";
+            public string Name { get; } = "Claptrap RabbitMQ EventCenter module";
+            public string Description { get; } = "Module for claptrap to send event by RabbitMQ";
 
             protected override void Load(ContainerBuilder builder)
             {

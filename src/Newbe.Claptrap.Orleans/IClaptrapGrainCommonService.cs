@@ -1,9 +1,9 @@
-
 namespace Newbe.Claptrap.Orleans
 {
     public interface IClaptrapGrainCommonService
     {
-        IClaptrapBoxFactory BoxFactory { get; }
+        IClaptrapFactory ClaptrapFactory { get; }
+        IClaptrapAccessor ClaptrapAccessor { get; }
         IClaptrapTypeCodeFactory ClaptrapTypeCodeFactory { get; }
     }
 }

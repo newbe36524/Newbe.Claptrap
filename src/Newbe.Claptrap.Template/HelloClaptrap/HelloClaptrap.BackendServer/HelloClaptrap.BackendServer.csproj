@@ -14,7 +14,7 @@
         <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.2.0" />
         <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="3.2.0" />
         <PackageReference Include="Newbe.Claptrap.Orleans.Hosting" Version="0.3.8-alpha.gecc8a868f4" />
-        <PackageReference Include="Newbe.Claptrap.StorageProvider.PostgreSQL" Version="0.3.8-alpha.gecc8a868f4" />
+        <PackageReference Include="Newbe.Claptrap.StorageProvider.SQLite" Version="0.3.8-alpha.gecc8a868f4" />
         <PackageReference Include="OrleansDashboard" Version="3.1.0" />
     </ItemGroup>
 

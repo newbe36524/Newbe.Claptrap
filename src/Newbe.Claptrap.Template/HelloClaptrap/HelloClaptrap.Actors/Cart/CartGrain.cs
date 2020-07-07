@@ -42,7 +42,8 @@ namespace HelloClaptrap.Actors.Cart
 
         public Task<Dictionary<string, int>> GetItemsAsync()
         {
-            return Task.FromResult(StateData.Items);
+            var re = StateData.Items ?? new Dictionary<string, int>();
+            return Task.FromResult(re);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Autofac;
 using Newbe.Claptrap.AppMetrics;
+using Newbe.Claptrap.Box;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
 

@@ -12,16 +12,16 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "api/cart/666",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Newbe.Claptrap.Web": {
+    "HelloClaptrap.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "api/cart/666",
+      "applicationUrl": "https://localhost:36524;http://localhost:36525",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

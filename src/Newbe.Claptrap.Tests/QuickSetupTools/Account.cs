@@ -6,19 +6,21 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
     [ClaptrapStateInitialFactoryHandler]
     [ClaptrapEventHandler(typeof(AccountBalanceChangeEventHandler), Codes.AccountBalanceChangeEvent)]
     [ClaptrapEventHandler(typeof(UnitEventHandler), UnitEvent.TypeCode)]
-    public class Account : NormalClaptrapBox, IAccount
+    public class Account : NormalClaptrapBox<AccountState>, IAccount
     {
         public new delegate Account Factory(IClaptrapIdentity identity);
 
         public Account(IClaptrapIdentity identity,
-            IClaptrapFactory claptrapFactory) : base(identity,
-            claptrapFactory)
+            IClaptrapFactory claptrapFactory,
+            IClaptrapAccessor claptrapAccessor) : base(identity,
+            claptrapFactory,
+            claptrapAccessor)
         {
         }
 
         public Task<decimal> GetBalanceAsync()
         {
-            var accountInfo = (AccountInfo) Claptrap.State.Data;
+            var accountInfo = StateData;
             return Task.FromResult(accountInfo.Balance);
         }
 

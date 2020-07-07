@@ -11,12 +11,13 @@ namespace Newbe.Claptrap.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ClaptrapBoxFactory>()
-                .As<IClaptrapBoxFactory>()
-                .InstancePerLifetimeScope();
 
             builder.RegisterType<NormalClaptrapBox>()
                 .AsSelf()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<ClaptrapAccessor>()
+                .As<IClaptrapAccessor>()
                 .InstancePerLifetimeScope();
         }
     }
