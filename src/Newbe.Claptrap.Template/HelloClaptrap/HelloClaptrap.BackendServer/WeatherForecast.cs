@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Server
+namespace HelloClaptrap.BackendServer
 {
     public class WeatherForecast
     {

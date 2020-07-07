@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.IActor", "Hel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.Models", "HelloClaptrap.Models\HelloClaptrap.Models.csproj", "{60952E37-DE0A-4457-B602-779B21D24F16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.Actors.Tests", "HelloClaptrap.Actors.Tests\HelloClaptrap.Actors.Tests.csproj", "{6AE15739-FAD7-4604-884A-39FAB6525E63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{60952E37-DE0A-4457-B602-779B21D24F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60952E37-DE0A-4457-B602-779B21D24F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60952E37-DE0A-4457-B602-779B21D24F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AE15739-FAD7-4604-884A-39FAB6525E63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AE15739-FAD7-4604-884A-39FAB6525E63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AE15739-FAD7-4604-884A-39FAB6525E63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AE15739-FAD7-4604-884A-39FAB6525E63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

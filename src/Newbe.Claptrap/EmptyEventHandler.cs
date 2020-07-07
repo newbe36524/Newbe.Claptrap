@@ -18,6 +18,7 @@ namespace Newbe.Claptrap
 
         public ValueTask DisposeAsync()
         {
+            Dispose();
             return new ValueTask();
         }
 
@@ -25,6 +26,10 @@ namespace Newbe.Claptrap
         {
             _logger.LogTrace("Event handled by {name}. It will do nothing.", nameof(EmptyEventHandler));
             return Task.FromResult(eventContext.State);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

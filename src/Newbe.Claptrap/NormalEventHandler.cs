@@ -9,6 +9,7 @@ namespace Newbe.Claptrap
     {
         public virtual ValueTask DisposeAsync()
         {
+            Dispose();
             return new ValueTask();
         }
 
@@ -22,5 +23,9 @@ namespace Newbe.Claptrap
 
         // ReSharper disable once MemberCanBeProtected.Global
         public abstract ValueTask HandleEvent(TStateData stateData, TEventData eventData, IEventContext eventContext);
+
+        public void Dispose()
+        {
+        }
     }
 }

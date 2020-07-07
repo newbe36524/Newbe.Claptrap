@@ -6,6 +6,7 @@ namespace Newbe.Claptrap.Tests
     {
         public ValueTask DisposeAsync()
         {
+            Dispose();
             return new ValueTask();
         }
 
@@ -16,6 +17,10 @@ namespace Newbe.Claptrap.Tests
                 data.Counter++;
             }
             return Task.FromResult(eventContext.State);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

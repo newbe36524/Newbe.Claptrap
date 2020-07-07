@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newbe.Claptrap" Version="0.2.6-alpha.g3612e6ba20" />
-        <PackageReference Include="Newbe.Claptrap.DataSerializer.Json" Version="0.2.6-alpha.g3612e6ba20" />
-        <PackageReference Include="Newbe.Claptrap.Orleans" Version="0.2.6-alpha.g3612e6ba20" />
+        <PackageReference Include="Newbe.Claptrap" Version="0.3.8-alpha.gecc8a868f4" />
+        <PackageReference Include="Newbe.Claptrap.DataSerializer.Json" Version="0.3.8-alpha.gecc8a868f4" />
+        <PackageReference Include="Newbe.Claptrap.Orleans" Version="0.3.8-alpha.gecc8a868f4" />
         <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\HelloClaptrap.IActor\HelloClaptrap.IActor.csproj" />
       <ProjectReference Include="..\HelloClaptrap.Models\HelloClaptrap.Models.csproj" />
     </ItemGroup>
 </Project>

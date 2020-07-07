@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using HelloClaptrap.Actors.Cart.Events;
+using HelloClaptrap.IActor;
+using HelloClaptrap.Models;
+using HelloClaptrap.Models.Cart;
+using HelloClaptrap.Models.Cart.Events;
+using Newbe.Claptrap;
+using Newbe.Claptrap.Orleans;
+
+namespace HelloClaptrap.Actors.Cart
+{
+    [ClaptrapEventHandler(typeof(AddItemToCartEventHandler), ClaptrapCodes.AddItemToCart)]
+    [ClaptrapEventHandler(typeof(RemoveItemFromCartEventHandler), ClaptrapCodes.RemoveItemFromCart)]
+    public class CartGrain : ClaptrapBoxGrain<CartState>, ICartGrain
+    {
+        public CartGrain(
+            IClaptrapGrainCommonService claptrapGrainCommonService)
+            : base(claptrapGrainCommonService)
+        {
+        }
+
+        public Task AddItemAsync(string skuId, int count)
+        {
+            var evt = this.CreateEvent(new AddItemToCartEvent
+            {
+                Count = count,
+                SkuId = skuId,
+            });
+            return Claptrap.HandleEventAsync(evt);
+        }
+
+        public Task RemoveItemAsync(string skuId, int count)
+        {
+            var evt = this.CreateEvent(new RemoveItemFromCartEvent
+            {
+                Count = count,
+                SkuId = skuId
+            });
+            return Claptrap.HandleEventAsync(evt);
+        }
+
+        public Task<Dictionary<string, int>> GetItemsAsync()
+        {
+            return Task.FromResult(StateData.Items);
+        }
+    }
+}

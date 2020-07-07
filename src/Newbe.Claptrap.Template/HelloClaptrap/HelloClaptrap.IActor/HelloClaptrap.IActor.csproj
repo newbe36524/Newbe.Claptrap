@@ -5,12 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newbe.Claptrap.Attributes" Version="0.2.6-alpha.g3612e6ba20" />
+        <PackageReference Include="Newbe.Claptrap.Attributes" Version="0.3.8-alpha.gecc8a868f4" />
         <PackageReference Include="Microsoft.Orleans.CodeGenerator.Msbuild" Version="3.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Newbe.Claptrap.Orleans.Core" Version="0.2.6-alpha.g3612e6ba20" />
+        <PackageReference Include="Newbe.Claptrap.Orleans.Core" Version="0.3.8-alpha.gecc8a868f4" />
     </ItemGroup>
 
     <ItemGroup>
