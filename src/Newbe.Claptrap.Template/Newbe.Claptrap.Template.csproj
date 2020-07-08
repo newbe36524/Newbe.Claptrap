@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0</PackageVersion>
+    <PackageId>Newbe.Claptrap.Template</PackageId>
+    <Title>Newbe.Claptrap.Template</Title>
+    <Authors>newbe36524</Authors>
+    <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern.
+    This package is one part of that project. Please check the source repository for more details.
+https://github.com/newbe36524/Newbe.Claptrap</Description>
+    <PackageTags>Newbe Newbe.Claptrap Template newbe36524</PackageTags>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="HelloClaptrap\**\*" Exclude="HelloClaptrap\**\bin\**;HelloClaptrap\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>
