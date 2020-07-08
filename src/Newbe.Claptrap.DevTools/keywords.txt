@@ -1,0 +1,14 @@
+claptrap
+claptrap design store
+minion
+state loader
+state saver
+event loader
+event saver
+event handler
+event version
+design
+designs
+master design
+minion design
+provider

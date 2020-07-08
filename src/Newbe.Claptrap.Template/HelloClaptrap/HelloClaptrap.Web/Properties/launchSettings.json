@@ -20,7 +20,7 @@
     "HelloClaptrap.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/cart/666",
+      "launchUrl": "swagger",
       "applicationUrl": "https://localhost:36524;http://localhost:36525",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

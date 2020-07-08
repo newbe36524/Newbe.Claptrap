@@ -5,17 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newbe.Claptrap.DevTools.Translation;
 
 namespace Newbe.Claptrap.DevTools
 {
     public class ToolService : IToolService
     {
         private readonly ILocalizationFileFactory _localizationFileFactory;
+        private readonly ITranslator _translator;
 
         public ToolService(
-            ILocalizationFileFactory localizationFileFactory)
+            ILocalizationFileFactory localizationFileFactory,
+            ITranslator translator)
         {
             _localizationFileFactory = localizationFileFactory;
+            _translator = translator;
         }
 
         public async Task RunAsync()
@@ -25,58 +29,66 @@ namespace Newbe.Claptrap.DevTools
                     "../../../../Newbe.Claptrap.Localization/LK.cs");
             var root = CSharpSyntaxTree.ParseText(fileContent).GetCompilationUnitRoot();
             var items = GetLocalizationItems().OrderBy(x => x.Key).ToArray();
-            var globalFile = _localizationFileFactory.Create(new LocalizationFile
+            var localizationFile = new LocalizationFile
             {
                 Culture = string.Empty,
                 Items = items
+            };
+            var globalFile = _localizationFileFactory.Create(localizationFile);
+
+            var translationResults = await _translator.TranslateAsync(localizationFile, new[]
+            {
+                "zh-Hans",
+                "zh-Hant",
+                "ja",
+                "ru",
             });
 
             const string globalFilePath = "../../../../Newbe.Claptrap.Localization/Docs/L.ini";
             await File.WriteAllTextAsync(globalFilePath, globalFile);
 
-            const string cnFilePath = "../../../../Newbe.Claptrap.Localization/Docs/L-cn.ini";
-            var createNew = false;
-            if (createNew)
+            foreach (var (k,v) in translationResults)
             {
-                var cnFile = _localizationFileFactory.Create(new LocalizationFile
+                var cnFilePath = $"../../../../Newbe.Claptrap.Localization/Docs/L-{k}.ini";
+                var createNew = true;
+                if (createNew)
                 {
-                    Culture = "cn",
-                    Items = items
-                });
-                await File.WriteAllTextAsync(cnFilePath, cnFile);
-            }
-            else
-            {
-                var oldFileString = await File.ReadAllTextAsync(cnFilePath);
-                var oldFile = _localizationFileFactory.ResolveFormContent(oldFileString);
-                var oldFileItemDic = oldFile.Items.ToDictionary(x => x.Key);
+                    var cnFile = _localizationFileFactory.Create(v);
+                    await File.WriteAllTextAsync(cnFilePath, cnFile);
+                }
+                else
+                {
+                    var oldFileString = await File.ReadAllTextAsync(cnFilePath);
+                    var oldFile = _localizationFileFactory.ResolveFormContent(oldFileString);
+                    var oldFileItemDic = oldFile.Items.ToDictionary(x => x.Key);
 
-                var cnItems = CreateNewItems().OrderBy(x => x.Key).ToArray();
-                var cnFile = _localizationFileFactory.Create(new LocalizationFile
-                {
-                    Culture = "cn",
-                    Items = cnItems
-                });
-                await File.WriteAllTextAsync(cnFilePath, cnFile);
-
-                IEnumerable<LocalizationItem> CreateNewItems()
-                {
-                    foreach (var item in items!)
+                    var cnItems = CreateNewItems().OrderBy(x => x.Key).ToArray();
+                    var cnFile = _localizationFileFactory.Create(new LocalizationFile
                     {
-                        if (oldFileItemDic!.TryGetValue(item.Key, out var oldItem))
+                        Culture = "cn",
+                        Items = cnItems
+                    });
+                    await File.WriteAllTextAsync(cnFilePath, cnFile);
+
+                    IEnumerable<LocalizationItem> CreateNewItems()
+                    {
+                        foreach (var item in v.Items!)
                         {
-                            if (oldItem.SourceText != item.SourceText)
+                            if (oldFileItemDic!.TryGetValue(item.Key, out var oldItem))
                             {
-                                yield return item;
+                                if (oldItem.SourceText != item.SourceText)
+                                {
+                                    yield return item;
+                                }
+                                else
+                                {
+                                    yield return oldItem;
+                                }
                             }
                             else
                             {
-                                yield return oldItem;
+                                yield return item;
                             }
-                        }
-                        else
-                        {
-                            yield return item;
                         }
                     }
                 }

@@ -28,6 +28,10 @@ namespace HelloClaptrap.Actors.Cart.Events
             {
                 items.Remove(skuId);
             }
+            // else
+            // {
+            //     items[skuId] = oldCount;
+            // }
 
             return new ValueTask();
         }

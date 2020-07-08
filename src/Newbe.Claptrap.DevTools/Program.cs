@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.DevTools
 {
@@ -11,7 +14,11 @@ namespace Newbe.Claptrap.DevTools
             try
             {
                 Console.WriteLine($"current dir : {AppDomain.CurrentDomain.BaseDirectory}");
+                var serviceCollection = new ServiceCollection();
+                serviceCollection.AddLogging(logging => { logging.AddConsole(); });
+
                 var builder = new ContainerBuilder();
+                builder.Populate(serviceCollection);
                 builder.RegisterModule<ToolsServiceModule>();
                 var container = builder.Build();
 

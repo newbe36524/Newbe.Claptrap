@@ -20,24 +20,26 @@ namespace HelloClaptrap.Actors.Cart
         {
         }
 
-        public Task AddItemAsync(string skuId, int count)
+        public async Task<Dictionary<string, int>> AddItemAsync(string skuId, int count)
         {
             var evt = this.CreateEvent(new AddItemToCartEvent
             {
                 Count = count,
                 SkuId = skuId,
             });
-            return Claptrap.HandleEventAsync(evt);
+            await Claptrap.HandleEventAsync(evt);
+            return StateData.Items;
         }
 
-        public Task RemoveItemAsync(string skuId, int count)
+        public async Task<Dictionary<string, int>> RemoveItemAsync(string skuId, int count)
         {
             var evt = this.CreateEvent(new RemoveItemFromCartEvent
             {
                 Count = count,
                 SkuId = skuId
             });
-            return Claptrap.HandleEventAsync(evt);
+            await Claptrap.HandleEventAsync(evt);
+            return StateData.Items;
         }
 
         public Task<Dictionary<string, int>> GetItemsAsync()

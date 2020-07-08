@@ -9,11 +9,19 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.2.0" />
-        
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="System.Linq.Async" Version="4.1.1" />
         <PackageReference Include="System.Reactive" Version="4.4.1" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.6.0" />
         
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="keywords.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

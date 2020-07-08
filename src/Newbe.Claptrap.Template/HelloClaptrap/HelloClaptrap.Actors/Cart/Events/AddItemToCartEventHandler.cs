@@ -17,6 +17,10 @@ namespace HelloClaptrap.Actors.Cart.Events
             {
                 itemCount += eventData.Count;
             }
+            // else
+            // {
+            //     itemCount = eventData.Count;
+            // }
 
             items[eventData.SkuId] = itemCount;
             stateData.Items = items;
