@@ -36,7 +36,7 @@ jobs:
         cd $GITHUB_WORKSPACE/src
         mkdir pkgs
         dotnet pack --configuration Release -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
-        dotnet pack Newbe.Claptrap.Template\Newbe.Claptrap.Template.csproj -o .\pkgs --p:PackageVersion=$NBGV_SemVer2
+        dotnet pack Newbe.Claptrap.Template\Newbe.Claptrap.Template.csproj -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
 
     - name: Push nuget package to Azure storage
       env: 
