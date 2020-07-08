@@ -46,4 +46,4 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet tool install -g sleet
-        sleet push .\pkgs --skip-existing
+        sleet push ./pkgs --skip-existing
