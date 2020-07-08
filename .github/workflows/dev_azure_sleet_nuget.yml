@@ -34,8 +34,9 @@ jobs:
     - name: pack
       run: |
         cd $GITHUB_WORKSPACE/src
-        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
-        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
+        mkdir pkgs
+        dotnet pack --configuration Release -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
+        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
 
     - name: Push nuget package to Azure storage
       env: 
@@ -45,4 +46,4 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet tool install -g sleet
-        sleet push **/*.nupkg --skip-existing
+        sleet push .\pkgs --skip-existing
