@@ -30,7 +30,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/src
         dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
-        dotnet pack Newbe.Claptrap.Template\Newbe.Claptrap.Template.csproj -o .\pkgs -p:PackageVersion=$NBGV_SemVer2
+        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
 
     - name: Push nuget package to MyGet registry
       run: |
