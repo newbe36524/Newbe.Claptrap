@@ -24,7 +24,7 @@
 - [X] Minions
 - 事件处理广播器与接收器
   - [X] 基于Orleans直接调用
-  - [ ] RabbitMQ
+  - [X] RabbitMQ
 - 事件与状态序列化
   - [X] Json
   - [ ] Binary
@@ -37,7 +37,7 @@
   - [ ] 关系图展示
 - [ ] 配置文件式设计 Design
 - 单元测试
-  - [ ] 覆盖率80%以上
+  - [X] 覆盖率80%以上
   - [ ] 覆盖主要的异常抛出情况
 - 指标监控
   - [X] 事件处理器
@@ -46,7 +46,7 @@
   - [X] 存储使用
   - [ ] 链路追踪
 - 开发工具
-  - [ ] 项目模板  
+  - [X] 项目模板  
 - 代码样例
   - [X] [单体式运行](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.OutofOrleans)
   - [X] [Orleans 结合](https://github.com/newbe36524/Newbe.Claptrap.Examples/tree/master/src/Newbe.Claptrap.ArticleManager)
