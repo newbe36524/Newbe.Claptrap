@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="5.2.0" />
+      
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      
+    </ItemGroup>
+
+</Project>

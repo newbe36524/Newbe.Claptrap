@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newbe.Claptrap" Version="0.3.16-alpha.g1517ff130a" />
+        <PackageReference Include="Newbe.Claptrap.DataSerializer.Json" Version="0.3.16-alpha.g1517ff130a" />
+        <PackageReference Include="Newbe.Claptrap.Orleans" Version="0.3.16-alpha.g1517ff130a" />
+        <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.2.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HelloClaptrap.IActor\HelloClaptrap.IActor.csproj" />
+      <ProjectReference Include="..\HelloClaptrap.Models\HelloClaptrap.Models.csproj" />
+    </ItemGroup>
+</Project>

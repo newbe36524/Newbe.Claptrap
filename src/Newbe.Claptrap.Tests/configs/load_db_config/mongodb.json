@@ -1,0 +1,13 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "mongodb://root:claptrap@localhost/claptrap?authSource=admin",
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MongoDB"
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MongoDB"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+name: Claptrap build
+
+on:
+  push:
+    branches: 
+      - feature/database_mysql
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/core/sdk:3.1.301-bionic
+    services:
+      mysql:
+        image: mysql
+        ports:
+          - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: claptrap
+          MYSQL_DATABASE: claptrap
+          MYSQL_USER: claptrap
+          MYSQL_PASSWORD: claptrap
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Build
+      run: |
+        dotnet build $GITHUB_WORKSPACE/src --configuration Release
+    - name: Test
+      run: |
+        dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == MySql"

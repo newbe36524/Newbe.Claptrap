@@ -1,0 +1,38 @@
+name: Publish dev nuget package to nuget.org
+
+on:
+  push:
+    branches: 
+      - v*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+
+    - uses: aarnott/nbgv@v0.3
+      with:
+        setAllVars: true
+
+    - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
+
+    - name: pack
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
+        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
+
+    - name: Push nuget package to MyGet registry
+      run: |
+        cd $GITHUB_WORKSPACE/src
+        dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --no-symbols --skip-duplicate --source https://api.nuget.org/v3/index.json

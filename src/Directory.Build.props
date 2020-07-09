@@ -1,0 +1,30 @@
+<Project>
+    <PropertyGroup>
+        <Authors>newbe36524</Authors>
+        <Company>newbe36524</Company>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://www.newbe.pro</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/newbe36524/Newbe.Claptrap</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+        <PackageReleaseNotes>
+        </PackageReleaseNotes>
+        <LangVersion>latest</LangVersion>
+        <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern. It could help you to build a distributed, scalable, and testable server application.
+        This package is one part of that project. Please check the source repository for more details.
+    https://github.com/newbe36524/Newbe.Claptrap </Description>
+        <PackageIcon>icon.png</PackageIcon>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
+        <None Include="icon.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Fody" Version="6.2.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Visualize.Fody" Version="1.2.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>  
+    </ItemGroup>
+</Project>

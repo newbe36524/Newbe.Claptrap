@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+    grafana:
+        image: grafana/grafana
+        restart: always
+        ports:
+            - 3000:3000
+        volumes:
+            - ./grafana-storage:/var/lib/grafana grafana/grafana
+    influxdb:
+        image: influxdb
+        restart: always
+        ports: 
+            - 19086:8086
+        environment: 
+            INFLUXDB_DB: metricsdatabase
+            INFLUXDB_ADMIN_USER: claptrap
+            INFLUXDB_ADMIN_PASSWORD: claptrap

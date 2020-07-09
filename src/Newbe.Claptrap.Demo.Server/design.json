@@ -1,0 +1,255 @@
+[
+  {
+    "ClaptrapTypeCode": "balance__minion__account.demo.claptrap.newbe",
+    "ClaptrapMasterDesign": {
+      "ClaptrapTypeCode": "account.demo.claptrap.newbe",
+      "ClaptrapMasterDesign": null,
+      "ClaptrapOptions": {
+        "StateSavingOptions": {
+          "SavingWindowTime": "00:00:10",
+          "SavingWindowVersionLimit": 1000,
+          "SaveWhenDeactivateAsync": true
+        },
+        "StateRecoveryOptions": {
+          "StateRecoveryStrategy": 1
+        },
+        "EventLoadingOptions": {
+          "LoadingCountInOneBatch": 1000
+        },
+        "MinionActivationOptions": {
+          "ActivateMinionsAtMasterStart": true
+        }
+      },
+      "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "EventHandlerDesigns": {
+        "accountBalanceChanged__account.demo.claptrap.newbe": {
+          "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
+          "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "ExtendInfos": {
+            "EventDisplayName": "余额变更事件",
+            "EventHandlerDisplayName": "更新余额"
+          }
+        }
+      },
+      "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "ClaptrapStorageProviderOptions": {
+        "EventSaverOptions": {
+          "IsAutoMigrationEnabled": true,
+          "RelationalEventStoreLocator": {
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.events.db",
+            "EventTableName": "claptrap_events"
+          },
+          "InsertManyWindowTimeInMilliseconds": 30,
+          "InsertManyWindowCount": 100
+        },
+        "EventLoaderOptions": {
+          "IsAutoMigrationEnabled": true,
+          "RelationalEventStoreLocator": {
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.events.db",
+            "EventTableName": "claptrap_events"
+          },
+          "InsertManyWindowTimeInMilliseconds": 30,
+          "InsertManyWindowCount": 100
+        },
+        "StateSaverOptions": {
+          "IsAutoMigrationEnabled": true,
+          "RelationalStateStoreLocator": {
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.states.db",
+            "StateTableName": "claptrap_states"
+          },
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 100
+        },
+        "StateLoaderOptions": {
+          "IsAutoMigrationEnabled": true,
+          "RelationalStateStoreLocator": {
+            "SchemaName": "main",
+            "ConnectionName": "shared/claptrap.states.db",
+            "StateTableName": "claptrap_states"
+          },
+          "InsertManyWindowTimeInMilliseconds": 50,
+          "InsertManyWindowCount": 100
+        }
+      },
+      "ExtendInfos": {}
+    },
+    "ClaptrapOptions": {
+      "StateSavingOptions": {
+        "SavingWindowTime": "00:00:10",
+        "SavingWindowVersionLimit": 1000,
+        "SaveWhenDeactivateAsync": true
+      },
+      "StateRecoveryOptions": {
+        "StateRecoveryStrategy": 1
+      },
+      "EventLoadingOptions": {
+        "LoadingCountInOneBatch": 1000
+      },
+      "MinionActivationOptions": {
+        "ActivateMinionsAtMasterStart": false
+      }
+    },
+    "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerDesigns": {
+      "accountBalanceChanged__account.demo.claptrap.newbe": {
+        "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
+        "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "ExtendInfos": {
+          "EventDisplayName": "余额变更事件",
+          "EventHandlerDisplayName": "更新余额"
+        }
+      }
+    },
+    "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccountBalanceMinion, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountBalanceBalanceMinion, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapStorageProviderOptions": {
+      "EventSaverOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalEventStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
+          "EventTableName": "claptrap_events"
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
+      },
+      "EventLoaderOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalEventStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
+          "EventTableName": "claptrap_events"
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
+      },
+      "StateSaverOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalStateStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
+          "StateTableName": "claptrap_states"
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
+      },
+      "StateLoaderOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalStateStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
+          "StateTableName": "claptrap_states"
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
+      }
+    },
+    "ExtendInfos": {
+      "ClaptrapDisplayName": "同步余额"
+    }
+  },
+  {
+    "ClaptrapTypeCode": "account.demo.claptrap.newbe",
+    "ClaptrapMasterDesign": null,
+    "ClaptrapOptions": {
+      "StateSavingOptions": {
+        "SavingWindowTime": "00:00:10",
+        "SavingWindowVersionLimit": 1000,
+        "SaveWhenDeactivateAsync": true
+      },
+      "StateRecoveryOptions": {
+        "StateRecoveryStrategy": 1
+      },
+      "EventLoadingOptions": {
+        "LoadingCountInOneBatch": 1000
+      },
+      "MinionActivationOptions": {
+        "ActivateMinionsAtMasterStart": true
+      }
+    },
+    "StateDataType": "Newbe.Claptrap.Demo.Models.AccountStateData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateLoaderFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateSaverFactoryType": "Newbe.Claptrap.StorageProvider.Relational.RelationalStoreFactory, Newbe.Claptrap.StorageProvider.Relational, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "InitialStateDataFactoryType": "Newbe.Claptrap.DefaultInitialStateDataFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "StateHolderFactoryType": "Newbe.Claptrap.StateHolder.NoChangeStateHolderFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerFactoryFactoryType": "Newbe.Claptrap.EventHandlerFactoryFactory, Newbe.Claptrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "EventHandlerDesigns": {
+      "accountBalanceChanged__account.demo.claptrap.newbe": {
+        "EventTypeCode": "accountBalanceChanged__account.demo.claptrap.newbe",
+        "EventDataType": "Newbe.Claptrap.Demo.Models.AccountBalanceChangeEventData, Newbe.Claptrap.Demo.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "EventHandlerType": "Newbe.Claptrap.Demo.TransferAccountBalanceEventHandler, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "ExtendInfos": {
+          "EventDisplayName": "余额变更事件",
+          "EventHandlerDisplayName": "更新余额"
+        }
+      }
+    },
+    "ClaptrapBoxInterfaceType": "Newbe.Claptrap.Demo.Interfaces.Domain.Account.IAccount, Newbe.Claptrap.Demo.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapBoxImplementationType": "Newbe.Claptrap.Demo.AccountGrain, Newbe.Claptrap.Demo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "ClaptrapStorageProviderOptions": {
+      "EventSaverOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalEventStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
+          "EventTableName": "claptrap_events"
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
+      },
+      "EventLoaderOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalEventStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.events.db",
+          "EventTableName": "claptrap_events"
+        },
+        "InsertManyWindowTimeInMilliseconds": 30,
+        "InsertManyWindowCount": 100
+      },
+      "StateSaverOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalStateStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
+          "StateTableName": "claptrap_states"
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
+      },
+      "StateLoaderOptions": {
+        "IsAutoMigrationEnabled": true,
+        "RelationalStateStoreLocator": {
+          "SchemaName": "main",
+          "ConnectionName": "shared/claptrap.states.db",
+          "StateTableName": "claptrap_states"
+        },
+        "InsertManyWindowTimeInMilliseconds": 50,
+        "InsertManyWindowCount": 100
+      }
+    },
+    "ExtendInfos": {}
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "PostgreSQL",
+      "InsertManyWindowCount": 2000
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "PostgreSQL",
+      "InsertManyWindowCount": 2000
+    }
+  }
+}
