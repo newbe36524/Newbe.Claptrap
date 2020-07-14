@@ -120,12 +120,13 @@ namespace Newbe.Claptrap.Design
                         : new StateSavingOptions
                         {
                             SavingWindowTime =
-                                m.StateSavingOptionsAttribute.SavingWindowTimeInMillionSeconds.HasValue &&
                                 m.StateSavingOptionsAttribute.SavingWindowTimeInMillionSeconds > 0
                                     ? TimeSpan.FromMilliseconds(m.StateSavingOptionsAttribute
-                                        .SavingWindowTimeInMillionSeconds.Value)
+                                        .SavingWindowTimeInMillionSeconds)
                                     : default(TimeSpan?),
-                            SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit,
+                            SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit > 0
+                                ? m.StateSavingOptionsAttribute.SavingWindowVersionLimit
+                                : 100,
                             SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
                         }
                 };

@@ -8,8 +8,8 @@ namespace Newbe.Claptrap
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ClaptrapStateSavingOptionsAttribute : Attribute
     {
-        public int? SavingWindowTimeInMillionSeconds { get; set; }
-        public int? SavingWindowVersionLimit { get; set; }
+        public int SavingWindowTimeInMillionSeconds { get; set; }
+        public int SavingWindowVersionLimit { get; set; }
 
         /// <summary>
         /// save state when claptrap deactivated or not
