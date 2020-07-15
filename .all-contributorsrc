@@ -15,6 +15,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "kotoneme",
+      "name": "kotone",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/43395111?v=4",
+      "profile": "https://github.com/kotoneme",
+      "contributions": [
+        "translation"
+      ]
     }
   ],
   "contributorsPerLine": 7,
