@@ -1,6 +1,14 @@
 ![Newbe.Claptrap](/docs/main_banner.png)
 
-[【简体中文说明】](README-zh_Hans.md) / [【English Readme】](README-en_US.md)
+- [简体中文](https://claptrap.newbe.pro/zh_Hans)
+- [粤语](https://claptrap.newbe.pro/zh_HK)
+- [繁体中文](https://claptrap.newbe.pro/zh_TW)
+- [English](https://claptrap.newbe.pro/en_US)
+- [русский язык](https://claptrap.newbe.pro/ru_RU)
+- [Deutsche](https://claptrap.newbe.pro/de_DE)
+- [Español](https://claptrap.newbe.pro/es_ES)
+- [français](https://claptrap.newbe.pro/fr_FR)
+- [日本語](https://claptrap.newbe.pro/ja_JP)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
@@ -21,7 +29,7 @@ The project has entered the Preview stage, and related versions will be released
 
 Claptrap and it`s Minions are coming.
 
-At present, we need more members to join us to complete this work. No matter where you are interested in convenience, we believe that you can find a suitable participation point for you here. [You can click here to view the current needs of our members. ](docs/Teams-en_US.md)
+At present, we need more members to join us to complete this work. No matter where you are interested in convenience, we believe that you can find a suitable participation point for you here.
 
 ## Samples
 
@@ -31,6 +39,7 @@ You can get the samples about the project through [Newbe.Claptrap.Examples](http
 
 - If you are interested in this project, you can submit your idea through [github issues](https://github.com/newbe36524/Newbe.Claptrap/issues)
 - Click the link for QQ group [Newbe.Claptrap]: <https://jq.qq.com/?_wv=1027&k=5uJGXf5>
+- [![Gitter](https://badges.gitter.im/newbe-claptrap/community.svg)](https://gitter.im/newbe-claptrap/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## References
 
@@ -40,7 +49,7 @@ The project was inspired by many open source projects and blog posts：
 - [Event Sourcing Pattern](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn589792%28v%3dpandp.10%29)
 - [Event Sourcing Pattern (Chinese translated)](https://www.infoq.cn/article/event-sourcing)
 - [Orleans - Distributed Virtual Actor Model](https://github.com/dotnet/orleans)
-- [ENode 1.0 - Saga's idea and realization](http://www.cnblogs.com/netfocus/p/3149156.html)
+- [ENode 1.0 - idea about Saga and implementation](http://www.cnblogs.com/netfocus/p/3149156.html)
 
 ## Stargazers over time
 
