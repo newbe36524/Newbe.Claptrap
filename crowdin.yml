@@ -1,0 +1,3 @@
+files:
+  - source: src/Newbe.Claptrap.Localization/Docs/L.ini
+    translation: src/Newbe.Claptrap.Localization/Docs/L-%locale_with_underscore%.ini
