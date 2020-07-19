@@ -2,6 +2,8 @@ using System;
 using System.Globalization;
 using Autofac;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Newbe.Claptrap.Localization.Modules;
 using NUnit.Framework;
 
@@ -51,6 +53,19 @@ namespace Newbe.Claptrap.Tests
             localString.Should().Be("未能构建claptrap引导器");
             localString.Should().NotBeNullOrEmpty();
             Console.WriteLine(localString);
+        }
+
+        [Test]
+        [SetUICulture("zh-Hans")]
+        public void Test()
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLocalization();
+            serviceCollection.AddLogging();
+            var provider = serviceCollection.BuildServiceProvider();
+            var l = provider.GetRequiredService<IStringLocalizer<L>>();
+            var result = l["failed to build claptrap bootstrapper"];
+            result.ToString().Should().Be("无法构建 claptrap 启动器");
         }
     }
 }
