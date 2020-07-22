@@ -128,70 +128,70 @@
         <value>未能激活 Claptrap {identity}</value>
     </data>
     <data name="success to notify about event be handled. event version : {version}" xml:space="preserve">
-        <value>成功通知事件被处理。事件版本 ： {version}</value>
+        <value>事件通知成功。事件版本 ： {version}</value>
     </data>
     <data name="failed to notify about event be handled. event version : {version}" xml:space="preserve">
-        <value>未能通知有关事件的处理。事件版本 ： {version}</value>
+        <value>事件通知失败。事件版本 ： {version}</value>
     </data>
     <data name="there is no state snapshot found from state loader" xml:space="preserve">
-        <value>未从状态加载程序找到状态快照</value>
+        <value>未能从 state loader 中找到 state 的快照</value>
     </data>
     <data name="found state snapshot from state loader" xml:space="preserve">
-        <value>从状态加载器找到状态快照</value>
+        <value>从 state loader 中找到了 state 快照</value>
     </data>
     <data name="MissingEventHandler" xml:space="preserve">
-        <value>没有找到事件处理程序 {eventTypeCode} 在 {claptrapTypeCode}.它必须被定义，因为这是一个小人，母校将发送它到这个。如果不处理该事件，可以定义 {handlerName} 对于此事件。</value>
+        <value>在 {claptrapTypeCode} claptrap 中未能找到 {eventTypeCode} 对应的 event handler。 它必须被定义，因为这是一个 minion，主 claptrap 将会把事件发送到此处。如果不想处理该事件，可以定义 {handlerName} 用于处理该事件。</value>
     </data>
     <data name="{name} is required, please set it correctly." xml:space="preserve">
-        <value>{name} 需要，请正确设置。</value>
+        <value>{name} 是必须的，请正确的设置。</value>
     </data>
     <data name="Type {type} does not implement {componentType}." xml:space="preserve">
-        <value>类型 {type} 不实现 {componentType}.</value>
+        <value>类型 {type} 未实现 {componentType}.</value>
     </data>
     <data name="failed to create a claptrap. {identity}" xml:space="preserve">
-        <value>未能创建拍手。 {identity}</value>
+        <value>未能创建 Claptrap。 {identity}</value>
     </data>
     <data name="IsMinion" xml:space="preserve">
-        <value>这是一个小拍手，因为它包含一个主设计，它的设计。主类型代码 ： {typeCode}</value>
+        <value>这是一个 Minion，因为它包含一个 master design。master design type code ： {typeCode}</value>
     </data>
     <data name="This is a master claptrap. type code : {typeCode}" xml:space="preserve">
-        <value>这是一个主拍手。类型代码 ： {typeCode}</value>
+        <value>这是一个 master claptrap。type code ： {typeCode}</value>
     </data>
     <data name="add {provider} as claptrap design provider" xml:space="preserve">
-        <value>添加 {provider} 作为拍手设计提供商</value>
+        <value>添加 {provider} 作为 claptrap design provider</value>
     </data>
     <data name="start to scan {assemblyArrayCount} types" xml:space="preserve">
         <value>开始扫描 {assemblyArrayCount} 类型</value>
     </data>
     <data name="start to create claptrap design" xml:space="preserve">
-        <value>开始创建拍手设计</value>
+        <value>开始创建 claptrap design</value>
     </data>
     <data name="claptrap design store created, start to configure it" xml:space="preserve">
-        <value>拍手设计存储创建， 开始配置它</value>
+        <value>claptrap design store 创建完成， 开始调整设置。</value>
     </data>
     <data name="all designs : {designs}" xml:space="preserve">
-        <value>所有设计： {designs}</value>
+        <value>所有的 design 如下： {designs}</value>
     </data>
     <data name="start to configure claptrap design store by {configurator}" xml:space="preserve">
-        <value>开始配置拍手设计存储 {configurator}</value>
+        <value>通过 {configurator} 配置 claptrap design store</value>
     </data>
     <data name="found {actorCount} claptrap designs" xml:space="preserve">
-        <value>发现 {actorCount} 拍手设计</value>
+        <value>发现了 {actorCount} 个 claptrap design</value>
     </data>
     <data name="all designs after configuration: {designs}" xml:space="preserve">
-        <value>配置后的所有设计： {designs}</value>
+        <value>完成配置后的所有 design 如下： {designs}</value>
     </data>
     <data name="start to validate all design in claptrap design store" xml:space="preserve">
-        <value>开始验证拍手设计商店中的所有设计</value>
+        <value>开始验证 claptrap design store 中的所有 design</value>
     </data>
     <data name="all design validated ok" xml:space="preserve">
-        <value>所有设计验证确定</value>
+        <value>所有 design 验证完毕，没有问题</value>
     </data>
     <data name="There is a IStringLocalizer found in container, start to use localization in UI culture" xml:space="preserve">
-        <value>容器中存在一个 IString 定位器，在 UI 区域性中开始使用本地化</value>
+        <value>容器中存在 IStringLocalizer，将根据 UI 区域性进行本地化</value>
     </data>
     <data name="There is no IStringLocalizer found in container, start to use default localization in English" xml:space="preserve">
-        <value>容器中找不到 IString 定位器，开始使用英语默认本地化</value>
+        <value>容器中找不到 IStringLocalizer，将使用英文作为默认语言</value>
     </data>
     <data name="Template" xml:space="preserve">
         <value>模板</value>
