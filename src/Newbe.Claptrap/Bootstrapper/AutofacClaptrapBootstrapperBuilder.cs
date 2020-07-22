@@ -6,10 +6,10 @@ using Autofac;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.Extensions;
+using Newbe.Claptrap.Localization;
 using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
 using Newtonsoft.Json;
-using static Newbe.Claptrap.LK.L0001AutofacClaptrapBootstrapperBuilder;
 using Module = Autofac.Module;
 
 namespace Newbe.Claptrap.Bootstrapper
@@ -34,7 +34,6 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 DesignTypes = Enumerable.Empty<Type>(),
                 ModuleTypes = Enumerable.Empty<Type>(),
-                CultureInfo = CultureInfo.CurrentCulture,
                 ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
                 ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
@@ -46,7 +45,7 @@ namespace Newbe.Claptrap.Bootstrapper
         private IL CreateL()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new LocalizationModule(Options.CultureInfo));
+            builder.RegisterModule(new LocalizationModule());
             var container = builder.Build();
             var l = container.Resolve<IL>();
             return l;
@@ -62,14 +61,14 @@ namespace Newbe.Claptrap.Bootstrapper
             }
             catch (Exception e)
             {
-                _logger.LogError(e, _l.Value[L001BuildException]);
+                _logger.LogError(e, _l.Value[LK.failed_to_build_claptrap_bootstrapper]);
                 throw;
             }
 
             IClaptrapBootstrapper BuildCore()
             {
                 var container = CreateContainerForScanning();
-                
+
                 IClaptrapDesignStore? claptrapDesignStore = null;
                 // minion can save nothing
                 this.ConfigureClaptrapDesign(x => x.IsMinion(),
@@ -112,7 +111,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 var builder = new ContainerBuilder();
                 builder.RegisterModule<ClaptrapDesignScanningModule>();
                 builder.RegisterModule(new LoggingModule(_loggerFactory));
-                builder.RegisterModule(new LocalizationModule(Options.CultureInfo));
+                builder.RegisterModule(new LocalizationModule());
                 builder.RegisterInstance(Options);
                 var container = builder.Build();
                 return container;
@@ -193,38 +192,38 @@ namespace Newbe.Claptrap.Bootstrapper
         {
             foreach (var provider in Options.ClaptrapDesignStoreProviders)
             {
-                _logger.LogDebug(_l.Value[L002AddProviderAsClaptrapDesignProvider], provider);
+                _logger.LogDebug(_l.Value[LK.add__provider__as_claptrap_design_provider], provider);
                 factory.AddProvider(provider);
             }
 
             var typeArray = types as Type[] ?? types.ToArray();
-            _logger.LogDebug(_l.Value[L003StartToScan], typeArray.Length);
-            _logger.LogDebug(_l.Value[L004StartToCreateClaptrapDesign]);
+            _logger.LogDebug(_l.Value[LK.start_to_scan__assemblyArrayCount__types], typeArray.Length);
+            _logger.LogDebug(_l.Value[LK.start_to_create_claptrap_design]);
             var claptrapDesignStore = factory.Create(typeArray);
 
-            _logger.LogInformation(_l.Value[L005ClaptrapStoreCreated]);
-            _logger.LogDebug(_l.Value[L006ShowAllDesign],
+            _logger.LogInformation(_l.Value[LK.claptrap_design_store_created__start_to_configure_it]);
+            _logger.LogDebug(_l.Value[LK.all_designs____designs_],
                 JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
 
             foreach (var configurator in Options.ClaptrapDesignStoreConfigurators)
             {
-                _logger.LogDebug(_l.Value[L007StartToConfigureDesignStore], configurator);
+                _logger.LogDebug(_l.Value[LK.start_to_configure_claptrap_design_store_by__configurator_], configurator);
                 configurator.Configure(claptrapDesignStore);
             }
 
-            _logger.LogInformation(_l.Value[L008CountDesigns],
+            _logger.LogInformation(_l.Value[LK.found__actorCount__claptrap_designs],
                 claptrapDesignStore.Count());
-            _logger.LogDebug(_l.Value[L009ShowDesignsAfterConfiguration],
+            _logger.LogDebug(_l.Value[LK.all_designs_after_configuration___designs_],
                 JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
 
-            _logger.LogDebug(_l.Value[L010StartToValidateDesigns]);
+            _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
             var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
             if (!isOk)
             {
                 throw new ClaptrapDesignStoreValidationFailException(errorMessage);
             }
 
-            _logger.LogInformation(_l.Value[L011DesignValidationSuccess]);
+            _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
             return claptrapDesignStore;
         }
     }

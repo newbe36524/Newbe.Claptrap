@@ -6,7 +6,7 @@ using System.Reactive.Threading.Tasks;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using static Newbe.Claptrap.LK.L0005StateRestorer;
+using Newbe.Claptrap.Localization;
 
 namespace Newbe.Claptrap.Core.Impl
 {
@@ -55,13 +55,13 @@ namespace Newbe.Claptrap.Core.Impl
             var stateSnapshot = await _stateLoader.GetStateSnapshotAsync();
             if (stateSnapshot == null)
             {
-                _logger.LogInformation(_l[L001LogThereIsNoStateSnapshot]);
+                _logger.LogInformation(_l[LK.there_is_no_state_snapshot_found_from_state_loader]);
                 var stateData = await _initialStateDataFactory.Create(_claptrapIdentity);
                 State = new DataState(_claptrapIdentity, stateData, 0);
             }
             else
             {
-                _logger.LogInformation(_l[L002LogStateSnapshotFound]);
+                _logger.LogInformation(_l[LK.found_state_snapshot_from_state_loader]);
                 State = stateSnapshot;
             }
 
@@ -82,6 +82,7 @@ namespace Newbe.Claptrap.Core.Impl
                             {
                                 throw new VersionErrorException(newState.Version, eventContext.Event.Version);
                             }
+
                             State = newState;
                             State.IncreaseVersion();
                         }

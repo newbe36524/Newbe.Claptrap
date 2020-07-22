@@ -4,7 +4,7 @@ using System.Linq;
 using Autofac;
 using MethodTimer;
 using Microsoft.Extensions.Logging;
-using static Newbe.Claptrap.LK.L0006ClaptrapFactory;
+using Newbe.Claptrap.Localization;
 
 namespace Newbe.Claptrap
 {
@@ -41,7 +41,7 @@ namespace Newbe.Claptrap
             }
             catch (Exception e)
             {
-                _logger.LogError(e, _l[L001FailedToCreate], identity);
+                _logger.LogError(e, _l[LK.failed_to_create_a_claptrap___identity_], identity);
                 throw;
             }
         }
@@ -63,7 +63,7 @@ namespace Newbe.Claptrap
                 var masterDesign = claptrapDesign.ClaptrapMasterDesign;
                 if (masterDesign != null)
                 {
-                    _logger.LogTrace(_l[L002MasterFound], masterDesign.ClaptrapTypeCode);
+                    _logger.LogTrace(_l[LK.IsMinion], masterDesign.ClaptrapTypeCode);
                     var minionModules = _claptrapModuleProviders
                         .SelectMany(x => x.GetClaptrapMinionModules(identity))
                         .OfType<Module>()
@@ -75,7 +75,7 @@ namespace Newbe.Claptrap
                 }
                 else
                 {
-                    _logger.LogTrace(_l[L003MasterFound], identity.TypeCode);
+                    _logger.LogTrace(_l[LK.This_is_a_master_claptrap__type_code____typeCode_], identity.TypeCode);
                     var masterModules = _claptrapModuleProviders
                         .SelectMany(x => x.GetClaptrapMasterClaptrapModules(identity))
                         .OfType<Module>()

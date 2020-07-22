@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newbe.Claptrap.Extensions;
+using Newbe.Claptrap.Localization;
 using SmartFormat;
-using static Newbe.Claptrap.LK.L0007ClaptrapDesignStoreValidator;
 
 namespace Newbe.Claptrap.Design
 {
@@ -101,7 +101,7 @@ namespace Newbe.Claptrap.Design
                         {
                             if (!minionDesign.EventHandlerDesigns.TryGetValue(key, out var handlerDesign))
                             {
-                                yield return Smart.Format(_l[L003MissingEventHandleInMinion], new
+                                yield return Smart.Format(_l[LK.MissingEventHandler], new
                                 {
                                     eventTypeCode = key,
                                     claptrapTypeCode = minionDesign.ClaptrapTypeCode,
@@ -117,16 +117,17 @@ namespace Newbe.Claptrap.Design
                     string ValidateClaptrapComponent<TComponent>(Type type, string name)
                     {
                         return type == null
-                            ? Smart.Format(_l[L001ValueCannotBeNull], new {name})
+                            ? Smart.Format(_l[LK._name__is_required__please_set_it_correctly_], new {name})
                             : type.GetInterface(typeof(TComponent).FullName) != null
-                                ? Smart.Format(_l[L002NotImpl], new {type, componentType = typeof(TComponent)})
+                                ? Smart.Format(_l[LK.Type__type__does_not_implement__componentType__],
+                                    new {type, componentType = typeof(TComponent)})
                                 : string.Empty;
                     }
 
                     string ValidateTypeNotNull(object type, string name)
                     {
                         return type == null
-                            ? Smart.Format(_l[L001ValueCannotBeNull], new {name})
+                            ? Smart.Format(_l![LK._name__is_required__please_set_it_correctly_], new {name})
                             : string.Empty;
                     }
                 }

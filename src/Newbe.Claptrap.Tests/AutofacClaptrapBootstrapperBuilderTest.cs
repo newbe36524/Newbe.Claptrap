@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
+using NLog.Extensions.Logging;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
@@ -12,7 +13,12 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void NothingAdded()
         {
-            var serviceCollection = new ServiceCollection().AddLogging(logging => logging.AddConsole());
+            var serviceCollection = new ServiceCollection().AddLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.AddNLog();
+            });
             var buildServiceProvider = serviceCollection.BuildServiceProvider();
             var loggerFactory = buildServiceProvider.GetRequiredService<ILoggerFactory>();
             using var mocker = AutoMockHelper.Create();
