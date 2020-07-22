@@ -2,7 +2,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Microsoft.Extensions.Logging;
-using static Newbe.Claptrap.LK.L0004EventHandledNotificationFlow;
+using Newbe.Claptrap.Localization;
 
 namespace Newbe.Claptrap.Core.Impl
 {
@@ -33,11 +33,13 @@ namespace Newbe.Claptrap.Core.Impl
                     try
                     {
                         await _eventNotifier.Notify(context);
-                        _logger.LogDebug(_l[L001SuccessToNotify], context.Event.Version);
+                        _logger.LogDebug(_l[LK.success_to_notify_about_event_be_handled__event_version____version_],
+                            context.Event.Version);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, _l[L002FailToNotify], context.Event.Version);
+                        _logger.LogError(e, _l[LK.failed_to_notify_about_event_be_handled__event_version____version_],
+                            context.Event.Version);
                     }
                 }))
                 .Concat()

@@ -1,20 +1,50 @@
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Localization;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap
 {
     public class L : IL
     {
-        private readonly IStringLocalizer _line;
+        private readonly IL _l;
 
         public L(
-            IStringLocalizer line)
+            ILogger<L> logger,
+            IStringLocalizer<LK>? line = null)
         {
-            _line = line;
+            if (line != null)
+            {
+                logger.LogInformation(
+                    LK.There_is_a_IStringLocalizer_found_in_container__start_to_use_localization_in_UI_culture);
+                _l = new StringLocalizerL(line);
+            }
+            else
+            {
+                logger.LogInformation(
+                    LK.There_is_no_IStringLocalizer_found_in_container__start_to_use_default_localization_in_English);
+                _l = new DefaultL();
+            }
         }
 
-        public string this[string index] => _line[index];
+        public string this[string index] => _l[index];
 
-        public static IL Instance { get; internal set; } = null!;
+        public string this[string index, params object[] ps] => _l[index, ps];
+
+
+        private class StringLocalizerL : IL
+        {
+            private readonly IStringLocalizer<LK> _line;
+
+            public StringLocalizerL(
+                IStringLocalizer<LK> line)
+            {
+                _line = line;
+            }
+
+            public string this[string index] => _line[index];
+
+            public string this[string index, params object[] ps] => _line[index, ps];
+        }
     }
 }

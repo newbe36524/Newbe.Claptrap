@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using static Newbe.Claptrap.LK.L0002ClaptrapActor;
+using Newbe.Claptrap.Localization;
 
 namespace Newbe.Claptrap.Core
 {
@@ -52,7 +52,7 @@ namespace Newbe.Claptrap.Core
             }
             catch (Exception e)
             {
-                _logger.LogError(e, _l[L001FailedToActivate], _claptrapIdentity);
+                _logger.LogError(e, _l[LK.failed_to_activate_claptrap__identity_], _claptrapIdentity);
                 throw new ActivateFailException(e, _claptrapIdentity);
             }
         }

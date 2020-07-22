@@ -1,7 +1,11 @@
 using System;
-using System.Globalization;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Autofac.Extras.Moq;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Newbe.Claptrap.Localization.Modules;
 
 namespace Newbe.Claptrap.Tests
@@ -12,8 +16,7 @@ namespace Newbe.Claptrap.Tests
             bool localizationModule = true,
             DateTime? nowTime = null,
             bool verifyAll = true,
-            Action<ContainerBuilder> builderAction = null,
-            CultureInfo cultureInfo = null)
+            Action<ContainerBuilder> builderAction = null)
         {
             var action = builderAction ?? (builder => { });
             var mocker = AutoMock.GetStrict(builder =>
@@ -23,7 +26,17 @@ namespace Newbe.Claptrap.Tests
 
                 if (localizationModule)
                 {
-                    builder.RegisterModule(new LocalizationModule(cultureInfo));
+                    var localizationOptions = new LocalizationOptions();
+                    builder.Register(t => new OptionsWrapper<LocalizationOptions>(localizationOptions))
+                        .As<IOptions<LocalizationOptions>>()
+                        .SingleInstance();
+                    builder.RegisterType<ResourceManagerStringLocalizerFactory>()
+                        .As<IStringLocalizerFactory>()
+                        .SingleInstance();
+                    builder.RegisterGeneric(typeof(StringLocalizer<>))
+                        .As(typeof(IStringLocalizer<>))
+                        .InstancePerLifetimeScope();
+                    builder.RegisterModule(new LocalizationModule(new ClaptrapLocalizationOptions()));
                 }
 
                 if (nowTime.HasValue)

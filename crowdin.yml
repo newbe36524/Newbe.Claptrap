@@ -1,0 +1,3 @@
+files:
+  - source: /src/Newbe.Claptrap.Localization/LK.resx
+    translation: /src/Newbe.Claptrap.Localization/LK.%locale_with_underscore%.resx
