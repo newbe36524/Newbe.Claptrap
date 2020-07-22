@@ -122,10 +122,10 @@
         </value>
     </resheader>
     <data name="failed to build claptrap bootstrapper" xml:space="preserve">
-        <value>未能构建拍手引导器</value>
+        <value>无法构建 claptrap 启动器</value>
     </data>
     <data name="failed to activate claptrap {identity}" xml:space="preserve">
-        <value>未能激活拍手 {identity}</value>
+        <value>未能激活 Claptrap {identity}</value>
     </data>
     <data name="success to notify about event be handled. event version : {version}" xml:space="preserve">
         <value>成功通知事件被处理。事件版本 ： {version}</value>
