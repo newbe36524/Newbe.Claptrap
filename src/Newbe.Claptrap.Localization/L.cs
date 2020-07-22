@@ -11,7 +11,7 @@ namespace Newbe.Claptrap
 
         public L(
             ILogger<L> logger,
-            IStringLocalizer<LK>? line)
+            IStringLocalizer<LK>? line = null)
         {
             if (line != null)
             {
