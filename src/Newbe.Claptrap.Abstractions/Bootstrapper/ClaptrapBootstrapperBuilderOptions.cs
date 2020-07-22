@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Newbe.Claptrap
 {
     public class ClaptrapBootstrapperBuilderOptions
     {
-        /// <summary>
-        /// Culture info about claptrap exception message and logging.
-        /// If not be set, <see cref="CultureInfo.CurrentCulture"/> will be used.
-        /// </summary>
-        public CultureInfo CultureInfo { get; set; } = null!;
-
         /// <summary>
         /// Assemblies to scan claptrap design.
         /// </summary>

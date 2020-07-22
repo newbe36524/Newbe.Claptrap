@@ -130,7 +130,6 @@ namespace Newbe.Claptrap.Bootstrapper
             this IClaptrapBootstrapperBuilder builder,
             CultureInfo cultureInfo)
         {
-            builder.Options.CultureInfo = cultureInfo;
             return builder;
         }
 

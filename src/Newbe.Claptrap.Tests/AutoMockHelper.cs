@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.Tests
 
                 if (localizationModule)
                 {
-                    builder.RegisterModule(new LocalizationModule(cultureInfo));
+                    builder.RegisterModule(new LocalizationModule());
                 }
 
                 if (nowTime.HasValue)
