@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.Bootstrapper
         private IL CreateL()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new LocalizationModule());
+            builder.RegisterModule(new LocalizationModule(Options.ClaptrapLocalizationOptions));
             var logger = _loggerFactory.CreateLogger<L>();
             builder.RegisterInstance(logger)
                 .SingleInstance();
@@ -114,7 +114,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 var builder = new ContainerBuilder();
                 builder.RegisterModule<ClaptrapDesignScanningModule>();
                 builder.RegisterModule(new LoggingModule(_loggerFactory));
-                builder.RegisterModule(new LocalizationModule());
+                builder.RegisterModule(new LocalizationModule(Options.ClaptrapLocalizationOptions));
                 builder.RegisterInstance(Options);
                 var container = builder.Build();
                 return container;

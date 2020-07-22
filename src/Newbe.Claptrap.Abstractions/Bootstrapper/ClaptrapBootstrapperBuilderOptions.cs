@@ -38,5 +38,14 @@ namespace Newbe.Claptrap
         /// </summary>
         public IDictionary<string, string> StorageConnectionStrings { get; set; }
             = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Localization options
+        /// </summary>
+        public ClaptrapLocalizationOptions ClaptrapLocalizationOptions { get; set; }
+            = new ClaptrapLocalizationOptions
+            {
+                EnableLocalization = true
+            };
     }
 }

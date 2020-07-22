@@ -31,14 +31,6 @@ namespace Newbe.Claptrap
 
         public string this[string index, params object[] ps] => _l[index, ps];
 
-        private class DefaultL : IL
-        {
-            public string this[string index, params object[] ps] =>
-                string.Format(LK.ResourceManager.GetString(index), ps);
-
-            public string this[string index] =>
-                LK.ResourceManager.GetString(index);
-        }
 
         private class StringLocalizerL : IL
         {

@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.Tests
             serviceCollection.AddLogging();
             var builder = new ContainerBuilder();
             builder.Populate(serviceCollection);
-            builder.RegisterModule<LocalizationModule>();
+            builder.RegisterModule(new LocalizationModule(new ClaptrapLocalizationOptions()));
             var container = builder.Build();
             var l = container.Resolve<IL>();
             var result = l[LK.failed_to_build_claptrap_bootstrapper];
@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Tests
             serviceCollection.AddLogging();
             var builder = new ContainerBuilder();
             builder.Populate(serviceCollection);
-            builder.RegisterModule<LocalizationModule>();
+            builder.RegisterModule(new LocalizationModule(new ClaptrapLocalizationOptions()));
             var container = builder.Build();
             var l = container.Resolve<IL>();
             var result = l[LK.failed_to_build_claptrap_bootstrapper];
@@ -47,7 +47,7 @@ namespace Newbe.Claptrap.Tests
         public void ReverseRegistration()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule<LocalizationModule>();
+            builder.RegisterModule(new LocalizationModule(new ClaptrapLocalizationOptions()));
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddLocalization();
             serviceCollection.AddLogging();

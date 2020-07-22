@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.Tests
                 {
                     var localizationOptions = new LocalizationOptions();
                     builder.Register(t => new OptionsWrapper<LocalizationOptions>(localizationOptions))
-                        .AsImplementedInterfaces()
+                        .As<IOptions<LocalizationOptions>>()
                         .SingleInstance();
                     builder.RegisterType<ResourceManagerStringLocalizerFactory>()
                         .As<IStringLocalizerFactory>()
@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.Tests
                     builder.RegisterGeneric(typeof(StringLocalizer<>))
                         .As(typeof(IStringLocalizer<>))
                         .InstancePerLifetimeScope();
-                    builder.RegisterModule(new LocalizationModule());
+                    builder.RegisterModule(new LocalizationModule(new ClaptrapLocalizationOptions()));
                 }
 
                 if (nowTime.HasValue)
