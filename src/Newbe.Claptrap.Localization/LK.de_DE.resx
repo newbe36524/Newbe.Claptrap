@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <!-- 
+      Microsoft ResX Schema 
+      
+      Version 2.0
+      
+      The primary goals of this format is to allow a simple XML format 
+      that is mostly human readable. The generation and parsing of the 
+      various data types are done through the TypeConverter classes 
+      associated with the data types.
+      
+      Example:
+      
+      ... ado.net/XML headers & schema ...
+      <resheader name="resmimetype">text/microsoft-resx</resheader>
+      <resheader name="version">2.0</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+      <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+      <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+          <value>[base64 mime encoded serialized .NET Framework object]</value>
+      </data>
+      <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+          <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+          <comment>This is a comment</comment>
+      </data>
+                  
+      There are any number of "resheader" rows that contain simple 
+      name/value pairs.
+      
+      Each data row contains a name, and value. The row also contains a 
+      type or mimetype. Type corresponds to a .NET class that support 
+      text/value conversion through the TypeConverter architecture. 
+      Classes that don't support this are serialized and stored with the 
+      mimetype set.
+      
+      The mimetype is used for serialized objects, and tells the 
+      ResXResourceReader how to depersist the object. This is currently not 
+      extensible. For a given mimetype the value must be set accordingly:
+      
+      Note - application/x-microsoft.net.object.binary.base64 is the format 
+      that the ResXResourceWriter will generate, however the reader can 
+      read any of the formats listed below.
+      
+      mimetype: application/x-microsoft.net.object.binary.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+              : and then encoded with base64 encoding.
+      
+      mimetype: application/x-microsoft.net.object.soap.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+              : and then encoded with base64 encoding.
+  
+      mimetype: application/x-microsoft.net.object.bytearray.base64
+      value   : The object must be serialized into a byte array 
+              : using a System.ComponentModel.TypeConverter
+              : and then encoded with base64 encoding.
+      -->
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="failed to build claptrap bootstrapper" xml:space="preserve">
+        <value>Claptrap-Bootstrapper konnte nicht erstellt werden</value>
+    </data>
+    <data name="failed to activate claptrap {identity}" xml:space="preserve">
+        <value>Claptrap konnte nicht aktiviert werden {identity}</value>
+    </data>
+    <data name="success to notify about event be handled. event version : {version}" xml:space="preserve">
+        <value>Erfolg, um über Ereignis zu benachrichtigen, behandelt werden. Ereignisversion : {version}</value>
+    </data>
+    <data name="failed to notify about event be handled. event version : {version}" xml:space="preserve">
+        <value>nicht über das Ereignis benachrichtigt werden konnte. Ereignisversion : {version}</value>
+    </data>
+    <data name="there is no state snapshot found from state loader" xml:space="preserve">
+        <value>Es wurde kein Statussnapshot vom Zustandsladeprogramm gefunden</value>
+    </data>
+    <data name="found state snapshot from state loader" xml:space="preserve">
+        <value>Status-Snapshot vom Zustandsladeprogramm gefunden</value>
+    </data>
+    <data name="MissingEventHandler" xml:space="preserve">
+        <value>Es wurde kein Ereignishandler für {eventTypeCode} In {claptrapTypeCode}. Es muss definiert werden, da dies ein Diener ist, und der Mater wird es dazu schicken. Wenn Sie das Ereignis nicht verarbeiten, können Sie {handlerName} für dieses Ereignis.</value>
+    </data>
+    <data name="{name} is required, please set it correctly." xml:space="preserve">
+        <value>{name} erforderlich ist, stellen Sie es bitte richtig ein.</value>
+    </data>
+    <data name="Type {type} does not implement {componentType}." xml:space="preserve">
+        <value>Typ {type} implementiert nicht {componentType}.</value>
+    </data>
+    <data name="failed to create a claptrap. {identity}" xml:space="preserve">
+        <value>fehlerbesagte Erstellung einer Klatsche. {identity}</value>
+    </data>
+    <data name="IsMinion" xml:space="preserve">
+        <value>Dies ist eine Minion-Klatsche, da sie ein Master-Design im Design enthält. Mastertypcode : {typeCode}</value>
+    </data>
+    <data name="This is a master claptrap. type code : {typeCode}" xml:space="preserve">
+        <value>Dies ist eine Master-Klatsche. Typcode : {typeCode}</value>
+    </data>
+    <data name="add {provider} as claptrap design provider" xml:space="preserve">
+        <value>Hinzufügen {provider} als Claptrap-Designanbieter</value>
+    </data>
+    <data name="start to scan {assemblyArrayCount} types" xml:space="preserve">
+        <value>Starten Sie den Scan {assemblyArrayCount} Typen</value>
+    </data>
+    <data name="start to create claptrap design" xml:space="preserve">
+        <value>Beginnen Sie mit der Erstellung des Claptrap-Designs</value>
+    </data>
+    <data name="claptrap design store created, start to configure it" xml:space="preserve">
+        <value>claptrap Design Store erstellt, beginnen Sie, es zu konfigurieren</value>
+    </data>
+    <data name="all designs : {designs}" xml:space="preserve">
+        <value>alle Designs : {designs}</value>
+    </data>
+    <data name="start to configure claptrap design store by {configurator}" xml:space="preserve">
+        <value>starten Sie die Konfiguration des Claptrap-Designspeichers durch {configurator}</value>
+    </data>
+    <data name="found {actorCount} claptrap designs" xml:space="preserve">
+        <value>Gefunden {actorCount} Claptrap Designs</value>
+    </data>
+    <data name="all designs after configuration: {designs}" xml:space="preserve">
+        <value>alle Designs nach der Konfiguration: {designs}</value>
+    </data>
+    <data name="start to validate all design in claptrap design store" xml:space="preserve">
+        <value>Starten Sie, um alle Designs im Claptrap-Designspeicher zu validieren</value>
+    </data>
+    <data name="all design validated ok" xml:space="preserve">
+        <value>alle Design validiert ok</value>
+    </data>
+    <data name="There is a IStringLocalizer found in container, start to use localization in UI culture" xml:space="preserve">
+        <value>Es gibt einen IStringLocalizer in Container gefunden, beginnen, Lokalisierung in UI-Kultur zu verwenden</value>
+    </data>
+    <data name="There is no IStringLocalizer found in container, start to use default localization in English" xml:space="preserve">
+        <value>Es gibt keinen IStringLocalizer in Container gefunden, beginnen Sie, Standard-Lokalisierung in Englisch zu verwenden</value>
+    </data>
+    <data name="Template" xml:space="preserve">
+        <value>Vorlage</value>
+    </data>
+</root>
