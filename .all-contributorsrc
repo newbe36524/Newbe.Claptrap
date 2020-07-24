@@ -33,6 +33,15 @@
       "contributions": [
         "translation"
       ]
+    },
+    {
+      "login": "FFFirer",
+      "name": "FFFirer",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/22254170?v=4",
+      "profile": "https://github.com/FFFirer",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
