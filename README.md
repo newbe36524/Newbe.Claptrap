@@ -38,7 +38,7 @@ You can get the samples about the project through [Newbe.Claptrap.Examples](http
 ## Discussion
 
 - If you are interested in this project, you can submit your idea through [github issues](https://github.com/newbe36524/Newbe.Claptrap/issues)
-- Click the link for QQ group [Newbe.Claptrap]: <https://jq.qq.com/?_wv=1027&k=5uJGXf5>
+- Click the link for QQ group 610394020 [Newbe.Claptrap]: <https://jq.qq.com/?_wv=1027&k=vRi0usiG>
 - [![Gitter](https://badges.gitter.im/newbe-claptrap/community.svg)](https://gitter.im/newbe-claptrap/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## References
