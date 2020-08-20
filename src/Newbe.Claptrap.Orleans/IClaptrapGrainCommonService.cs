@@ -1,3 +1,5 @@
+using Autofac;
+
 namespace Newbe.Claptrap.Orleans
 {
     public interface IClaptrapGrainCommonService
@@ -5,5 +7,6 @@ namespace Newbe.Claptrap.Orleans
         IClaptrapFactory ClaptrapFactory { get; }
         IClaptrapAccessor ClaptrapAccessor { get; }
         IClaptrapTypeCodeFactory ClaptrapTypeCodeFactory { get; }
+        ILifetimeScope LifetimeScope { get; }
     }
 }
