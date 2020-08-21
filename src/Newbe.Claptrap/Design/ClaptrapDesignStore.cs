@@ -17,6 +17,9 @@ namespace Newbe.Claptrap.Design
         private readonly IDictionary<string, IClaptrapDesign> _globalDic
             = new Dictionary<string, IClaptrapDesign>();
 
+        private readonly IDictionary<string, ClaptrapDesignFactory> _factories
+            = new Dictionary<string, ClaptrapDesignFactory>();
+
         public ClaptrapDesignStore(
             ILogger<ClaptrapDesignStore>? logger = null)
         {
@@ -27,18 +30,25 @@ namespace Newbe.Claptrap.Design
 
         public IClaptrapDesign FindDesign(IClaptrapIdentity claptrapIdentity)
         {
-            if (_globalDic.TryGetValue(claptrapIdentity.TypeCode, out var globalDesign))
+            var typeCode = claptrapIdentity.TypeCode;
+
+            if (!_globalDic.TryGetValue(typeCode, out var globalDesign))
             {
-                return globalDesign;
+                throw new ClaptrapDesignNotFoundException(claptrapIdentity);
             }
 
-            throw new ClaptrapDesignNotFoundException(claptrapIdentity);
+            if (_factories.TryGetValue(typeCode, out var factory))
+            {
+                var re = factory.Invoke(claptrapIdentity, globalDesign);
+                return re;
+            }
+
+            return globalDesign;
         }
 
         public void AddOrReplace(IClaptrapDesign design)
         {
             var typeCode = design.ClaptrapTypeCode;
-            _logger.LogDebug("the claptrap design will be add to global store");
             if (_globalDic.TryGetValue(typeCode, out var old))
             {
                 _logger.LogInformation(
@@ -52,6 +62,22 @@ namespace Newbe.Claptrap.Design
                 design);
         }
 
+        public void AddOrReplaceFactory(string claptrapTypeCode, ClaptrapDesignFactory designFactory)
+        {
+            if (_factories.TryGetValue(claptrapTypeCode, out var old))
+            {
+                _logger.LogInformation(
+                    "Found a old claptrap design factory and it will be replaced. typeCode : {@typeCode} old: {@designFactory}",
+                    claptrapTypeCode,
+                    old);
+            }
+
+            _factories[claptrapTypeCode] = designFactory;
+            _logger.LogInformation(
+                "a claptrap design factory add to factories. typeCode : {@typeCode} ",
+                claptrapTypeCode);
+        }
+
         public void Remove(Func<IClaptrapDesign, bool> removedSelector)
         {
             var needRemoved = this.Where(removedSelector)
@@ -63,6 +89,21 @@ namespace Newbe.Claptrap.Design
                 {
                     _logger.LogInformation("design for {typeCode} remove from global design store", typeCode);
                 }
+            }
+        }
+
+        public void RemoveFactory(string claptrapTypeCode)
+        {
+            if (_factories.ContainsKey(claptrapTypeCode))
+            {
+                _factories.Remove(claptrapTypeCode);
+                _logger.LogInformation("Remove a factory with claptrap type code : {claptrapTypeCode}",
+                    claptrapTypeCode);
+            }
+            else
+            {
+                _logger.LogTrace("There is not factory found with claptrap type code : {claptrapTypeCode}",
+                    claptrapTypeCode);
             }
         }
 

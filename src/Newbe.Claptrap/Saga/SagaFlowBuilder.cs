@@ -6,7 +6,7 @@ namespace Newbe.Claptrap.Saga
     public interface ISagaFlowBuilder
     {
         ISagaFlowBuilder WithStep(Type step, Type compensateStep);
-        ISagaFlowBuilder WithUserData(Dictionary<string, string> userData);
+        ISagaFlowBuilder WithUserData(object userData);
         SagaFlow Build();
     }
 
@@ -14,7 +14,7 @@ namespace Newbe.Claptrap.Saga
     {
         private readonly IList<Type> _steps = new List<Type>();
         private readonly IList<Type> _compensateSteps = new List<Type>();
-        private Dictionary<string, string> _userData;
+        private object _userData = null!;
 
         public ISagaFlowBuilder WithStep(Type step, Type compensateStep)
         {
@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.Saga
             return this;
         }
 
-        public ISagaFlowBuilder WithUserData(Dictionary<string, string> userData)
+        public ISagaFlowBuilder WithUserData(object userData)
         {
             _userData = userData;
             return this;

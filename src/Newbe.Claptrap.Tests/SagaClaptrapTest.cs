@@ -5,8 +5,10 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Orleans;
 using Newbe.Claptrap.Saga;
 using NUnit.Framework;
 
@@ -17,7 +19,7 @@ namespace Newbe.Claptrap.Tests
         private static IContainer CreateContainer()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogging();
+            serviceCollection.AddLogging(logging => logging.AddConsole());
             var builder = new ContainerBuilder();
             builder.Populate(serviceCollection);
             var autofacClaptrapBootstrapperBuilder =
@@ -55,21 +57,20 @@ namespace Newbe.Claptrap.Tests
         {
             var container = CreateContainer();
             await using var scope = container.BeginLifetimeScope();
-            var factory = scope.Resolve<SagaClaptrap.Factory>();
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), SagaCodes.ClaptrapTypeCode);
-            var claptrap = factory.Invoke(identity);
-            await claptrap.Claptrap.ActivateAsync();
+            var masterIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "TestCode");
+            await using var claptrap = scope.CreateSagaClaptrap(masterIdentity, "testFlow", typeof(TestFlowData));
             var sagaFlow = SagaFlowBuilder.Create()
                 .WithStep<TestStep1, CompensateStep1>()
                 .WithStep<TestStep2, CompensateStep2>()
-                .WithUserData(new Dictionary<string, string>())
+                .WithUserData(new TestFlowData())
                 .Build();
             await claptrap.RunAsync(sagaFlow);
-            var claptrapStateData = claptrap.StateData;
+            var claptrapAccessor = scope.Resolve<IClaptrapAccessor>();
+            var claptrapStateData = (SagaStateData<TestFlowData>) claptrapAccessor.Claptrap.State.Data;
             claptrapStateData.SagaFlowState.IsCompleted.Should().BeTrue();
-            var flowData = claptrapStateData.UserData;
-            flowData.Should().Contain("1", true.ToString());
-            flowData.Should().Contain("2", true.ToString());
+            var flowData = (TestFlowData) claptrapStateData.GetUserData();
+            flowData.Test1.Should().BeTrue();
+            flowData.Test2.Should().BeTrue();
             // there will be nothing change since flow completed.
             await claptrap.RunAsync(sagaFlow);
         }
@@ -79,26 +80,26 @@ namespace Newbe.Claptrap.Tests
         {
             var container = CreateContainer();
             await using var scope = container.BeginLifetimeScope();
-            var factory = scope.Resolve<SagaClaptrap.Factory>();
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), SagaCodes.ClaptrapTypeCode);
-            var claptrap = factory.Invoke(identity);
-            await claptrap.Claptrap.ActivateAsync();
+            var masterIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "TestCode");
+            await using var claptrap = scope.CreateSagaClaptrap(masterIdentity, "testFlow", typeof(TestFlowData));
             var sagaFlow = SagaFlowBuilder.Create()
                 .WithStep<TestStep1, CompensateStep1>()
                 .WithStep<ExceptionStep, CompensateStep2>()
-                .WithUserData(new Dictionary<string, string>())
+                .WithUserData(new TestFlowData())
                 .Build();
+            var claptrapAccessor = scope.Resolve<IClaptrapAccessor>();
             await claptrap.RunAsync(sagaFlow);
-            var claptrapStateData = claptrap.StateData;
+            var claptrapStateData = (SagaStateData<TestFlowData>) claptrapAccessor.Claptrap.State.Data;
             var flowState = claptrapStateData.SagaFlowState;
             flowState.IsCompleted.Should().BeFalse();
             flowState.IsCompensating.Should().BeFalse();
             flowState.IsCompensated.Should().BeTrue();
             flowState.StepStatuses.Should().Equal(StepStatus.Completed, StepStatus.Error);
             flowState.CompensateStepStatuses.Should().Equal(StepStatus.Completed, StepStatus.Completed);
-            var flowData = claptrapStateData.UserData;
-            flowData.Should().Contain("1", false.ToString());
-            flowData.Should().Contain("2", false.ToString());
+            var flowData = (TestFlowData) claptrapStateData.GetUserData();
+            flowData.Test1.Should().BeFalse();
+            flowData.Test2.Should().BeFalse();
+            await claptrap.RunAsync(sagaFlow);
         }
 
         [Test]
@@ -106,70 +107,79 @@ namespace Newbe.Claptrap.Tests
         {
             var container = CreateContainer();
             await using var scope = container.BeginLifetimeScope();
-            var factory = scope.Resolve<SagaClaptrap.Factory>();
-            var identity = new ClaptrapIdentity(Guid.NewGuid().ToString(), SagaCodes.ClaptrapTypeCode);
-            var claptrap = factory.Invoke(identity);
-            await claptrap.Claptrap.ActivateAsync();
+            var masterIdentity = new ClaptrapIdentity(Guid.NewGuid().ToString(), "TestCode");
+            await using var claptrap = scope.CreateSagaClaptrap(masterIdentity, "testFlow", typeof(TestFlowData));
             var sagaFlow = SagaFlowBuilder.Create()
                 .WithStep<TestStep1, CompensateStep1>()
                 .WithStep<ExceptionStep, ExceptionStep>()
-                .WithUserData(new Dictionary<string, string>())
+                .WithUserData(new TestFlowData())
                 .Build();
             Assert.ThrowsAsync<Exception>(() => claptrap.RunAsync(sagaFlow));
-            var claptrapStateData = claptrap.StateData;
+            var claptrapAccessor = scope.Resolve<IClaptrapAccessor>();
+            var claptrapStateData = (SagaStateData<TestFlowData>) claptrapAccessor.Claptrap.State.Data;
             var flowState = claptrapStateData.SagaFlowState;
             flowState.IsCompleted.Should().BeFalse();
             flowState.IsCompensating.Should().BeTrue();
             flowState.IsCompensated.Should().BeFalse();
             flowState.StepStatuses.Should().Equal(StepStatus.Completed, StepStatus.Error);
             flowState.CompensateStepStatuses.Should().Equal(StepStatus.Completed, StepStatus.Error);
-            var flowData = claptrapStateData.UserData;
-            flowData.Should().Contain("1", false.ToString());
-            flowData.Should().NotContainKey("2");
+            var flowData = (TestFlowData) claptrapStateData.GetUserData();
+            flowData.Test1.Should().BeFalse();
+            flowData.Test2.Should().BeFalse();
         }
 
         public class TestStep1 : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, Dictionary<string, string> userData)
+            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
             {
-                userData["1"] = true.ToString();
+                var testFlowData = (TestFlowData) userData;
+                testFlowData.Test1 = true;
                 return Task.CompletedTask;
             }
         }
 
         public class CompensateStep1 : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, Dictionary<string, string> userData)
+            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
             {
-                userData["1"] = false.ToString();
+                var testFlowData = (TestFlowData) userData;
+                testFlowData.Test1 = false;
                 return Task.CompletedTask;
             }
         }
 
         public class TestStep2 : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, Dictionary<string, string> userData)
+            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
             {
-                userData["2"] = true.ToString();
+                var testFlowData = (TestFlowData) userData;
+                testFlowData.Test2 = true;
                 return Task.CompletedTask;
             }
         }
 
         public class CompensateStep2 : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, Dictionary<string, string> userData)
+            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
             {
-                userData["2"] = false.ToString();
+                var testFlowData = (TestFlowData) userData;
+                testFlowData.Test1 = false;
                 return Task.CompletedTask;
             }
         }
 
         public class ExceptionStep : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, Dictionary<string, string> userData)
+            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
             {
                 throw new Exception();
             }
+        }
+
+        public class TestFlowData : IStateData
+        {
+            public bool Test1 { get; set; }
+            public bool Test2 { get; set; }
         }
     }
 }

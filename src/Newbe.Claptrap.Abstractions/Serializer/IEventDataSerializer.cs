@@ -2,7 +2,7 @@ namespace Newbe.Claptrap
 {
     public interface IEventDataSerializer<T>
     {
-        T Serialize(string claptrapTypeCode, string eventTypeCode, IEventData eventData);
-        IEventData Deserialize(string claptrapTypeCode, string eventTypeCode, T source);
+        T Serialize(IClaptrapIdentity identity, string eventTypeCode, IEventData eventData);
+        IEventData Deserialize(IClaptrapIdentity identity, string eventTypeCode, T source);
     }
 }

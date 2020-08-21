@@ -5,8 +5,9 @@ namespace Newbe.Claptrap.Saga
 {
     public class SagaFlowCreateEvent : IEventData
     {
-        public Dictionary<string, string> UserData { get; set; }
-        public IList<Type> Steps { get; set; }
-        public IList<Type> CompensateSteps { get; set; }
+        public string UserData { get; set; } = null!;
+        public Type UserDataType { get; set; } = null!;
+        public IList<Type> Steps { get; set; } = null!;
+        public IList<Type> CompensateSteps { get; set; } = null!;
     }
 }

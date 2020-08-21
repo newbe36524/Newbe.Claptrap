@@ -9,6 +9,7 @@ using Newbe.Claptrap.Extensions;
 using Newbe.Claptrap.Localization;
 using Newbe.Claptrap.Localization.Modules;
 using Newbe.Claptrap.Modules;
+using Newbe.Claptrap.Saga;
 using Newtonsoft.Json;
 using Module = Autofac.Module;
 
@@ -34,7 +35,11 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 DesignTypes = Enumerable.Empty<Type>(),
                 ModuleTypes = Enumerable.Empty<Type>(),
-                ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
+                ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>
+                {
+                    // TODO remove to sub module maybe
+                    new SageClaptrapDesignStoreConfigurator()
+                },
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
                 ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
             };

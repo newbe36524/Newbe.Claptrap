@@ -163,7 +163,7 @@ namespace Newbe.Claptrap.Tests
         [TestCase(100)]
         public async Task SaveStateMultipleClaptrapAsync(int claptrapCount)
         {
-            var stateVersion = 100;
+            const int stateVersion = 100;
             using var lifetimeScope = BuildService().CreateScope();
             var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();

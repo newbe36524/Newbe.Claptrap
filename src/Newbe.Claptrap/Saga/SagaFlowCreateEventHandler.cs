@@ -3,10 +3,17 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.Saga
 {
-    public class SagaFlowCreateEventHandler :
-        NormalEventHandler<SagaStateData, SagaFlowCreateEvent>
+    public class SagaFlowCreateEventHandler : NormalEventHandler<ISagaStateData, SagaFlowCreateEvent>
     {
-        public override ValueTask HandleEvent(SagaStateData stateData,
+        private readonly ISagaUserDataSerializer _sagaUserDataSerializer;
+
+        public SagaFlowCreateEventHandler(
+            ISagaUserDataSerializer sagaUserDataSerializer)
+        {
+            _sagaUserDataSerializer = sagaUserDataSerializer;
+        }
+
+        public override ValueTask HandleEvent(ISagaStateData stateData,
             SagaFlowCreateEvent eventData,
             IEventContext eventContext)
         {
@@ -25,7 +32,8 @@ namespace Newbe.Claptrap.Saga
                 IsCompleted = false,
             };
             stateData.SagaFlowState = flowState;
-            stateData.UserData = eventData.UserData;
+            var userData = _sagaUserDataSerializer.Deserialize(eventData.UserData, eventData.UserDataType);
+            stateData.SetUserData(userData);
             return new ValueTask();
         }
     }

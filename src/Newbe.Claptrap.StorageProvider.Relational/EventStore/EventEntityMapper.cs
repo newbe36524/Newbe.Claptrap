@@ -16,8 +16,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
         public EventEntity Map(IEvent @event)
         {
             var eventData =
-                _eventDataStringSerializer.Serialize(@event.ClaptrapIdentity.TypeCode, @event.EventTypeCode,
-                    @event.Data);
+                _eventDataStringSerializer.Serialize(@event.ClaptrapIdentity, @event.EventTypeCode, @event.Data);
             var eventEntity = new EventEntity
             {
                 Version = @event.Version,
@@ -33,7 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
         public IEvent Map(EventEntity entity, IClaptrapIdentity identity)
         {
             var eventData =
-                _eventDataStringSerializer.Deserialize(identity.TypeCode, entity.EventTypeCode, entity.EventData);
+                _eventDataStringSerializer.Deserialize(identity, entity.EventTypeCode, entity.EventData);
             var dataEvent = new DataEvent(identity, entity.EventTypeCode, eventData)
             {
                 Version = entity.Version

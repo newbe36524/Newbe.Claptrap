@@ -15,8 +15,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 
         public StateEntity Map(IState stateEntity)
         {
-            var stateData = _stateDataStringSerializer.Serialize(
-                stateEntity.Identity.TypeCode,
+            var stateData = _stateDataStringSerializer.Serialize(stateEntity.Identity,
                 stateEntity.Data);
             var re = new StateEntity
             {
@@ -31,8 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
 
         public IState Map(StateEntity stateEntity, IClaptrapIdentity identity)
         {
-            var stateData = _stateDataStringSerializer.Deserialize(
-                identity.TypeCode, stateEntity.StateData);
+            var stateData = _stateDataStringSerializer.Deserialize(identity, stateEntity.StateData);
             var re = new DataState(identity, stateData, stateEntity.Version);
             return re;
         }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Newbe.Claptrap.Saga
 {
     public class SagaMoveToNextEventHandler :
-        NormalEventHandler<SagaStateData, SagaMoveToNextEvent>
+        NormalEventHandler<ISagaStateData, SagaMoveToNextEvent>
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger<SagaMoveToNextEventHandler> _logger;
@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.Saga
             _logger = logger;
         }
 
-        public override async ValueTask HandleEvent(SagaStateData stateData,
+        public override async ValueTask HandleEvent(ISagaStateData stateData,
             SagaMoveToNextEvent eventData,
             IEventContext eventContext)
         {
@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.Saga
             var step = (ISagaStep) _lifetimeScope.Resolve(stepType);
             try
             {
-                await step.RunAsync(stepIndex, stateData.SagaFlowState, stateData.UserData);
+                await step.RunAsync(stepIndex, stateData.SagaFlowState, stateData.GetUserData());
                 flowState.StepStatuses[stepIndex] = StepStatus.Completed;
                 if (stepIndex == flowState.Steps.Length - 1)
                 {

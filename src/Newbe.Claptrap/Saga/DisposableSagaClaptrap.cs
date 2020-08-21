@@ -21,11 +21,6 @@ namespace Newbe.Claptrap.Saga
             return _sagaClaptrap.RunAsync(flow);
         }
 
-        public Task ContinueAsync()
-        {
-            return _sagaClaptrap.ContinueAsync();
-        }
-
         public ValueTask DisposeAsync()
         {
             return _lifetimeScope.DisposeAsync();

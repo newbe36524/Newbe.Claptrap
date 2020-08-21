@@ -14,6 +14,9 @@ namespace Newbe.Claptrap.Modules
             builder.RegisterType<SagaClaptrap>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<SagaUserDataSerializer>()
+                .As<ISagaUserDataSerializer>()
+                .SingleInstance();
         }
     }
 }

@@ -38,25 +38,19 @@ namespace Newbe.Claptrap.Orleans
         /// </summary>
         /// <param name="claptrapBoxGrain"></param>
         /// <param name="flowKey">Key of flow. It must be different if you want to create multiple saga flow in a ClaptrapGrainBox</param>
+        /// <param name="userDataType"></param>
         /// <typeparam name="TStateData"></typeparam>
         /// <returns></returns>
         public static IDisposableSagaClaptrap CreateSagaClaptrap<TStateData>(
-            this IClaptrapBoxGrain<TStateData> claptrapBoxGrain, string flowKey)
+            this IClaptrapBoxGrain<TStateData> claptrapBoxGrain,
+            string flowKey,
+            Type? userDataType = null)
             where TStateData : IStateData
             =>
                 claptrapBoxGrain.CreateSagaClaptrap(() =>
                 {
                     var state = claptrapBoxGrain.Claptrap.State;
-                    var hashAlgorithm = HashAlgorithm.Create();
-                    var sourceId = $"{flowKey}_{state.Identity.Id}_{state.Identity.TypeCode}";
-                    var hash = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(sourceId));
-                    var hashKey = new StringBuilder();
-                    foreach (var b in hash)
-                    {
-                        hashKey.Append(b.ToString("x2"));
-                    }
-
-                    return hashKey.ToString();
+                    return new SagaClaptrapIdentity(state.Identity, flowKey, userDataType ?? typeof(object));
                 });
 
         /// <summary>
@@ -68,14 +62,43 @@ namespace Newbe.Claptrap.Orleans
         /// <returns></returns>
         public static IDisposableSagaClaptrap CreateSagaClaptrap<TStateData>(
             this IClaptrapBoxGrain<TStateData> claptrapBoxGrain,
-            Func<string> sagaClaptrapIdFactory) where TStateData : IStateData
+            Func<ISagaClaptrapIdentity> sagaClaptrapIdFactory) where TStateData : IStateData
         {
             var commonService = claptrapBoxGrain.ClaptrapGrainCommonService;
             var scope = commonService.LifetimeScope.BeginLifetimeScope();
+            var re = scope.CreateSagaClaptrap(sagaClaptrapIdFactory);
+            return re;
+        }
+
+        /// <summary>
+        /// Create a SagaClaptrap to handle saga flow
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="masterIdentity"></param>
+        /// <param name="flowKey"></param>
+        /// <param name="userDataType"></param>
+        /// <returns></returns>
+        public static IDisposableSagaClaptrap CreateSagaClaptrap(this ILifetimeScope scope,
+            IClaptrapIdentity masterIdentity,
+            string flowKey,
+            Type? userDataType = null)
+            =>
+                scope.CreateSagaClaptrap(() =>
+                    new SagaClaptrapIdentity(masterIdentity, flowKey, userDataType ?? typeof(object)));
+
+        /// <summary>
+        /// Create a SagaClaptrap to handle saga flow
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="sagaClaptrapIdFactory"></param>
+        /// <returns></returns>
+        public static IDisposableSagaClaptrap CreateSagaClaptrap(
+            this ILifetimeScope scope,
+            Func<ISagaClaptrapIdentity> sagaClaptrapIdFactory)
+        {
             var factory = scope.Resolve<SagaClaptrap.Factory>();
-            var id = sagaClaptrapIdFactory();
-            var sagaIdentity = new ClaptrapIdentity(id, SagaCodes.ClaptrapTypeCode);
-            var sagaClaptrap = factory.Invoke(sagaIdentity);
+            var sagaClaptrapIdentity = sagaClaptrapIdFactory();
+            var sagaClaptrap = factory.Invoke(sagaClaptrapIdentity);
             var re = new DisposableSagaClaptrap(sagaClaptrap, scope);
             return re;
         }

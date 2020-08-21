@@ -8,26 +8,36 @@ namespace Newbe.Claptrap.Saga
     [ClaptrapEventHandler(typeof(SagaFlowCreateEventHandler), SagaCodes.Create)]
     [ClaptrapEventHandler(typeof(SagaCompensateStepEventHandler), SagaCodes.Compensate)]
     [ClaptrapEventHandler(typeof(SagaMoveToNextEventHandler), SagaCodes.MoveToNext)]
-    public class SagaClaptrap : NormalClaptrapBox<SagaStateData>, ISagaClaptrap
+    public class SagaClaptrap : NormalClaptrapBox<ISagaStateData>, ISagaClaptrap
     {
-        public new delegate SagaClaptrap Factory(IClaptrapIdentity identity);
+        public delegate SagaClaptrap Factory(ISagaClaptrapIdentity identity);
 
         private readonly IClaptrapIdentity _identity;
+        private readonly ISagaUserDataSerializer _sagaUserDataSerializer;
         private readonly ILogger<SagaClaptrap> _logger;
+        private readonly Lazy<bool> _activated;
 
         public SagaClaptrap(IClaptrapIdentity identity,
             IClaptrapFactory claptrapFactory,
             IClaptrapAccessor claptrapAccessor,
+            ISagaUserDataSerializer sagaUserDataSerializer,
             ILogger<SagaClaptrap> logger) : base(identity,
             claptrapFactory,
             claptrapAccessor)
         {
             _identity = identity;
+            _sagaUserDataSerializer = sagaUserDataSerializer;
             _logger = logger;
+            _activated = new Lazy<bool>(() =>
+            {
+                Claptrap.ActivateAsync().Wait();
+                return true;
+            });
         }
 
         public async Task RunAsync(SagaFlow flow)
         {
+            _ = _activated.Value;
             if (StateData.SagaFlowState != null!)
             {
                 if (StateData.SagaFlowState.IsCompleted)
@@ -39,21 +49,23 @@ namespace Newbe.Claptrap.Saga
             else
             {
                 _logger.LogInformation("saga flow is not built, start to build it");
-                await Claptrap.HandleEventAsync(new DataEvent(_identity, SagaCodes.Create,
-                    new SagaFlowCreateEvent
-                    {
-                        Steps = flow.Steps,
-                        CompensateSteps = flow.CompensateSteps,
-                        UserData = flow.UserData,
-                    }));
+                var evt = new SagaFlowCreateEvent
+                {
+                    Steps = flow.Steps,
+                    CompensateSteps = flow.CompensateSteps,
+                    UserData = _sagaUserDataSerializer.Serialize(flow.UserData, flow.UserData.GetType()),
+                    UserDataType = flow.UserData.GetType()
+                };
+
+                await Claptrap.HandleEventAsync(new DataEvent(_identity, SagaCodes.Create, evt));
             }
 
             await ContinueAsync();
         }
 
-
-        public async Task ContinueAsync()
+        private async Task ContinueAsync()
         {
+            _ = _activated.Value;
             var flowState = StateData.SagaFlowState;
             var maxSteps = flowState.Steps.Length + flowState.CompensateSteps.Length;
             var isNeedContinue = true;
