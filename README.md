@@ -11,14 +11,16 @@
 - [日本語](https://claptrap.newbe.pro/ja_JP)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![build](https://github.com/newbe36524/Newbe.Claptrap/workflows/Claptrap/badge.svg)](https://github.com/newbe36524/Newbe.Claptrap/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)](https://codecov.io/gh/newbe36524/Newbe.Claptrap)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=coverage)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=alert_status)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1fd0e7443364414ca0003dab27f9f9b8)](https://www.codacy.com/manual/472158246/Newbe.Claptrap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=newbe36524/Newbe.Claptrap&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1fd0e7443364414ca0003dab27f9f9b8)](https://www.codacy.com/manual/472158246/Newbe.Claptrap?utm_source=github.com&utm_medium=referral&utm_content=newbe36524/Newbe.Claptrap&utm_campaign=Badge_Grade)
 [![Newbe.Claptrap](https://img.shields.io/nuget/v/Newbe.Claptrap?label=Newbe.Claptrap%20nuget&logo=Newbe.Claptrap&style=flat-square)](https://www.nuget.org/packages/Newbe.Claptrap/)
 
 This is a set of server-side development frameworks with `reactive`, `event sourcing` and `Actor pattern` as basic theories. On top of this, developers can develop "distributed", "scale out", and "easy to test" application more simply.
@@ -38,7 +40,7 @@ You can get the samples about the project through [Newbe.Claptrap.Examples](http
 ## Discussion
 
 - If you are interested in this project, you can submit your idea through [github issues](https://github.com/newbe36524/Newbe.Claptrap/issues)
-- Click the link for QQ group 610394020 [Newbe.Claptrap]: <https://jq.qq.com/?_wv=1027&k=vRi0usiG>
+- Click the link for QQ group 610394020 [Newbe.Claptrap CL4P-TP]: <https://jq.qq.com/?_wv=1027&k=erWUmrOP>
 - [![Gitter](https://badges.gitter.im/newbe-claptrap/community.svg)](https://gitter.im/newbe-claptrap/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## References
@@ -54,6 +56,7 @@ The project was inspired by many open source projects and blog posts：
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/newbe36524/Newbe.Claptrap.svg)](https://starchart.cc/newbe36524/Newbe.Claptrap)
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -72,13 +75,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Icon
 
-The icons currently used in this project are all from [The Noun Project] (https://thenounproject.com/). You can view the copyright information of each section in [/docs/noun_source](/docs/noun_source).
+The icons currently used in this project are all from [The Noun Project](https://thenounproject.com/). You can view the copyright information of each section in [/docs/noun_source](/docs/noun_source).
 
 ## Gitee
 
