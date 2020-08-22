@@ -20,7 +20,7 @@
         <None Include="icon.png" Pack="true" PackagePath=""/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Fody" Version="6.2.0">
+        <PackageReference Include="Fody" Version="6.2.4">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Visualize.Fody" Version="1.2.0">

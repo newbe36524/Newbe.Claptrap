@@ -105,7 +105,8 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             }
         }
 
-        private (string? encoding, byte[] data) CompressData(byte[] source, CompressType type)
+        private (string? encoding, ReadOnlyMemory<byte> data) CompressData(ReadOnlyMemory<byte> source,
+            CompressType type)
         {
             _logger.LogTrace("compress type : {type}", type);
             if (type == CompressType.None)
@@ -113,15 +114,12 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
                 return ("utf8", source);
             }
 
-            using var input = new MemoryStream();
-            input.Write(source, 0, source.Length);
-            input.Seek(0, SeekOrigin.Begin);
             switch (type)
             {
                 case CompressType.GZip:
-                    return (GzipStreamHelper.ContentEncoding, GzipStreamHelper.Compress(input));
+                    return (GzipStreamHelper.ContentEncoding, GzipStreamHelper.Compress(source));
                 case CompressType.Deflate:
-                    return (DeflateStreamHelper.ContentEncoding, DeflateStreamHelper.Compress(input));
+                    return (DeflateStreamHelper.ContentEncoding, DeflateStreamHelper.Compress(source));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

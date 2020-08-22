@@ -5,6 +5,32 @@ namespace Newbe.Claptrap
 {
     public class ClaptrapDesign : IClaptrapDesign
     {
+        public ClaptrapDesign()
+        {
+        }
+
+        public ClaptrapDesign(
+            IClaptrapDesign claptrapDesign)
+        {
+            ClaptrapTypeCode = claptrapDesign.ClaptrapTypeCode;
+            ClaptrapMasterDesign = claptrapDesign.ClaptrapMasterDesign;
+            ClaptrapOptions = claptrapDesign.ClaptrapOptions;
+            StateDataType = claptrapDesign.StateDataType;
+            EventLoaderFactoryType = claptrapDesign.EventLoaderFactoryType;
+            EventSaverFactoryType = claptrapDesign.EventSaverFactoryType;
+            StateLoaderFactoryType = claptrapDesign.StateLoaderFactoryType;
+            StateSaverFactoryType = claptrapDesign.StateSaverFactoryType;
+            InitialStateDataFactoryType = claptrapDesign.InitialStateDataFactoryType;
+            StateHolderFactoryType = claptrapDesign.StateHolderFactoryType;
+            EventHandlerFactoryFactoryType = claptrapDesign.EventHandlerFactoryFactoryType;
+            EventNotifierFactoryType = claptrapDesign.EventNotifierFactoryType;
+            EventHandlerDesigns = claptrapDesign.EventHandlerDesigns;
+            ClaptrapBoxInterfaceType = claptrapDesign.ClaptrapBoxInterfaceType;
+            ClaptrapBoxImplementationType = claptrapDesign.ClaptrapBoxImplementationType;
+            ExtendInfos = claptrapDesign.ExtendInfos;
+            ClaptrapStorageProviderOptions = claptrapDesign.ClaptrapStorageProviderOptions;
+        }
+
         public string ClaptrapTypeCode { get; set; } = null!;
         public IClaptrapDesign ClaptrapMasterDesign { get; set; } = null!;
         public ClaptrapOptions ClaptrapOptions { get; set; } = null!;

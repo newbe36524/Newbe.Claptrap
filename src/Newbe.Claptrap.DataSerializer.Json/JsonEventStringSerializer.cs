@@ -15,7 +15,7 @@ namespace Newbe.Claptrap.DataSerializer.Json
         public string Serialize(IEvent evt)
         {
             var id = evt.ClaptrapIdentity;
-            var eventData = _eventDataStringSerializer.Serialize(id.TypeCode, evt.EventTypeCode, evt.Data);
+            var eventData = _eventDataStringSerializer.Serialize(id, evt.EventTypeCode, evt.Data);
             var model = new EventJsonModel
             {
                 Version = evt.Version,
@@ -31,10 +31,11 @@ namespace Newbe.Claptrap.DataSerializer.Json
         public IEvent Deserialize(string source)
         {
             var jsonModel = JsonConvert.DeserializeObject<EventJsonModel>(source);
-            var eventData = _eventDataStringSerializer.Deserialize(jsonModel.ClaptrapTypeCode,
+            var id = new ClaptrapIdentity(jsonModel.ClaptrapId, jsonModel.ClaptrapTypeCode);
+            var eventData = _eventDataStringSerializer.Deserialize(
+                id,
                 jsonModel.EventTypeCode,
                 jsonModel.DataJson);
-            var id = new ClaptrapIdentity(jsonModel.ClaptrapId, jsonModel.ClaptrapTypeCode);
             var re = new DataEvent(id, jsonModel.EventTypeCode, eventData)
             {
                 Version = jsonModel.Version

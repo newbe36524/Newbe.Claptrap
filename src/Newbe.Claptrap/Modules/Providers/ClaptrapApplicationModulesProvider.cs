@@ -25,6 +25,7 @@ namespace Newbe.Claptrap.Modules
             yield return new ClaptrapFactoryModule();
             yield return new NoChangeStateHolderModule();
             yield return new CompoundEventNotifierModule();
+            yield return new SagaClaptrapModule();
         }
     }
 }

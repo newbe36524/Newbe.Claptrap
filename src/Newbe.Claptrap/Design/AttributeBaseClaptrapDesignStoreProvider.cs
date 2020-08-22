@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.Design
                         stateAttr = interfaceType.GetCustomAttribute<ClaptrapStateAttribute>(),
                         eventAttrs = interfaceType.GetCustomAttributes<ClaptrapEventAttribute>().ToArray(),
                         stateInitialFactoryHandlerAttr =
-                            implType?.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
+                            implType.GetCustomAttribute<ClaptrapStateInitialFactoryHandlerAttribute>(),
                         eventHandlerAttrs = implType.GetCustomAttributes<ClaptrapEventHandlerAttribute>().ToArray(),
                         eventStoreAttr = implType.GetCustomAttribute<ClaptrapEventStoreAttribute>(),
                         stateStoreAttr = implType.GetCustomAttribute<ClaptrapStateStoreAttribute>(),

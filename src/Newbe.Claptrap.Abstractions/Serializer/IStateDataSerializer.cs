@@ -2,7 +2,7 @@ namespace Newbe.Claptrap
 {
     public interface IStateDataSerializer<T>
     {
-        T Serialize(string claptrapTypeCode, IStateData stateData);
-        IStateData Deserialize(string claptrapTypeCode, T source);
+        T Serialize(IClaptrapIdentity identity, IStateData stateData);
+        IStateData Deserialize(IClaptrapIdentity identity, T source);
     }
 }

@@ -12,15 +12,20 @@ namespace Newbe.Claptrap.DataSerializer.Json
             _claptrapDesignStore = claptrapDesignStore;
         }
 
-        public string Serialize(string claptrapTypeCode, IStateData stateData)
+        public string Serialize(IClaptrapIdentity identity, IStateData stateData)
         {
-            var re = JsonConvert.SerializeObject(stateData);
+            var design = _claptrapDesignStore.FindDesign(identity);
+            var stateDataType = design.StateDataType;
+            var re = JsonConvert.SerializeObject(stateData, stateDataType, new JsonSerializerSettings
+            {
+                Formatting = Formatting.None
+            });
             return re;
         }
 
-        public IStateData Deserialize(string claptrapTypeCode, string source)
+        public IStateData Deserialize(IClaptrapIdentity identity, string source)
         {
-            var design = _claptrapDesignStore.FindDesign(new ClaptrapIdentity(default!, claptrapTypeCode));
+            var design = _claptrapDesignStore.FindDesign(identity);
             var stateDataType = design.StateDataType;
             var re = (IStateData) JsonConvert.DeserializeObject(source, stateDataType)!;
             return re;

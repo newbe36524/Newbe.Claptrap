@@ -2,7 +2,7 @@ using System;
 
 namespace Newbe.Claptrap.Box
 {
-    public class NormalClaptrapBox : IClaptrapBox
+    public abstract class NormalClaptrapBox : IClaptrapBox
     {
         private readonly IClaptrapAccessor _claptrapAccessor;
 
@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Box
         public IClaptrap Claptrap => _claptrapAccessor.Claptrap ?? _createFromFactory.Value;
     }
 
-    public class NormalClaptrapBox<TStateData> : NormalClaptrapBox
+    public abstract class NormalClaptrapBox<TStateData> : NormalClaptrapBox
         where TStateData : IStateData
     {
         protected NormalClaptrapBox(IClaptrapIdentity identity,
