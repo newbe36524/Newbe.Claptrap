@@ -128,42 +128,38 @@ namespace Newbe.Claptrap.Tests
             flowData.Test2.Should().BeFalse();
         }
 
-        public class TestStep1 : ISagaStep
+        public class TestStep1 : SagaStep<TestFlowData>
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
             {
-                var testFlowData = (TestFlowData) userData;
-                testFlowData.Test1 = true;
+                userData.Test1 = true;
                 return Task.CompletedTask;
             }
         }
 
-        public class CompensateStep1 : ISagaStep
+        public class CompensateStep1 : SagaStep<TestFlowData>
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
             {
-                var testFlowData = (TestFlowData) userData;
-                testFlowData.Test1 = false;
+                userData.Test1 = false;
                 return Task.CompletedTask;
             }
         }
 
-        public class TestStep2 : ISagaStep
+        public class TestStep2 : SagaStep<TestFlowData>
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
             {
-                var testFlowData = (TestFlowData) userData;
-                testFlowData.Test2 = true;
+                userData.Test2 = true;
                 return Task.CompletedTask;
             }
         }
 
-        public class CompensateStep2 : ISagaStep
+        public class CompensateStep2 : SagaStep<TestFlowData>
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
             {
-                var testFlowData = (TestFlowData) userData;
-                testFlowData.Test1 = false;
+                userData.Test2 = false;
                 return Task.CompletedTask;
             }
         }

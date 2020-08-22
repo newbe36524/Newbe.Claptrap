@@ -1,18 +1,19 @@
+using System;
 using System.Text;
 
 namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 {
     public class MessageSerializer : IMessageSerializer
     {
-        public byte[] Serialize(string source)
+        public ReadOnlyMemory<byte> Serialize(string source)
         {
             var re = Encoding.UTF8.GetBytes(source);
             return re;
         }
 
-        public string Deserialize(byte[] bytes)
+        public string Deserialize(ReadOnlyMemory<byte> bytes)
         {
-            var re = Encoding.UTF8.GetString(bytes);
+            var re = Encoding.UTF8.GetString(bytes.Span);
             return re;
         }
     }

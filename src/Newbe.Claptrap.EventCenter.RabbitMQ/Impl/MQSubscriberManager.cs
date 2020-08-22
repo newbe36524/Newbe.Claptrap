@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -89,14 +90,13 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             _logger.LogDebug("a message sent to minion {minionId}", minionId);
         }
 
-        private static byte[] Decompress(BasicDeliverEventArgs args)
+        private static ReadOnlyMemory<byte> Decompress(BasicDeliverEventArgs args)
         {
-            var data = args.Body.ToArray();
             return args.BasicProperties.ContentEncoding switch
             {
-                DeflateStreamHelper.ContentEncoding => DeflateStreamHelper.Decompress(data),
-                GzipStreamHelper.ContentEncoding => GzipStreamHelper.Decompress(data),
-                _ => data
+                DeflateStreamHelper.ContentEncoding => DeflateStreamHelper.Decompress(args.Body),
+                GzipStreamHelper.ContentEncoding => GzipStreamHelper.Decompress(args.Body),
+                _ => args.Body
             };
         }
 

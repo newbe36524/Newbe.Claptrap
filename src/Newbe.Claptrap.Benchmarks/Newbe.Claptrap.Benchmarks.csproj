@@ -13,8 +13,8 @@
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
         
-        <PackageReference Include="Microsoft.Orleans.Server" Version="3.2.1" />
-        <PackageReference Include="Microsoft.Orleans.Client" Version="3.2.1" />
+        <PackageReference Include="Microsoft.Orleans.Server" Version="3.2.2" />
+        <PackageReference Include="Microsoft.Orleans.Client" Version="3.2.2" />
         
     </ItemGroup>
 
