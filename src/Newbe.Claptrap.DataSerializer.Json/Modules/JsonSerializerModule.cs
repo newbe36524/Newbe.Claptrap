@@ -2,7 +2,7 @@ using Autofac;
 
 namespace Newbe.Claptrap.DataSerializer.Json.Modules
 {
-    public class JsonSerializerModule : Module, IClaptrapApplicationModule
+    public class JsonSerializerModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Json serializer module";
 

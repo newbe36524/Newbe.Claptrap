@@ -4,7 +4,7 @@ using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.Module
 {
-    public class ClaptrapRelationalStorageProviderModule : Autofac.Module, IClaptrapApplicationModule
+    public class ClaptrapRelationalStorageProviderModule : Autofac.Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap relational database storage provider model";
         public string Description { get; } = "Module for sharing components in relation database storage providers";

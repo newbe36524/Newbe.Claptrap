@@ -9,10 +9,10 @@ namespace Newbe.Claptrap.Bootstrapper
             this IClaptrapBootstrapperBuilder builder,
             Action<OrleansConfigurator> orleans)
         {
-            return builder.UseMongoDB(x => true, orleans);
+            return builder.UseOrleans(x => true, orleans);
         }
 
-        public static IClaptrapBootstrapperBuilder UseMongoDB(
+        public static IClaptrapBootstrapperBuilder UseOrleans(
             this IClaptrapBootstrapperBuilder builder,
             Func<IClaptrapDesign, bool> designFilter,
             Action<OrleansConfigurator> orleans)

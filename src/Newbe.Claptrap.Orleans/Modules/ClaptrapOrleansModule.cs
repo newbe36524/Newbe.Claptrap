@@ -4,7 +4,7 @@ using Newbe.Claptrap.EventCenter;
 
 namespace Newbe.Claptrap.Orleans.Modules
 {
-    public class ClaptrapOrleansModule : Module, IClaptrapApplicationModule
+    public class ClaptrapOrleansModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap orleans module";
         public string Description { get; } = "Module for Orleans support";

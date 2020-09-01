@@ -3,7 +3,7 @@ using Newbe.Claptrap.StateHolder;
 
 namespace Newbe.Claptrap.Modules
 {
-    public class NoChangeStateHolderModule : Module, IClaptrapApplicationModule
+    public class NoChangeStateHolderModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap NoChangeStateHolder module";
 

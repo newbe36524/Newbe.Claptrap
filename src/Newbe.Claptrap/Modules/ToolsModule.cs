@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace Newbe.Claptrap.Modules
 {
     [ExcludeFromCodeCoverage]
-    public class ToolsModule : Module, IClaptrapApplicationModule
+    public class ToolsModule : Module, IClaptrapAppModule
     {
         protected override void Load(ContainerBuilder builder)
         {

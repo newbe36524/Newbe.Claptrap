@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Newbe.Claptrap.Saga
 {
     public class SageClaptrapDesignStoreConfigurator : IClaptrapDesignStoreConfigurator

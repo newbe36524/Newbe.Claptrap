@@ -67,7 +67,6 @@ namespace Microsoft.Extensions.Hosting
             => hostBuilder
                 .UseOrleans((context, builder) =>
                 {
-                    // TODO try to enable claptrap orleans event center
                     var claptrapOptions = new ClaptrapServerOptions();
                     var config =
                         context.Configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);

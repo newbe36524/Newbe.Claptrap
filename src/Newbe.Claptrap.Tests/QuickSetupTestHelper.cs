@@ -56,6 +56,8 @@ namespace Newbe.Claptrap.Tests
                         typeof(IAccountHistoryBalanceMinion),
                         typeof(AccountHistoryBalanceMinion)
                     });
+                    bootstrapperBuilder.ConfigureClaptrapDesign(x =>
+                        x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None);
                     bootstrapperAction?.Invoke(bootstrapperBuilder);
                 }, containerBuilder =>
                 {

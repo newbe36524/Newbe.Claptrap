@@ -5,7 +5,7 @@ using Newbe.Claptrap.StorageProvider.SQLite.StateStore;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.Module
 {
-    public class SQLiteStorageSharedModule : Autofac.Module, IClaptrapApplicationModule
+    public class SQLiteStorageSharedModule : Autofac.Module, IClaptrapAppModule
     {
         public string Name { get; } = "SQLite storage shared module";
         public string Description { get; } = "Module for support event store and state store by using SQLite";

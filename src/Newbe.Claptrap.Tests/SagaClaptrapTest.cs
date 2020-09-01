@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -27,6 +26,8 @@ namespace Newbe.Claptrap.Tests
             var claptrapBootstrapper = autofacClaptrapBootstrapperBuilder
                 .ScanClaptrapDesigns(new[] {typeof(SagaClaptrap).Assembly})
                 .ScanClaptrapModule()
+                .ConfigureClaptrapDesign(x =>
+                    x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None)
                 .UseSQLiteAsTestingStorage()
                 .Build();
             claptrapBootstrapper.Boot();

@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.Modules
     /// <summary>
     /// Module for building Claptrap from `your code`
     /// </summary>
-    public class ClaptrapCustomizationModule : Module, IClaptrapApplicationModule
+    public class ClaptrapCustomizationModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap design module";
         public string Description { get; } = "Module for register types from claptrap designs";

@@ -4,7 +4,7 @@ using Autofac;
 namespace Newbe.Claptrap.Modules
 {
     [ExcludeFromCodeCoverage]
-    public class ClaptrapFactoryModule : Module, IClaptrapApplicationModule
+    public class ClaptrapFactoryModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap factory module";
         public string Description { get; } = "Module for registering ClaptrapFactory and some common implementations";
