@@ -5,7 +5,7 @@ using Newbe.Claptrap.StorageProvider.Relational;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.Module
 {
-    public class MySqlStorageModule : Autofac.Module, IClaptrapApplicationModule
+    public class MySqlStorageModule : Autofac.Module, IClaptrapAppModule
     {
         public string Name { get; } = "MySql storage module";
         public string Description { get; } = "Module for support event store and state store by using MySql";

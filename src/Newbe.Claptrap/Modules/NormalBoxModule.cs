@@ -3,7 +3,7 @@ using Newbe.Claptrap.Box;
 
 namespace Newbe.Claptrap.Modules
 {
-    public class NormalBoxModule : Module, IClaptrapApplicationModule
+    public class NormalBoxModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Normal claptrap box module";
         public string Description { get; } = "Module for registering normal claptrap box";

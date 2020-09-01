@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Saga;
 
 namespace Newbe.Claptrap.Modules
 {
-    public class ClaptrapApplicationModulesProvider : IClaptrapApplicationModulesProvider
+    public class ClaptrapAppProvider : IClaptrapAppProvider
     {
         private readonly IClaptrapDesignStore _claptrapDesignStore;
         private readonly ILoggerFactory _loggerFactory;
 
-        public ClaptrapApplicationModulesProvider(
+        public ClaptrapAppProvider(
             IClaptrapDesignStore claptrapDesignStore,
             ILoggerFactory loggerFactory)
         {
@@ -16,7 +18,7 @@ namespace Newbe.Claptrap.Modules
             _loggerFactory = loggerFactory;
         }
 
-        public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
+        public IEnumerable<IClaptrapAppModule> GetClaptrapApplicationModules()
         {
             yield return new ClaptrapCustomizationModule(_claptrapDesignStore,
                 _loggerFactory.CreateLogger<ClaptrapCustomizationModule>());
@@ -26,6 +28,13 @@ namespace Newbe.Claptrap.Modules
             yield return new NoChangeStateHolderModule();
             yield return new CompoundEventNotifierModule();
             yield return new SagaClaptrapModule();
+        }
+
+        public IEnumerable<IClaptrapDesignStoreConfigurator> GetClaptrapDesignStoreConfigurators()
+        {
+            yield return new DefaultClaptrapDesignConfigurator();
+            // TODO remove to sub module maybe
+            yield return new SageClaptrapDesignStoreConfigurator();
         }
     }
 }

@@ -1,9 +1,6 @@
 using System;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Autofac.Extras.Moq;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Newbe.Claptrap.Localization.Modules;

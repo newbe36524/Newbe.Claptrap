@@ -3,7 +3,7 @@ using Newbe.Claptrap.EventNotifier;
 
 namespace Newbe.Claptrap.Modules
 {
-    public class CompoundEventNotifierModule : Module, IClaptrapApplicationModule
+    public class CompoundEventNotifierModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Compound Event Notifier Module";
 

@@ -3,7 +3,7 @@ using Module = Autofac.Module;
 
 namespace Newbe.Claptrap.Localization.Modules
 {
-    public class LocalizationModule : Module, IClaptrapApplicationModule
+    public class LocalizationModule : Module, IClaptrapAppModule
     {
         private readonly ClaptrapLocalizationOptions _claptrapLocalizationOptions;
         public string Name { get; } = "Localization module";

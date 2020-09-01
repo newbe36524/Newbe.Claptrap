@@ -2,17 +2,17 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap.Localization.Modules
 {
-    public class ClaptrapApplicationModulesProvider : IClaptrapApplicationModulesProvider
+    public class ClaptrapAppProvider : IClaptrapAppProvider
     {
         private readonly ClaptrapBootstrapperBuilderOptions _claptrapBootstrapperBuilderOptions;
 
-        public ClaptrapApplicationModulesProvider(
+        public ClaptrapAppProvider(
             ClaptrapBootstrapperBuilderOptions claptrapBootstrapperBuilderOptions)
         {
             _claptrapBootstrapperBuilderOptions = claptrapBootstrapperBuilderOptions;
         }
 
-        public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
+        public IEnumerable<IClaptrapAppModule> GetClaptrapApplicationModules()
         {
             yield return new LocalizationModule(_claptrapBootstrapperBuilderOptions.ClaptrapLocalizationOptions);
         }

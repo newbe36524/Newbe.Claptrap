@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap.DataSerializer.Json.Modules.Providers
 {
-    public class ClaptrapApplicationModulesProvider : IClaptrapApplicationModulesProvider
+    public class ClaptrapAppProvider : IClaptrapAppProvider
     {
-        public IEnumerable<IClaptrapApplicationModule> GetClaptrapApplicationModules()
+        public IEnumerable<IClaptrapAppModule> GetClaptrapApplicationModules()
         {
             yield return new JsonSerializerModule();
         }

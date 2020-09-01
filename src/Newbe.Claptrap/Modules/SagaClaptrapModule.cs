@@ -3,7 +3,7 @@ using Newbe.Claptrap.Saga;
 
 namespace Newbe.Claptrap.Modules
 {
-    public class SagaClaptrapModule : Module, IClaptrapApplicationModule
+    public class SagaClaptrapModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Saga";
         public string Description { get; } = "Saga Supported";

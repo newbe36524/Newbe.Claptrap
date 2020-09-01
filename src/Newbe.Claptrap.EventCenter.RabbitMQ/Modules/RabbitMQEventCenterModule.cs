@@ -3,7 +3,7 @@ using Newbe.Claptrap.EventCenter.RabbitMQ.Impl;
 
 namespace Newbe.Claptrap.EventCenter.RabbitMQ.Modules
 {
-    public class RabbitMQEventCenterModule : Module, IClaptrapApplicationModule
+    public class RabbitMQEventCenterModule : Module, IClaptrapAppModule
     {
         public string Name { get; } = "Claptrap RabbitMQ module";
         public string Description { get; } = "Module for Claptrap EventCenter implement by RabbitMQ";
