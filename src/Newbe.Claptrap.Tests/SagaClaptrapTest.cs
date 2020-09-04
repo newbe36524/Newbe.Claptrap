@@ -131,43 +131,43 @@ namespace Newbe.Claptrap.Tests
 
         public class TestStep1 : SagaStep<TestFlowData>
         {
-            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
+            public override Task RunAsync(SagaStepData<TestFlowData> stepData)
             {
-                userData.Test1 = true;
+                stepData.UserData.Test1 = true;
                 return Task.CompletedTask;
             }
         }
 
         public class CompensateStep1 : SagaStep<TestFlowData>
         {
-            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
+            public override Task RunAsync(SagaStepData<TestFlowData> stepData)
             {
-                userData.Test1 = false;
+                stepData.UserData.Test1 = false;
                 return Task.CompletedTask;
             }
         }
 
         public class TestStep2 : SagaStep<TestFlowData>
         {
-            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
+            public override Task RunAsync(SagaStepData<TestFlowData> stepData)
             {
-                userData.Test2 = true;
+                stepData.UserData.Test2 = true;
                 return Task.CompletedTask;
             }
         }
 
         public class CompensateStep2 : SagaStep<TestFlowData>
         {
-            public override Task RunAsync(int stepIndex, SagaFlowState flowState, TestFlowData userData)
+            public override Task RunAsync(SagaStepData<TestFlowData> stepData)
             {
-                userData.Test2 = false;
+                stepData.UserData.Test2 = false;
                 return Task.CompletedTask;
             }
         }
 
         public class ExceptionStep : ISagaStep
         {
-            public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+            public Task RunAsync(SagaStepData data)
             {
                 throw new Exception();
             }

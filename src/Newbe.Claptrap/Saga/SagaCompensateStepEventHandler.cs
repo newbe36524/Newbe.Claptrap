@@ -29,7 +29,11 @@ namespace Newbe.Claptrap.Saga
             var step = (ISagaStep) _lifetimeScope.Resolve(stepType);
             try
             {
-                await step.RunAsync(stepIndex, flowState, stateData.GetUserData());
+                var stepData = new SagaStepData(stepIndex,
+                    flowState,
+                    stateData.GetUserData(),
+                    eventContext.State.Identity.Id);
+                await step.RunAsync(stepData);
                 flowState.CompensateStepStatuses[stepIndex] = StepStatus.Completed;
                 if (stepIndex == flowState.LastErrorStepIndex)
                 {

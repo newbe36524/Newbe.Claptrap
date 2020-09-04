@@ -4,11 +4,13 @@ namespace Newbe.Claptrap.Saga
 {
     public abstract class SagaStep<TUserData> : ISagaStep
     {
-        public abstract Task RunAsync(int stepIndex, SagaFlowState flowState, TUserData userData);
+        public abstract Task RunAsync(SagaStepData<TUserData> stepData);
 
-        public Task RunAsync(int stepIndex, SagaFlowState flowState, object userData)
+        public Task RunAsync(SagaStepData data)
         {
-            return RunAsync(stepIndex, flowState, (TUserData) userData);
+            var sagaStepData =
+                new SagaStepData<TUserData>(data.StepIndex, data.FlowState, (TUserData) data.UserData!, data.FlowId);
+            return RunAsync(sagaStepData);
         }
     }
 }

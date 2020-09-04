@@ -4,6 +4,6 @@ namespace Newbe.Claptrap.Saga
 {
     public interface ISagaStep
     {
-        Task RunAsync(int stepIndex, SagaFlowState flowState, object userData);
+        Task RunAsync(SagaStepData data);
     }
 }
