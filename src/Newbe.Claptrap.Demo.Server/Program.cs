@@ -7,7 +7,7 @@ using Orleans;
 
 namespace Newbe.Claptrap.Demo.Server
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
@@ -30,8 +30,9 @@ namespace Newbe.Claptrap.Demo.Server
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .UseClaptrap(typeof(AccountGrain).Assembly)
                 .UseOrleansClaptrap()
@@ -42,5 +43,6 @@ namespace Newbe.Claptrap.Demo.Server
                     logging.SetMinimumLevel(LogLevel.Trace);
                 })
                 .UseNLog();
+        }
     }
 }

@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
                     new BatchOperatorOptions<StateEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
-                            SaveManyCoreMany(dbFactory, entities),
+                            SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 

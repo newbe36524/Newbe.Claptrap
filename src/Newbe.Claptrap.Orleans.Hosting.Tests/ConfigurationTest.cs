@@ -38,7 +38,7 @@ namespace Newbe.Claptrap.Tests
                     typeof(IAccount),
                     typeof(Account),
                     typeof(IAccountBalanceMinion),
-                    typeof(AccountBalanceMinion),
+                    typeof(AccountBalanceMinion)
                 })
                 .Build();
             claptrapBootstrapper.Boot();

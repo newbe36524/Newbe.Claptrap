@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Newbe.Claptrap.StorageProvider.Relational
@@ -24,6 +25,18 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             {
                 dic[index] = $"@{name}{index}";
             }
+        }
+
+        private readonly Dictionary<int, Lazy<string>> sqlDic = new Dictionary<int, Lazy<string>>();
+
+        public void AddSql(int key, Func<string> sqlFunc)
+        {
+            sqlDic.Add(key, new Lazy<string>(sqlFunc));
+        }
+
+        public string GetSql(int key)
+        {
+            return sqlDic[key].Value;
         }
     }
 }

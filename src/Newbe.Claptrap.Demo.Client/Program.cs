@@ -9,9 +9,9 @@ using Orleans;
 
 namespace Newbe.Claptrap.Demo.Client
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var clientBuilder = new ClientBuilder();
             clientBuilder

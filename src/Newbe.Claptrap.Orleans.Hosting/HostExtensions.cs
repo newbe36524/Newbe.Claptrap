@@ -24,8 +24,9 @@ namespace Microsoft.Extensions.Hosting
     {
         public static IHostBuilder UseClaptrap(this IHostBuilder hostBuilder,
             params Assembly[] assemblies)
-            =>
-                hostBuilder.UseClaptrap(builder => builder.ScanClaptrapDesigns(assemblies));
+        {
+            return hostBuilder.UseClaptrap(builder => builder.ScanClaptrapDesigns(assemblies));
+        }
 
         public static IHostBuilder UseClaptrap(this IHostBuilder hostBuilder,
             Action<IClaptrapBootstrapperBuilder> builderAction,
@@ -64,7 +65,8 @@ namespace Microsoft.Extensions.Hosting
         }
 
         public static IHostBuilder UseOrleansClaptrap(this IHostBuilder hostBuilder)
-            => hostBuilder
+        {
+            return hostBuilder
                 .UseOrleans((context, builder) =>
                 {
                     var claptrapOptions = new ClaptrapServerOptions();
@@ -139,5 +141,6 @@ namespace Microsoft.Extensions.Hosting
                             new MetricsPrometheusTextOutputFormatter();
                     };
                 });
+        }
     }
 }

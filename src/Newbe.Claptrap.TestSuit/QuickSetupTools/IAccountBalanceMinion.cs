@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
     {
         Task<IEnumerable<decimal>> GetBalanceHistoryAsync();
     }
-    
+
 
     public class AccountBalanceHistoryInfo : IStateData
     {

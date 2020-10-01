@@ -12,7 +12,7 @@ namespace Newbe.Claptrap.Saga
                 var finalType = stateDataType.MakeGenericType(userDataType);
                 var newDesign = new ClaptrapDesign(design)
                 {
-                    StateDataType = finalType,
+                    StateDataType = finalType
                 };
                 return newDesign;
             });

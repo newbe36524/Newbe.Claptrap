@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj"/>
+  </ItemGroup>
+
+
+</Project>

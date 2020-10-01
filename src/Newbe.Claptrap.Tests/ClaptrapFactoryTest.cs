@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
+using Newbe.Claptrap.StateHolder;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
@@ -24,7 +25,7 @@ namespace Newbe.Claptrap.Tests
                 },
                 ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
-                StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                StateHolderFactoryType = typeof(NoChangeStateHolderFactory),
                 StateDataType = typeof(TestStateData),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory)
@@ -66,7 +67,7 @@ namespace Newbe.Claptrap.Tests
                 },
                 ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
-                StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                StateHolderFactoryType = typeof(NoChangeStateHolderFactory),
                 StateDataType = typeof(TestStateData),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory)
@@ -83,7 +84,7 @@ namespace Newbe.Claptrap.Tests
                 },
                 ClaptrapTypeCode = actorIdentity.TypeCode,
                 EventHandlerDesigns = ImmutableDictionary<string, IClaptrapEventHandlerDesign>.Empty,
-                StateHolderFactoryType = typeof(DeepClonerStateHolderFactory),
+                StateHolderFactoryType = typeof(NoChangeStateHolderFactory),
                 StateDataType = typeof(TestStateData),
                 EventHandlerFactoryFactoryType = typeof(EventHandlerFactoryFactory),
                 InitialStateDataFactoryType = typeof(DefaultInitialStateDataFactory),

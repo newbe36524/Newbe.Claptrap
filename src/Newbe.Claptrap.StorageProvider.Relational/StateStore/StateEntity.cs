@@ -16,10 +16,26 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
         {
             public bool Equals(StateEntity x, StateEntity y)
             {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
-                if (x.GetType() != y.GetType()) return false;
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(x, null))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(y, null))
+                {
+                    return false;
+                }
+
+                if (x.GetType() != y.GetType())
+                {
+                    return false;
+                }
+
                 return x.ClaptrapTypeCode == y.ClaptrapTypeCode && x.ClaptrapId == y.ClaptrapId;
             }
 

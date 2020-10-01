@@ -15,8 +15,8 @@ namespace Newbe.Claptrap
             var stringKey = key.AsStringKey();
             // ReSharper disable once InconsistentlySynchronizedField
             if (_operators.ContainsKey(stringKey))
-            {
                 // ReSharper disable once InconsistentlySynchronizedField
+            {
                 return _operators[stringKey];
             }
 

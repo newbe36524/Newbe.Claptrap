@@ -120,7 +120,7 @@ namespace Newbe.Claptrap.Saga
                             SagaCodes.Compensate,
                             new SagaCompensateStepEvent
                             {
-                                StepIndex = i,
+                                StepIndex = i
                             }));
                         return true;
                     }
@@ -139,7 +139,7 @@ namespace Newbe.Claptrap.Saga
                             SagaCodes.MoveToNext,
                             new SagaMoveToNextEvent
                             {
-                                StepIndex = i,
+                                StepIndex = i
                             }));
                         return true;
                     default:

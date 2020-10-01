@@ -16,11 +16,9 @@ namespace Newbe.Claptrap.Design
         {
             var re = _claptrapDesignStoreFactory.Invoke();
             foreach (var claptrapDesignStore in stores)
+            foreach (var claptrapDesign in claptrapDesignStore)
             {
-                foreach (var claptrapDesign in claptrapDesignStore)
-                {
-                    re.AddOrReplace(claptrapDesign);
-                }
+                re.AddOrReplace(claptrapDesign);
             }
 
             return re;

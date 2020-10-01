@@ -16,7 +16,8 @@ using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests
 {
-    [Category("RabbitMQ"), Explicit]
+    [Category("RabbitMQ")]
+    [Explicit]
     public class RabbitMQTest
     {
         private IEnumerable<string> AppsettingsFilenames

@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Orleans;
 using Newbe.Claptrap.Saga;
 using NUnit.Framework;
 

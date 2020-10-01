@@ -15,7 +15,7 @@ namespace Newbe.Claptrap.Orleans.Modules
                 x => x.ClaptrapOptions.EventCenterOptions == null!,
                 x => x.ClaptrapOptions.EventCenterOptions = new EventCenterOptions
                 {
-                    EventCenterType = EventCenterType.OrleansClient,
+                    EventCenterType = EventCenterType.OrleansClient
                 });
             AddConfig(
                 x => x.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.None,

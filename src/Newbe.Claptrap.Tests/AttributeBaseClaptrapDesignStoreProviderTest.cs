@@ -9,7 +9,6 @@ namespace Newbe.Claptrap.Tests
 {
     public class AttributeBaseClaptrapDesignStoreProviderTest
     {
-
         private AttributeBaseClaptrapDesignStoreProvider.Factory GetFactory()
         {
             var builder = new ContainerBuilder();

@@ -1,4 +1,3 @@
-
 namespace Newbe.Claptrap.Orleans
 {
     public interface IClaptrapTypeCodeFactory

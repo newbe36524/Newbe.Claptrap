@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.Tests.QuickSetupTools
         {
             var evt = new AccountBalanceChangeEvent
             {
-                Diff = diff,
+                Diff = diff
             };
             return Claptrap.HandleEventAsync(new DataEvent(Claptrap.State.Identity, Codes.AccountBalanceChangeEvent,
                 evt));

@@ -29,7 +29,7 @@ namespace Newbe.Claptrap.Saga
                     .ToArray(),
                 IsCompensated = false,
                 IsCompensating = false,
-                IsCompleted = false,
+                IsCompleted = false
             };
             stateData.SagaFlowState = flowState;
             var userData = _sagaUserDataSerializer.Deserialize(eventData.UserData, eventData.UserDataType);

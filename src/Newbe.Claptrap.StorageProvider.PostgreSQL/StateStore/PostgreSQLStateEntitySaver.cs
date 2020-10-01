@@ -67,7 +67,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
                 claptrap_type_code = items.Select(x => x.ClaptrapTypeCode).ToArray(),
                 version = items.Select(x => x.Version).ToArray(),
                 state_data = items.Select(x => x.StateData).ToArray(),
-                updated_time = items.Select(x => x.UpdatedTime).ToArray(),
+                updated_time = items.Select(x => x.UpdatedTime).ToArray()
             };
             using var db = factory.GetConnection(_connectionName);
             await db.ExecuteAsync(upsertSql, data);

@@ -12,6 +12,5 @@ namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
         Task TransferIn(decimal amount, string uid);
 
         Task<decimal> GetBalance();
-        
     }
 }

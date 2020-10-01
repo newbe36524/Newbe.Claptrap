@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="configs\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\db_configs\claptrap.mongodb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\db_configs\claptrap.mongodb.oneidonetable.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\db_configs\claptrap.mongodb.onetypeonetable.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\db_configs\claptrap.mongodb.sharedtable.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

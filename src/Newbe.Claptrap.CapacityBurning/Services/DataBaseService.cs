@@ -19,13 +19,17 @@ namespace Newbe.Claptrap.CapacityBurning.Services
         }
 
         private string GetContextDirectory(DatabaseType databaseType)
-            => Path.Combine(AppDomain.CurrentDomain.BaseDirectory!,
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory!,
                 "Docker",
                 "Db",
                 databaseType.ToString("G"));
+        }
 
         private string GetContextDataDirectory(DatabaseType databaseType)
-            => Path.Combine(GetContextDirectory(databaseType), "Data");
+        {
+            return Path.Combine(GetContextDirectory(databaseType), "Data");
+        }
 
         public async Task StartAsync(DatabaseType databaseType, int preparingSleepInSec)
         {

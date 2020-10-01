@@ -199,7 +199,7 @@ namespace Newbe.Claptrap.Tests
                     {
                         id,
                         d.state,
-                        lifetimeScope = buildClaptrapLifetimeScope,
+                        lifetimeScope = buildClaptrapLifetimeScope
                     };
                 })
                 .ToArray();
@@ -217,7 +217,7 @@ namespace Newbe.Claptrap.Tests
                         id,
                         d.state,
                         saver,
-                        d.lifetimeScope,
+                        d.lifetimeScope
                     };
                 })
                 .ToArray();

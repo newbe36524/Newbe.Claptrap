@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 fileName => fileName.EndsWith("-event.sql"),
                 new Dictionary<string, string>
                 {
-                    {"EventTableName", eventTableName},
+                    {"EventTableName", eventTableName}
                 },
                 () =>
                 {

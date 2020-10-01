@@ -13,6 +13,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="SmartFormat.NET" Version="2.5.2" />
         <PackageReference Include="System.Reactive" Version="4.4.1" />
+        <PackageReference Include="System.Threading.Channels" Version="4.7.1" />
     </ItemGroup>
 
     <ItemGroup>

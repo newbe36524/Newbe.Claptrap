@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -16,7 +17,8 @@ namespace Newbe.Claptrap
 
         public delegate BatchOperator<T> Factory(BatchOperatorOptions<T> options);
 
-        private readonly Subject<BatchItem> _subject = new Subject<BatchItem>();
+        private readonly Channel<BatchItem> _channel;
+        private Task _task;
 
         public BatchOperator(
             BatchOperatorOptions<T> options,
@@ -39,15 +41,51 @@ namespace Newbe.Claptrap
                 _cacheData = options.CacheDataFunc.Invoke();
             }
 
-            _subject
-                .Buffer(options.BufferTime.Value, options.BufferCount.Value)
-                .Where(x => x.Count > 0)
-                .Select(x => Observable.FromAsync(DoManyAsync(x)))
-                .Concat()
-                .Subscribe();
+            _channel = Channel.CreateUnbounded<BatchItem>();
+
+            _task = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        var items = new LinkedList<BatchItem>();
+                        while (await _channel.Reader.WaitToReadAsync())
+                        {
+                            var last = DateTimeOffset.UtcNow;
+                            var windowTime = last.Add(_options.BufferTime.Value);
+                            while (
+                                items.Count < _options.BufferCount
+                                && windowTime > DateTimeOffset.UtcNow
+                                && _channel.Reader.TryRead(out var item))
+                            {
+                                items.AddLast(item);
+                            }
+
+                            if (items.Any())
+                            {
+                                try
+                                {
+                                    var task = DoManyAsync(items);
+                                    await task.Invoke();
+                                }
+                                finally
+                                {
+                                    items.Clear();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "failed to run a batch");
+                        await Task.Delay(TimeSpan.FromSeconds(5));
+                    }
+                }
+            });
         }
 
-        private Func<Task> DoManyAsync(IList<BatchItem> x)
+        private Func<Task> DoManyAsync(LinkedList<BatchItem> x)
         {
             return async () =>
             {
@@ -73,15 +111,20 @@ namespace Newbe.Claptrap
             };
         }
 
-        public Task CreateTask(T input)
+        public async Task CreateTask(T input)
         {
             var batchItem = new BatchItem
             {
                 Tcs = new TaskCompletionSource<int>(),
                 Input = input
             };
-            _subject.OnNext(batchItem);
-            return batchItem.Tcs.Task;
+            var valueTask = _channel.Writer.WriteAsync(batchItem);
+            if (!valueTask.IsCompleted)
+            {
+                await valueTask;
+            }
+
+            await batchItem.Tcs.Task;
         }
 
         private struct BatchItem

@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 ModuleTypes = Enumerable.Empty<Type>(),
                 ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
-                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
+                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>()
             };
         }
 

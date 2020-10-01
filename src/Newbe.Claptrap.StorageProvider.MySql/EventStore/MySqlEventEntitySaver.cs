@@ -112,7 +112,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
         {
             foreach (var name in RelationalEventEntity.ParameterNames())
             {
-                for (int i = 0; i < maxCount; i++)
+                for (var i = 0; i < maxCount; i++)
                 {
                     sqlTemplateCache.AddParameterName(name, i);
                 }

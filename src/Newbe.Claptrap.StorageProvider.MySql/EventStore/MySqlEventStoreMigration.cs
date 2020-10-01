@@ -34,7 +34,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 new Dictionary<string, string>
                 {
                     {"SchemaName", schemaName},
-                    {"EventTableName", eventTableName},
+                    {"EventTableName", eventTableName}
                 },
                 () =>
                     (DeployChanges

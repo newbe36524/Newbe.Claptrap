@@ -12,7 +12,9 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder, HostBuilderContext context)
-            => AddConfiguration(builder, context.Configuration);
+        {
+            return AddConfiguration(builder, context.Configuration);
+        }
 
         public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder,

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="configs\load_db_config\mongodb.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\load_db_config\multiple_db.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\load_db_config\mysql.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\load_db_config\postgresql.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\load_db_config\sqlite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -49,7 +49,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                     CreatedTime = x.created_time,
                     EventData = x.event_data,
                     ClaptrapTypeCode = x.claptrap_type_code,
-                    EventTypeCode = x.event_type_code,
+                    EventTypeCode = x.event_type_code
                 });
             return re;
         }

@@ -155,7 +155,7 @@ namespace Newbe.Claptrap.Core.Impl
                 var re = new EventHandleFlowContext
                 {
                     NowState = _stateHolder.DeepCopy(State),
-                    Event = @event,
+                    Event = @event
                 };
                 re.EventContext = new EventContext(re.Event, re.NowState);
                 re.EventHandler = CreateHandler(re.EventContext);

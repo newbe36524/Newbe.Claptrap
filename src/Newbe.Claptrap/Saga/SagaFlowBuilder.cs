@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.Saga
             {
                 Steps = _steps,
                 CompensateSteps = _compensateSteps,
-                UserData = _userData,
+                UserData = _userData
             };
             return re;
         }

@@ -102,7 +102,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             return taskCompletionSource.Task;
         }
 
-        struct MigrationItem
+        private struct MigrationItem
         {
             public string MigrationKey { get; set; }
             public IStorageMigration Migration { get; set; }

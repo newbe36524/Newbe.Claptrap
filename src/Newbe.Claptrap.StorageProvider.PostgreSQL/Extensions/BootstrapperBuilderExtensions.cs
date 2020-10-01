@@ -18,7 +18,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UsePostgreSQLAsEventStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UsePostgreSQL(sqlite =>
+        {
+            return builder.UsePostgreSQL(sqlite =>
                 sqlite.AsEventStore(eventStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -38,7 +39,7 @@ namespace Newbe.Claptrap.Bootstrapper
                             {
                                 ConnectionName = storageOptions.ConnectionName,
                                 SchemaName = storageOptions.SchemaName,
-                                EventTableName = storageOptions.TableName,
+                                EventTableName = storageOptions.TableName
                             }, ConfigMore);
                             break;
                     }
@@ -58,6 +59,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         }
                     }
                 }));
+        }
 
         /// <summary>
         /// it will be invoked form HostExtensions
@@ -68,7 +70,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UsePostgreSQLAsStateStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UsePostgreSQL(sqlite =>
+        {
+            return builder.UsePostgreSQL(sqlite =>
                 sqlite.AsStateStore(stateStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -101,6 +104,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
                     }
                 }));
+        }
 
         public static IClaptrapBootstrapperBuilder UsePostgreSQL(
             this IClaptrapBootstrapperBuilder builder,

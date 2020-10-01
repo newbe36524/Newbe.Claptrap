@@ -15,14 +15,26 @@ namespace Newbe.Claptrap
 
         public bool Equals(IClaptrapIdentity other)
         {
-            return other != null && (Id == other.Id && TypeCode == other.TypeCode);
+            return other != null && Id == other.Id && TypeCode == other.TypeCode;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
             return Equals((ClaptrapIdentity) obj);
         }
 

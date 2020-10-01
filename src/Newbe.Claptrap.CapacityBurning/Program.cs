@@ -18,9 +18,9 @@ using NLog.Web;
 
 namespace Newbe.Claptrap.CapacityBurning
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
@@ -41,8 +41,9 @@ namespace Newbe.Claptrap.CapacityBurning
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .ConfigureLogging(logging =>
                 {
@@ -93,6 +94,7 @@ namespace Newbe.Claptrap.CapacityBurning
 
                     return serviceProviderFactory;
                 });
+        }
 
         public static async Task Old()
         {
@@ -111,7 +113,7 @@ namespace Newbe.Claptrap.CapacityBurning
                 .ScanClaptrapDesigns(new[]
                 {
                     typeof(Burning),
-                    typeof(IBurning),
+                    typeof(IBurning)
                 })
                 .ScanClaptrapModule()
                 .UseSQLiteAsTestingStorage()

@@ -49,9 +49,9 @@ namespace Newbe.Claptrap.DesignStoreFormatter
                         EventHandlerDefs = x.Select(a => new EventHandlerDef
                             {
                                 Handler = a.eventHandlerDesign.Value.EventHandlerType.Name,
-                                ClaptrapTypeCode = a.design.ClaptrapTypeCode,
+                                ClaptrapTypeCode = a.design.ClaptrapTypeCode
                             })
-                            .ToArray(),
+                            .ToArray()
                     };
                 });
             foreach (var eventDef in eventDefs)

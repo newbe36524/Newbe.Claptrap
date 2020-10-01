@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 {
                     SavingWindowTime = TimeSpan.FromSeconds(10),
                     SaveWhenDeactivateAsync = true,
-                    SavingWindowVersionLimit = 1000,
+                    SavingWindowVersionLimit = 1000
                 });
             AddConfig(
                 x => x.ClaptrapOptions.MinionActivationOptions == null!,
@@ -58,7 +58,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 x => x.ClaptrapOptions.EventCenterOptions == null!,
                 x => x.ClaptrapOptions.EventCenterOptions = new EventCenterOptions
                 {
-                    EventCenterType = EventCenterType.None,
+                    EventCenterType = EventCenterType.None
                 });
         }
 

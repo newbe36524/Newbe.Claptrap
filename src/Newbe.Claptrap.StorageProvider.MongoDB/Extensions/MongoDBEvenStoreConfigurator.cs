@@ -23,48 +23,53 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
 
         public MongoDBEvenStoreConfigurator SharedCollection(
             Action<MongoDBEventStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBEventStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventCollectionName = Defaults.EventTableName
-                }, action);
+        {
+            return UseLocator(new MongoDBEventStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventCollectionName = Defaults.EventTableName
+            }, action);
+        }
 
 
         public MongoDBEvenStoreConfigurator OneIdOneCollection(
             Action<MongoDBEventStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBEventStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventCollectionName = $"[TypeCode]_[Id]_{Defaults.EventTableName}",
-                }, action);
+        {
+            return UseLocator(new MongoDBEventStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventCollectionName = $"[TypeCode]_[Id]_{Defaults.EventTableName}"
+            }, action);
+        }
 
 
         public MongoDBEvenStoreConfigurator OneTypeOneCollection(
             Action<MongoDBEventStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBEventStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventCollectionName = $"[TypeCode]_{Defaults.EventTableName}",
-                }, action);
+        {
+            return UseLocator(new MongoDBEventStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventCollectionName = $"[TypeCode]_{Defaults.EventTableName}"
+            }, action);
+        }
 
         public MongoDBEvenStoreConfigurator UseLocator(
             IMongoDBEventStoreLocator locator,
             Action<MongoDBEventStoreOptions>? action = null)
-            => ConfigureOptions(providerOptions =>
+        {
+            return ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MongoDBEventStoreOptions
                 {
-                    MongoDBEventStoreLocator = locator,
+                    MongoDBEventStoreLocator = locator
                 };
                 action?.Invoke(stateOptions);
                 providerOptions.EventLoaderOptions = stateOptions;
                 providerOptions.EventSaverOptions = stateOptions;
             });
+        }
     }
 }

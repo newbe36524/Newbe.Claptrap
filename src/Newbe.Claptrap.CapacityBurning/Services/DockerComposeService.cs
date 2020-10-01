@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.CapacityBurning.Services
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
-                WorkingDirectory = workingDirectory,
+                WorkingDirectory = workingDirectory
             };
             if (ps?.Any() == true)
             {
