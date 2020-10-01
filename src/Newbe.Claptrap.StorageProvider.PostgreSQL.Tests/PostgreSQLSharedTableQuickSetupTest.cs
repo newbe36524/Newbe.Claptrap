@@ -1,6 +1,7 @@
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Tests
 {
    
 

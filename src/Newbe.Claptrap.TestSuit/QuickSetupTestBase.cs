@@ -8,10 +8,10 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Tests.QuickSetupTools;
+using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.TestSuit
 {
     [SingleThreaded]
     public abstract class QuickSetupTestBase

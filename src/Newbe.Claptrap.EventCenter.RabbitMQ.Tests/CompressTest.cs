@@ -5,7 +5,7 @@ using FluentAssertions;
 using Newbe.Claptrap.EventCenter.RabbitMQ.Impl;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.EventCenter.RabbitMQ.Tests
 {
     public class CompressTest
     {

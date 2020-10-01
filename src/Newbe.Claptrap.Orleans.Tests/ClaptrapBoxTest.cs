@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 using Autofac.Extras.Moq;
 using FluentAssertions;
-using Newbe.Claptrap.Orleans;
-using Newbe.Claptrap.Tests.QuickSetupTools;
+using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.Orleans.Tests
 {
     public class ClaptrapBoxTest
     {

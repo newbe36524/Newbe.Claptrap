@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Tests.QuickSetupTools;
+using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NLog.Extensions.Logging;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.TestSuit
 {
     public static class QuickSetupTestHelper
     {

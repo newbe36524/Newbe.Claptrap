@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Autofac;
 using Newbe.Claptrap.Core;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests

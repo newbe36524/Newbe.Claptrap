@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Newbe.Claptrap.Box;
 
-namespace Newbe.Claptrap.Tests.QuickSetupTools
+namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
     [ClaptrapEventHandler(typeof(AccountBalanceChangeEventHandler), Codes.AccountBalanceChangeEvent)]
     [ClaptrapEventHandler(typeof(EmptyEventHandler), UnitEvent.TypeCode)]

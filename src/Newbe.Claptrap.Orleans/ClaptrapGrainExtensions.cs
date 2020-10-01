@@ -1,5 +1,4 @@
 using System;
-using Autofac;
 using Newbe.Claptrap.Saga;
 
 // ReSharper disable MemberCanBePrivate.Global

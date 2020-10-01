@@ -4,6 +4,7 @@ using Autofac;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.StateHolder;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests

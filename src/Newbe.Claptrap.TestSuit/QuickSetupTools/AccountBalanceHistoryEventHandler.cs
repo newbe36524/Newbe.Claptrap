@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.Tests.QuickSetupTools
+namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
     public class
         AccountBalanceHistoryEventHandler : NormalEventHandler<AccountBalanceHistoryInfo, AccountBalanceChangeEvent>

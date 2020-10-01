@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.Tests.QuickSetupTools
+namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
     [ClaptrapMinion(Codes.Account)]
     [ClaptrapState(typeof(AccountState), Codes.AccountBalanceMinion)]

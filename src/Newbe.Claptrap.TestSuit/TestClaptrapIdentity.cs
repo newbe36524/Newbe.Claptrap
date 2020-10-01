@@ -1,6 +1,6 @@
 using System;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.TestSuit
 {
     public class TestClaptrapIdentity : IClaptrapIdentity
     {

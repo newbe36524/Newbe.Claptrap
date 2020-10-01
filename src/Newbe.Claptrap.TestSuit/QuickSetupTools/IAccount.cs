@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.Tests.QuickSetupTools
+namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
     [ClaptrapState(typeof(AccountState), Codes.Account)]
     [ClaptrapEvent(typeof(AccountBalanceChangeEvent), Codes.AccountBalanceChangeEvent)]

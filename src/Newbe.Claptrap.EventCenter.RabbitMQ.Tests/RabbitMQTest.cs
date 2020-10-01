@@ -9,12 +9,11 @@ using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.EventCenter;
-using Newbe.Claptrap.EventCenter.RabbitMQ;
-using Newbe.Claptrap.Tests.QuickSetupTools;
+using Newbe.Claptrap.TestSuit;
+using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.EventCenter.RabbitMQ.Tests
 {
     [Category("RabbitMQ")]
     [Explicit]

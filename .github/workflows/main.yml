@@ -76,7 +76,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         Claptrap__RabbitMQ__Uri: amqp://guest:guest@rabbitmq:5672/%2f
     - name: Codecov
-      uses: codecov/codecov-action@v1.0.6
+      uses: codecov/codecov-action@v1.0.13
       # with:
       #   # User defined upload name. Visible in Codecov UI
       #   name: # optional

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Newbe.Claptrap.Tests.QuickSetupTools
+namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
     public class UnitEventHandler :
         NormalEventHandler<AccountState, UnitEvent.UnitEventData>

@@ -1,5 +1,4 @@
-
-using Newbe.Claptrap.Tests;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Tests

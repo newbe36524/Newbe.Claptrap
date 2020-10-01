@@ -6,10 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Tests.QuickSetupTools;
+using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.Orleans.Hosting.Tests
 {
     public class ConfigurationTest
     {

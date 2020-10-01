@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Tests
+namespace Newbe.Claptrap.StateHolder.DeepCopy.Tests
 {
     public class DeepClonerStateHolderTest
     {
