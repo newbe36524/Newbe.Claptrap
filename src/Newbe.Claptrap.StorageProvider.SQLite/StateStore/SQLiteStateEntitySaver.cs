@@ -126,7 +126,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)

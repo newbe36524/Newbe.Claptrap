@@ -75,7 +75,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
@@ -95,10 +97,13 @@ namespace Newbe.Claptrap.TestSuit
             await Host.StopAsync();
         }
 
-        [TestCase("account10", 10)]
-        [TestCase("account100", 100)]
-        [TestCase("account1000", 1000)]
-        public async Task SaveEventAsync(string accountId, int count)
+        [TestCase("account10", 10, true)]
+        [TestCase("account100", 100, true)]
+        [TestCase("account1000", 1_000, true)]
+        [TestCase("account5000", 5_000, true)]
+        [TestCase("account10000", 10_000, true)]
+        [TestCase("account50000", 50_000, false)]
+        public async Task SaveEventAsync(string accountId, int count, bool validateByLoader)
         {
             using var lifetimeScope = BuildService().CreateScope();
             var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
@@ -106,23 +111,33 @@ namespace Newbe.Claptrap.TestSuit
             var id = new ClaptrapIdentity(accountId, Codes.Account);
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
             var saver = buildClaptrapLifetimeScope.Resolve<IEventSaver>();
-            var tasks = Enumerable.Range(Defaults.EventStartingVersion, count)
-                .Select(x => saver.SaveEventAsync(
-                    new UnitEvent(id, UnitEvent.TypeCode, new UnitEvent.UnitEventData())
-                    {
-                        Version = x
-                    }));
-            await Task.WhenAll(tasks);
+            var sw = Stopwatch.StartNew();
+            var unitEvents = Enumerable.Range(Defaults.EventStartingVersion, count)
+                .Select(x=> new UnitEvent(id, UnitEvent.TypeCode, new UnitEvent.UnitEventData())
+                {
+                    Version = x
+                })
+                .ToArray();
+            Parallel.ForEach(unitEvents, e =>
+            {
+                saver.SaveEventAsync(e);
+            });
+            sw.Stop();
+            Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            if (validateByLoader)
+            {
+                var loader = buildClaptrapLifetimeScope.Resolve<IEventLoader>();
+                const int eventBeginVersion = Defaults.StateStartingVersion + 1;
+                var eventEndVersion = eventBeginVersion + count;
+                var events = await loader.GetEventsAsync(eventBeginVersion, eventEndVersion);
+                var versions = events.Select(x => x.Version);
+                logger.LogInformation("version from event loader : {version}", versions);
+                versions.Should().BeInAscendingOrder()
+                    .And.OnlyHaveUniqueItems()
+                    .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
+            }
 
-            var loader = buildClaptrapLifetimeScope.Resolve<IEventLoader>();
-            const int eventBeginVersion = Defaults.StateStartingVersion + 1;
-            var eventEndVersion = eventBeginVersion + count;
-            var events = await loader.GetEventsAsync(eventBeginVersion, eventEndVersion);
-            var versions = events.Select(x => x.Version);
-            logger.LogInformation("version from event loader : {version}", versions);
-            versions.Should().BeInAscendingOrder()
-                .And.OnlyHaveUniqueItems()
-                .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
             await OnStopHost(Host);
             await Host.StopAsync();
         }

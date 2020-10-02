@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         private async Task SaveManyCoreMany(

@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
 
@@ -11,8 +11,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
     public class SQLiteEventEntitySaver : IEventEntitySaver<EventEntity>
     {
-        public const string InsertSqlKey = nameof(InsertSqlKey);
-        private readonly ISqlTemplateCache _sqlTemplateCache;
+        private readonly ISQLiteAdoNetCache _sqLiteAdoNetCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _eventTableName;
@@ -23,9 +22,9 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer,
-            ISqlTemplateCache sqlTemplateCache)
+            ISQLiteAdoNetCache sqLiteAdoNetCache)
         {
-            _sqlTemplateCache = sqlTemplateCache;
+            _sqLiteAdoNetCache = sqLiteAdoNetCache;
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(identity);
             _eventTableName = storeLocator.GetEventTableName(identity);
@@ -41,14 +40,17 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(sqLiteDbFactory, entities),
                     }));
-            var maxCount = SQLiteEventStoreOptions.SQLiteMaxVariablesCount /
-                           RelationalEventEntity.ParameterNames().Count();
-            RegisterSql(sqlTemplateCache, maxCount);
+            RegisterSql();
+        }
+
+        private int GetCommandHashCode()
+        {
+            return HashCode.Combine(_connectionName, _eventTableName, 0);
         }
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         private async Task SaveManyCoreMany(ISQLiteDbFactory sqLiteDbFactory,
@@ -67,62 +69,75 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 })
                 .ToArray();
 
-            var sql = _sqlTemplateCache.GetSql(items.Length);
-            using var db = sqLiteDbFactory.GetConnection(_connectionName);
-            var ps = new DynamicParameters();
+            var key = GetCommandHashCode();
+            var cmd = _sqLiteAdoNetCache.GetCommand(key);
+            var connection = sqLiteDbFactory.GetConnection(_connectionName, true);
+            cmd.Connection = connection;
+            await using var transaction = await connection.BeginTransactionAsync();
             for (var i = 0; i < array.Length; i++)
             {
-                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories())
+                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories)
                 {
+                    var dataParameter = _sqLiteAdoNetCache.GetParameter(parameterName, 0);
                     var relationalEventEntity = items[i];
-                    var name = _sqlTemplateCache.GetParameterName(parameterName, i);
-                    ps.Add(name, valueFunc(relationalEventEntity));
+                    dataParameter.Value = valueFunc(relationalEventEntity);
+                    cmd.Parameters.Add(dataParameter);
                 }
+
+                await cmd.ExecuteNonQueryAsync();
             }
 
-            await db.ExecuteAsync(sql, ps);
+            await transaction.CommitAsync();
         }
 
         private string InitRelationalInsertManySql(
-            string eventTableName,
-            int count)
+            string eventTableName)
         {
-            string insertManySqlHeader =
-                $"INSERT INTO {eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES ";
-            var valuesSql = Enumerable.Range(0, count)
-                .Select(x =>
-                    ValuePartFactory(RelationalEventEntity.ParameterNames(), x))
-                .ToArray();
-            var sb = new StringBuilder(insertManySqlHeader);
-            sb.Append(string.Join(",", valuesSql));
-            return sb.ToString();
+            string sql =
+                $"INSERT INTO {eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES {ValuePartFactory(RelationalEventEntity.ParameterNames(), 0)}";
+            return sql;
         }
 
         private string ValuePartFactory(IEnumerable<string> parameters, int index)
         {
-            var values = string.Join(",", parameters.Select(x => _sqlTemplateCache.GetParameterName(x, index)));
+            var values = string.Join(",",
+                parameters.Select(x => _sqLiteAdoNetCache.GetParameter(x, index).ParameterName));
             var re = $" ({values}) ";
             return re;
         }
 
-        public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)
+        public static void RegisterParameters(ISQLiteAdoNetCache cache, int maxCount)
         {
             foreach (var name in RelationalEventEntity.ParameterNames())
             {
                 for (var i = 0; i < maxCount; i++)
                 {
-                    sqlTemplateCache.AddParameterName(name, i);
+                    cache.AddParameterName(name, i, new SQLiteParameter
+                    {
+                        ParameterName = $"@{name}{i}"
+                    });
                 }
             }
         }
 
-        private void RegisterSql(ISqlTemplateCache sqlTemplateCache, int maxCount)
+        private void RegisterSql()
         {
-            for (int i = 0; i < maxCount; i++)
+            var key = GetCommandHashCode();
+            _sqLiteAdoNetCache.AddCommand(key, () =>
             {
-                var count = i + 1;
-                sqlTemplateCache.AddSql(count, () => InitRelationalInsertManySql(_eventTableName, count));
-            }
+                var cmd = new SQLiteCommand
+                {
+                    CommandText = InitRelationalInsertManySql(_eventTableName),
+                    CommandType = CommandType.Text
+                };
+                foreach (var (parameterName, _) in RelationalEventEntity.ValueFactories)
+                {
+                    var dataParameter = _sqLiteAdoNetCache.GetParameter(parameterName, 0);
+                    cmd.Parameters.Add(dataParameter);
+                }
+
+                return cmd;
+            });
         }
     }
 }

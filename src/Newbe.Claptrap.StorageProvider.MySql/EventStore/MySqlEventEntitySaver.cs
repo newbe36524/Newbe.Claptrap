@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         private async Task SaveManyCoreMany(
@@ -73,7 +73,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
             {
-                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories())
+                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories)
                 {
                     var eventEntity = items[i];
                     var name = _sqlTemplateCache.GetParameterName(parameterName, i);

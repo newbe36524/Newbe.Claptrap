@@ -1,6 +1,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -16,8 +17,11 @@ namespace Newbe.Claptrap.Core.Impl
         private readonly StateRecoveryOptions _stateRecoveryOptions;
         private readonly ILogger _logger;
 
-        private IDisposable _eventHandleFlow = null!;
+        // ReSharper disable once NotAccessedField.Local
+        private Task _eventHandleTask = null!;
         private readonly Subject<EventItem> _incomingEventsSeq;
+
+        private readonly Channel<EventItem> _channel;
 
         protected IState State
         {
@@ -41,14 +45,16 @@ namespace Newbe.Claptrap.Core.Impl
             _stateSavingFlow = stateSavingFlow;
             _stateRecoveryOptions = stateRecoveryOptions;
             _logger = logger;
-            _incomingEventsSeq = new Subject<EventItem>();
+            _channel = Channel.CreateUnbounded<EventItem>();
         }
 
         public void Activate()
         {
-            _eventHandleFlow = _incomingEventsSeq
-                .Select(item => Observable.FromAsync(async () =>
+            _eventHandleTask = Task.Factory.StartNew(async () =>
+            {
+                while (await _channel.Reader.WaitToReadAsync())
                 {
+                    var item = await _channel.Reader.ReadAsync();
                     try
                     {
                         await HandleCoreAsync(item.Event);
@@ -58,15 +64,12 @@ namespace Newbe.Claptrap.Core.Impl
                     {
                         item.TaskCompletionSource.SetException(e);
                     }
-                }))
-                .Concat()
-                .Subscribe(_ => { },
-                    ex => { _logger.LogError(ex, "thrown a exception while handling event"); });
+                }
+            }, TaskCreationOptions.LongRunning).Unwrap();
         }
 
         public virtual void Deactivate()
         {
-            _eventHandleFlow?.Dispose();
             _incomingEventsSeq?.Dispose();
         }
 
@@ -163,7 +166,7 @@ namespace Newbe.Claptrap.Core.Impl
             }
         }
 
-        public Task OnNewEventReceived(IEvent @event)
+        public async Task OnNewEventReceived(IEvent @event)
         {
             var eventItem = new EventItem
             {
@@ -171,10 +174,13 @@ namespace Newbe.Claptrap.Core.Impl
                 TaskCompletionSource = new TaskCompletionSource<int>()
             };
 
-            _incomingEventsSeq.OnNext(eventItem);
+            var valueTask = _channel.Writer.WriteAsync(eventItem);
+            if (!valueTask.IsCompleted)
+            {
+                await valueTask;
+            }
 
-            var task = eventItem.TaskCompletionSource.Task;
-            return task;
+            await eventItem.TaskCompletionSource.Task;
         }
 
         private IEventHandler CreateHandler(IEventContext eventContext)

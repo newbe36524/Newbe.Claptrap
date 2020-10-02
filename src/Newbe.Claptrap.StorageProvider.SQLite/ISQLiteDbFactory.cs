@@ -1,4 +1,4 @@
-using System.Data;
+using System.Data.SQLite;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite
 {
@@ -15,7 +15,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
         /// 
         /// </summary>
         /// <param name="connectionName"></param>
+        /// <param name="keepOpen"></param>
         /// <returns></returns>
-        IDbConnection GetConnection(string connectionName);
+        SQLiteConnection GetConnection(string connectionName, bool keepOpen = false);
     }
 }

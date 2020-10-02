@@ -126,7 +126,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
         public Task SendTopicAsync(IEvent @event)
         {
-            return _batchOperator.CreateTask(@event);
+            return _batchOperator.CreateTask(@event).AsTask();
         }
     }
 }

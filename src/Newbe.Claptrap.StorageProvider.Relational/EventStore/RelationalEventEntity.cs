@@ -24,14 +24,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
             yield return nameof(created_time);
         }
 
-        public static IEnumerable<(string, Func<RelationalEventEntity, object>)> ValueFactories()
+        private static readonly (string, Func<RelationalEventEntity, object>)[] Values =
         {
-            yield return (nameof(claptrap_type_code), x => x.claptrap_type_code);
-            yield return (nameof(claptrap_id), x => x.claptrap_id);
-            yield return (nameof(version), x => x.version);
-            yield return (nameof(event_type_code), x => x.event_type_code);
-            yield return (nameof(event_data), x => x.event_data);
-            yield return (nameof(created_time), x => x.created_time);
-        }
+            (nameof(claptrap_type_code), x => x.claptrap_type_code),
+            (nameof(claptrap_id), x => x.claptrap_id),
+            (nameof(version), x => x.version),
+            (nameof(event_type_code), x => x.event_type_code),
+            (nameof(event_data), x => x.event_data),
+            (nameof(created_time), x => x.created_time),
+        };
+
+        public static IEnumerable<(string, Func<RelationalEventEntity, object>)> ValueFactories => Values;
     }
 }

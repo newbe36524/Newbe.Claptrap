@@ -16,12 +16,16 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Module
             builder.RegisterType<SQLiteDbFactory>()
                 .As<ISQLiteDbFactory>()
                 .SingleInstance();
+            builder.RegisterType<SQLiteAdoNetCache>()
+                .As<ISQLiteAdoNetCache>()
+                .SingleInstance();
 
             builder.RegisterBuildCallback(container =>
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
-                SQLiteEventEntitySaver.RegisterParameters(cache, 1000);
                 SQLiteStateEntitySaver.RegisterParameters(cache, 1000);
+                var adoCache = container.Resolve<ISQLiteAdoNetCache>();
+                SQLiteEventEntitySaver.RegisterParameters(adoCache, 1000);
             });
         }
     }

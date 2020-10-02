@@ -16,7 +16,9 @@ namespace Newbe.Claptrap
         public delegate BatchOperator<T> Factory(BatchOperatorOptions<T> options);
 
         private readonly Channel<BatchItem> _channel;
-        private Task _task;
+
+        // ReSharper disable once NotAccessedField.Local
+        private readonly Task _task;
 
         public BatchOperator(
             BatchOperatorOptions<T> options,
@@ -39,81 +41,78 @@ namespace Newbe.Claptrap
                 _cacheData = options.CacheDataFunc.Invoke();
             }
 
-            _channel = Channel.CreateUnbounded<BatchItem>();
-
-            _task = Task.Run(async () =>
+            _channel = Channel.CreateBounded<BatchItem>(new BoundedChannelOptions(5_0000)
             {
-                while (true)
-                {
-                    try
-                    {
-                        var items = new LinkedList<BatchItem>();
-                        while (await _channel.Reader.WaitToReadAsync())
-                        {
-                            var last = DateTimeOffset.UtcNow;
-                            var windowTime = last.Add(_options.BufferTime.Value);
-                            while (
-                                items.Count < _options.BufferCount
-                                && windowTime > DateTimeOffset.UtcNow
-                                && _channel.Reader.TryRead(out var item))
-                            {
-                                items.AddLast(item);
-                            }
-
-                            if (items.Any())
-                            {
-                                try
-                                {
-                                    var task = DoManyAsync(items);
-                                    await task.Invoke();
-                                }
-                                finally
-                                {
-                                    items.Clear();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, "failed to run a batch");
-                        await Task.Delay(TimeSpan.FromSeconds(5));
-                    }
-                }
+                FullMode = BoundedChannelFullMode.Wait,
             });
+
+            _task = Task.Factory.StartNew(ConsumeTasks, TaskCreationOptions.LongRunning).Unwrap();
         }
 
-        private Func<Task> DoManyAsync(LinkedList<BatchItem> x)
+        private async Task ConsumeTasks()
         {
-            return async () =>
+            while (true)
             {
                 try
                 {
-                    var inputs = x.Select(a => a.Input).ToArray();
-                    _logger.LogTrace("there are {count} items to do in one batch.", inputs.Length);
-                    await _options.DoManyFunc.Invoke(inputs, _cacheData).ConfigureAwait(false);
-                    _logger.LogDebug("one batch done with {count} items", inputs.Length);
-                    foreach (var batchItem in x)
+                    var items = new List<BatchItem>(_options.BufferCount!.Value);
+                    while (await _channel.Reader.WaitToReadAsync())
                     {
-                        batchItem.Tcs.SetResult(0);
+                        var last = DateTimeOffset.UtcNow;
+                        var windowTime = last.Add(_options.BufferTime!.Value);
+                        while (items.Count < _options.BufferCount
+                               && windowTime > DateTimeOffset.UtcNow
+                               && _channel.Reader.TryRead(out var item))
+                        {
+                            items.Add(item);
+                        }
+
+                        if (items.Any())
+                        {
+                            try
+                            {
+                                await DoManyAsync(items);
+                            }
+                            finally
+                            {
+                                items.Clear();
+                            }
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "failed to run batch operation");
-                    foreach (var batchItem in x)
-                    {
-                        batchItem.Tcs.SetException(e);
-                    }
+                    _logger.LogError(e, "failed to run a batch");
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                 }
-            };
+            }
         }
 
-        public async Task CreateTask(T input)
+        private async Task DoManyAsync(List<BatchItem> items)
         {
+            try
+            {
+                var input = items.Select(x => x.Input).ToArray();
+                _logger.LogTrace("there are {count} items to do in one batch.", input.Length);
+                await _options.DoManyFunc.Invoke(input, _cacheData).ConfigureAwait(false);
+                _logger.LogDebug("one batch done with {count} items", input.Length);
+
+                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetResult(0); });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "failed to run batch operation");
+                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetException(e); });
+            }
+        }
+
+
+        public async ValueTask CreateTask(T input)
+        {
+            var tcs = new ManualResetValueTaskSource<int>();
             var batchItem = new BatchItem
             {
-                Tcs = new TaskCompletionSource<int>(),
+                Vts = tcs,
                 Input = input
             };
             var valueTask = _channel.Writer.WriteAsync(batchItem);
@@ -122,13 +121,17 @@ namespace Newbe.Claptrap
                 await valueTask;
             }
 
-            await batchItem.Tcs.Task;
+            var finalValueTask = new ValueTask(batchItem.Vts, 0);
+            if (!finalValueTask.IsCompleted)
+            {
+                await finalValueTask;
+            }
         }
 
         private struct BatchItem
         {
             public T Input { get; set; }
-            public TaskCompletionSource<int> Tcs { get; set; }
+            public ManualResetValueTaskSource<int> Vts { get; set; }
         }
     }
 }

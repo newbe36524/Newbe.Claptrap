@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Autofac;
 using MethodTimer;
@@ -53,27 +54,29 @@ namespace Newbe.Claptrap.CapacityBurning.Services
             await _dataBaseService.CleanAsync(_burningDatabaseOptions.Value.DatabaseType);
         }
 
-        public async Task StartAsync()
+        public Task StartAsync()
         {
-            var task = Enumerable.Range(0, _options.BatchCount)
-                .ToObservable()
+            foreach (var (eventSaver1, unitEvent) in Enumerable.Range(0, _options.BatchCount)
                 .SelectMany(i => Enumerable.Range(_options.BatchSize * i, _options.BatchSize))
                 .SelectMany(version =>
                 {
                     return _savers.Select(eventSaver =>
                     {
                         var (id, _, saver) = eventSaver;
-                        return Observable.FromAsync(() => saver.SaveEventAsync(new UnitEvent(id,
+                        return (saver, unitEvent: new UnitEvent(id,
                             Codes.BurningEvent,
                             UnitEvent.UnitEventData.Create())
                         {
                             Version = version
-                        }));
+                        });
                     });
                 })
-                .Merge(_options.ConcurrentCount)
-                .ToTask();
-            await task;
+                .AsParallel())
+            {
+                eventSaver1.SaveEventAsync(unitEvent);
+            }
+
+            return Task.CompletedTask;
         }
 
         [Time]

@@ -1,4 +1,5 @@
 using Autofac;
+using Autofac.Builder;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 

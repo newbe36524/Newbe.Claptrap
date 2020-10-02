@@ -7,8 +7,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Options
     {
         public bool IsAutoMigrationEnabled { get; set; } = true;
         public IRelationalEventStoreLocator RelationalEventStoreLocator { get; set; } = null!;
-        public int? InsertManyWindowTimeInMilliseconds { get; } = 30;
+        public int? InsertManyWindowTimeInMilliseconds { get; } = 50;
         public const int SQLiteMaxVariablesCount = 999;
-        public int? InsertManyWindowCount { get; } = 100;
+        public int? InsertManyWindowCount { get; } = 10000;
     }
 }
