@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
 
         public MongoDBStateEntitySaver(
             IClaptrapIdentity identity,
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IDbFactory dbFactory,
             IMongoDBStateStoreLocatorOptions options,
             IBatchOperatorContainer batchOperatorContainer)

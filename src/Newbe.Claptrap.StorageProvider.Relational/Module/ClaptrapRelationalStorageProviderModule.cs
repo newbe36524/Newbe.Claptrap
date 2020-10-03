@@ -1,5 +1,5 @@
 using Autofac;
-using Autofac.Builder;
+using Microsoft.Extensions.ObjectPool;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
@@ -38,9 +38,45 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterType<BatchOperatorContainer>()
                 .As<IBatchOperatorContainer>()
                 .SingleInstance();
-            builder.RegisterGeneric(typeof(BatchOperator<>))
+            builder.RegisterGeneric(typeof(ChannelBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
+            builder.RegisterGeneric(typeof(MultipleChannelBatchOperator<>))
+                .AsSelf()
+                .InstancePerDependency();
+
+            builder.RegisterType<DefaultObjectPoolProvider>()
+                .As<ObjectPoolProvider>()
+                .SingleInstance()
+                .ExternallyOwned();
+            builder.Register(t =>
+                {
+                    var provider = t.Resolve<ObjectPoolProvider>();
+                    var objectPool =
+                        provider.Create(
+                            new BatchItemPooledObjectPolicy());
+                    return objectPool;
+                })
+                .AsSelf()
+                .SingleInstance()
+                .ExternallyOwned();
+        }
+
+        private class BatchItemPooledObjectPolicy : PooledObjectPolicy<MultipleChannelBatchOperator<EventEntity>.BatchItem>
+        {
+            public override MultipleChannelBatchOperator<EventEntity>.BatchItem Create()
+            {
+                return new MultipleChannelBatchOperator<EventEntity>.BatchItem
+                {
+                    Vts = new ManualResetValueTaskSource<int>()
+                };
+            }
+
+            public override bool Return(MultipleChannelBatchOperator<EventEntity>.BatchItem obj)
+            {
+                obj.Vts.Reset();
+                return true;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using App.Metrics;
+using App.Metrics.Gauge;
 using App.Metrics.Timer;
 
 namespace Newbe.Claptrap.AppMetrics
@@ -320,6 +321,84 @@ namespace Newbe.Claptrap.AppMetrics
             };
             var metricTags = new MetricTags(StateSaverMigrationKeys, values);
             return MetricsRoot.Measure.Timer.Time(StateSaverMigrationTimer, metricTags);
+        }
+
+        #endregion
+
+        #region BatchOperator
+
+        private static readonly TimerOptions BatchOperatorTimer = new TimerOptions
+        {
+            Name = "Batch Operator Handling Timer",
+            MeasurementUnit = Unit.Events,
+            DurationUnit = TimeUnit.Milliseconds,
+            RateUnit = TimeUnit.Milliseconds,
+            ResetOnReporting = true
+        };
+
+        private static readonly string[] BatchOperatorKeys =
+        {
+            "DoManyFunc",
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static TimerContext MeasureBatchOperatorTime(
+            string doManyFuncName)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            return MetricsRoot.Measure.Timer.Time(BatchOperatorTimer, metricTags);
+        }
+        
+        private static readonly GaugeOptions BatchOperatorMaxCountGauge = new GaugeOptions
+        {
+            Name = "Batch Operator Max Batch Count",
+            MeasurementUnit = Unit.Events,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static void MeasureBatchOperatorMaxCountGauge(
+            string doManyFuncName,
+            int count)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            MetricsRoot.Measure.Gauge.SetValue(BatchOperatorMaxCountGauge, metricTags, count);
+        }
+
+        private static readonly GaugeOptions BatchOperatorGauge = new GaugeOptions
+        {
+            Name = "Batch Operator Handling Count",
+            MeasurementUnit = Unit.Events,
+            ResetOnReporting = true,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static void MeasureBatchOperatorGauge(
+            string doManyFuncName,
+            int count)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            MetricsRoot.Measure.Gauge.SetValue(BatchOperatorGauge, metricTags, count);
         }
 
         #endregion

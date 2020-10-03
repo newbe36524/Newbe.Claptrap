@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
 
         public MongoDBEventEntitySaver(
             IMongoDBEventStoreOptions options,
-            BatchOperator<EventEntity>.Factory batchOperatorFactory,
+            MultipleChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
             IBatchOperatorContainer batchOperatorContainer)

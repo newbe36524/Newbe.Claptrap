@@ -29,6 +29,11 @@ namespace Newbe.Claptrap
 
         public DoMany DoManyFunc { get; set; } = null!;
 
+        /// <summary>
+        /// Name of <see cref="DoManyFunc"/> for display
+        /// </summary>
+        public string? DoManyFuncName { get; set; }
+
         public delegate Task DoMany(IEnumerable<T> entities, IReadOnlyDictionary<string, object>? cacheData);
     }
 }

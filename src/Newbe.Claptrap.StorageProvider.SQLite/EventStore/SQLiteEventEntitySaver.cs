@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private readonly string _eventTableName;
 
         public SQLiteEventEntitySaver(
-            BatchOperator<EventEntity>.Factory batchOperatorFactory,
+            MultipleChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
@@ -50,7 +50,13 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity).AsTask();
+            var valueTask = _batchOperator.CreateTask(entity);
+            if (valueTask.IsCompleted)
+            {
+                return Task.CompletedTask;
+            }
+
+            return valueTask.AsTask();
         }
 
         private async Task SaveManyCoreMany(ISQLiteDbFactory sqLiteDbFactory,

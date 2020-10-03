@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
         private readonly string _schemaName;
 
         public MySqlEventEntitySaver(
-            BatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
             IMySqlEventStoreOptions options,

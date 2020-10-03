@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
             new ConcurrentDictionary<int, string>();
 
         public MySqlStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
             IRelationalStateStoreLocatorOptions options,

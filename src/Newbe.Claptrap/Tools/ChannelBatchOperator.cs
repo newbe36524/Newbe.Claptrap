@@ -4,25 +4,28 @@ using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.AppMetrics;
 
 namespace Newbe.Claptrap
 {
-    public class BatchOperator<T> : IBatchOperator<T>
+    public class ChannelBatchOperator<T> : IBatchOperator<T>
     {
         private readonly BatchOperatorOptions<T> _options;
-        private readonly ILogger<BatchOperator<T>> _logger;
+        private readonly ILogger<ChannelBatchOperator<T>> _logger;
         private readonly IReadOnlyDictionary<string, object>? _cacheData;
 
-        public delegate BatchOperator<T> Factory(BatchOperatorOptions<T> options);
+        public delegate ChannelBatchOperator<T> Factory(BatchOperatorOptions<T> options);
 
         private readonly Channel<BatchItem> _channel;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly Task _task;
 
-        public BatchOperator(
+        private readonly string _doManyFuncName;
+
+        public ChannelBatchOperator(
             BatchOperatorOptions<T> options,
-            ILogger<BatchOperator<T>> logger)
+            ILogger<ChannelBatchOperator<T>> logger)
         {
             if (options.BufferTime == null)
             {
@@ -36,15 +39,13 @@ namespace Newbe.Claptrap
 
             _options = options;
             _logger = logger;
+            _doManyFuncName = _options.DoManyFuncName ?? _options.DoManyFunc.ToString();
             if (options.CacheDataFunc != null)
             {
                 _cacheData = options.CacheDataFunc.Invoke();
             }
 
-            _channel = Channel.CreateBounded<BatchItem>(new BoundedChannelOptions(5_0000)
-            {
-                FullMode = BoundedChannelFullMode.Wait,
-            });
+            _channel = Channel.CreateUnbounded<BatchItem>();
 
             _task = Task.Factory.StartNew(ConsumeTasks, TaskCreationOptions.LongRunning).Unwrap();
         }
@@ -71,6 +72,9 @@ namespace Newbe.Claptrap
                         {
                             try
                             {
+                                ClaptrapMetrics.MeasureBatchOperatorGauge(_doManyFuncName, items.Count);
+                                ClaptrapMetrics.MeasureBatchOperatorMaxCountGauge(_doManyFuncName, _options.BufferCount!.Value);
+                                using var _ = ClaptrapMetrics.MeasureBatchOperatorTime(_doManyFuncName);
                                 await DoManyAsync(items);
                             }
                             finally
@@ -97,12 +101,18 @@ namespace Newbe.Claptrap
                 await _options.DoManyFunc.Invoke(input, _cacheData).ConfigureAwait(false);
                 _logger.LogDebug("one batch done with {count} items", input.Length);
 
-                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetResult(0); });
+                Parallel.ForEach(items.Select(x => x.Vts), tcs =>
+                {
+                    tcs.SetResult(0);
+                });
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "failed to run batch operation");
-                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetException(e); });
+                Parallel.ForEach(items.Select(x => x.Vts), tcs =>
+                {
+                    tcs.SetException(e);
+                });
             }
         }
 
@@ -121,7 +131,7 @@ namespace Newbe.Claptrap
                 await valueTask;
             }
 
-            var finalValueTask = new ValueTask(batchItem.Vts, 0);
+            var finalValueTask = new ValueTask(batchItem.Vts, tcs.Version);
             if (!finalValueTask.IsCompleted)
             {
                 await finalValueTask;

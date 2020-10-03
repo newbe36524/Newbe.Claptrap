@@ -1,6 +1,4 @@
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -19,7 +17,6 @@ namespace Newbe.Claptrap.Core.Impl
 
         // ReSharper disable once NotAccessedField.Local
         private Task _eventHandleTask = null!;
-        private readonly Subject<EventItem> _incomingEventsSeq;
 
         private readonly Channel<EventItem> _channel;
 
@@ -70,7 +67,6 @@ namespace Newbe.Claptrap.Core.Impl
 
         public virtual void Deactivate()
         {
-            _incomingEventsSeq?.Dispose();
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
         private readonly string _stateTableName;
 
         public SQLiteStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteStateStoreOptions options,

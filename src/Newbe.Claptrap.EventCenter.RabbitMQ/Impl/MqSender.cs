@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             IConnection connection,
             IEventStringSerializer eventStringSerializer,
             IMessageSerializer messageSerializer,
-            BatchOperator<IEvent>.Factory batchOperatorFactory,
+            ChannelBatchOperator<IEvent>.Factory batchOperatorFactory,
             IBatchOperatorContainer batchOperatorContainer,
             ILogger<MqSender> logger,
             IOptions<ClaptrapServerOptions> options)

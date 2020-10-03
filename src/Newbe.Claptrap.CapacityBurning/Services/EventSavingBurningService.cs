@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Autofac;
 using MethodTimer;
@@ -56,7 +53,7 @@ namespace Newbe.Claptrap.CapacityBurning.Services
 
         public Task StartAsync()
         {
-            foreach (var (eventSaver1, unitEvent) in Enumerable.Range(0, _options.BatchCount)
+            Parallel.ForEach(Enumerable.Range(0, _options.BatchCount)
                 .SelectMany(i => Enumerable.Range(_options.BatchSize * i, _options.BatchSize))
                 .SelectMany(version =>
                 {
@@ -70,11 +67,11 @@ namespace Newbe.Claptrap.CapacityBurning.Services
                             Version = version
                         });
                     });
-                })
-                .AsParallel())
+                }), t =>
             {
+                var (eventSaver1, unitEvent) = t;
                 eventSaver1.SaveEventAsync(unitEvent);
-            }
+            });
 
             return Task.CompletedTask;
         }

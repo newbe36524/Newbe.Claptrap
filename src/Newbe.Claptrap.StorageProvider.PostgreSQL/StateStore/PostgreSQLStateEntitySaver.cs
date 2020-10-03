@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.StateStore
         private readonly string _stateTableName;
 
         public PostgreSQLStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IBatchOperatorContainer batchOperatorContainer,
             IDbFactory dbFactory,
             IClaptrapIdentity identity,
