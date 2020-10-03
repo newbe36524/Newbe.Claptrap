@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private readonly string _eventTableName;
 
         public SQLiteEventEntitySaver(
-            MultipleChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ManualBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,

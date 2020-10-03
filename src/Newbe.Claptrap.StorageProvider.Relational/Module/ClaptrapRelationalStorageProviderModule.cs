@@ -44,7 +44,10 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterGeneric(typeof(MultipleChannelBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
-
+            builder.RegisterGeneric(typeof(ManualBatchOperator<>))
+                .AsSelf()
+                .InstancePerDependency();
+            
             builder.RegisterType<DefaultObjectPoolProvider>()
                 .As<ObjectPoolProvider>()
                 .SingleInstance()
