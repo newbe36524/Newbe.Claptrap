@@ -97,9 +97,9 @@ namespace Newbe.Claptrap.TestSuit
 
         [TestCase("account10", 10, true, 100)]
         [TestCase("account100", 100, true, 100)]
-        [TestCase("account1000", 1_000, true, 1000)]
-        [TestCase("account5000", 5_000, true, 3000)]
-        [TestCase("account10000", 10_000, true, 3000)]
+        [TestCase("account1000", 1_000, true, 100)]
+        [TestCase("account5000", 5_000, true, 500)]
+        [TestCase("account10001", 10_001, true, 500)]
         [TestCase("account50000", 50_000, false, 3000)]
         public async Task SaveEventAsync(string accountId, int count, bool validateByLoader, int sleepInMs)
         {

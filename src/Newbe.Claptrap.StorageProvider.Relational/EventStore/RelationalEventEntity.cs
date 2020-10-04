@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 // ReSharper disable InconsistentNaming
 
@@ -35,5 +36,32 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
         };
 
         public static IEnumerable<(string, Func<RelationalEventEntity, object>)> ValueFactories => Values;
+
+        public static void FillParameter(RelationalEventEntity entity,
+            IDbCommand cmd,
+            IAdoParameterCache cache,
+            int index)
+        {
+            // gc free
+            IDataParameter dataParameter;
+            dataParameter = cache.GetParameter(nameof(claptrap_type_code), index);
+            dataParameter.Value = entity.claptrap_type_code;
+            cmd.Parameters.Add(dataParameter);
+            dataParameter = cache.GetParameter(nameof(claptrap_id), index);
+            dataParameter.Value = entity.claptrap_id;
+            cmd.Parameters.Add(dataParameter);
+            dataParameter = cache.GetParameter(nameof(version), index);
+            dataParameter.Value = entity.version;
+            cmd.Parameters.Add(dataParameter);
+            dataParameter = cache.GetParameter(nameof(event_type_code), index);
+            dataParameter.Value = entity.event_type_code;
+            cmd.Parameters.Add(dataParameter);
+            dataParameter = cache.GetParameter(nameof(event_data), index);
+            dataParameter.Value = entity.event_data;
+            cmd.Parameters.Add(dataParameter);
+            dataParameter = cache.GetParameter(nameof(created_time), index);
+            dataParameter.Value = entity.created_time;
+            cmd.Parameters.Add(dataParameter);
+        }
     }
 }

@@ -179,18 +179,17 @@ CREATE TABLE IF NOT EXISTS TestTable
             var guid = Guid.NewGuid().ToString();
 
             var (cmd, p) = CreateCommand();
-            cmd.Connection = sqLiteConnection;
             var pageCount = count / batchSize;
             var sw = Stopwatch.StartNew();
             for (var i = 0; i < pageCount; i++)
             {
                 await using var transaction = await sqLiteConnection.BeginTransactionAsync();
+                cmd.Connection = sqLiteConnection;
                 for (var j = 0; j < batchSize; j++)
                 {
                     p.Value = guid;
                     await cmd.ExecuteNonQueryAsync();
                 }
-
                 await transaction.CommitAsync();
             }
 

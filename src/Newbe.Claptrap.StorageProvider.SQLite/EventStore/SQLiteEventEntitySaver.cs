@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private readonly string _eventTableName;
 
         public SQLiteEventEntitySaver(
-            ManualBatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
@@ -39,6 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                     {
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(sqLiteDbFactory, entities),
+                        DoManyFuncName = $"event batch saver for {operatorKey}"
                     }));
             RegisterSql();
         }
@@ -62,8 +63,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private async Task SaveManyCoreMany(ISQLiteDbFactory sqLiteDbFactory,
             IEnumerable<EventEntity> entities)
         {
-            var array = entities as EventEntity[] ?? entities.ToArray();
-            var items = array
+            var items = entities
                 .Select(x => new RelationalEventEntity
                 {
                     claptrap_id = x.ClaptrapId,
@@ -73,27 +73,29 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                     event_type_code = x.EventTypeCode,
                     version = x.Version
                 })
-                .ToArray();
+                .AsParallel();
 
             var key = GetCommandHashCode();
-            var cmd = _sqLiteAdoNetCache.GetCommand(key);
+            var sourceCmd = _sqLiteAdoNetCache.GetCommand(key);
             var connection = sqLiteDbFactory.GetConnection(_connectionName, true);
-            cmd.Connection = connection;
-            await using var transaction = await connection.BeginTransactionAsync();
-            for (var i = 0; i < array.Length; i++)
+            var valueTask = connection.BeginTransactionAsync();
+            if (!valueTask.IsCompleted)
             {
-                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories)
-                {
-                    var dataParameter = _sqLiteAdoNetCache.GetParameter(parameterName, 0);
-                    var relationalEventEntity = items[i];
-                    dataParameter.Value = valueFunc(relationalEventEntity);
-                    cmd.Parameters.Add(dataParameter);
-                }
-
-                await cmd.ExecuteNonQueryAsync();
+                await valueTask;
             }
 
-            await transaction.CommitAsync();
+            var transaction = valueTask.Result;
+            await using (transaction)
+            {
+                sourceCmd.Connection = connection;
+                foreach (var item in items)
+                {
+                    RelationalEventEntity.FillParameter(item, sourceCmd, _sqLiteAdoNetCache, 0);
+                    await sourceCmd.ExecuteNonQueryAsync();
+                }
+
+                await transaction.CommitAsync();
+            }
         }
 
         private string InitRelationalInsertManySql(

@@ -9,6 +9,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Options
         public IRelationalEventStoreLocator RelationalEventStoreLocator { get; set; } = null!;
         public int? InsertManyWindowTimeInMilliseconds { get; } = 50;
         public const int SQLiteMaxVariablesCount = 999;
-        public int? InsertManyWindowCount { get; } = 12000;
+        public int? InsertManyWindowCount { get; } = 10000;
     }
 }

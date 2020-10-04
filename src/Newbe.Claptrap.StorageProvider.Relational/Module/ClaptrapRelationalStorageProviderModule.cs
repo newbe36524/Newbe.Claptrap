@@ -41,13 +41,19 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterGeneric(typeof(ChannelBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
-            builder.RegisterGeneric(typeof(MultipleChannelBatchOperator<>))
+            builder.RegisterGeneric(typeof(ConcurrentListBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
-            builder.RegisterGeneric(typeof(ManualBatchOperator<>))
+            builder.RegisterGeneric(typeof(ConcurrentListPool<>))
+                .As(typeof(IConcurrentListPool<>))
+                .SingleInstance();
+            builder.RegisterGeneric(typeof(AutoFlushList<>))
                 .AsSelf()
                 .InstancePerDependency();
-            
+            builder.RegisterType<AutoScaleAutoFlushListOptions>()
+                .AsSelf()
+                .InstancePerDependency();
+
             builder.RegisterType<DefaultObjectPoolProvider>()
                 .As<ObjectPoolProvider>()
                 .SingleInstance()
@@ -63,21 +69,49 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
                 .AsSelf()
                 .SingleInstance()
                 .ExternallyOwned();
+
+            builder.Register(t =>
+                {
+                    var provider = t.Resolve<ObjectPoolProvider>();
+                    var objectPool =
+                        provider.Create(
+                            new ConcurrentListPooledObjectPolicy<ConcurrentListBatchOperator<EventEntity>.BatchItem>());
+                    return objectPool;
+                })
+                .AsSelf()
+                .SingleInstance()
+                .ExternallyOwned();
         }
 
-        private class BatchItemPooledObjectPolicy : PooledObjectPolicy<MultipleChannelBatchOperator<EventEntity>.BatchItem>
+        private class
+            BatchItemPooledObjectPolicy : PooledObjectPolicy<ConcurrentListBatchOperator<EventEntity>.BatchItem>
         {
-            public override MultipleChannelBatchOperator<EventEntity>.BatchItem Create()
+            public override ConcurrentListBatchOperator<EventEntity>.BatchItem Create()
             {
-                return new MultipleChannelBatchOperator<EventEntity>.BatchItem
+                return new ConcurrentListBatchOperator<EventEntity>.BatchItem
                 {
-                    Vts = new ManualResetValueTaskSource<int>()
+                    Vts = new ManualResetValueTaskSource<int>(),
                 };
             }
 
-            public override bool Return(MultipleChannelBatchOperator<EventEntity>.BatchItem obj)
+            public override bool Return(ConcurrentListBatchOperator<EventEntity>.BatchItem obj)
             {
                 obj.Vts.Reset();
+                return true;
+            }
+        }
+
+        private class
+            ConcurrentListPooledObjectPolicy<T> : PooledObjectPolicy<ConcurrentList<T>>
+        {
+            public override ConcurrentList<T> Create()
+            {
+                return new ConcurrentList<T>();
+            }
+
+            public override bool Return(ConcurrentList<T> obj)
+            {
+                obj.ResetIndex();
                 return true;
             }
         }
