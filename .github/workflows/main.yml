@@ -29,6 +29,8 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: claptrap
       mysql:
         image: mysql
+        options: >-
+          --local-infile=1
         ports:
           - 3306
         env:

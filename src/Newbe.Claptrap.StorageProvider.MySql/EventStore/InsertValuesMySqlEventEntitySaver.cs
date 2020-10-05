@@ -1,15 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
+using MySql.Data.MySqlClient;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {
-    public class MySqlEventEntitySaver : IEventEntitySaver<EventEntity>
+    public class InsertValuesMySqlEventEntitySaver : IEventEntitySaver<EventEntity>
     {
         private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
@@ -17,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
         private readonly string _connectionName;
         private readonly string _schemaName;
 
-        public MySqlEventEntitySaver(
+        public InsertValuesMySqlEventEntitySaver(
             ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
@@ -31,7 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             _eventTableName = locator.GetEventTableName(identity);
             _sqlTemplateCache = sqlTemplateCache;
             var operatorKey = new BatchOperatorKey()
-                .With(nameof(MySqlEventEntitySaver))
+                .With(nameof(InsertValuesMySqlEventEntitySaver))
                 .With(_connectionName)
                 .With(_schemaName)
                 .With(_eventTableName);
@@ -42,11 +43,37 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                         DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
+            RegisterSql();
+        }
+
+        private int GetCommandHashCode(int count)
+        {
+            return HashCode.Combine(_connectionName, _schemaName, _eventTableName, count);
+        }
+
+        private void RegisterSql()
+        {
+            for (var i = 0; i < 1000; i++)
+            {
+                var count = i + 1;
+                var key = GetCommandHashCode(count);
+                _sqlTemplateCache.AddSql(key, () =>
+                {
+                    var sql = InitRelationalInsertManySql(_schemaName, _eventTableName, count);
+                    return sql;
+                });
+            }
         }
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity).AsTask();
+            var valueTask = _batchOperator.CreateTask(entity);
+            if (valueTask.IsCompleted)
+            {
+                return Task.CompletedTask;
+            }
+
+            return valueTask.AsTask();
         }
 
         private async Task SaveManyCoreMany(
@@ -66,23 +93,21 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 })
                 .ToArray();
 
-            var sql = InitRelationalInsertManySql(
-                _schemaName,
-                _eventTableName,
-                array.Length);
-            using var db = dbFactory.GetConnection(_connectionName);
-            var ps = new DynamicParameters();
+            var sql = _sqlTemplateCache.GetSql(GetCommandHashCode(array.Length));
+            await using var db = dbFactory.GetConnection(_connectionName);
+            var cmd = new MySqlCommand(sql, db);
             for (var i = 0; i < array.Length; i++)
             {
                 foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories)
                 {
                     var eventEntity = items[i];
                     var name = _sqlTemplateCache.GetParameterName(parameterName, i);
-                    ps.Add(name, valueFunc(eventEntity));
+                    cmd.Parameters.AddWithValue(name, valueFunc(eventEntity));
                 }
             }
 
-            await db.ExecuteAsync(sql, ps);
+            await db.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
         }
 
         private string InitRelationalInsertManySql(

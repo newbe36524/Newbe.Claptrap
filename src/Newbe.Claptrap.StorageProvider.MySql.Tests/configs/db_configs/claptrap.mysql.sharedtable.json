@@ -3,7 +3,7 @@
     "EventStore": {
       "Strategy": "SharedTable",
       "DatabaseType": "MySql",
-      "InsertManyWindowCount": 1500
+      "InsertManyWindowCount": 1000
     },
     "StateStore": {
       "Strategy": "SharedTable",

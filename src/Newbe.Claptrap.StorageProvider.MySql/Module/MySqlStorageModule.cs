@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
                 MySqlStateEntitySaver.RegisterParameters(cache, 2000);
-                MySqlEventEntitySaver.RegisterParameters(cache, 1000);
+                BulkInFileMySqlEventEntitySaver.RegisterParameters(cache, 1000);
             });
         }
     }

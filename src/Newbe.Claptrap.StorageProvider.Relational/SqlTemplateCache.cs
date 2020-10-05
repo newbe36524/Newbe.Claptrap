@@ -27,16 +27,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             }
         }
 
-        private readonly Dictionary<int, Lazy<string>> sqlDic = new Dictionary<int, Lazy<string>>();
+        private readonly Dictionary<int, Lazy<string>> _sqlDic = new Dictionary<int, Lazy<string>>();
 
         public void AddSql(int key, Func<string> sqlFunc)
         {
-            sqlDic.Add(key, new Lazy<string>(sqlFunc));
+            _sqlDic[key] = new Lazy<string>(sqlFunc);
         }
 
         public string GetSql(int key)
         {
-            return sqlDic[key].Value;
+            return _sqlDic[key].Value;
         }
     }
 }

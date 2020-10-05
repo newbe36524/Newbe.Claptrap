@@ -117,7 +117,16 @@ namespace Newbe.Claptrap.TestSuit
                     Version = x
                 })
                 .ToArray();
-            var parallelLoopResult = Parallel.ForEach(unitEvents, e => { saver.SaveEventAsync(e); });
+            var parallelLoopResult = Parallel.ForEach(unitEvents, e =>
+            {
+                saver.SaveEventAsync(e).ContinueWith(x =>
+                {
+                    if (x.IsFaulted)
+                    {
+                        logger.LogError(x.Exception, "error");
+                    }
+                });
+            });
             while (!parallelLoopResult.IsCompleted)
             {
                 await Task.Yield();

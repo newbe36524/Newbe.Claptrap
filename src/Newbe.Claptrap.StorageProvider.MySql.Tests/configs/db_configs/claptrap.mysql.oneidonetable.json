@@ -3,7 +3,7 @@
     "EventStore": {
       "Strategy": "OneIdOneTable",
       "DatabaseType": "MySql",
-      "InsertManyWindowCount": 1500
+      "InsertManyWindowCount": 1000
     },
     "StateStore": {
       "Strategy": "OneIdOneTable",
