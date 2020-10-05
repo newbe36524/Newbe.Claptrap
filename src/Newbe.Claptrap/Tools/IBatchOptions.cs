@@ -4,5 +4,8 @@ namespace Newbe.Claptrap
     {
         int? InsertManyWindowTimeInMilliseconds { get; }
         int? InsertManyWindowCount { get; }
+        int? InsertManyMaxWindowCount { get; }
+        int? InsertManyMinWindowCount { get; }
+        bool? EnableAutoScale { get; }
     }
 }

@@ -39,7 +39,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                     {
                         DoManyFunc = (entities, cacheData) =>
                             SaveManyCoreMany(sqLiteDbFactory, entities),
-                        DoManyFuncName = $"event batch saver for {operatorKey}"
+                        DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
             RegisterSql();
         }

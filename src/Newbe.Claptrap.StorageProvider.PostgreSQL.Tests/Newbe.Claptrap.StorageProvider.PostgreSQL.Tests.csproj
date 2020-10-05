@@ -13,22 +13,4 @@
     <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="configs\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\db_configs\claptrap.postgresql.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\db_configs\claptrap.postgresql.oneidonetable.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\db_configs\claptrap.postgresql.onetypeonetable.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\db_configs\claptrap.postgresql.sharedtable.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

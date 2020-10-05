@@ -31,7 +31,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            using var db = _dbFactory.GetConnection(_connectionName);
+            await using var db = _dbFactory.GetConnection(_connectionName);
             var entities = await db.QueryAsync<RelationalEventEntity>(_selectSql, new
             {
                 startVersion,

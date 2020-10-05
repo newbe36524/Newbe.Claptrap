@@ -7,7 +7,9 @@ namespace Newbe.Claptrap
     public class AutoScaleAutoFlushListOptions : IAutoFlushListOptions
     {
         public delegate AutoScaleAutoFlushListOptions Factory(int initSize,
-            TimeSpan debounceTime);
+            TimeSpan debounceTime,
+            int? minSize,
+            int? maxSize);
 
         private readonly TimeSpan _debounceTime;
         private readonly ILogger<AutoScaleAutoFlushListOptions> _logger;
@@ -24,9 +26,9 @@ namespace Newbe.Claptrap
         public AutoScaleAutoFlushListOptions(
             int initSize,
             TimeSpan debounceTime,
+            int? minSize,
+            int? maxSize,
             ILogger<AutoScaleAutoFlushListOptions> logger,
-            int minSize = 100,
-            int maxSize = 200_000,
             double scaleUpRate = 2,
             double scaleDownRate = 0.9,
             double scaleUpConditionRate = 0.3,
@@ -36,8 +38,8 @@ namespace Newbe.Claptrap
             _debounceTime = debounceTime;
             _logger = logger;
             _initSize = initSize;
-            _minSize = minSize;
-            _maxSize = maxSize;
+            _minSize = minSize ?? 100;
+            _maxSize = maxSize ?? 200_000;
             _scaleUpRate = scaleUpRate;
             _scaleDownRate = scaleDownRate;
             _scaleUpConditionRate = scaleUpConditionRate;

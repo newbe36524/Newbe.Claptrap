@@ -16,12 +16,15 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
             builder.RegisterType<DbFactory>()
                 .As<IDbFactory>()
                 .SingleInstance();
+            builder.RegisterType<MySqlAdoCache>()
+                .As<IMySqlAdoCache>()
+                .SingleInstance();
 
             builder.RegisterBuildCallback(container =>
             {
                 var cache = container.Resolve<ISqlTemplateCache>();
-                MySqlEventEntitySaver.RegisterParameters(cache, 2000);
                 MySqlStateEntitySaver.RegisterParameters(cache, 2000);
+                MySqlEventEntitySaver.RegisterParameters(cache, 1000);
             });
         }
     }

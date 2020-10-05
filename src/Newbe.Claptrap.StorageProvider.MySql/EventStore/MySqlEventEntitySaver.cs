@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
         private readonly string _schemaName;
 
         public MySqlEventEntitySaver(
-            ChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
             IMySqlEventStoreOptions options,
@@ -39,7 +39,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
         }
 

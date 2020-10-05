@@ -25,7 +25,7 @@ namespace Newbe.Claptrap.CapacityBurning.Controllers
             await service.StartAsync();
             sw.Stop();
             var cost = sw.ElapsedMilliseconds;
-            await service.CleanAsync();
+            // await service.CleanAsync();
             return Content($"{cost} ms");
         }
     }

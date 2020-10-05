@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
@@ -95,12 +96,12 @@ namespace Newbe.Claptrap.TestSuit
             await Host.StopAsync();
         }
 
-        [TestCase("account10", 10, true, 100)]
-        [TestCase("account100", 100, true, 100)]
-        [TestCase("account1000", 1_000, true, 100)]
-        [TestCase("account5000", 5_000, true, 500)]
-        [TestCase("account10001", 10_001, true, 500)]
-        [TestCase("account50000", 50_000, false, 3000)]
+        [TestCase("account10", 10, true, 1000)]
+        [TestCase("account100", 100, true, 1000)]
+        [TestCase("account1000", 1_000, true, 1000)]
+        [TestCase("account5000", 5_000, true, 3000)]
+        [TestCase("account10001", 10_001, true, 3000)]
+        [TestCase("account50000", 50_000, false, 5000)]
         public async Task SaveEventAsync(string accountId, int count, bool validateByLoader, int sleepInMs)
         {
             using var lifetimeScope = BuildService().CreateScope();
@@ -124,6 +125,7 @@ namespace Newbe.Claptrap.TestSuit
 
             sw.Stop();
             Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
+            Thread.Sleep(TimeSpan.FromSeconds(10));
             await Task.Delay(TimeSpan.FromMilliseconds(sleepInMs));
             if (validateByLoader)
             {

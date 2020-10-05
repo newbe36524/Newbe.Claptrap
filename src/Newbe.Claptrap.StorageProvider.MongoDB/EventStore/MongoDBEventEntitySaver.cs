@@ -35,21 +35,27 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
         }
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity).AsTask();
+            var valueTask = _batchOperator.CreateTask(entity);
+            if (valueTask.IsCompleted)
+            {
+                return Task.CompletedTask;
+            }
+
+            return valueTask.AsTask();
         }
 
         private async Task SaveManyCoreMany(
             IDbFactory dbFactory,
             IEnumerable<EventEntity> entities)
         {
-            var array = entities as EventEntity[] ?? entities.ToArray();
-            var items = array
+            var items = entities
                 .Select(x => new MongoEventEntity
                 {
                     claptrap_id = x.ClaptrapId,
@@ -58,14 +64,15 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                     event_data = x.EventData,
                     event_type_code = x.EventTypeCode,
                     version = x.Version
-                })
-                .ToArray();
+                });
 
             var client = dbFactory.GetConnection(_connectionName);
             var db = client.GetDatabase(_databaseName);
             var collection = db.GetCollection<MongoEventEntity>(_eventCollectionName);
-            var insertOneModels = items.Select(x => new InsertOneModel<MongoEventEntity>(x));
-            await collection.BulkWriteAsync(insertOneModels);
+            await collection.InsertManyAsync(items, new InsertManyOptions
+            {
+                IsOrdered = false
+            });
         }
     }
 }

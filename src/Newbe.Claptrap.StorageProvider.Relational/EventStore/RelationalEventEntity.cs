@@ -42,6 +42,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
             IAdoParameterCache cache,
             int index)
         {
+            cmd.Parameters.Clear();
             // gc free
             IDataParameter dataParameter;
             dataParameter = cache.GetParameter(nameof(claptrap_type_code), index);

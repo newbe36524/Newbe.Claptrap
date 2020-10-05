@@ -50,13 +50,26 @@ namespace Newbe.Claptrap
                 throw new ArgumentNullException(nameof(options));
             }
 
+            if (options.MinBufferCount == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (options.MaxBufferCount == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             _options = options;
             _itemPool = itemPool;
             _concurrentListPool = concurrentListPool;
             _logger = logger;
             _doManyFuncName = _options.DoManyFuncName ?? _options.DoManyFunc.ToString();
             var autoFlushListOptions = autoScaleAutoFlushListOptionsFactory
-                .Invoke(_options.BufferCount!.Value, _options.BufferTime.Value);
+                .Invoke(_options.BufferCount.Value,
+                    _options.BufferTime.Value,
+                    _options.MinBufferCount.Value,
+                    _options.MaxBufferCount.Value);
             _autoFlushList = autoFlushListFactory.Invoke(autoFlushListOptions,
                 concurrentListPool,
                 Func);

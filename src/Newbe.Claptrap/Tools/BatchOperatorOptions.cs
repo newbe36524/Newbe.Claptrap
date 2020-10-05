@@ -14,6 +14,8 @@ namespace Newbe.Claptrap
             IBatchOptions options)
         {
             BufferCount = options.InsertManyWindowCount ?? 200;
+            MaxBufferCount = options.InsertManyMaxWindowCount ?? 100;
+            MinBufferCount = options.InsertManyMinWindowCount ?? 200_000;
             BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                 ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
                 : TimeSpan.FromMilliseconds(50);
@@ -21,6 +23,8 @@ namespace Newbe.Claptrap
 
         public TimeSpan? BufferTime { get; set; }
         public int? BufferCount { get; set; }
+        public int? MaxBufferCount { get; set; }
+        public int? MinBufferCount { get; set; }
 
         /// <summary>
         /// Cache data func for create cache data while invoking DoManyFunc. e.g insert sql
