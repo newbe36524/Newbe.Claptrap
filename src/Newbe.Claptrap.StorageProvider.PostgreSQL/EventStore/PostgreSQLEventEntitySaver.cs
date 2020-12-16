@@ -11,6 +11,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
 {
     public class PostgreSQLEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly IDbFactory _dbFactory;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _schemaName;
@@ -23,6 +24,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
             IPostgreSQLEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer)
         {
+            _dbFactory = dbFactory;
             var (connectionName, schemaName, eventTableName) =
                 options.RelationalEventStoreLocator.GetNames(identity.Identity);
             _connectionName = connectionName;
@@ -38,7 +40,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFunc = (entities, cacheData) => SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
         }
@@ -48,9 +50,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
             return _batchOperator.CreateTask(entity).AsTask();
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory factory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var items = entities
                 .Select(x => new RelationalEventEntity
@@ -63,7 +63,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                     version = x.Version
                 });
 
-            await using var db = (NpgsqlConnection) factory.GetConnection(_connectionName);
+            await using var db = (NpgsqlConnection) _dbFactory.GetConnection(_connectionName);
             await db.OpenAsync();
             await using var importer =
                 db.BeginBinaryImport(

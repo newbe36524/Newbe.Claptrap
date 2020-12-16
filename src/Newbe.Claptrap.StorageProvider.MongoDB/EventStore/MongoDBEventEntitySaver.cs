@@ -9,6 +9,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
 {
     public class MongoDBEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly IDbFactory _dbFactory;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _databaseName;
@@ -21,6 +22,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
             IClaptrapIdentity identity,
             IBatchOperatorContainer batchOperatorContainer)
         {
+            _dbFactory = dbFactory;
             var locator = options.MongoDBEventStoreLocator;
             _connectionName = locator.GetConnectionName(identity);
             _databaseName = locator.GetDatabaseName(identity);
@@ -35,7 +37,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFunc = (entities, cacheData) => SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
         }
@@ -51,9 +53,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
             return valueTask.AsTask();
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory dbFactory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var items = entities
                 .Select(x => new MongoEventEntity
@@ -66,7 +66,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                     version = x.Version
                 });
 
-            var client = dbFactory.GetConnection(_connectionName);
+            var client = _dbFactory.GetConnection(_connectionName);
             var db = client.GetDatabase(_databaseName);
             var collection = db.GetCollection<MongoEventEntity>(_eventCollectionName);
             await collection.InsertManyAsync(items, new InsertManyOptions

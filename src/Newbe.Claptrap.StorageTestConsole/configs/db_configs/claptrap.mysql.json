@@ -1,0 +1,15 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "Server=localhost;Port=33306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;AllowLoadLocalInfile=true;",
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MySql",
+      "InsertManyWindowCount": 1000
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MySql",
+      "InsertManyWindowCount": 1500
+    }
+  }
+}

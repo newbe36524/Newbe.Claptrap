@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.CapacityBurning.Grains
     {
         private readonly IClaptrapIdentity _identity;
 
-        public new delegate Burning Factory(IClaptrapIdentity identity);
+        public delegate Burning Factory(IClaptrapIdentity identity);
 
         public Burning(IClaptrapIdentity identity,
             IClaptrapFactory claptrapFactory,

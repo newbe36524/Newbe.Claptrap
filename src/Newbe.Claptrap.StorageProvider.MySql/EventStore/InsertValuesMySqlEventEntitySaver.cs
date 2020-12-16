@@ -12,6 +12,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {
     public class InsertValuesMySqlEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly IDbFactory _dbFactory;
         private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _eventTableName;
@@ -30,6 +31,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             _connectionName = locator.GetConnectionName(identity);
             _schemaName = locator.GetSchemaName(identity);
             _eventTableName = locator.GetEventTableName(identity);
+            _dbFactory = dbFactory;
             _sqlTemplateCache = sqlTemplateCache;
             var operatorKey = new BatchOperatorKey()
                 .With(nameof(InsertValuesMySqlEventEntitySaver))
@@ -40,7 +42,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFunc = (entities, cacheData) => SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
             RegisterSql();
@@ -76,9 +78,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             return valueTask.AsTask();
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory dbFactory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
             var items = array
@@ -94,7 +94,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 .ToArray();
 
             var sql = _sqlTemplateCache.GetSql(GetCommandHashCode(array.Length));
-            await using var db = dbFactory.GetConnection(_connectionName);
+            await using var db = _dbFactory.GetConnection(_connectionName);
             var cmd = new MySqlCommand(sql, db);
             for (var i = 0; i < array.Length; i++)
             {

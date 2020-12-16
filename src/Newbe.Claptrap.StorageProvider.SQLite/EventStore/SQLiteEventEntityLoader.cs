@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
         public async Task<IEnumerable<EventEntity>> SelectAsync(long startVersion, long endVersion)
         {
-            using var db = _sqLiteDbFactory.GetConnection(_connectionName);
+            await using var db = _sqLiteDbFactory.GetConnection(_connectionName);
             var entities = await db.QueryAsync<RelationalEventEntity>(_selectSql, new
             {
                 startVersion,

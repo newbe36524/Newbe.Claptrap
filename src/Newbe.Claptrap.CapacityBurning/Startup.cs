@@ -39,8 +39,6 @@ namespace Newbe.Claptrap.CapacityBurning
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
                 endpoints.MapControllers();
             });
-
-            SQLiteDbFactory.RemoveDataBaseDirectory();
         }
     }
 }

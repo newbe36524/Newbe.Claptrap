@@ -15,6 +15,7 @@
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.StorageSetup\Newbe.Claptrap.StorageSetup.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -19,6 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {
     public class BulkInFileMySqlEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly IDbFactory _dbFactory;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _eventTableName;
         private readonly string _connectionName;
@@ -34,6 +35,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             IMySqlEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer)
         {
+            _dbFactory = dbFactory;
             var locator = options.RelationalEventStoreLocator;
             _connectionName = locator.GetConnectionName(identity);
             _schemaName = locator.GetSchemaName(identity);
@@ -47,7 +49,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities),
+                        DoManyFunc = (entities, cacheData) => SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
             _csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -79,9 +81,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             return valueTask.AsTask();
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory dbFactory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
             var items = array
@@ -99,7 +99,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 .ThenBy(x => x.version)
                 .ToArray();
 
-            await using var db = dbFactory.GetConnection(_connectionName);
+            await using var db = _dbFactory.GetConnection(_connectionName);
             var newIndex = Interlocked.Increment(ref _fileIndex);
             var filename = $"{GetCommandHashCode(0)}_{newIndex}.csv";
 

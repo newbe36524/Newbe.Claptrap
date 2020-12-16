@@ -6,6 +6,7 @@ using MethodTimer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newbe.Claptrap.CapacityBurning.Grains;
+using Newbe.Claptrap.StorageSetup;
 
 namespace Newbe.Claptrap.CapacityBurning.Services
 {

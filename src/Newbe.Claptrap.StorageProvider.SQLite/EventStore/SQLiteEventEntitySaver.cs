@@ -11,6 +11,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
     public class SQLiteEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly ISQLiteDbFactory _sqLiteDbFactory;
         private readonly ISQLiteAdoNetCache _sqLiteAdoNetCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
@@ -24,6 +25,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             IBatchOperatorContainer batchOperatorContainer,
             ISQLiteAdoNetCache sqLiteAdoNetCache)
         {
+            _sqLiteDbFactory = sqLiteDbFactory;
             _sqLiteAdoNetCache = sqLiteAdoNetCache;
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(identity);
@@ -38,7 +40,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                     new BatchOperatorOptions<EventEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
-                            SaveManyCoreMany(sqLiteDbFactory, entities),
+                            SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
             RegisterSql();
@@ -60,8 +62,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             return valueTask.AsTask();
         }
 
-        private async Task SaveManyCoreMany(ISQLiteDbFactory sqLiteDbFactory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var items = entities
                 .Select(x => new RelationalEventEntity
@@ -77,7 +78,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 
             var key = GetCommandHashCode();
             var sourceCmd = _sqLiteAdoNetCache.GetCommand(key);
-            var connection = sqLiteDbFactory.GetConnection(_connectionName, true);
+            var connection = _sqLiteDbFactory.GetConnection(_connectionName, true);
             var valueTask = connection.BeginTransactionAsync();
             if (!valueTask.IsCompleted)
             {
