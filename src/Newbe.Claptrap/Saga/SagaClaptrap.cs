@@ -10,7 +10,7 @@ namespace Newbe.Claptrap.Saga
     [ClaptrapEventHandler(typeof(SagaMoveToNextEventHandler), SagaCodes.MoveToNext)]
     public class SagaClaptrap : NormalClaptrapBox<ISagaStateData>, ISagaClaptrap
     {
-        public new delegate SagaClaptrap Factory(ISagaClaptrapIdentity identity);
+        public delegate SagaClaptrap Factory(ISagaClaptrapIdentity identity);
 
         private readonly IClaptrapIdentity _identity;
         private readonly ISagaUserDataSerializer _sagaUserDataSerializer;
