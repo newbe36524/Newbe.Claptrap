@@ -10,6 +10,6 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
         public int BatchCount { get; set; }
         [ReportIgnore] public List<long> BatchTimes { get; set; }
         public long TotalTime => BatchTimes.Sum();
-        public long CountPerMs => TotalCount / TotalTime;
+        public double CountPerMs => TotalCount * 1000.0 / TotalTime;
     }
 }

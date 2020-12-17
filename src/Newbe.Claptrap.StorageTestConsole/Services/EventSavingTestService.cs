@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Humanizer;
-using Humanizer.Localisation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageSetup;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
+using Newtonsoft.Json;
 
 namespace Newbe.Claptrap.StorageTestConsole.Services
 {
@@ -20,6 +20,7 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
         private readonly IOptions<TestConsoleOptions> _options;
         private readonly IDataBaseService _dataBaseService;
         private readonly IReportFormat<SavingEventResult> _reportFormat;
+        private readonly IReportManager _reportManager;
         private readonly ClaptrapFactory _claptrapFactory;
 
         public EventSavingTestService(
@@ -27,26 +28,36 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             IOptions<TestConsoleOptions> options,
             IDataBaseService dataBaseService,
             IReportFormat<SavingEventResult> reportFormat,
-            IClaptrapFactory claptrapFactory)
+            IClaptrapFactory claptrapFactory,
+            IReportManager reportManager)
         {
             _logger = logger;
             _options = options;
             _dataBaseService = dataBaseService;
             _reportFormat = reportFormat;
+            _reportManager = reportManager;
             _claptrapFactory = (ClaptrapFactory) claptrapFactory;
         }
 
         public async Task RunAsync()
         {
-            var databaseType = _options.Value.DatabaseType;
-            await _dataBaseService.StartAsync(databaseType, 30);
-            try
+            await _reportManager.InitAsync();
+            if (_options.Value.SetupLocalDatabase)
+            {
+                var databaseType = _options.Value.DatabaseType;
+                await _dataBaseService.StartAsync(databaseType, 30);
+                try
+                {
+                    await RunCoreAsync();
+                }
+                finally
+                {
+                    await _dataBaseService.CleanAsync(databaseType);
+                }
+            }
+            else
             {
                 await RunCoreAsync();
-            }
-            finally
-            {
-                await _dataBaseService.CleanAsync(databaseType);
             }
         }
 
@@ -91,6 +102,15 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
 
             var report = await _reportFormat.FormatAsync(result);
             _logger.LogInformation(report);
+
+            var reportName = $"{_options.Value.DatabaseType.ToString("G").ToLower()}-event_saving_directly.json";
+            await using (var fileStream = _reportManager.CreateFile(reportName))
+            {
+                await using var streamWriter = new StreamWriter(fileStream);
+                await streamWriter.WriteAsync(JsonConvert.SerializeObject(result, Formatting.Indented));
+            }
+
+            await _reportManager.CopyAsync(reportName);
         }
     }
 }

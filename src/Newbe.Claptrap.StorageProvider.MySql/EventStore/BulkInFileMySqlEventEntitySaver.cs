@@ -17,6 +17,9 @@ using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {
+    /// <summary>
+    /// It seem nothing better than <see cref="InsertValuesMySqlEventEntitySaver"/>
+    /// </summary>
     public class BulkInFileMySqlEventEntitySaver : IEventEntitySaver<EventEntity>
     {
         private readonly IDbFactory _dbFactory;
@@ -139,17 +142,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                 if (File.Exists(targetFile))
                 {
                     File.Delete(targetFile);
-                }
-            }
-        }
-
-        public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)
-        {
-            foreach (var name in RelationalEventEntity.ParameterNames())
-            {
-                for (var i = 0; i < maxCount; i++)
-                {
-                    sqlTemplateCache.AddParameterName(name, i);
                 }
             }
         }
