@@ -24,17 +24,17 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Build
-        run: |
-          dotnet build $GITHUB_WORKSPACE/src --configuration Release
-      - name: Test
+      # - name: Build
+      #   run: |
+      #     dotnet build $GITHUB_WORKSPACE/src --configuration Release
+      - name: Run Benchmark
         env:
           TestConsoleOptions__DatabaseType: sqlite
           TestConsoleOptions__TotalCount: 5000000
           TestConsoleOptions__BatchSize: 20000
           TestConsoleOptions__SetupLocalDatabase: true
         run: |
-          dotnet run $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole --configuration Release
+          dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
       - name: Azure Blob Upload
         uses: LanceMcCarthy/Action-AzureBlobUpload@v1.8.0
         with:
