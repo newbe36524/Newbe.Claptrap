@@ -1,4 +1,4 @@
-name: database_sqlite_event_saving
+name: benchmark_db_event_saving_sqlite
 
 on:
   push:
