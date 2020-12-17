@@ -53,4 +53,4 @@ jobs:
         with:
           connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
           container_name: claptrap
-          source_dir: "$GITHUB_WORKSPACE\src\Newbe.Claptrap.StorageTestConsole\bin\Release\net5.0\TestResults\"
+          source_dir: $GITHUB_WORKSPACE\src\Newbe.Claptrap.StorageTestConsole\bin\Release\net5.0\TestResults\
