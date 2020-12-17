@@ -12,12 +12,12 @@ jobs:
       matrix:
         total_count:
           - 1000
-          - 100000
+          # - 100000
           # - 5000000
           # - 20000000
         batch_size:
           - 1000
-          - 5000
+          # - 5000
           # - 10000
           # - 20000
           # - 50000
@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: |
-            $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/
+            $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/*.json
