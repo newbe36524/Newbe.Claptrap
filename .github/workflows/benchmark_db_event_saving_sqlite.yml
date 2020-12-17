@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/dotnet/core/sdk:3.1.301-bionic
+    container: mcr.microsoft.com/dotnet/sdk:5.0
     # services:
     # mysql:
     #   image: mysql
@@ -28,5 +28,16 @@ jobs:
         run: |
           dotnet build $GITHUB_WORKSPACE/src --configuration Release
       - name: Test
+        env:
+          TestConsoleOptions__DatabaseType: sqlite
+          TestConsoleOptions__TotalCount: 5000000
+          TestConsoleOptions__BatchSize: 20000
+          TestConsoleOptions__SetupLocalDatabase: true
         run: |
-          dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings
+          dotnet run $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole --configuration Release
+      - name: Azure Blob Upload
+        uses: LanceMcCarthy/Action-AzureBlobUpload@v1.8.0
+        with:
+          connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
+          container_name: claptrap
+          source_folder: $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/netcoreapp3.1/TestResults
