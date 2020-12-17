@@ -13,14 +13,14 @@ jobs:
         total_count:
           - 1000
           - 100000
-          # - 5000000
-          # - 20000000
+          - 5000000
+          - 20000000
         batch_size:
           - 1000
           - 5000
-          # - 10000
-          # - 20000
-          # - 50000
+          - 10000
+          - 20000
+          - 50000
     container: mcr.microsoft.com/dotnet/sdk:5.0
     steps:
       - uses: actions/checkout@v2
