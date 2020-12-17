@@ -12,12 +12,12 @@ jobs:
       matrix:
         total_count:
           - 1000
-          # - 100000
+          - 100000
           # - 5000000
           # - 20000000
         batch_size:
           - 1000
-          # - 5000
+          - 5000
           # - 10000
           # - 20000
           # - 50000
@@ -35,9 +35,6 @@ jobs:
           TestConsoleOptions__SetupLocalDatabase: true
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
-      - name: ls
-        run: |
-          ls .
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
