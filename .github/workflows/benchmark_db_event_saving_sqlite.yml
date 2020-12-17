@@ -53,4 +53,4 @@ jobs:
         with:
           connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
           container_name: claptrap
-          source_folder: $BENCHMARK_RESULT_DIR/TestResults
+          source_folder: $BENCHMARK_RESULT_DIR
