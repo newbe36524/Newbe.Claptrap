@@ -9,16 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/dotnet/core/sdk:3.1.301-bionic
-    services:
-      # mysql:
-      #   image: mysql
-      #   ports:
-      #     - 3306
-      #   env:
-      #     MYSQL_ROOT_PASSWORD: claptrap
-      #     MYSQL_DATABASE: claptrap
-      #     MYSQL_USER: claptrap
-      #     MYSQL_PASSWORD: claptrap
+    # services:
+    # mysql:
+    #   image: mysql
+    #   ports:
+    #     - 3306
+    #   env:
+    #     MYSQL_ROOT_PASSWORD: claptrap
+    #     MYSQL_DATABASE: claptrap
+    #     MYSQL_USER: claptrap
+    #     MYSQL_PASSWORD: claptrap
     steps:
       - uses: actions/checkout@v2
         with:
