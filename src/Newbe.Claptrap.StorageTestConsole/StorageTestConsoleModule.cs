@@ -14,6 +14,9 @@ namespace Newbe.Claptrap.StorageTestConsole
             builder.RegisterType<SavingEventResultReportFormat>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
+            builder.RegisterType<ReportManager>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
         }
     }
 }
