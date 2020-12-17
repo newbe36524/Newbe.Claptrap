@@ -9,8 +9,6 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
     {
         private readonly ILogger<ReportManager> _logger;
         private readonly string _resultDir;
-        private readonly string _latestDir;
-        private readonly string _currentDateDir;
 
         public ReportManager(
             ILogger<ReportManager> logger)
@@ -18,8 +16,6 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             _logger = logger;
             _resultDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!,
                 "TestResults");
-            _latestDir = Path.Combine(_resultDir, "latest");
-            _currentDateDir = Path.Combine(_resultDir, $"{DateTime.UtcNow:yyyyMMdd}");
         }
 
         public Task InitAsync()
@@ -31,8 +27,6 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             }
 
             CreateIfNotFound(_resultDir);
-            CreateIfNotFound(_latestDir);
-            CreateIfNotFound(_currentDateDir);
 
             return Task.CompletedTask;
 
@@ -47,16 +41,8 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
 
         public FileStream CreateFile(string filename)
         {
-            var path = Path.Combine(_currentDateDir, filename);
+            var path = Path.Combine(_resultDir, filename);
             return new FileStream(path, FileMode.CreateNew);
-        }
-
-        public Task CopyAsync(string filename)
-        {
-            var source = Path.Combine(_currentDateDir, filename);
-            var dest = Path.Combine(_latestDir, filename);
-            File.Copy(source, dest);
-            return Task.CompletedTask;
         }
     }
 }

@@ -22,24 +22,11 @@ jobs:
           # - 20000
           # - 50000
     container: mcr.microsoft.com/dotnet/sdk:5.0
-    # services:
-    # mysql:
-    #   image: mysql
-    #   ports:
-    #     - 3306
-    #   env:
-    #     MYSQL_ROOT_PASSWORD: claptrap
-    #     MYSQL_DATABASE: claptrap
-    #     MYSQL_USER: claptrap
-    #     MYSQL_PASSWORD: claptrap
     steps:
       - uses: actions/checkout@v2
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      # - name: Build
-      #   run: |
-      #     dotnet build $GITHUB_WORKSPACE/src --configuration Release
       - name: Run Benchmark
         env:
           TestConsoleOptions__DatabaseType: sqlite
@@ -51,12 +38,5 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: TestResults
           path: |
             $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/
-      # - name: Azure Blob Upload
-      #   uses: LanceMcCarthy/Action-AzureBlobUpload@v1.8.0
-      #   with:
-      #     connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
-      #     container_name: claptrap
-      #     source_folder: $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/

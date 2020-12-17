@@ -7,6 +7,5 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
     {
         Task InitAsync();
         FileStream CreateFile(string filename);
-        Task CopyAsync(string filename);
     }
 }
