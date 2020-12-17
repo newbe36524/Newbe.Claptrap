@@ -103,7 +103,8 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             var report = await _reportFormat.FormatAsync(result);
             _logger.LogInformation(report);
 
-            var reportName = $"{_options.Value.DatabaseType.ToString("G").ToLower()}-event_saving_directly.json";
+            var reportName =
+                $"{_options.Value.DatabaseType.ToString("G").ToLower()}-event_saving_directly-{result.TotalCount}-{result.BatchSize}.json";
             await using (var fileStream = _reportManager.CreateFile(reportName))
             {
                 await using var streamWriter = new StreamWriter(fileStream);

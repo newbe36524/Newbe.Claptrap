@@ -8,6 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        total_count:
+          - 1000
+          - 100000
+          # - 5000000
+          # - 20000000
+        batch_size:
+          - 1000
+          - 5000
+          # - 10000
+          # - 20000
+          # - 50000
     container: mcr.microsoft.com/dotnet/sdk:5.0
     # services:
     # mysql:
@@ -30,8 +43,8 @@ jobs:
       - name: Run Benchmark
         env:
           TestConsoleOptions__DatabaseType: sqlite
-          TestConsoleOptions__TotalCount: 5000000
-          TestConsoleOptions__BatchSize: 20000
+          TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
+          TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
           TestConsoleOptions__SetupLocalDatabase: true
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
@@ -40,4 +53,4 @@ jobs:
         with:
           connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
           container_name: claptrap
-          source_folder: $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/netcoreapp3.1/TestResults
+          source_folder: $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults
