@@ -48,9 +48,9 @@ jobs:
           TestConsoleOptions__SetupLocalDatabase: true
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
-      - name: Azure Blob Storage Upload
-        uses: bacongobbler/azure-blob-storage-upload@v1.1.1
+      - name: Azure Blob Upload
+        uses: LanceMcCarthy/Action-AzureBlobUpload@v1.8.0
         with:
           connection_string: ${{ secrets.BENCHMARK_AZURE_CONNECTION }}
           container_name: claptrap
-          source_dir: $GITHUB_WORKSPACE\src\Newbe.Claptrap.StorageTestConsole\bin\Release\net5.0\TestResults\
+          source_folder: $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/
