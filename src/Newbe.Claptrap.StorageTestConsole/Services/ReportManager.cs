@@ -28,6 +28,8 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             CreateIfNotFound(_resultDir);
             CreateIfNotFound(_latestDir);
             CreateIfNotFound(_currentDateDir);
+
+            Environment.SetEnvironmentVariable("BENCHMARK_RESULT_DIR", _resultDir, EnvironmentVariableTarget.User);
             return Task.CompletedTask;
 
             static void CreateIfNotFound(string path)
