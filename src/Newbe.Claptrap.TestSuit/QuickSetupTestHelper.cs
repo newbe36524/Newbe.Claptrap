@@ -19,19 +19,11 @@ namespace Newbe.Claptrap.TestSuit
             RelationLocatorStrategy strategy,
             IEnumerable<string> configJsonFilenames,
             Action<ContainerBuilder> builderAction = null,
-            Action<IClaptrapBootstrapperBuilder> bootstrapperAction = null)
+            Action<IClaptrapBootstrapperBuilder> bootstrapperAction = null,
+            Action<HostBuilder> configureHostBuilder = null)
         {
             var hostBuilder = new HostBuilder();
             hostBuilder
-                .ConfigureServices(collection =>
-                {
-                    collection.AddLogging(logging =>
-                    {
-                        logging.ClearProviders();
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                        logging.AddNLog();
-                    });
-                })
                 .ConfigureAppConfiguration(configurationBuilder =>
                 {
                     configurationBuilder
@@ -44,6 +36,15 @@ namespace Newbe.Claptrap.TestSuit
                     }
 
                     configurationBuilder.AddEnvironmentVariables();
+                })
+                .ConfigureServices(collection =>
+                {
+                    collection.AddLogging(logging =>
+                    {
+                        logging.ClearProviders();
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                        logging.AddNLog();
+                    });
                 })
                 .UseClaptrap(bootstrapperBuilder =>
                 {
@@ -69,6 +70,7 @@ namespace Newbe.Claptrap.TestSuit
                         .AsSelf()
                         .InstancePerDependency();
                 });
+            configureHostBuilder?.Invoke(hostBuilder);
             var host = hostBuilder.Build();
             return host;
         }

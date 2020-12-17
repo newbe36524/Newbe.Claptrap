@@ -4,28 +4,41 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Humanizer;
+using Humanizer.Localisation;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageSetup;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
 
 namespace Newbe.Claptrap.StorageTestConsole.Services
 {
-    public class EventInsertTestService : IEventInsertTestService
+    public class EventSavingTestService : IEventSavingTestService
     {
+        private readonly ILogger<EventSavingTestService> _logger;
+        private readonly IOptions<TestConsoleOptions> _options;
         private readonly IDataBaseService _dataBaseService;
+        private readonly IReportFormat<SavingEventResult> _reportFormat;
         private readonly ClaptrapFactory _claptrapFactory;
 
-        public EventInsertTestService(
+        public EventSavingTestService(
+            ILogger<EventSavingTestService> logger,
+            IOptions<TestConsoleOptions> options,
             IDataBaseService dataBaseService,
+            IReportFormat<SavingEventResult> reportFormat,
             IClaptrapFactory claptrapFactory)
         {
+            _logger = logger;
+            _options = options;
             _dataBaseService = dataBaseService;
+            _reportFormat = reportFormat;
             _claptrapFactory = (ClaptrapFactory) claptrapFactory;
         }
 
         public async Task RunAsync()
         {
-            var databaseType = DatabaseType.MongoDB;
+            var databaseType = _options.Value.DatabaseType;
             await _dataBaseService.StartAsync(databaseType, 30);
             try
             {
@@ -42,12 +55,12 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             var id = new ClaptrapIdentity("1", Codes.Account);
             await using var scope = _claptrapFactory.BuildClaptrapLifetimeScope(id);
             var eventSaverMigration = scope.Resolve<IEventSaverMigration>();
-            // await eventSaverMigration.MigrateAsync();
+            await eventSaverMigration.MigrateAsync();
 
             var saver = scope.Resolve<IEventEntitySaver<EventEntity>>();
             var mapper = scope.Resolve<IEventEntityMapper<EventEntity>>();
-            var totalCount = 5_000_000;
-            var batchSize = 10;
+            var totalCount = _options.Value.TotalCount;
+            var batchSize = _options.Value.BatchSize;
             var batchCount = totalCount / batchSize;
             var timeList = new List<long>();
             for (int i = 0; i < batchCount; i++)
@@ -64,10 +77,20 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
                 await saver.SaveManyAsync(events);
                 sw.Stop();
                 timeList.Add(sw.ElapsedMilliseconds);
-                Console.WriteLine(sw.ElapsedMilliseconds);
+                _logger.LogTrace("batch {i} {percent:00.00}%: {total}", i, i * 1.0 / batchCount * 100,
+                    sw.Elapsed.Humanize());
             }
 
-            Console.WriteLine($@"total: {timeList.Sum()}");
+            var result = new SavingEventResult
+            {
+                TotalCount = totalCount,
+                BatchCount = batchCount,
+                BatchSize = batchSize,
+                BatchTimes = timeList
+            };
+
+            var report = await _reportFormat.FormatAsync(result);
+            _logger.LogInformation(report);
         }
     }
 }

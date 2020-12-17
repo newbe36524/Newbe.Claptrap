@@ -8,7 +8,10 @@ namespace Newbe.Claptrap.StorageTestConsole
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<EventInsertTestService>()
+            builder.RegisterType<EventSavingTestService>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterType<SavingEventResultReportFormat>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }

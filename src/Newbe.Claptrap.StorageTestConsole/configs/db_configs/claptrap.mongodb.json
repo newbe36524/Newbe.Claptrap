@@ -1,15 +1,5 @@
 {
   "Claptrap": {
-    "DefaultConnectionString": "mongodb://root:claptrap@localhost:27999/claptrap?authSource=admin",
-    "EventStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "MongoDB",
-      "InsertManyWindowCount": 1500
-    },
-    "StateStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "MongoDB",
-      "InsertManyWindowCount": 2000
-    }
+    "DefaultConnectionString": "mongodb://root:claptrap@localhost:27999/claptrap?authSource=admin"
   }
 }

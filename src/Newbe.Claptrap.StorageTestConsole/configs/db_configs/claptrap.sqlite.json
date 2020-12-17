@@ -1,14 +1,2 @@
 {
-  "Claptrap": {
-    "EventStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "SQLite",
-      "InsertManyWindowCount": 100
-    },
-    "StateStore": {
-      "Strategy": "SharedTable",
-      "DatabaseType": "SQLite",
-      "InsertManyWindowCount": 100
-    }
-  }
 }

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.StorageTestConsole.Services
 {
-    public interface IEventInsertTestService
+    public interface IReportFormat<in T>
     {
-        Task RunAsync();
+        Task<string> FormatAsync(T result);
     }
 }
