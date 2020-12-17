@@ -35,8 +35,11 @@ jobs:
           TestConsoleOptions__SetupLocalDatabase: true
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
+      - name: ls
+        run: |
+          ls .
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
           path: |
-            $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/*.json
+            src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/*.json
