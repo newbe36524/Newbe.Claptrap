@@ -1,17 +1,21 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.StorageTestConsole.Services
 {
     public class ReportManager : IReportManager
     {
+        private readonly ILogger<ReportManager> _logger;
         private readonly string _resultDir;
         private readonly string _latestDir;
         private readonly string _currentDateDir;
 
-        public ReportManager()
+        public ReportManager(
+            ILogger<ReportManager> logger)
         {
+            _logger = logger;
             _resultDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!,
                 "TestResults");
             _latestDir = Path.Combine(_resultDir, "latest");
@@ -20,6 +24,7 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
 
         public Task InitAsync()
         {
+            _logger.LogInformation("Result dir : {dir}", _resultDir);
             if (Directory.Exists(_resultDir))
             {
                 Directory.Delete(_resultDir, true);
@@ -29,7 +34,6 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             CreateIfNotFound(_latestDir);
             CreateIfNotFound(_currentDateDir);
 
-            Environment.SetEnvironmentVariable("BENCHMARK_RESULT_DIR", _resultDir, EnvironmentVariableTarget.User);
             return Task.CompletedTask;
 
             static void CreateIfNotFound(string path)
