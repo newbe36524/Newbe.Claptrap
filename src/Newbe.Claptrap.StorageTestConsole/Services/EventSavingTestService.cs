@@ -105,13 +105,9 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
 
             var reportName =
                 $"{_options.Value.DatabaseType.ToString("G").ToLower()}-event_saving_directly-{result.TotalCount}-{result.BatchSize}.json";
-            await using (var fileStream = _reportManager.CreateFile(reportName))
-            {
-                await using var streamWriter = new StreamWriter(fileStream);
-                await streamWriter.WriteAsync(JsonConvert.SerializeObject(result, Formatting.Indented));
-            }
-
-            await _reportManager.CopyAsync(reportName);
+            await using var fileStream = _reportManager.CreateFile(reportName);
+            await using var streamWriter = new StreamWriter(fileStream);
+            await streamWriter.WriteAsync(JsonConvert.SerializeObject(result, Formatting.Indented));
         }
     }
 }
