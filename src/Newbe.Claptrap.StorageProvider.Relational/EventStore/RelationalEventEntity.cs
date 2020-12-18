@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
-    public class RelationalEventEntity
+    public record RelationalEventEntity
     {
         public string claptrap_type_code { get; set; } = null!;
         public string claptrap_id { get; set; } = null!;

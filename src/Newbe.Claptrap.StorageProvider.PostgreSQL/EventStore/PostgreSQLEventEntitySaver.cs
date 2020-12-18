@@ -79,7 +79,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                 await importer.WriteAsync(entity.created_time, NpgsqlDbType.Date);
             }
 
-            importer.Complete();
+            await importer.CompleteAsync();
         }
     }
 }

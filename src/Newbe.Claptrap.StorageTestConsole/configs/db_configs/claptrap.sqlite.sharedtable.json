@@ -3,12 +3,12 @@
     "EventStore": {
       "Strategy": "SharedTable",
       "DatabaseType": "SQLite",
-      "InsertManyWindowCount": 100
+      "InsertManyWindowCount": 10000
     },
     "StateStore": {
       "Strategy": "SharedTable",
       "DatabaseType": "SQLite",
-      "InsertManyWindowCount": 100
+      "InsertManyWindowCount": 10000
     }
   }
 }

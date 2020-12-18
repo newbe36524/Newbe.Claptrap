@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,39 +7,27 @@ namespace Newbe.Claptrap
 {
     public static class TaskExtensions
     {
-        public static Task WhenAllComplete(this IEnumerable<Task> tasks)
+        public static Task<int> WhenAllComplete(this IEnumerable<Task> tasks,
+            int count,
+            Action<int>? stepAction = null)
         {
             var tcs = new TaskCompletionSource<int>();
-            var locker = 0;
-            IReadOnlyCollection<Task> c;
-            if (tasks is IReadOnlyCollection<Task> cc)
-            {
-                c = cc;
-            }
-            else
-            {
-                var taskList = new LinkedList<Task>();
-                foreach (var task in tasks)
-                {
-                    taskList.AddLast(task);
-                }
+            var counter = 0;
 
-                c = taskList;
-            }
-
-            foreach (var task in c)
+            foreach (var task in tasks)
             {
                 task.ContinueWith(ContinuationFunction);
             }
 
             void ContinuationFunction(Task t)
             {
-                var nowValue = Interlocked.Increment(ref locker);
+                var nowValue = Interlocked.Increment(ref counter);
+                stepAction?.Invoke(nowValue);
                 if (t.IsCompletedSuccessfully)
                 {
-                    if (nowValue == c.Count)
+                    if (nowValue >= count)
                     {
-                        tcs.SetResult(0);
+                        tcs.SetResult(nowValue);
                     }
                 }
                 else if (t.IsFaulted)

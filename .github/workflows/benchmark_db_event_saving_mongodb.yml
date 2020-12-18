@@ -1,9 +1,9 @@
-name: benchmark_db_event_saving_sqlite
+name: benchmark_db_event_saving_mongodb
 
 on:
   push:
     branches:
-      - feature/benchmark_sqlite
+      - feature/benchmark_mongodb
 
 jobs:
   build:
@@ -22,6 +22,14 @@ jobs:
           - 20000
           - 50000
     container: mcr.microsoft.com/dotnet/sdk:5.0
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: claptrap
     steps:
       - uses: actions/checkout@v2
         with:
@@ -29,10 +37,11 @@ jobs:
           fetch-depth: 0
       - name: Run Benchmark
         env:
-          TestConsoleOptions__DatabaseType: sqlite
+          TestConsoleOptions__DatabaseType: mongodb
           TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
           TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
           TestConsoleOptions__SetupLocalDatabase: false
+          Claptrap__DefaultConnectionString: "mongodb://root:claptrap@mongo:27017/claptrap?authSource=admin"
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
       - name: Archive artifacts

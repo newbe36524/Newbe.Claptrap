@@ -44,10 +44,11 @@ namespace Newbe.Claptrap.StorageTestConsole
                     });
                 });
             var serviceProvider = host.Services;
-            var logger = serviceProvider.GetService<ILogger<Program>>();
+            await using var scope = serviceProvider.GetService<ILifetimeScope>();
+            var logger = scope!.Resolve<ILogger<Program>>();
             try
             {
-                var service = serviceProvider.GetService<IEventSavingTestService>();
+                var service = scope.ResolveKeyed<ITestJob>(options.Job);
                 await service!.RunAsync();
             }
             catch (Exception e)

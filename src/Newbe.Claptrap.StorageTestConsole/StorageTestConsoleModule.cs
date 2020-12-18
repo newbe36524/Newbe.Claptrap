@@ -8,8 +8,11 @@ namespace Newbe.Claptrap.StorageTestConsole
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<EventSavingTestService>()
-                .AsImplementedInterfaces()
+            builder.RegisterType<EventSavingDirectlyTestJob>()
+                .Keyed<ITestJob>(TestJobType.EventSavingDirectly)
+                .SingleInstance();
+            builder.RegisterType<EventSavingActorSaverTestJob>()
+                .Keyed<ITestJob>(TestJobType.EventSavingActorSaver)
                 .SingleInstance();
             builder.RegisterType<SavingEventResultReportFormat>()
                 .AsImplementedInterfaces()
@@ -18,5 +21,11 @@ namespace Newbe.Claptrap.StorageTestConsole
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }
+    }
+
+    public enum TestJobType
+    {
+        EventSavingDirectly = 0,
+        EventSavingActorSaver = 1
     }
 }
