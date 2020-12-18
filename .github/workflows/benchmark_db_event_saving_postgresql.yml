@@ -1,9 +1,9 @@
-name: benchmark_db_event_saving_mysql
+name: benchmark_db_event_saving_postgresql
 
 on:
   push:
     branches:
-      - feature/benchmark_mysql
+      - feature/benchmark
 
 jobs:
   build:
@@ -16,21 +16,25 @@ jobs:
           - 5000000
           - 20000000
         batch_size:
-          - 100
-          - 200
-          - 500
           - 1000
+          - 5000
+          - 10000
+          - 20000
+          - 50000
     container: mcr.microsoft.com/dotnet/sdk:5.0
     services:
-      mysql:
-        image: mysql
-        ports:
-          - 3306
+      postgres:
+        image: postgres:12.3-alpine
         env:
-          MYSQL_ROOT_PASSWORD: claptrap
-          MYSQL_DATABASE: claptrap
-          MYSQL_USER: claptrap
-          MYSQL_PASSWORD: claptrap
+          POSTGRES_PASSWORD: claptrap
+          POSTGRES_DB: claptrap
+        ports:
+          - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,11 +42,11 @@ jobs:
           fetch-depth: 0
       - name: Run Benchmark
         env:
-          TestConsoleOptions__DatabaseType: sqlite
+          TestConsoleOptions__DatabaseType: postgresql
           TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
           TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
           TestConsoleOptions__SetupLocalDatabase: false
-          Claptrap__DefaultConnectionString: "Server=claptrap;Port=3306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
+          Claptrap__DefaultConnectionString: "Server=postgres;Port=5432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;"
         run: |
           dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
       - name: Archive artifacts
