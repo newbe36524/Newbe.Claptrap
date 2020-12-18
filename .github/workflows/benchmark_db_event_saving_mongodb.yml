@@ -3,7 +3,7 @@ name: benchmark_db_event_saving_mongodb
 on:
   push:
     branches:
-      - feature/benchmark
+      - feature/benchmark_mongodb
 
 jobs:
   build:

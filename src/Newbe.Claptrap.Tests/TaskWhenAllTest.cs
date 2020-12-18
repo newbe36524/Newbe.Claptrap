@@ -12,16 +12,18 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public async Task WhenAllCompleted()
         {
-            var tasks = Enumerable.Range(0, 10_000)
+            var count = 10_000;
+            var tasks = Enumerable.Range(0, count)
                 .Select(x => Task.Run(() => Console.Write(1)));
 
-            await tasks.WhenAllComplete();
+            await tasks.WhenAllComplete(count);
         }
 
         [Test]
         public void WhenAllCompletedWithError()
         {
-            Assert.ThrowsAsync<AggregateException>(() => GetTasks(10_000).WhenAllComplete());
+            var cc = 10_000;
+            Assert.ThrowsAsync<AggregateException>(() => GetTasks(cc).WhenAllComplete(cc));
 
             IEnumerable<Task> GetTasks(int count)
             {
@@ -37,7 +39,8 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void WhenAllCompletedWithCancel()
         {
-            Assert.ThrowsAsync<TaskCanceledException>(async () => await GetTasks(10_000).WhenAllComplete());
+            var cc = 10_000;
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await GetTasks(cc).WhenAllComplete(cc));
 
             IEnumerable<Task> GetTasks(int count)
             {

@@ -88,7 +88,7 @@ namespace Newbe.Claptrap
                     nextSize = Math.Min(nextSize, _maxSize);
                     if (_currentSize != nextSize)
                     {
-                        _logger.LogInformation("auto scale buffer size {currentSize} -> {nextSize}",
+                        _logger.LogDebug("auto scale buffer size {currentSize} -> {nextSize}",
                             _currentSize,
                             nextSize);
                         _currentSize = nextSize;

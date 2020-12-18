@@ -5,26 +5,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Humanizer;
+using Humanizer.Localisation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageSetup;
+using Newbe.Claptrap.StorageTestConsole.Services;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using Newtonsoft.Json;
 
-namespace Newbe.Claptrap.StorageTestConsole.Services
+namespace Newbe.Claptrap.StorageTestConsole
 {
-    public class EventSavingTestService : IEventSavingTestService
+    public class EventSavingDirectlyTestJob : ITestJob
     {
-        private readonly ILogger<EventSavingTestService> _logger;
+        private readonly ILogger<EventSavingDirectlyTestJob> _logger;
         private readonly IOptions<TestConsoleOptions> _options;
         private readonly IDataBaseService _dataBaseService;
         private readonly IReportFormat<SavingEventResult> _reportFormat;
         private readonly IReportManager _reportManager;
         private readonly ClaptrapFactory _claptrapFactory;
 
-        public EventSavingTestService(
-            ILogger<EventSavingTestService> logger,
+        public EventSavingDirectlyTestJob(
+            ILogger<EventSavingDirectlyTestJob> logger,
             IOptions<TestConsoleOptions> options,
             IDataBaseService dataBaseService,
             IReportFormat<SavingEventResult> reportFormat,
@@ -89,7 +91,7 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
                 sw.Stop();
                 timeList.Add(sw.ElapsedMilliseconds);
                 _logger.LogTrace("batch {i} {percent:00.00}%: {total}", i, i * 1.0 / batchCount * 100,
-                    sw.Elapsed.Humanize());
+                    sw.Elapsed.Humanize(maxUnit: TimeUnit.Millisecond));
             }
 
             var result = new SavingEventResult
