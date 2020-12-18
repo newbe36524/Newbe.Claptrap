@@ -74,15 +74,15 @@ namespace Newbe.Claptrap.StorageTestConsole.Services
             var batchSize = _options.Value.BatchSize;
             var batchCount = totalCount / batchSize;
             var timeList = new List<long>();
-            for (int i = 0; i < batchCount; i++)
+
+            var unitEvent = UnitEvent.Create(id);
+            var entity = mapper.Map(unitEvent);
+
+            for (var i = 0; i < batchCount; i++)
             {
                 var versionStart = i * batchSize;
                 var events = Enumerable.Range(versionStart, batchSize)
-                    .Select(version => new UnitEvent(id, Codes.AccountBalanceMinion, UnitEvent.UnitEventData.Create())
-                    {
-                        Version = version
-                    })
-                    .Select(mapper.Map);
+                    .Select(version => entity with{Version = version});
 
                 var sw = Stopwatch.StartNew();
                 await saver.SaveManyAsync(events);

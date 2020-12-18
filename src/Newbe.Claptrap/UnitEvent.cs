@@ -7,7 +7,7 @@ namespace Newbe.Claptrap
     /// This event is used for load test
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class UnitEvent : IEvent
+    public record UnitEvent : IEvent
     {
         public UnitEvent()
         {

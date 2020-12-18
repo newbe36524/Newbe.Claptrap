@@ -7,7 +7,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
     public abstract class AdoNetCache<TCommand> : IAdoNetCache<TCommand> where TCommand : IDbCommand
     {
         private readonly Dictionary<string, Dictionary<int, IDataParameter>>
-            _parameters = new Dictionary<string, Dictionary<int, IDataParameter>>();
+            _parameters = new();
 
         public IDataParameter GetParameter(string name, int index)
         {
@@ -25,7 +25,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             dic[index] = parameter;
         }
 
-        private readonly Dictionary<int, Lazy<TCommand>> _commandCache = new Dictionary<int, Lazy<TCommand>>();
+        private readonly Dictionary<int, Lazy<TCommand>> _commandCache = new();
 
         public void AddCommand(int key, Func<TCommand> dbCommandFunc)
         {
