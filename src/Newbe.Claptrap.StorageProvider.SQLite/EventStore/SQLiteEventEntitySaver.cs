@@ -4,15 +4,17 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
+using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.SQLite.Options;
+using Newbe.ObjectVisitor;
 
 namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
 {
     public class SQLiteEventEntitySaver : IEventEntitySaver<EventEntity>
     {
         private readonly ISQLiteDbFactory _sqLiteDbFactory;
-        private readonly ISQLiteAdoNetCache _sqLiteAdoNetCache;
+        private readonly ISqlTemplateCache _sqlTemplateCache;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _eventTableName;
@@ -23,10 +25,10 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer,
-            ISQLiteAdoNetCache sqLiteAdoNetCache)
+            ISqlTemplateCache sqlTemplateCache)
         {
             _sqLiteDbFactory = sqLiteDbFactory;
-            _sqLiteAdoNetCache = sqLiteAdoNetCache;
+            _sqlTemplateCache = sqlTemplateCache;
             var storeLocator = options.RelationalEventStoreLocator;
             _connectionName = storeLocator.GetConnectionName(identity);
             _eventTableName = storeLocator.GetEventTableName(identity);
@@ -62,6 +64,17 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             return valueTask.AsTask();
         }
 
+        private static readonly ICachedObjectVisitor<RelationalEventEntity, SQLiteCommand> CommandFiller =
+            default(RelationalEventEntity)!
+                .V()
+                .WithExtendObject<RelationalEventEntity, SQLiteCommand>()
+                .ForEach((name, value, cmd) => cmd.Parameters.Add(new SQLiteParameter
+                {
+                    ParameterName = name,
+                    Value = value
+                }))
+                .Cache();
+
         public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var items = entities
@@ -77,7 +90,13 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 .AsParallel();
 
             var key = GetCommandHashCode();
-            var sourceCmd = _sqLiteAdoNetCache.GetCommand(key);
+            var sql = _sqlTemplateCache.GetSql(key);
+            var cmd = new SQLiteCommand
+            {
+                CommandText = sql,
+                CommandType = CommandType.Text
+            };
+
             var connection = _sqLiteDbFactory.GetConnection(_connectionName, true);
             var valueTask = connection.BeginTransactionAsync();
             if (!valueTask.IsCompleted)
@@ -88,65 +107,33 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             var transaction = valueTask.Result;
             await using (transaction)
             {
-                sourceCmd.Connection = connection;
-                foreach (var item in items)
+                cmd.Connection = connection;
+                foreach (var entity in items)
                 {
-                    RelationalEventEntity.FillParameter(item, sourceCmd, _sqLiteAdoNetCache, 0);
-                    await sourceCmd.ExecuteNonQueryAsync();
+                    CommandFiller.Run(entity, cmd);
+                    await cmd.ExecuteNonQueryAsync();
                 }
 
                 await transaction.CommitAsync();
             }
         }
 
-        private string InitRelationalInsertManySql(
-            string eventTableName)
-        {
-            string sql =
-                $"INSERT INTO {eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES {ValuePartFactory(RelationalEventEntity.ParameterNames(), 0)}";
-            return sql;
-        }
-
-        private string ValuePartFactory(IEnumerable<string> parameters, int index)
-        {
-            var values = string.Join(",",
-                parameters.Select(x => _sqLiteAdoNetCache.GetParameter(x, index).ParameterName));
-            var re = $" ({values}) ";
-            return re;
-        }
-
-        public static void RegisterParameters(ISQLiteAdoNetCache cache, int maxCount)
-        {
-            foreach (var name in RelationalEventEntity.ParameterNames())
-            {
-                for (var i = 0; i < maxCount; i++)
-                {
-                    cache.AddParameterName(name, i, new SQLiteParameter
-                    {
-                        ParameterName = $"@{name}{i}"
-                    });
-                }
-            }
-        }
-
         private void RegisterSql()
         {
             var key = GetCommandHashCode();
-            _sqLiteAdoNetCache.AddCommand(key, () =>
-            {
-                var cmd = new SQLiteCommand
-                {
-                    CommandText = InitRelationalInsertManySql(_eventTableName),
-                    CommandType = CommandType.Text
-                };
-                foreach (var (parameterName, _) in RelationalEventEntity.ValueFactories)
-                {
-                    var dataParameter = _sqLiteAdoNetCache.GetParameter(parameterName, 0);
-                    cmd.Parameters.Add(dataParameter);
-                }
+            _sqlTemplateCache.AddSql(key, () => InitRelationalInsertManySql(_eventTableName));
 
-                return cmd;
-            });
+            static string InitRelationalInsertManySql(
+                string eventTableName)
+            {
+                var propertyNames = typeof(RelationalEventEntity).GetProperties().Select(x => x.Name).ToArray();
+
+                var names = string.Join(",", propertyNames);
+                var values = string.Join(",", propertyNames.Select(x => $"@{x}"));
+                string sql =
+                    $"INSERT INTO {eventTableName} ({names}) VALUES ({values})";
+                return sql;
+            }
         }
     }
 }

@@ -16,28 +16,23 @@ namespace Newbe.Claptrap
 
             foreach (var task in tasks)
             {
-                task.ContinueWith(ContinuationFunction);
-            }
-
-            void ContinuationFunction(Task t)
-            {
-                var nowValue = Interlocked.Increment(ref counter);
-                stepAction?.Invoke(nowValue);
-                if (t.IsCompletedSuccessfully)
+                Task.Run(async () =>
                 {
-                    if (nowValue >= count)
+                    try
                     {
-                        tcs.SetResult(nowValue);
+                        await task;
+                        var nowValue = Interlocked.Increment(ref counter);
+                        stepAction?.Invoke(nowValue);
+                        if (nowValue >= count)
+                        {
+                            tcs.SetResult(nowValue);
+                        }
                     }
-                }
-                else if (t.IsFaulted)
-                {
-                    tcs.TrySetException(t.Exception!);
-                }
-                else if (t.IsCanceled)
-                {
-                    tcs.TrySetCanceled();
-                }
+                    catch (Exception e)
+                    {
+                        tcs.TrySetException(e);
+                    }
+                });
             }
 
 

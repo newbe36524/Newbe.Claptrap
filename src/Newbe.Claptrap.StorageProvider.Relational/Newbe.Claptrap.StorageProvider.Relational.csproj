@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="dbup-core" Version="4.5.0" />
+      <PackageReference Include="Newbe.ObjectVisitor" Version="0.4.4" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
       <PackageReference Include="System.Reactive" Version="5.0.0" />
     </ItemGroup>

@@ -286,3 +286,4 @@ __pycache__/
 
 *.orig
 *.temp
+/src/.idea/config/applicationhost.config

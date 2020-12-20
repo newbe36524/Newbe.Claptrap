@@ -37,7 +37,7 @@ namespace Newbe.Claptrap
 
             public static UnitEventData Create()
             {
-                return new UnitEventData
+                return new()
                 {
                     Item1 = Guid.NewGuid().ToString("N"),
                     Item2 = Guid.NewGuid().ToString("N"),
@@ -50,7 +50,7 @@ namespace Newbe.Claptrap
 
         public static UnitEvent Create(IClaptrapIdentity identity)
         {
-            return new UnitEvent(identity, TypeCode, UnitEventData.Create());
+            return new(identity, TypeCode, UnitEventData.Create());
         }
     }
 }

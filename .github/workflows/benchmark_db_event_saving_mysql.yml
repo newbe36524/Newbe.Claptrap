@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/benchmark_mysql
+      - feature/k6
 
 jobs:
   build:
@@ -20,6 +21,10 @@ jobs:
           - 200
           - 500
           - 1000
+        worker_count:
+          - 1
+          - 3
+          - 5
     container: mcr.microsoft.com/dotnet/sdk:5.0
     services:
       mysql:
@@ -41,6 +46,7 @@ jobs:
           TestConsoleOptions__DatabaseType: sqlite
           TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
           TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
+          TestConsoleOptions__WorkerCount: ${{ matrix.worker_count }}
           TestConsoleOptions__SetupLocalDatabase: false
           Claptrap__DefaultConnectionString: "Server=claptrap;Port=3306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
         run: |

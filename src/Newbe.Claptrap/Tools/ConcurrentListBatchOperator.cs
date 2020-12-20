@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
@@ -20,8 +21,10 @@ namespace Newbe.Claptrap
 
         private readonly BlockingCollection<ExceptionConcurrentList<BatchItem>> _tasksCollection;
         private readonly BlockingCollection<ExceptionConcurrentList<BatchItem>> _resultCollection;
-        private readonly AutoFlushList<BatchItem> _autoFlushList;
         private readonly string _doManyFuncName;
+
+        private readonly AutoFlushList<BatchItem>[] _autoFlushLists;
+        private int _taskCounter = 0;
 
         // ReSharper disable once NotAccessedField.Local
         private readonly Task _task;
@@ -35,29 +38,23 @@ namespace Newbe.Claptrap
         public ConcurrentListBatchOperator(
             BatchOperatorOptions<T> options,
             ObjectPool<BatchItem> itemPool,
-            AutoScaleAutoFlushListOptions.Factory autoScaleAutoFlushListOptionsFactory,
             AutoFlushList<BatchItem>.Factory autoFlushListFactory,
             IConcurrentListPool<BatchItem> concurrentListPool,
             ILogger<ConcurrentListBatchOperator<T>> logger)
         {
-            if (options.BufferTime == null)
+            if (options.BufferTime == null || options.BufferTime == TimeSpan.Zero)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            if (options.BufferCount == null)
+            if (options.BufferCount == null || options.BufferCount <= 0)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            if (options.MinBufferCount == null)
+            if (options.WorkerCount == 0)
             {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (options.MaxBufferCount == null)
-            {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentOutOfRangeException(nameof(options));
             }
 
             _options = options;
@@ -65,14 +62,13 @@ namespace Newbe.Claptrap
             _concurrentListPool = concurrentListPool;
             _logger = logger;
             _doManyFuncName = _options.DoManyFuncName ?? _options.DoManyFunc.ToString();
-            var autoFlushListOptions = autoScaleAutoFlushListOptionsFactory
-                .Invoke(_options.BufferCount.Value,
-                    _options.BufferTime.Value,
-                    _options.MinBufferCount.Value,
-                    _options.MaxBufferCount.Value);
-            _autoFlushList = autoFlushListFactory.Invoke(autoFlushListOptions,
-                concurrentListPool,
-                Func);
+            var autoFlushListOptions = new StaticAutoFlushListOptions(_options.BufferCount.Value,
+                _options.BufferTime.Value);
+            _autoFlushLists = Enumerable.Range(0, options.WorkerCount)
+                .Select(i => autoFlushListFactory.Invoke(autoFlushListOptions,
+                    concurrentListPool,
+                    Func))
+                .ToArray();
             _tasksCollection = new BlockingCollection<ExceptionConcurrentList<BatchItem>>();
             _resultCollection = new BlockingCollection<ExceptionConcurrentList<BatchItem>>();
             _task = Task.Factory.StartNew(ConsumeTasks, TaskCreationOptions.LongRunning).Unwrap();
@@ -116,7 +112,6 @@ namespace Newbe.Claptrap
                                 }
                             }
                         }
-
                         finally
                         {
                             _concurrentListPool.Return(batchItems);
@@ -145,18 +140,11 @@ namespace Newbe.Claptrap
                         try
                         {
                             await _options.DoManyFunc.Invoke(items.Select(x => x.Input), null);
-                            _resultCollection.Add(new ExceptionConcurrentList<BatchItem>
-                            {
-                                ConcurrentList = batchItems
-                            });
+                            _resultCollection.Add(new ExceptionConcurrentList<BatchItem>(batchItems));
                         }
                         catch (Exception e)
                         {
-                            _resultCollection.Add(new ExceptionConcurrentList<BatchItem>
-                            {
-                                ConcurrentList = batchItems,
-                                Exception = e
-                            });
+                            _resultCollection.Add(new ExceptionConcurrentList<BatchItem>(batchItems, e));
                             _logger.LogError(e, "error while handle a batch");
                         }
                     }
@@ -170,10 +158,7 @@ namespace Newbe.Claptrap
 
         private Task Func(ConcurrentList<BatchItem> arg)
         {
-            _tasksCollection.Add(new ExceptionConcurrentList<BatchItem>
-            {
-                ConcurrentList = arg
-            });
+            _tasksCollection.Add(new ExceptionConcurrentList<BatchItem>(arg));
             return Task.CompletedTask;
         }
 
@@ -181,7 +166,10 @@ namespace Newbe.Claptrap
         {
             var item = _itemPool.Get();
             item.Input = input;
-            var valueTask = _autoFlushList.Push(item);
+            var nowValue = Interlocked.Increment(ref _taskCounter);
+            var index = nowValue / _options.BufferCount!.Value % _options.WorkerCount;
+            var list = _autoFlushLists[index];
+            var valueTask = list.Push(item);
             if (valueTask.IsCompleted)
             {
                 await valueTask;

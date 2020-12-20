@@ -84,6 +84,9 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             return valueTask.AsTask();
         }
 
+        private static readonly string[] EntityNames =
+            typeof(RelationalEventEntity).GetProperties().Select(x => x.Name).ToArray();
+
         public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
@@ -133,7 +136,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
                     FileName = targetFile,
                     FieldTerminator = "┣",
                 };
-                mySqlBulkLoader.Columns.AddRange(RelationalEventEntity.ParameterNames());
+                mySqlBulkLoader.Columns.AddRange(EntityNames);
                 await mySqlBulkLoader.LoadAsync();
             }
             finally

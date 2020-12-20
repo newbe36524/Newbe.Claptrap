@@ -1,10 +1,21 @@
 using System;
+using System.Threading;
 
 namespace Newbe.Claptrap
 {
-    public struct ExceptionConcurrentList<T>
+    public record ExceptionConcurrentList<T>
     {
-        public ConcurrentList<T> ConcurrentList { get; set; }
+        private static long _idCounter = 0;
+
+        public ExceptionConcurrentList(ConcurrentList<T> concurrentList, Exception? exception = null)
+        {
+            ConcurrentList = concurrentList;
+            Id = Interlocked.Increment(ref _idCounter);
+            Exception = exception;
+        }
+
+        public long Id { get; }
+        public ConcurrentList<T> ConcurrentList { get; }
         public Exception? Exception { get; set; }
 
         public void Deconstruct(out ConcurrentList<T> concurrentList, out Exception? exception)

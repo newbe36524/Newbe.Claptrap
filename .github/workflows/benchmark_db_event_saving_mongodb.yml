@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/benchmark_mongodb
+      - feature/k6
 
 jobs:
   build:
@@ -21,6 +22,10 @@ jobs:
           - 10000
           - 20000
           - 50000
+        worker_count:
+          - 1
+          - 3
+          - 5
     container: mcr.microsoft.com/dotnet/sdk:5.0
     services:
       mongo:
@@ -40,6 +45,7 @@ jobs:
           TestConsoleOptions__DatabaseType: mongodb
           TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
           TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
+          TestConsoleOptions__WorkerCount: ${{ matrix.worker_count }}
           TestConsoleOptions__SetupLocalDatabase: false
           Claptrap__DefaultConnectionString: "mongodb://root:claptrap@mongo:27017/claptrap?authSource=admin"
         run: |

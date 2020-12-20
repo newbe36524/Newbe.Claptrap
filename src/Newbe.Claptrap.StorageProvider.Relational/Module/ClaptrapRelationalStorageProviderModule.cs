@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterGeneric(typeof(AutoFlushList<>))
                 .AsSelf()
                 .InstancePerDependency();
-            builder.RegisterType<AutoScaleAutoFlushListOptions>()
+            builder.RegisterType<StaticAutoFlushListOptions>()
                 .AsSelf()
                 .InstancePerDependency();
 
