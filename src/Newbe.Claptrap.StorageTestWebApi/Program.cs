@@ -9,7 +9,6 @@ using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.StorageSetup;
 using Newbe.Claptrap.StorageTestWebApi.Services;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
-using NLog.Extensions.Logging;
 using NLog.Web;
 
 namespace Newbe.Claptrap.StorageTestWebApi
@@ -81,6 +80,7 @@ namespace Newbe.Claptrap.StorageTestWebApi
                         builder.RegisterModule<StorageSetupModule>();
                         builder.RegisterModule<StorageTestWebApiModule>();
                     })
+                .UseOrleansClaptrap()
                 .ConfigureServices((host, services) =>
                 {
                     services.AddOptions<TestConsoleOptions>()

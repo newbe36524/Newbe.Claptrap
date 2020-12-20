@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    
     <IsPackable>false</IsPackable>
     <Nullable>disable</Nullable>
     <SonarQubeExclude>true</SonarQubeExclude>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Faster\Newbe.Claptrap.StorageProvider.Faster.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj" />

@@ -10,17 +10,17 @@ using Newbe.Claptrap.TestSuit.QuickSetupTools;
 
 namespace Newbe.Claptrap.StorageTestWebApi.Services
 {
-    public class TestService : ITestService
+    public class InMemoryActorTestService : IInMemoryActorTestService
     {
-        private readonly ILogger<TestService> _logger;
+        private readonly ILogger<InMemoryActorTestService> _logger;
         private readonly IOptions<TestConsoleOptions> _options;
         private readonly IDataBaseService _dataBaseService;
         private readonly ClaptrapFactory _claptrapFactory;
         private readonly int _actorCount;
 
 
-        public TestService(
-            ILogger<TestService> logger,
+        public InMemoryActorTestService(
+            ILogger<InMemoryActorTestService> logger,
             IOptions<TestConsoleOptions> options,
             IDataBaseService dataBaseService,
             IClaptrapFactory claptrapFactory)

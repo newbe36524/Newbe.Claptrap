@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Newbe.Claptrap.StorageTestWebApi.Services
 {
-    public interface ITestService
+    public interface IInMemoryActorTestService
     {
         Task InitAsync();
         Task<int> RunAsync();

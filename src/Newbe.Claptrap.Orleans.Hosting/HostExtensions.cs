@@ -89,7 +89,7 @@ namespace Microsoft.Extensions.Hosting
                     builder
                         .ConfigureDefaults()
                         .UseLocalhostClustering()
-                        .ConfigureEndpoints(ip, siloPort, gatewayPort)
+                        // .ConfigureEndpoints(ip, siloPort, gatewayPort)
                         .ConfigureApplicationParts(manager =>
                             manager.AddFromDependencyContext().WithReferences());
                 })

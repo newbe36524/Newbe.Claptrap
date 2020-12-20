@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        
         <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="dbup-core" Version="4.5.0" />
+      <PackageReference Include="dbup-core" Version="4.4.0" />
       <PackageReference Include="Newbe.ObjectVisitor" Version="0.4.4" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
       <PackageReference Include="System.Reactive" Version="5.0.0" />

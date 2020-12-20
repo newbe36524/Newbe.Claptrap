@@ -6,7 +6,7 @@ using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.Account
 
 namespace Newbe.Claptrap.Demo
 {
-    [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
+    // [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
     public class AccountGrain : ClaptrapBoxGrain<AccountStateData>, IAccount, IClaptrapGrain
     {
@@ -15,14 +15,16 @@ namespace Newbe.Claptrap.Demo
         {
         }
 
-        public Task TransferIn(decimal amount, string uid)
+        public async Task<decimal> TransferIn(decimal amount)
         {
             var accountBalanceChangeEventData = new AccountBalanceChangeEventData
             {
                 Diff = +amount
             };
             var dataEvent = this.CreateEvent(accountBalanceChangeEventData);
-            return Claptrap.HandleEventAsync(dataEvent);
+            await Claptrap.HandleEventAsync(dataEvent);
+            var re = await GetBalance();
+            return re;
         }
 
         public Task<decimal> GetBalance()

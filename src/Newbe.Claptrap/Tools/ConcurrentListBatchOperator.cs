@@ -68,8 +68,8 @@ namespace Newbe.Claptrap
         {
             var nowValue = Interlocked.Increment(ref _taskCounter);
             var index = nowValue / _options.BufferCount!.Value % _options.WorkerCount;
-            var list = _workers[index];
-            return list.CreateTask(input);
+            var worker = _workers[index];
+            return worker.CreateTask(input);
         }
     }
 }

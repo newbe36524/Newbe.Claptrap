@@ -1,9 +1,11 @@
+using App.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.StorageTestWebApi.Services;
 
 namespace Newbe.Claptrap.StorageTestWebApi
@@ -30,6 +32,9 @@ namespace Newbe.Claptrap.StorageTestWebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var metricsRoot = app.ApplicationServices.GetRequiredService<IMetricsRoot>();
+            ClaptrapMetrics.MetricsRoot = metricsRoot;
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -50,7 +55,7 @@ namespace Newbe.Claptrap.StorageTestWebApi
             });
 
             using var serviceScope = app.ApplicationServices.CreateScope();
-            var service = serviceScope.ServiceProvider.GetRequiredService<ITestService>();
+            var service = serviceScope.ServiceProvider.GetRequiredService<IInMemoryActorTestService>();
             service.InitAsync().Wait();
         }
     }

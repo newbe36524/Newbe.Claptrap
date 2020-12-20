@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
     [ClaptrapEvent(typeof(AccountBalanceChangeEventData), C.EventCodes.AccountBalanceChanged)]
     public interface IAccount : IGrainWithStringKey
     {
-        Task TransferIn(decimal amount, string uid);
+        Task<decimal> TransferIn(decimal amount);
 
         Task<decimal> GetBalance();
     }

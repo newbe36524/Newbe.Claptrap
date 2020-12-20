@@ -8,18 +8,18 @@ namespace Newbe.Claptrap.StorageTestWebApi.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly ITestService _testService;
+        private readonly IInMemoryActorTestService _inMemoryActorTestService;
 
         public EventController(
-            ITestService testService)
+            IInMemoryActorTestService inMemoryActorTestService)
         {
-            _testService = testService;
+            _inMemoryActorTestService = inMemoryActorTestService;
         }
 
         [HttpGet]
         public async Task<IActionResult> InsertAsync()
         {
-            var count = await _testService.RunAsync();
+            var count = await _inMemoryActorTestService.RunAsync();
             return Content(count.ToString());
         }
     }

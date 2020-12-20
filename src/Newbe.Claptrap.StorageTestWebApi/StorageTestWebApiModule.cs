@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.StorageTestWebApi
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<TestService>()
+            builder.RegisterType<InMemoryActorTestService>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }
