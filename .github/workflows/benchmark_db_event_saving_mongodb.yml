@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - feature/benchmark_mongodb
-      - feature/k6
 
 jobs:
   build:
@@ -15,7 +14,6 @@ jobs:
           - 1000
           - 100000
           - 5000000
-          - 20000000
         batch_size:
           - 1000
           - 5000

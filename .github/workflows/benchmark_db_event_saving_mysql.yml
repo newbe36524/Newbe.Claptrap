@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - feature/benchmark_mysql
-      - feature/k6
 
 jobs:
   build:
@@ -15,7 +14,6 @@ jobs:
           - 1000
           - 100000
           - 5000000
-          - 20000000
         batch_size:
           - 100
           - 200
@@ -43,7 +41,7 @@ jobs:
           fetch-depth: 0
       - name: Run Benchmark
         env:
-          TestConsoleOptions__DatabaseType: sqlite
+          TestConsoleOptions__DatabaseType: mysql
           TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
           TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
           TestConsoleOptions__WorkerCount: ${{ matrix.worker_count }}

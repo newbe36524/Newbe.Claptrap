@@ -1,0 +1,62 @@
+name: benchmark_db_event_saving_webapi_sqlite
+
+on:
+  push:
+    branches:
+      - feature/k6
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/sdk:5.0
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0' # SDK Version to use; x will use the latest version of the 3.1 channel
+      - run: |
+          cd $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestWebApi
+          docker build . -t mywebapi
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        total_count:
+          - 1000
+          - 100000
+          - 5000000
+        batch_size:
+          - 1000
+          - 5000
+          - 10000
+          - 20000
+          - 50000
+        worker_count:
+          - 1
+          - 3
+          - 5
+    container: mcr.microsoft.com/dotnet/sdk:5.0
+    services:
+      webapi:
+        image: mywebapi
+        # env:
+        #   POSTGRES_PASSWORD: claptrap
+        #   POSTGRES_DB: claptrap
+        # ports:
+        #   - 5432
+        # options: >-
+        #   --health-cmd pg_isready
+        #   --health-interval 10s
+        #   --health-timeout 5s
+        #   --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - run: |
+          echo ls

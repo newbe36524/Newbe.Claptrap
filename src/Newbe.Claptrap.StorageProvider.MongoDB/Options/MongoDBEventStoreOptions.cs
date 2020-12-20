@@ -6,8 +6,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Options
     {
         public int? InsertManyWindowTimeInMilliseconds { get; set; } = 50;
         public int? InsertManyWindowCount { get; set; } = 1500;
-        public int? WorkerCount { get; } = 5;
-        public bool? EnableAutoScale { get; set; } = true;
+        public int? WorkerCount { get; set; } = 5;
         public bool IsAutoMigrationEnabled { get; set; } = true;
         public IMongoDBEventStoreLocator MongoDBEventStoreLocator { get; set; } = null!;
     }

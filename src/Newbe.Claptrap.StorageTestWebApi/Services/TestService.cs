@@ -39,10 +39,12 @@ namespace Newbe.Claptrap.StorageTestWebApi.Services
 
         public async Task InitAsync()
         {
+            _logger.LogInformation("Start to init async");
             if (_options.Value.SetupLocalDatabase)
             {
                 var databaseType = _options.Value.DatabaseType;
                 await _dataBaseService.StartAsync(databaseType, 30);
+                _logger.LogInformation("Database setup completed.");
             }
 
             var optionsValue = _options.Value;
@@ -63,23 +65,27 @@ namespace Newbe.Claptrap.StorageTestWebApi.Services
                 })
                 .ToArray();
 
+            _logger.LogInformation("Scopes created.");
             for (var i = 0; i < optionsValue.ActorCount; i++)
             {
                 accounts[i] = scopes[i].Scope.Resolve<IEventSaver>();
             }
 
+            _logger.LogInformation("Accounts created.");
             events = new UnitEvent[optionsValue.ActorCount];
             for (var i = 0; i < optionsValue.ActorCount; i++)
             {
                 events[i] = UnitEvent.Create(scopes[i].ClaptrapIdentity);
             }
 
+            _logger.LogInformation("Events created.");
             versions = new int[optionsValue.ActorCount];
 
             var id = new ClaptrapIdentity("1", Codes.Account);
             await using var scope = _claptrapFactory.BuildClaptrapLifetimeScope(id);
             var eventSaverMigration = scope.Resolve<IEventSaverMigration>();
             await eventSaverMigration.MigrateAsync();
+            _logger.LogInformation("Database migration done.");
         }
 
         private int _counter;

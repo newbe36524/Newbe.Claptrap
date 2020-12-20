@@ -9,7 +9,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Options
         public int? InsertManyWindowTimeInMilliseconds { get; } = 50;
         public const int SQLiteMaxVariablesCount = 999;
         public int? InsertManyWindowCount { get; } = 10000;
-        public int? WorkerCount { get; } = 5;
-        public bool? EnableAutoScale { get; } = true;
+        public int? WorkerCount { get; } = 1;
     }
 }
