@@ -29,8 +29,8 @@ namespace Newbe.Claptrap.Orleans.Hosting.Tests
             containerBuilder.RegisterType<AccountBalanceMinion>()
                 .AsSelf()
                 .InstancePerDependency();
-            var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory(), containerBuilder);
-            var claptrapBootstrapper = builder
+            var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory());
+            var claptrapBootstrapper =  builder
                 .ScanClaptrapModule()
                 .AddConfiguration(configuration)
                 .ScanClaptrapDesigns(new[]

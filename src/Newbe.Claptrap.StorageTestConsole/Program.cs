@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.StorageSetup;
-using Newbe.Claptrap.StorageTestConsole.Services;
 using Newbe.Claptrap.TestSuit;
 
 namespace Newbe.Claptrap.StorageTestConsole

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newbe.Claptrap.AppMetrics;
-using Newbe.Claptrap.StorageProvider.SQLite;
 
 namespace Newbe.Claptrap.CapacityBurning
 {

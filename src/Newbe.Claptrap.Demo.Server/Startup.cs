@@ -1,9 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using App.Metrics;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Demo.Server.Services;
 using Newbe.Claptrap.StorageSetup;
-using Orleans;
 
 namespace Newbe.Claptrap.Demo.Server
 {
@@ -40,12 +33,7 @@ namespace Newbe.Claptrap.Demo.Server
                 .Configure(
                     consoleOptions => Configuration.Bind(nameof(TestConsoleOptions), consoleOptions));
 
-            services.AddHostedService<MuHost>();
-            var clientBuilder = new ClientBuilder();
-            clientBuilder
-                .UseLocalhostClustering();
-            var client = clientBuilder.Build();
-            services.AddSingleton(client);
+            // services.AddHostedService<DaprHost>();
         }
         
         // ConfigureContainer is where you can register things directly
@@ -73,8 +61,9 @@ namespace Newbe.Claptrap.Demo.Server
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Newbe.Claptrap.StorageTestWebApi v1"));
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -86,19 +75,6 @@ namespace Newbe.Claptrap.Demo.Server
             using var serviceScope = app.ApplicationServices.CreateScope();
             var service = serviceScope.ServiceProvider.GetRequiredService<IOrleansActorTestService>();
             service.InitAsync().Wait();
-
-            Task.Run(() =>
-            {
-                using var scope = app.ApplicationServices.CreateScope();
-                var client = scope.ServiceProvider.GetRequiredService<IClusterClient>();
-                client.Connect(e =>
-                {
-                    Console.WriteLine(e);
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-                    return Task.FromResult(true);
-                });
-            });
-
         }
     }
 }

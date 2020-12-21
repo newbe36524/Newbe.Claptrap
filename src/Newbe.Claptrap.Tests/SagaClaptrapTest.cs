@@ -21,14 +21,15 @@ namespace Newbe.Claptrap.Tests
             var builder = new ContainerBuilder();
             builder.Populate(serviceCollection);
             var autofacClaptrapBootstrapperBuilder =
-                new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory(), builder);
-            var claptrapBootstrapper = autofacClaptrapBootstrapperBuilder
+                new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory());
+            var claptrapBootstrapper = (AutofacClaptrapBootstrapper) autofacClaptrapBootstrapperBuilder
                 .ScanClaptrapDesigns(new[] {typeof(SagaClaptrap).Assembly})
                 .ScanClaptrapModule()
                 .ConfigureClaptrapDesign(x =>
                     x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None)
                 .UseSQLiteAsTestingStorage()
                 .Build();
+            claptrapBootstrapper.Builder = builder;
             claptrapBootstrapper.Boot();
             builder.RegisterType<SagaClaptrap>()
                 .AsSelf()

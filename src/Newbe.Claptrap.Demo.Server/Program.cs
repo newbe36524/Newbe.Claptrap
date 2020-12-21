@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
-using Autofac.Extensions.DependencyInjection;
+using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Server.Services;
 using NLog.Web;
 
@@ -53,8 +54,14 @@ namespace Newbe.Claptrap.Demo.Server
 
                     configurationBuilder.AddEnvironmentVariables();
                 })
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountGrain).Assembly}); })
+                .UseClaptrapHostCommon()
+                .UseClaptrapDaprHost()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>()
+                        .UseActors(options => { });
+                })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
