@@ -7,7 +7,7 @@ on:
       - develop
       - feature/ci
       - feature/ut
-      - feature/performance_test
+      - feature/dapr
 
   pull_request:
     branches:
@@ -62,20 +62,24 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/src
           dotnet restore
-      - name: Sonarscanner for dotnet
-        uses: Secbyte/dotnet-sonarscanner@v2.3
-        with:
-          buildCommand: dotnet build $GITHUB_WORKSPACE/src --configuration Release
-          testCommand: dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="namespace =~ ^Newbe"
-          projectKey: newbe36524_Newbe.Claptrap
-          projectName: Newbe.Claptrap
-          sonarOrganisation: newbe36524
-          beginArguments: >
-            /d:sonar.cs.opencover.reportsPaths='"src/*.Tests/TestResults/*/coverage.opencover.xml"'
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          Claptrap__RabbitMQ__Uri: amqp://guest:guest@rabbitmq:5672/%2f
+      - name: build and test
+        run: |
+          dotnet build $GITHUB_WORKSPACE/src --configuration Release
+          dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="namespace =~ ^Newbe"
+      # - name: Sonarscanner for dotnet
+      #   uses: Secbyte/dotnet-sonarscanner@v2.3
+      #   with:
+      #     buildCommand: dotnet build $GITHUB_WORKSPACE/src --configuration Release
+      #     testCommand: dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="namespace =~ ^Newbe"
+      #     projectKey: newbe36524_Newbe.Claptrap
+      #     projectName: Newbe.Claptrap
+      #     sonarOrganisation: newbe36524
+      #     beginArguments: >
+      #       /d:sonar.cs.opencover.reportsPaths='"src/*.Tests/TestResults/*/coverage.opencover.xml"'
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     Claptrap__RabbitMQ__Uri: amqp://guest:guest@rabbitmq:5672/%2f
       - name: Codecov
         uses: codecov/codecov-action@v1.0.13
         # with:
