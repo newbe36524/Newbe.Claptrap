@@ -19,6 +19,8 @@ namespace Newbe.Claptrap.Design
 
         private readonly IDictionary<string, ClaptrapDesignFactory> _factories
             = new Dictionary<string, ClaptrapDesignFactory>();
+        
+        public static IClaptrapDesignStore Instance { get; internal set; }
 
         public ClaptrapDesignStore(
             ILogger<ClaptrapDesignStore>? logger = null)

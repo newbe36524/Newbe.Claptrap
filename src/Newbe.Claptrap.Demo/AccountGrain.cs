@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Dapr.Actors;
 using Dapr.Actors.Runtime;
 using Newbe.Claptrap.Dapr;
 using Newbe.Claptrap.Dapr.Core;

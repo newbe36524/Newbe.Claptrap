@@ -80,7 +80,7 @@ namespace Newbe.Claptrap.StorageTestWebApi
                         builder.RegisterModule<StorageSetupModule>();
                         builder.RegisterModule<StorageTestWebApiModule>();
                     })
-                .UseOrleansClaptrap()
+                .UseClaptrapOrleansHost()
                 .ConfigureServices((host, services) =>
                 {
                     services.AddOptions<TestConsoleOptions>()

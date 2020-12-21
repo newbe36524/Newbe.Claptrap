@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        
-        <IsPackable>false</IsPackable>
-        <SonarQubeExclude>true</SonarQubeExclude>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
-        <PackageReference Include="System.Reactive" Version="5.0.0" />
-        
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
+    <PackageReference Include="System.Reactive" Version="5.0.0"/>
+    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj"/>
+  </ItemGroup>
 
 </Project>

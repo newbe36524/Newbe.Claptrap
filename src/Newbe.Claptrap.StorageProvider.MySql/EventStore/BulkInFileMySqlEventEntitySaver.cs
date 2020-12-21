@@ -12,7 +12,6 @@ using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 using MySql.Data.MySqlClient;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
-using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore

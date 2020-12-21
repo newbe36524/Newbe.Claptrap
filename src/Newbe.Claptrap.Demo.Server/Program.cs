@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Autofac.Extensions.DependencyInjection;
 using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -56,14 +55,12 @@ namespace Newbe.Claptrap.Demo.Server
                     configurationBuilder.AddEnvironmentVariables();
                 })
                 .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountGrain).Assembly}); })
-                .UseDaprClaptrap()
+                .UseClaptrapHostCommon()
+                .UseClaptrapDaprHost()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                        .UseActors(options =>
-                        {
-                            options.Actors.RegisterActor<AccountGrain>();
-                        });
+                        .UseActors(options => { });
                 })
                 .ConfigureLogging(logging =>
                 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Dapr.Actors;
+﻿using Dapr.Actors;
 
 namespace Newbe.Claptrap.Dapr.Core
 {
