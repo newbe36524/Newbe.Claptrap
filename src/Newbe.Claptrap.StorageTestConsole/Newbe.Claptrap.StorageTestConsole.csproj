@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    
     <IsPackable>false</IsPackable>
     <Nullable>disable</Nullable>
     <SonarQubeExclude>true</SonarQubeExclude>
@@ -71,7 +71,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Humanizer" Version="2.8.26" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Newbe.ObjectVisitor" Version="0.4.4" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.5" />

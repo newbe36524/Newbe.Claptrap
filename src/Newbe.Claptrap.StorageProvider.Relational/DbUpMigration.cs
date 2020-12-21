@@ -16,7 +16,6 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         private readonly ILogger _logger;
         private readonly DbUpMigrationOptions _options;
-        private readonly Lazy<bool> _init;
 
         public DbUpMigration(
             ILogger logger,
@@ -24,16 +23,12 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         {
             _logger = logger;
             _options = options;
-            _init = new Lazy<bool>(() =>
-            {
-                CreateOrUpdateDatabase();
-                return true;
-            });
         }
 
         public Task MigrateAsync()
         {
-            return Task.Run(() => { _ = _init.Value; });
+            CreateOrUpdateDatabase();
+            return Task.CompletedTask;
         }
 
         private void CreateOrUpdateDatabase()

@@ -11,9 +11,9 @@ namespace Newbe.Claptrap.StorageTestConsole
             builder.RegisterType<EventSavingDirectlyTestJob>()
                 .Keyed<ITestJob>(TestJobType.EventSavingDirectly)
                 .SingleInstance();
-            builder.RegisterType<EventSavingActorSaverTestJob>()
-                .Keyed<ITestJob>(TestJobType.EventSavingActorSaver)
-                .SingleInstance();
+            // builder.RegisterType<EventSavingActorSaverTestJob>()
+            //     .Keyed<ITestJob>(TestJobType.EventSavingActorSaver)
+            //     .SingleInstance();
             builder.RegisterType<SavingEventResultReportFormat>()
                 .AsImplementedInterfaces()
                 .SingleInstance();

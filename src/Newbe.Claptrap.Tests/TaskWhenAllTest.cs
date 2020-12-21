@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.Tests
         public void WhenAllCompletedWithError()
         {
             var cc = 10_000;
-            Assert.ThrowsAsync<AggregateException>(() => GetTasks(cc).WhenAllComplete(cc));
+            Assert.ThrowsAsync<Exception>(() => GetTasks(cc).WhenAllComplete(cc));
 
             IEnumerable<Task> GetTasks(int count)
             {

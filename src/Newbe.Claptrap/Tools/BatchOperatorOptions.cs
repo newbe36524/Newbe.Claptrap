@@ -8,23 +8,25 @@ namespace Newbe.Claptrap
     {
         public BatchOperatorOptions()
         {
+            BufferCount = 200;
+            BufferTime = TimeSpan.FromMilliseconds(50);
+            WorkerCount = 5;
         }
 
         public BatchOperatorOptions(
             IBatchOptions options)
+            : this()
         {
             BufferCount = options.InsertManyWindowCount ?? 200;
-            MaxBufferCount = options.InsertManyMaxWindowCount ?? 100;
-            MinBufferCount = options.InsertManyMinWindowCount ?? 200_000;
             BufferTime = options.InsertManyWindowTimeInMilliseconds.HasValue
                 ? TimeSpan.FromMilliseconds(options.InsertManyWindowTimeInMilliseconds.Value)
                 : TimeSpan.FromMilliseconds(50);
+            WorkerCount = options.WorkerCount ?? 5;
         }
 
         public TimeSpan? BufferTime { get; set; }
         public int? BufferCount { get; set; }
-        public int? MaxBufferCount { get; set; }
-        public int? MinBufferCount { get; set; }
+        public int WorkerCount { get; set; }
 
         /// <summary>
         /// Cache data func for create cache data while invoking DoManyFunc. e.g insert sql

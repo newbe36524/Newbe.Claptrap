@@ -9,6 +9,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         private readonly Dictionary<string, Dictionary<int, IDataParameter>>
             _parameters = new();
 
+        private readonly object _locker = new();
         public IDataParameter GetParameter(string name, int index)
         {
             return _parameters[name][index];
@@ -16,20 +17,26 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 
         public void AddParameterName(string name, int index, IDataParameter parameter)
         {
-            if (!_parameters.TryGetValue(name, out var dic))
+            lock (_locker)
             {
-                dic = new Dictionary<int, IDataParameter>();
-                _parameters[name] = dic;
-            }
+                if (!_parameters.TryGetValue(name, out var dic))
+                {
+                    dic = new Dictionary<int, IDataParameter>();
+                    _parameters[name] = dic;
+                }
 
-            dic[index] = parameter;
+                dic[index] = parameter;
+            }
         }
 
         private readonly Dictionary<int, Lazy<TCommand>> _commandCache = new();
 
         public void AddCommand(int key, Func<TCommand> dbCommandFunc)
         {
-            _commandCache[KeyPrefix + key] = new Lazy<TCommand>(dbCommandFunc);
+            lock (_locker)
+            {
+                _commandCache[KeyPrefix + key] = new Lazy<TCommand>(dbCommandFunc);
+            }
         }
 
         public TCommand GetCommand(int key)

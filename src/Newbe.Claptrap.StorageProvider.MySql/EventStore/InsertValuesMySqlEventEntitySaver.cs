@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using Newbe.Claptrap.StorageProvider.MySql.Options;
 using Newbe.Claptrap.StorageProvider.Relational;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
+using Newbe.ObjectVisitor;
 
 namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 {
@@ -78,6 +79,15 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             return valueTask.AsTask();
         }
 
+        private static readonly
+            ICachedObjectVisitor<RelationalEventEntity, (ISqlTemplateCache cache, MySqlCommand cmd, int index)>
+            CommandFiller = default(RelationalEventEntity)!
+                .V()
+                .WithExtendObject<RelationalEventEntity, (ISqlTemplateCache cache, MySqlCommand cmd, int index)>()
+                .ForEach((name, value, data) =>
+                    data.cmd.Parameters.Add(new MySqlParameter(data.cache.GetParameterName(name, data.index), value)))
+                .Cache();
+
         public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
             var array = entities as EventEntity[] ?? entities.ToArray();
@@ -98,12 +108,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             var cmd = new MySqlCommand(sql, db);
             for (var i = 0; i < array.Length; i++)
             {
-                foreach (var (parameterName, valueFunc) in RelationalEventEntity.ValueFactories)
-                {
-                    var eventEntity = items[i];
-                    var name = _sqlTemplateCache.GetParameterName(parameterName, i);
-                    cmd.Parameters.AddWithValue(name, valueFunc(eventEntity));
-                }
+                var eventEntity = items[i];
+                CommandFiller.Run(eventEntity, (_sqlTemplateCache, cmd, i));
             }
 
             await db.OpenAsync();
@@ -115,11 +121,12 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
             string eventTableName,
             int count)
         {
+            var names = typeof(RelationalEventEntity).GetProperties().Select(x=>x.Name).ToArray();
             string insertManySqlHeader =
                 $"INSERT INTO {schemaName}.{eventTableName} (claptrap_type_code, claptrap_id, version, event_type_code, event_data, created_time) VALUES ";
             var valuesSql = Enumerable.Range(0, count)
                 .Select(x =>
-                    ValuePartFactory(RelationalEventEntity.ParameterNames(), x))
+                    ValuePartFactory(names, x))
                 .ToArray();
             var sb = new StringBuilder(insertManySqlHeader);
             sb.Append(string.Join(",", valuesSql));
@@ -136,7 +143,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.EventStore
 
         public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)
         {
-            foreach (var name in RelationalEventEntity.ParameterNames())
+            var names = typeof(RelationalEventEntity).GetProperties().Select(x=>x.Name).ToArray();
+            foreach (var name in names)
             {
                 for (var i = 0; i < maxCount; i++)
                 {

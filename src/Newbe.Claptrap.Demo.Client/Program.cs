@@ -51,7 +51,7 @@ namespace Newbe.Claptrap.Demo.Client
             for (var i = 0; i < pageCount; i++)
             {
                 var tasks = Enumerable.Range(0, pageSize)
-                    .SelectMany(i => accounts.Select(a => a.TransferIn(rd.Next(0, 100), Guid.NewGuid().ToString())));
+                    .SelectMany(i => accounts.Select(a => a.TransferIn(rd.Next(0, 100))));
                 await Task.WhenAll(tasks);
             }
 

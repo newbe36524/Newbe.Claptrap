@@ -96,57 +96,51 @@ namespace Newbe.Claptrap.TestSuit
             await Host.StopAsync();
         }
 
-        [TestCase("account10", 10, true, 1000)]
-        [TestCase("account100", 100, true, 1000)]
-        [TestCase("account1000", 1_000, true, 1000)]
-        [TestCase("account5000", 5_000, true, 3000)]
-        [TestCase("account10001", 10_001, true, 3000)]
-        public async Task SaveEventAsync(string accountId, int count, bool validateByLoader, int sleepInMs)
+        [TestCase(10, 10, true)]
+        [TestCase(100, 10, true)]
+        [TestCase(1000, 10, true)]
+        public async Task SaveEventAsync(int actorCount, int count, bool validateByLoader)
         {
             using var lifetimeScope = BuildService().CreateScope();
             var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();
-            var id = new ClaptrapIdentity(accountId, Codes.Account);
-            await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
-            var saver = buildClaptrapLifetimeScope.Resolve<IEventSaver>();
-            var sw = Stopwatch.StartNew();
-            var unitEvents = Enumerable.Range(Defaults.EventStartingVersion, count)
-                .Select(x => new UnitEvent(id, UnitEvent.TypeCode, new UnitEvent.UnitEventData())
+
+            var round = 1;
+            var tasks = Enumerable.Range(0, actorCount)
+                .Select(async actorId =>
                 {
-                    Version = x
-                })
-                .ToArray();
-            var parallelLoopResult = Parallel.ForEach(unitEvents, e =>
-            {
-                saver.SaveEventAsync(e).ContinueWith(x =>
-                {
-                    if (x.IsFaulted)
+                    var index = Interlocked.Increment(ref round);
+                    var accountId = $"acc_{actorId}_{actorCount}_{count}_{index}";
+                    var id = new ClaptrapIdentity(accountId, Codes.Account);
+                    await using var scope = factory.BuildClaptrapLifetimeScope(id);
+                    var saver = scope.Resolve<IEventSaver>();
+                    var sourceEvent = UnitEvent.Create(id);
+                    var unitEvents = Enumerable.Range(Defaults.EventStartingVersion, count)
+                        .Select(x => sourceEvent with{Version = x})
+                        .ToArray();
+                    var sw = Stopwatch.StartNew();
+                    foreach (var unitEvent in unitEvents)
                     {
-                        logger.LogError(x.Exception, "error");
+                        await saver.SaveEventAsync(unitEvent);
+                    }
+
+                    sw.Stop();
+                    Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
+                    if (validateByLoader)
+                    {
+                        var loader = scope.Resolve<IEventLoader>();
+                        const int eventBeginVersion = Defaults.StateStartingVersion + 1;
+                        var eventEndVersion = eventBeginVersion + count;
+                        var events = await loader.GetEventsAsync(eventBeginVersion, eventEndVersion);
+                        var versions = events.Select(x => x.Version);
+                        logger.LogInformation("version from event loader : {version}", versions);
+                        versions.Should().BeInAscendingOrder()
+                            .And.OnlyHaveUniqueItems()
+                            .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
                     }
                 });
-            });
-            while (!parallelLoopResult.IsCompleted)
-            {
-                await Task.Yield();
-            }
+            await tasks.WhenAllComplete(actorCount);
 
-            sw.Stop();
-            Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
-            Thread.Sleep(TimeSpan.FromSeconds(10));
-            await Task.Delay(TimeSpan.FromMilliseconds(sleepInMs));
-            if (validateByLoader)
-            {
-                var loader = buildClaptrapLifetimeScope.Resolve<IEventLoader>();
-                const int eventBeginVersion = Defaults.StateStartingVersion + 1;
-                var eventEndVersion = eventBeginVersion + count;
-                var events = await loader.GetEventsAsync(eventBeginVersion, eventEndVersion);
-                var versions = events.Select(x => x.Version);
-                logger.LogInformation("version from event loader : {version}", versions);
-                versions.Should().BeInAscendingOrder()
-                    .And.OnlyHaveUniqueItems()
-                    .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
-            }
 
             await OnStopHost(Host);
             await Host.StopAsync();
@@ -170,9 +164,9 @@ namespace Newbe.Claptrap.TestSuit
                     Version = x
                 })
                 .ToArray();
-            var tasks = states
-                .Select(x => saver.SaveAsync(x));
-            await Task.WhenAll(tasks);
+            await states
+                .Select(x => saver.SaveAsync(x))
+                .WhenAllComplete(states.Length);
 
             var loader = buildClaptrapLifetimeScope.Resolve<IStateLoader>();
             var state = await loader.GetStateSnapshotAsync();
@@ -251,9 +245,9 @@ namespace Newbe.Claptrap.TestSuit
             logger.LogInformation("cost {time} ms to build items", sw.ElapsedMilliseconds);
             sw.Restart();
 
-            var tasks = items
-                .Select(item => item.saver.SaveAsync(item.state));
-            await Task.WhenAll(tasks);
+            await items
+                .Select(item => item.saver.SaveAsync(item.state))
+                .WhenAllComplete(items.Length);
 
             sw.Stop();
             logger.LogInformation("cost {time} ms to save items", sw.ElapsedMilliseconds);

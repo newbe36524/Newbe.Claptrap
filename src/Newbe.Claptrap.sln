@@ -110,6 +110,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageSetup
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.Faster", "Newbe.Claptrap.StorageProvider.Faster\Newbe.Claptrap.StorageProvider.Faster.csproj", "{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageTestWebApi", "Newbe.Claptrap.StorageTestWebApi\Newbe.Claptrap.StorageTestWebApi.csproj", "{196E2219-1192-4AC7-87F5-B8F394344DA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -272,6 +274,10 @@ Global
 		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -316,6 +322,7 @@ Global
 		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
 		{22997D45-2366-4768-92C7-F7883A046E4A} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
 		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
+		{196E2219-1192-4AC7-87F5-B8F394344DA9} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {594E59AF-14B6-4BA7-A33F-5F202BC03640}

@@ -44,13 +44,16 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterGeneric(typeof(ConcurrentListBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
+            builder.RegisterGeneric(typeof(ConcurrentListBatchOperatorWorker<>))
+                .AsSelf()
+                .InstancePerDependency();
             builder.RegisterGeneric(typeof(ConcurrentListPool<>))
                 .As(typeof(IConcurrentListPool<>))
                 .SingleInstance();
             builder.RegisterGeneric(typeof(AutoFlushList<>))
                 .AsSelf()
                 .InstancePerDependency();
-            builder.RegisterType<AutoScaleAutoFlushListOptions>()
+            builder.RegisterType<StaticAutoFlushListOptions>()
                 .AsSelf()
                 .InstancePerDependency();
 
@@ -75,7 +78,8 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
                     var provider = t.Resolve<ObjectPoolProvider>();
                     var objectPool =
                         provider.Create(
-                            new ConcurrentListPooledObjectPolicy<ConcurrentListBatchOperator<EventEntity>.BatchItem>());
+                            new ConcurrentListPooledObjectPolicy<
+                                ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem>());
                     return objectPool;
                 })
                 .AsSelf()
@@ -84,17 +88,17 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
         }
 
         private class
-            BatchItemPooledObjectPolicy : PooledObjectPolicy<ConcurrentListBatchOperator<EventEntity>.BatchItem>
+            BatchItemPooledObjectPolicy : PooledObjectPolicy<ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem>
         {
-            public override ConcurrentListBatchOperator<EventEntity>.BatchItem Create()
+            public override ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem Create()
             {
-                return new ConcurrentListBatchOperator<EventEntity>.BatchItem
+                return new()
                 {
                     Vts = new ManualResetValueTaskSource<int>(),
                 };
             }
 
-            public override bool Return(ConcurrentListBatchOperator<EventEntity>.BatchItem obj)
+            public override bool Return(ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem obj)
             {
                 obj.Vts.Reset();
                 return true;

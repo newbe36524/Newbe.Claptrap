@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -63,43 +64,68 @@ namespace Newbe.Claptrap.StorageTestConsole
             }
         }
 
-        private async Task RunCoreAsync()
+        private async Task MigrateAsync()
         {
             var id = new ClaptrapIdentity("1", Codes.Account);
             await using var scope = _claptrapFactory.BuildClaptrapLifetimeScope(id);
             var eventSaverMigration = scope.Resolve<IEventSaverMigration>();
             await eventSaverMigration.MigrateAsync();
+        }
 
-            var saver = scope.Resolve<IEventEntitySaver<EventEntity>>();
-            var mapper = scope.Resolve<IEventEntityMapper<EventEntity>>();
+        private async Task RunCoreAsync()
+        {
+            await MigrateAsync();
+
             var totalCount = _options.Value.TotalCount;
             var batchSize = _options.Value.BatchSize;
             var batchCount = totalCount / batchSize;
-            var timeList = new List<long>();
-
-            var unitEvent = UnitEvent.Create(id);
-            var entity = mapper.Map(unitEvent);
-
-            for (var i = 0; i < batchCount; i++)
+            var totalW = Stopwatch.StartNew();
+            var endSign = new int[_options.Value.WorkerCount];
+            var tcs = new TaskCompletionSource<int>();
+            var timeBag = new ConcurrentBag<List<long>>();
+            Parallel.For(0, _options.Value.WorkerCount, async workerId =>
             {
-                var versionStart = i * batchSize;
-                var events = Enumerable.Range(versionStart, batchSize)
-                    .Select(version => entity with{Version = version});
+                var id = new ClaptrapIdentity(workerId.ToString(), Codes.Account);
+                await using var scope = _claptrapFactory.BuildClaptrapLifetimeScope(id);
+                var saver = scope.Resolve<IEventEntitySaver<EventEntity>>();
+                var mapper = scope.Resolve<IEventEntityMapper<EventEntity>>();
 
-                var sw = Stopwatch.StartNew();
-                await saver.SaveManyAsync(events);
-                sw.Stop();
-                timeList.Add(sw.ElapsedMilliseconds);
-                _logger.LogTrace("batch {i} {percent:00.00}%: {total}", i, i * 1.0 / batchCount * 100,
-                    sw.Elapsed.Humanize(maxUnit: TimeUnit.Millisecond));
-            }
+                var timeList = new List<long>();
+                var unitEvent = UnitEvent.Create(id);
+                var entity = mapper.Map(unitEvent);
+
+                for (var i = 0; i < batchCount; i++)
+                {
+                    var versionStart = i * batchSize;
+                    var events = Enumerable.Range(versionStart, batchSize)
+                        .Select(version => entity with{Version = version});
+
+                    var sw = Stopwatch.StartNew();
+                    await saver.SaveManyAsync(events);
+                    sw.Stop();
+                    timeList.Add(sw.ElapsedMilliseconds);
+                    _logger.LogTrace("batch {i} {percent:00.00}%: {total}", i, i * 1.0 / batchCount * 100,
+                        sw.Elapsed.Humanize(maxUnit: TimeUnit.Millisecond));
+                }
+
+                endSign[workerId]++;
+                timeBag.Add(timeList);
+                if (endSign.All(x => x > 0))
+                {
+                    tcs.TrySetResult(0);
+                }
+            });
+
+            await tcs.Task;
+            totalW.Stop();
 
             var result = new SavingEventResult
             {
-                TotalCount = totalCount,
+                TotalCount = totalCount * _options.Value.WorkerCount,
                 BatchCount = batchCount,
                 BatchSize = batchSize,
-                BatchTimes = timeList
+                BatchTimes = timeBag.SelectMany(x => x).ToList(),
+                TotalTime = totalW.ElapsedMilliseconds
             };
 
             var report = await _reportFormat.FormatAsync(result);

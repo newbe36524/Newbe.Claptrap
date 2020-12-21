@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Demo.Server.Services;
 using NLog.Web;
-using Orleans;
 
 namespace Newbe.Claptrap.Demo.Server
 {
@@ -33,10 +36,25 @@ namespace Newbe.Claptrap.Demo.Server
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(configurationBuilder =>
+                {
+                    var configBuilder = new ConfigurationBuilder();
+                    var config = configBuilder.AddJsonFile(Path.Combine("configs", "appsettings.json"))
+                        .AddEnvironmentVariables()
+                        .Build();
+                    var testConsoleOptions = new TestConsoleOptions();
+                    config.Bind(nameof(TestConsoleOptions), testConsoleOptions);
+                    var databaseType = testConsoleOptions.DatabaseType;
+                    var strategy = RelationLocatorStrategy.SharedTable;
+                    configurationBuilder
+                        .AddJsonFile("configs/appsettings.json")
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.json".ToLower())
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
+
+                    configurationBuilder.AddEnvironmentVariables();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .UseClaptrap(typeof(AccountGrain).Assembly)
-                .UseOrleansClaptrap()
-                .UseOrleans(builder => { builder.UseDashboard(options => options.Port = 9000); })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
