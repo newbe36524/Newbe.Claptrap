@@ -7,17 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.Msbuild" Version="3.3.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        
+      <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
+        <ProjectReference Include="..\Newbe.Claptrap.Dapr.Core\Newbe.Claptrap.Dapr.Core.csproj" />
         <ProjectReference Include="..\Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj" />
-        <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
     </ItemGroup>
 
 </Project>

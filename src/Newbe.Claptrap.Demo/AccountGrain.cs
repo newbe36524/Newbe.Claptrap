@@ -1,17 +1,21 @@
 using System.Threading.Tasks;
+using Dapr.Actors;
+using Dapr.Actors.Runtime;
+using Newbe.Claptrap.Dapr;
+using Newbe.Claptrap.Dapr.Core;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Orleans;
 using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
 
 namespace Newbe.Claptrap.Demo
 {
     // [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
-    public class AccountGrain : ClaptrapBoxGrain<AccountStateData>, IAccount, IClaptrapGrain
+    public class AccountGrain : ClaptrapBoxActor<AccountStateData>, IAccount, IClaptrapActor
     {
-        public AccountGrain(IClaptrapGrainCommonService claptrapGrainCommonService)
-            : base(claptrapGrainCommonService)
+        public AccountGrain(ActorHost actorService,
+            IClaptrapActorCommonService claptrapGrainCommonService) : base(actorService,
+            claptrapGrainCommonService)
         {
         }
 

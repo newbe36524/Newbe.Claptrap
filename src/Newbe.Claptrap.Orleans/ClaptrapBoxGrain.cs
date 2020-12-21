@@ -27,15 +27,7 @@ namespace Newbe.Claptrap.Orleans
             var actorTypeCode = ClaptrapGrainCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
             var grainActorIdentity = new ClaptrapIdentity(this.GetPrimaryKeyString(), actorTypeCode);
             var claptrap = ClaptrapGrainCommonService.ClaptrapFactory.Create(grainActorIdentity);
-            try
-            {
-                await claptrap.ActivateAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            await claptrap.ActivateAsync();
             ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap = claptrap;
         }
 

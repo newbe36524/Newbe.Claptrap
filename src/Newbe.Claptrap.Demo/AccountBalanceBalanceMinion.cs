@@ -1,22 +1,24 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dapr.Actors;
+using Dapr.Actors.Runtime;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Dapr;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
-using Newbe.Claptrap.Orleans;
 using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
 
 namespace Newbe.Claptrap.Demo
 {
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
-    public class AccountBalanceBalanceMinion : ClaptrapBoxGrain<AccountStateData>,
+    public class AccountBalanceBalanceMinion : ClaptrapBoxActor<AccountStateData>,
         IAccountBalanceMinion
     {
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
 
-        public AccountBalanceBalanceMinion(IClaptrapGrainCommonService claptrapGrainCommonService,
-            ILogger<AccountBalanceBalanceMinion> logger)
-            : base(claptrapGrainCommonService)
+        public AccountBalanceBalanceMinion(ActorHost actorService,
+            IClaptrapActorCommonService claptrapGrainCommonService, ILogger<AccountBalanceBalanceMinion> logger) : base(
+            actorService, claptrapGrainCommonService)
         {
             _logger = logger;
         }
