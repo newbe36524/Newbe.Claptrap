@@ -8,13 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.CodeGenerator.Msbuild" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Orleans.TestingHost" Version="3.3.0" />
     <PackageReference Include="NLog" Version="4.7.6" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.5" />
   </ItemGroup>
@@ -22,20 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\Account.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountBalanceChangeEvent.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountBalanceChangeEventHandler.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountBalanceHistoryEventHandler.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountBalanceMinion.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountHistoryBalanceMinion.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\AccountState.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\Codes.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\IAccount.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\IAccountBalanceMinion.cs" />
-    <Orleans_CodeGenInputs Remove="QuickSetupTools\UnitEventHandler.cs" />
   </ItemGroup>
 
 </Project>

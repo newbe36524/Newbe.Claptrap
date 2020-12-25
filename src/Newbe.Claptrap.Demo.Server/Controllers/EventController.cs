@@ -8,18 +8,18 @@ namespace Newbe.Claptrap.Demo.Server.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly IOrleansActorTestService _orleansActorTestService;
+        private readonly IDaprActorTestService _daprActorTestService;
 
         public EventController(
-            IOrleansActorTestService orleansActorTestService)
+            IDaprActorTestService daprActorTestService)
         {
-            _orleansActorTestService = orleansActorTestService;
+            _daprActorTestService = daprActorTestService;
         }
 
         [HttpGet]
         public async Task<IActionResult> InsertAsync()
         {
-            var count = await _orleansActorTestService.RunAsync();
+            var count = await _daprActorTestService.RunAsync();
             return Content(count.ToString());
         }
     }

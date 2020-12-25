@@ -16,12 +16,11 @@ namespace Newbe.Claptrap.Dapr.Modules.Providers
         public IEnumerable<IClaptrapMasterModule> GetClaptrapMasterClaptrapModules(IClaptrapIdentity identity)
         {
             var design = _claptrapDesignStore.FindDesign(identity);
-            return Enumerable.Empty<IClaptrapMasterModule>();
-            // if (design.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.OrleansClient)
-            // {
-            //     var re = new OrleansDirectlyEventCenterModule();
-            //     yield return re;
-            // }
+            if (design.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.DaprClient)
+            {
+                var re = new DaprEventCenterModule();
+                yield return re;
+            }
         }
     }
 }

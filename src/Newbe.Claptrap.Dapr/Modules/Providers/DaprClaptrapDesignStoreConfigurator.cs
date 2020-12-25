@@ -11,15 +11,15 @@ namespace Newbe.Claptrap.Dapr.Modules.Providers
         public void Configure(IClaptrapDesignStore designStore)
         {
             _designStore = designStore;
-            // AddConfig(
-            //     x => x.ClaptrapOptions.EventCenterOptions == null!,
-            //     x => x.ClaptrapOptions.EventCenterOptions = new EventCenterOptions
-            //     {
-            //         EventCenterType = EventCenterType.OrleansClient
-            //     });
-            // AddConfig(
-            //     x => x.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.None,
-            //     x => x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.OrleansClient);
+            AddConfig(
+                x => x.ClaptrapOptions.EventCenterOptions == null!,
+                x => x.ClaptrapOptions.EventCenterOptions = new EventCenterOptions
+                {
+                    EventCenterType = EventCenterType.DaprClient
+                });
+            AddConfig(
+                x => x.ClaptrapOptions.EventCenterOptions.EventCenterType == EventCenterType.None,
+                x => x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.DaprClient);
         }
 
         private void AddConfig(Func<IClaptrapDesign, bool> predicate,

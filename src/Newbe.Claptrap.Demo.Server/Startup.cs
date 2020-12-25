@@ -73,7 +73,7 @@ namespace Newbe.Claptrap.Demo.Server
             });
 
             using var serviceScope = app.ApplicationServices.CreateScope();
-            var service = serviceScope.ServiceProvider.GetRequiredService<IOrleansActorTestService>();
+            var service = serviceScope.ServiceProvider.GetRequiredService<IDaprActorTestService>();
             service.InitAsync().Wait();
         }
     }

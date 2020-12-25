@@ -9,15 +9,15 @@ using Newbe.Claptrap.StorageSetup;
 
 namespace Newbe.Claptrap.Demo.Server.Services
 {
-    public class OrleansActorTestService : IOrleansActorTestService
+    public class DaprActorTestService : IDaprActorTestService
     {
-        private readonly ILogger<OrleansActorTestService> _logger;
+        private readonly ILogger<DaprActorTestService> _logger;
         private readonly IOptions<TestConsoleOptions> _options;
         private readonly IDataBaseService _dataBaseService;
         private readonly int _actorCount;
 
-        public OrleansActorTestService(
-            ILogger<OrleansActorTestService> logger,
+        public DaprActorTestService(
+            ILogger<DaprActorTestService> logger,
             IOptions<TestConsoleOptions> options,
             IDataBaseService dataBaseService)
         {
@@ -47,10 +47,7 @@ namespace Newbe.Claptrap.Demo.Server.Services
             var uid = Interlocked.Increment(ref _userIndex) % _actorCount;
             var actorId = new ActorId(uid.ToString());
             var account = ActorProxy.Create<IAccount>(actorId,"AccountGrain");
-            // var account = _grainFactory.GetGrain<IAccount>(uid.ToString());
-            // var account = _grainFactory.GetGrain<IAccount>(1.ToString());
             var re = await account.TransferIn(1M);
-            // var re = await account.GetBalance();
             return (int) re;
         }
 

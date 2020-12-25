@@ -3,7 +3,7 @@ namespace Newbe.Claptrap
     public enum EventCenterType
     {
         None = 0,
-        OrleansClient = 1,
+        DaprClient = 1,
         RabbitMQ = 2
     }
 }

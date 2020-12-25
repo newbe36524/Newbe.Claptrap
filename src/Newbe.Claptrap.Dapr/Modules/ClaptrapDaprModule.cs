@@ -6,8 +6,8 @@ namespace Newbe.Claptrap.Dapr.Modules
 {
     public class ClaptrapDaprModule : Module, IClaptrapAppModule
     {
-        public string Name { get; } = "Claptrap orleans module";
-        public string Description { get; } = "Module for Orleans support";
+        public string Name { get; } = "Claptrap Dapr module";
+        public string Description { get; } = "Module for Dapr support";
 
         protected override void Load(ContainerBuilder builder)
         {

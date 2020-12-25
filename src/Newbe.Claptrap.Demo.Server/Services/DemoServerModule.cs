@@ -7,7 +7,7 @@ namespace Newbe.Claptrap.Demo.Server.Services
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<OrleansActorTestService>()
+            builder.RegisterType<DaprActorTestService>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }
