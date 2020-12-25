@@ -9,7 +9,7 @@ using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
 
-namespace Newbe.Claptrap.Orleans.Hosting.Tests
+namespace Newbe.Claptrap.Dapr.Hosting.Tests
 {
     public class ConfigurationTest
     {
@@ -30,7 +30,7 @@ namespace Newbe.Claptrap.Orleans.Hosting.Tests
                 .AsSelf()
                 .InstancePerDependency();
             var builder = new AutofacClaptrapBootstrapperBuilder(new NullLoggerFactory());
-            var claptrapBootstrapper =  builder
+            var claptrapBootstrapper = (AutofacClaptrapBootstrapper) builder
                 .ScanClaptrapModule()
                 .AddConfiguration(configuration)
                 .ScanClaptrapDesigns(new[]
@@ -41,6 +41,7 @@ namespace Newbe.Claptrap.Orleans.Hosting.Tests
                     typeof(AccountBalanceMinion)
                 })
                 .Build();
+            claptrapBootstrapper.Builder = containerBuilder;
             claptrapBootstrapper.Boot();
 
             var container = containerBuilder.Build();

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr.Hosting\Newbe.Claptrap.Dapr.Hosting.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Faster\Newbe.Claptrap.StorageProvider.Faster.csproj" />

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extras.AggregateService;
+using Newbe.Claptrap.EventCenter;
 
 namespace Newbe.Claptrap.Dapr.Modules
 {
@@ -14,7 +15,11 @@ namespace Newbe.Claptrap.Dapr.Modules
             builder.RegisterType<ClaptrapTypeCodeFactory>()
                 .As<IClaptrapTypeCodeFactory>()
                 .SingleInstance();
-           
+         
+            builder.RegisterType<DaprMinionActivator>()
+                .As<IMinionLocator>()
+                .SingleInstance();
+            
             builder.RegisterAggregateService<IClaptrapActorCommonService>();
         }
     }

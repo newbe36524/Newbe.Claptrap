@@ -6,18 +6,18 @@ using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.EventCenter;
 using Newbe.Claptrap.Extensions;
 
-namespace Newbe.Claptrap.Orleans
+namespace Newbe.Claptrap.Dapr
 {
-    public class OrleansEventCenter : IEventCenter
+    public class DaprRpcEventCenter : IEventCenter
     {
         private readonly IMinionLocator _minionLocator;
-        private readonly ILogger<OrleansEventCenter> _logger;
+        private readonly ILogger<DaprRpcEventCenter> _logger;
         private readonly ILookup<string, IClaptrapDesign> _minionDesignsLookup;
 
-        public OrleansEventCenter(
+        public DaprRpcEventCenter(
             IClaptrapDesignStore designStore,
             IMinionLocator minionLocator,
-            ILogger<OrleansEventCenter> logger)
+            ILogger<DaprRpcEventCenter> logger)
         {
             _minionLocator = minionLocator;
             _logger = logger;

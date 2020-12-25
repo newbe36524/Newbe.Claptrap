@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+</Project>
