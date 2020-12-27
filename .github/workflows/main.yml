@@ -56,8 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
+          fetch-depth: 2
       - name: Install dependencies
         run: |
           cd $GITHUB_WORKSPACE/src
@@ -101,5 +100,3 @@ jobs:
           project-token: ${{ secrets.CODACY_TOKEN }}
           # Optional comma separated list of coverage reports to send to Codacy
           coverage-reports: src/*.Tests/TestResults/*/coverage.opencover.xml # optional, default is
-      - name: completed reporter
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) final
