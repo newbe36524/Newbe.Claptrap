@@ -101,3 +101,5 @@ jobs:
           project-token: ${{ secrets.CODACY_TOKEN }}
           # Optional comma separated list of coverage reports to send to Codacy
           coverage-reports: src/*.Tests/TestResults/*/coverage.opencover.xml # optional, default is
+      - name: completed reporter
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) final
