@@ -1,4 +1,5 @@
 using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Newbe.Claptrap.EventCenter;
 
 namespace Newbe.Claptrap.Dapr.Modules
@@ -11,7 +12,10 @@ namespace Newbe.Claptrap.Dapr.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<DaprRpcEventCenter>()
+            builder.RegisterType<DaprRpcMinionLocator>()
+                .As<IMinionLocator>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<DaprEventCenter>()
                 .As<IEventCenter>()
                 .SingleInstance();
         }

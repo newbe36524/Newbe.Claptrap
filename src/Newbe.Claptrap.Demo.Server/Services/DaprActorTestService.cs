@@ -46,7 +46,7 @@ namespace Newbe.Claptrap.Demo.Server.Services
         {
             var uid = Interlocked.Increment(ref _userIndex) % _actorCount;
             var actorId = new ActorId(uid.ToString());
-            var account = ActorProxy.Create<IAccount>(actorId,"AccountGrain");
+            var account = ActorProxy.Create<IAccount>(actorId,"AccountActor");
             var re = await account.TransferIn(1M);
             return (int) re;
         }

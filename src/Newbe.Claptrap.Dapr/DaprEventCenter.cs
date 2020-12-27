@@ -8,22 +8,22 @@ using Newbe.Claptrap.Extensions;
 
 namespace Newbe.Claptrap.Dapr
 {
-    public class DaprRpcEventCenter : IEventCenter
+    public class DaprEventCenter : IEventCenter
     {
         private readonly IMinionLocator _minionLocator;
-        private readonly ILogger<DaprRpcEventCenter> _logger;
+        private readonly ILogger<DaprEventCenter> _logger;
         private readonly ILookup<string, IClaptrapDesign> _minionDesignsLookup;
 
-        public DaprRpcEventCenter(
+        public DaprEventCenter(
             IClaptrapDesignStore designStore,
             IMinionLocator minionLocator,
-            ILogger<DaprRpcEventCenter> logger)
+            ILogger<DaprEventCenter> logger)
         {
             _minionLocator = minionLocator;
             _logger = logger;
             _minionDesignsLookup = designStore
                 .Where(x => x.IsMinion())
-                .ToLookup(x => x.ClaptrapMasterDesign.ClaptrapTypeCode);
+                .ToLookup(x => x.ClaptrapMasterDesign!.ClaptrapTypeCode);
         }
 
         public async Task SendToMinionsAsync(IClaptrapIdentity masterId, IEvent @event)

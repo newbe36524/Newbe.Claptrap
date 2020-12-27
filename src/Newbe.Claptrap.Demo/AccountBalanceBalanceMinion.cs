@@ -16,8 +16,8 @@ namespace Newbe.Claptrap.Demo
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
 
         public AccountBalanceBalanceMinion(ActorHost actorService,
-            IClaptrapActorCommonService claptrapGrainCommonService, ILogger<AccountBalanceBalanceMinion> logger) : base(
-            actorService, claptrapGrainCommonService)
+            IClaptrapActorCommonService claptrapActorCommonService, ILogger<AccountBalanceBalanceMinion> logger) : base(
+            actorService, claptrapActorCommonService)
         {
             _logger = logger;
         }

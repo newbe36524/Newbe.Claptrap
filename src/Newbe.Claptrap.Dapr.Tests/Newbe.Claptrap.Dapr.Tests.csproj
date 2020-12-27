@@ -7,4 +7,8 @@
     <IsUnitTest>true</IsUnitTest>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj" />
+  </ItemGroup>
+
 </Project>

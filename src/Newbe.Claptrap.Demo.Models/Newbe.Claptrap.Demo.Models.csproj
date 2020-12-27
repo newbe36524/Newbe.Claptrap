@@ -11,9 +11,4 @@
       <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      
-      
-    </ItemGroup>
-
 </Project>

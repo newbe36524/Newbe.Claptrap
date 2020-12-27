@@ -6,9 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CsvHelper" Version="18.0.0" />
       <PackageReference Include="Dapper" Version="2.0.78" />
-      <PackageReference Include="dbup-mysql" Version="4.4.0" />
+      <PackageReference Include="dbup-mysql" Version="4.5.0" />
       <PackageReference Include="MySql.Data" Version="8.0.22" />
     </ItemGroup>
 

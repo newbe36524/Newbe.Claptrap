@@ -54,7 +54,7 @@ namespace Newbe.Claptrap.Demo.Server
 
                     configurationBuilder.AddEnvironmentVariables();
                 })
-                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountGrain).Assembly}); })
+                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly}); })
                 .UseClaptrapHostCommon()
                 .UseClaptrapDaprHost()
                 .ConfigureWebHostDefaults(webBuilder =>

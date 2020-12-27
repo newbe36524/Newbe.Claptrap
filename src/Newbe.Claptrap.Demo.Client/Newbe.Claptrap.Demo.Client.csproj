@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
-    <PackageReference Include="System.Reactive" Version="5.0.0"/>
-    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02"/>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

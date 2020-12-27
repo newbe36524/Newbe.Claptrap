@@ -3,7 +3,7 @@ using Autofac;
 
 namespace Newbe.Claptrap.Saga
 {
-    public static class ClaptrapGrainExtensions
+    public static class ClaptrapActorExtensions
     {
         /// <summary>
         /// Create a SagaClaptrap to handle saga flow

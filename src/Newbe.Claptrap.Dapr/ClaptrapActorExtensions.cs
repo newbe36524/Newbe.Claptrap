@@ -4,26 +4,26 @@ using Newbe.Claptrap.Saga;
 // ReSharper disable MemberCanBePrivate.Global
 namespace Newbe.Claptrap.Dapr
 {
-    public static class ClaptrapGrainExtensions
+    public static class ClaptrapActorExtensions
     {
         /// <summary>
         /// Create a event for claptrap to handle
         /// </summary>
-        /// <param name="claptrapBoxGrain"></param>
+        /// <param name="claptrapBoxActor"></param>
         /// <param name="eventData"></param>
         /// <typeparam name="TStateData"></typeparam>
         /// <typeparam name="TEventDataType"></typeparam>
         /// <returns></returns>
         public static DataEvent CreateEvent<TStateData, TEventDataType>(
-            this IClaptrapBoxActor<TStateData> claptrapBoxGrain,
+            this IClaptrapBoxActor<TStateData> claptrapBoxActor,
             TEventDataType eventData)
             where TStateData : IStateData
             where TEventDataType : IEventData
         {
             var eventTypeCode =
-                claptrapBoxGrain.ClaptrapGrainCommonService.ClaptrapTypeCodeFactory
-                    .FindEventTypeCode(claptrapBoxGrain, eventData);
-            var dataEvent = new DataEvent(claptrapBoxGrain.Claptrap.State.Identity,
+                claptrapBoxActor.ClaptrapActorCommonService.ClaptrapTypeCodeFactory
+                    .FindEventTypeCode(claptrapBoxActor, eventData);
+            var dataEvent = new DataEvent(claptrapBoxActor.Claptrap.State.Identity,
                 eventTypeCode,
                 eventData);
             return dataEvent;
@@ -32,20 +32,20 @@ namespace Newbe.Claptrap.Dapr
         /// <summary>
         /// Create a SagaClaptrap to handle saga flow
         /// </summary>
-        /// <param name="claptrapBoxGrain"></param>
-        /// <param name="flowKey">Key of flow. It must be different if you want to create multiple saga flow in a ClaptrapGrainBox</param>
+        /// <param name="claptrapBoxActor"></param>
+        /// <param name="flowKey">Key of flow. It must be different if you want to create multiple saga flow in a claptrapBoxActor</param>
         /// <param name="userDataType"></param>
         /// <typeparam name="TStateData"></typeparam>
         /// <returns></returns>
         public static IDisposableSagaClaptrap CreateSagaClaptrap<TStateData>(
-            this IClaptrapBoxActor<TStateData> claptrapBoxGrain,
+            this IClaptrapBoxActor<TStateData> claptrapBoxActor,
             string flowKey,
             Type? userDataType = null)
             where TStateData : IStateData
         {
-            return claptrapBoxGrain.CreateSagaClaptrap(() =>
+            return claptrapBoxActor.CreateSagaClaptrap(() =>
             {
-                var state = claptrapBoxGrain.Claptrap.State;
+                var state = claptrapBoxActor.Claptrap.State;
                 return new SagaClaptrapIdentity(state.Identity, flowKey, userDataType ?? typeof(object));
             });
         }
@@ -53,15 +53,15 @@ namespace Newbe.Claptrap.Dapr
         /// <summary>
         /// Create a SagaClaptrap to handle saga flow
         /// </summary>
-        /// <param name="claptrapBoxGrain"></param>
+        /// <param name="claptrapBoxActor"></param>
         /// <param name="sagaClaptrapIdFactory"></param>
         /// <typeparam name="TStateData"></typeparam>
         /// <returns></returns>
         public static IDisposableSagaClaptrap CreateSagaClaptrap<TStateData>(
-            this IClaptrapBoxActor<TStateData> claptrapBoxGrain,
+            this IClaptrapBoxActor<TStateData> claptrapBoxActor,
             Func<ISagaClaptrapIdentity> sagaClaptrapIdFactory) where TStateData : IStateData
         {
-            var commonService = claptrapBoxGrain.ClaptrapGrainCommonService;
+            var commonService = claptrapBoxActor.ClaptrapActorCommonService;
             var scope = commonService.LifetimeScope.BeginLifetimeScope();
             var re = scope.CreateSagaClaptrap(sagaClaptrapIdFactory);
             return re;

@@ -11,27 +11,27 @@ namespace Newbe.Claptrap.Dapr
 
         protected ClaptrapBoxActor(
             ActorHost actorService,
-            IClaptrapActorCommonService claptrapGrainCommonService) : base(actorService)
+            IClaptrapActorCommonService claptrapActorCommonService) : base(actorService)
         {
             _actorService = actorService;
-            ClaptrapGrainCommonService = claptrapGrainCommonService;
+            ClaptrapActorCommonService = claptrapActorCommonService;
         }
 
-        public IClaptrapActorCommonService ClaptrapGrainCommonService { get; }
+        public IClaptrapActorCommonService ClaptrapActorCommonService { get; }
 
         public IClaptrap Claptrap =>
-            ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap!;
+            ClaptrapActorCommonService.ClaptrapAccessor.Claptrap!;
 
         public TStateData StateData =>
-            (TStateData) ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap!.State.Data;
+            (TStateData) ClaptrapActorCommonService.ClaptrapAccessor.Claptrap!.State.Data;
 
         protected override async Task OnActivateAsync()
         {
-            var actorTypeCode = ClaptrapGrainCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
-            var grainActorIdentity = new ClaptrapIdentity(_actorService.Id.GetId(), actorTypeCode);
-            var claptrap = ClaptrapGrainCommonService.ClaptrapFactory.Create(grainActorIdentity);
+            var actorTypeCode = ClaptrapActorCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
+            var actorIdentity = new ClaptrapIdentity(_actorService.Id.GetId(), actorTypeCode);
+            var claptrap = ClaptrapActorCommonService.ClaptrapFactory.Create(actorIdentity);
             await claptrap.ActivateAsync();
-            ClaptrapGrainCommonService.ClaptrapAccessor.Claptrap = claptrap;
+            ClaptrapActorCommonService.ClaptrapAccessor.Claptrap = claptrap;
         }
 
         protected override Task OnDeactivateAsync()
