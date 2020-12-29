@@ -9,8 +9,8 @@ namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
     [ClaptrapEvent(typeof(AccountBalanceChangeEventData), C.EventCodes.AccountBalanceChanged)]
     public interface IAccount : IClaptrapActor
     {
-        Task<decimal> TransferIn(decimal amount);
+        Task<decimal> TransferInAsync(decimal amount);
 
-        Task<decimal> GetBalance();
+        Task<decimal> GetBalanceAsync();
     }
 }

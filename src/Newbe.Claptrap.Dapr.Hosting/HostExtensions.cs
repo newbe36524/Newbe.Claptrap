@@ -17,9 +17,10 @@ namespace Microsoft.Extensions.Hosting
                     var store = (IClaptrapDesignStore) context.Properties[ClaptrapHostConst.HostBuilderContextClaptrapDesignStoreKey];
                     foreach (var claptrapDesign in store)
                     {
+                        var actorTypeInformation = ActorTypeInformation.Get(claptrapDesign.ClaptrapBoxImplementationType);
                         options.Actors.Add(
                             new ActorRegistration(
-                                ActorTypeInformation.Get(claptrapDesign.ClaptrapBoxImplementationType)));
+                                actorTypeInformation));
                     }
                 });
             });

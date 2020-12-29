@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
 using Newbe.Claptrap.Dapr;
-using Newbe.Claptrap.Dapr.Core;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
@@ -10,7 +9,8 @@ namespace Newbe.Claptrap.Demo
 {
     [ClaptrapMinionOptions(ActivateMinionsAtStart = true)]
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
-    public class AccountActor : ClaptrapBoxActor<AccountStateData>, IAccount, IClaptrapActor
+    [Actor(TypeName = ClaptrapCode)]
+    public class AccountActor : ClaptrapBoxActor<AccountStateData>, IAccount
     {
         public AccountActor(ActorHost actorService,
             IClaptrapActorCommonService claptrapActorCommonService) : base(actorService,
@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.Demo
         {
         }
 
-        public async Task<decimal> TransferIn(decimal amount)
+        public async Task<decimal> TransferInAsync(decimal amount)
         {
             var accountBalanceChangeEventData = new AccountBalanceChangeEventData
             {
@@ -26,11 +26,11 @@ namespace Newbe.Claptrap.Demo
             };
             var dataEvent = this.CreateEvent(accountBalanceChangeEventData);
             await Claptrap.HandleEventAsync(dataEvent);
-            var re = await GetBalance();
+            var re = await GetBalanceAsync();
             return re;
         }
 
-        public Task<decimal> GetBalance()
+        public Task<decimal> GetBalanceAsync()
         {
             var re = StateData.Balance;
             return Task.FromResult(re);

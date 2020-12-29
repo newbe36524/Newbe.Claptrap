@@ -2,7 +2,7 @@ using System;
 
 namespace Newbe.Claptrap
 {
-    public class ClaptrapIdentity : IClaptrapIdentity
+    public record ClaptrapIdentity : IClaptrapIdentity
     {
         public ClaptrapIdentity(string id, string typeCode)
         {
@@ -13,39 +13,24 @@ namespace Newbe.Claptrap
         public string Id { get; }
         public string TypeCode { get; }
 
-        public bool Equals(IClaptrapIdentity other)
+        public virtual bool Equals(IClaptrapIdentity? other)
         {
-            return other != null && Id == other.Id && TypeCode == other.TypeCode;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            if (ReferenceEquals(null, other))
             {
                 return false;
             }
 
-            if (ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((ClaptrapIdentity) obj);
+            return Id == other.Id && TypeCode == other.TypeCode;
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, TypeCode);
-        }
-
-        public override string ToString()
-        {
-            return $"[{TypeCode} : {Id}]";
         }
     }
 }

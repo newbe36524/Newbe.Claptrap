@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapr.Actors.Client;
 using Newbe.Claptrap.Dapr.Core;
@@ -18,7 +19,7 @@ namespace Newbe.Claptrap.Dapr
 
         public Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
         {
-            return _actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedAsync), events);
+            return _actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedAsync), events.Cast<DataEvent>());
         }
     }
 }

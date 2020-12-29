@@ -51,7 +51,6 @@ namespace Newbe.Claptrap.Demo.Server
                         .AddJsonFile("configs/appsettings.json")
                         .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.json".ToLower())
                         .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
-
                     configurationBuilder.AddEnvironmentVariables();
                 })
                 .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly}); })

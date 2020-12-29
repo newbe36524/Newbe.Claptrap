@@ -10,6 +10,7 @@ using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.Account
 namespace Newbe.Claptrap.Demo
 {
     [ClaptrapEventHandler(typeof(TransferAccountBalanceEventHandler), EventCodes.AccountBalanceChanged)]
+    [Actor(TypeName = MinionCodes.BalanceMinion)]
     public class AccountBalanceBalanceMinion : ClaptrapBoxActor<AccountStateData>,
         IAccountBalanceMinion
     {

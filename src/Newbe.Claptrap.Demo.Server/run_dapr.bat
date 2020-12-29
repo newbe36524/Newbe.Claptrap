@@ -1,0 +1,1 @@
+dapr run --app-id newbe_claptrap_demo_server --app-port 5000 --dapr-http-port 3005 dotnet run

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.StorageSetup;
+using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
 
 namespace Newbe.Claptrap.Demo.Server.Services
 {
@@ -46,8 +47,8 @@ namespace Newbe.Claptrap.Demo.Server.Services
         {
             var uid = Interlocked.Increment(ref _userIndex) % _actorCount;
             var actorId = new ActorId(uid.ToString());
-            var account = ActorProxy.Create<IAccount>(actorId,"AccountActor");
-            var re = await account.TransferIn(1M);
+            var account = ActorProxy.Create<IAccount>(actorId, ClaptrapCode);
+            var re = await account.TransferInAsync(1M);
             return (int) re;
         }
 
