@@ -7,6 +7,7 @@ using FluentAssertions;
 using Moq;
 using Newbe.Claptrap.Core;
 using Newbe.Claptrap.Core.Impl;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests

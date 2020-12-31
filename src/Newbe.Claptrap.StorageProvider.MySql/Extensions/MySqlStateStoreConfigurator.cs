@@ -16,32 +16,35 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
 
 
         public MySqlStateStoreConfigurator SharedTable(Action<MySqlStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateTableName = Defaults.StateTableName,
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateTableName = Defaults.StateTableName
+            }, action);
+        }
 
         public MySqlStateStoreConfigurator OneIdOneTable(Action<MySqlStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateTableName = $"[TypeCode]_[Id]_{Defaults.StateTableName}",
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateTableName = $"[TypeCode]_[Id]_{Defaults.StateTableName}"
+            }, action);
+        }
 
 
         public MySqlStateStoreConfigurator OneTypeOneTable(Action<MySqlStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateTableName = $"[TypeCode]_{Defaults.StateTableName}",
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateTableName = $"[TypeCode]_{Defaults.StateTableName}"
+            }, action);
+        }
 
         public MySqlStateStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
@@ -54,15 +57,17 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
             IRelationalStateStoreLocator relationalEventStoreLocator,
             Action<MySqlStateStoreOptions>? action = null
         )
-            => ConfigureOptions(providerOptions =>
+        {
+            return ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MySqlStateStoreOptions
                 {
-                    RelationalStateStoreLocator = relationalEventStoreLocator,
+                    RelationalStateStoreLocator = relationalEventStoreLocator
                 };
                 action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;
                 providerOptions.StateSaverOptions = stateOptions;
             });
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                 ClaptrapId = item.claptrap_id,
                 StateData = item.state_data,
                 UpdatedTime = item.updated_time,
-                ClaptrapTypeCode = item.claptrap_type_code,
+                ClaptrapTypeCode = item.claptrap_type_code
             };
             return re;
         }

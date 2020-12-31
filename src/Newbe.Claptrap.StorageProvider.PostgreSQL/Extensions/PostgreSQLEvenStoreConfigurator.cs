@@ -22,31 +22,34 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
         }
 
         public PostgreSQLEvenStoreConfigurator SharedTable(Action<PostgreSQLEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventTableName = Defaults.EventTableName
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventTableName = Defaults.EventTableName
+            }, action);
+        }
 
         public PostgreSQLEvenStoreConfigurator OneIdOneTable(Action<PostgreSQLEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventTableName = $"[TypeCode]_[Id]_{Defaults.EventTableName}",
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventTableName = $"[TypeCode]_[Id]_{Defaults.EventTableName}"
+            }, action);
+        }
 
         public PostgreSQLEvenStoreConfigurator OneTypeOneTable(Action<PostgreSQLEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    EventTableName = $"[TypeCode]_{Defaults.EventTableName}",
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                EventTableName = $"[TypeCode]_{Defaults.EventTableName}"
+            }, action);
+        }
 
         public PostgreSQLEvenStoreConfigurator UseLocator(
             IRelationalEventStoreLocator relationalEventStoreLocator,
@@ -56,7 +59,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Extensions
             {
                 var eventOptions = new PostgreSQLEventStoreOptions
                 {
-                    RelationalEventStoreLocator = relationalEventStoreLocator,
+                    RelationalEventStoreLocator = relationalEventStoreLocator
                 };
                 action?.Invoke(eventOptions);
                 providerOptions.EventLoaderOptions = eventOptions;

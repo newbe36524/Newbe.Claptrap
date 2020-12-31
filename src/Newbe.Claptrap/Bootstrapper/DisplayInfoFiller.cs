@@ -34,22 +34,22 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 SetValueIfFound(eventHandlerDesign.ExtendInfos, EventDisplayName, GetDisplayName(new[]
                 {
-                    eventHandlerDesign.EventDataType,
+                    eventHandlerDesign.EventDataType
                 }));
 
                 SetValueIfFound(eventHandlerDesign.ExtendInfos, EventDescription, GetDescription(new[]
                 {
-                    eventHandlerDesign.EventDataType,
+                    eventHandlerDesign.EventDataType
                 }));
 
                 SetValueIfFound(eventHandlerDesign.ExtendInfos, EventHandlerDisplayName, GetDisplayName(new[]
                 {
-                    eventHandlerDesign.EventHandlerType,
+                    eventHandlerDesign.EventHandlerType
                 }));
 
                 SetValueIfFound(eventHandlerDesign.ExtendInfos, EventHandlerDescription, GetDescription(new[]
                 {
-                    eventHandlerDesign.EventHandlerType,
+                    eventHandlerDesign.EventHandlerType
                 }));
             }
 

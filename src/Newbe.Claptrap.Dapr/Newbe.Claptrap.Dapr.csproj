@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Dapr.Core\Newbe.Claptrap.Dapr.Core.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.1.0" />
+      <PackageReference Include="Autofac.Extras.AggregateService" Version="6.0.0" />
+      <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc02" />
+    </ItemGroup>
+
+</Project>

@@ -6,6 +6,6 @@ namespace Newbe.Claptrap
         SQLite = 1,
         PostgreSQL = 2,
         MySql = 3,
-        MongoDB = 4,
+        MongoDB = 4
     }
 }

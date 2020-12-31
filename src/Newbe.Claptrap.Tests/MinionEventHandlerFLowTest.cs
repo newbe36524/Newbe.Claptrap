@@ -231,7 +231,7 @@ namespace Newbe.Claptrap.Tests
                     .Range((int) left, (int) right - (int) left)
                     .Select(i => new TestEvent
                     {
-                        Version = i,
+                        Version = i
                     }).Cast<IEvent>()))
                 .Callback<long, long>((left, right) => Console.WriteLine($"left {left} right {right}"));
 

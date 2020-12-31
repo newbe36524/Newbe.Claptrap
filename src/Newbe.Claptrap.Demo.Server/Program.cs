@@ -1,13 +1,17 @@
 ﻿using System;
+using System.IO;
+using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newbe.Claptrap.Bootstrapper;
+using Newbe.Claptrap.Demo.Server.Services;
 using NLog.Web;
-using Orleans;
 
 namespace Newbe.Claptrap.Demo.Server
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
@@ -30,17 +34,39 @@ namespace Newbe.Claptrap.Demo.Server
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .UseClaptrap(typeof(AccountGrain).Assembly)
-                .UseOrleansClaptrap()
-                .UseOrleans(builder => { builder.UseDashboard(options => options.Port = 9000); })
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(configurationBuilder =>
+                {
+                    var configBuilder = new ConfigurationBuilder();
+                    var config = configBuilder.AddJsonFile(Path.Combine("configs", "appsettings.json"))
+                        .AddEnvironmentVariables()
+                        .Build();
+                    var testConsoleOptions = new TestConsoleOptions();
+                    config.Bind(nameof(TestConsoleOptions), testConsoleOptions);
+                    var databaseType = testConsoleOptions.DatabaseType;
+                    var strategy = RelationLocatorStrategy.SharedTable;
+                    configurationBuilder
+                        .AddJsonFile("configs/appsettings.json")
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.json".ToLower())
+                        .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
+                    configurationBuilder.AddEnvironmentVariables();
+                })
+                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly}); })
+                .UseClaptrapHostCommon()
+                .UseClaptrapDaprHost()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>()
+                        .UseActors(options => { });
+                })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Trace);
                 })
                 .UseNLog();
+        }
     }
 }

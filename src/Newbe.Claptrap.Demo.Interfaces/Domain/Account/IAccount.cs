@@ -1,17 +1,16 @@
 using System.Threading.Tasks;
+using Newbe.Claptrap.Dapr.Core;
 using Newbe.Claptrap.Demo.Models;
-using Orleans;
 using C = Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
 
 namespace Newbe.Claptrap.Demo.Interfaces.Domain.Account
 {
     [ClaptrapState(typeof(AccountStateData), C.ClaptrapCode)]
     [ClaptrapEvent(typeof(AccountBalanceChangeEventData), C.EventCodes.AccountBalanceChanged)]
-    public interface IAccount : IGrainWithStringKey
+    public interface IAccount : IClaptrapActor
     {
-        Task TransferIn(decimal amount, string uid);
+        Task<decimal> TransferInAsync(decimal amount);
 
-        Task<decimal> GetBalance();
-        
+        Task<decimal> GetBalanceAsync();
     }
 }

@@ -72,7 +72,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.EventStore
                 return collection.Indexes.CreateOneAsync(new CreateIndexModel<MongoEventEntity>(
                     indexKeysDefinition, new CreateIndexOptions
                     {
-                        Unique = true,
+                        Unique = true
                     }));
             }
         }

@@ -26,8 +26,9 @@ namespace Newbe.Claptrap.Tests
             using var mocker = AutoMockHelper.Create();
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(serviceCollection);
-            var builder = new AutofacClaptrapBootstrapperBuilder(loggerFactory, containerBuilder);
-            var claptrapBootstrapper = builder.Build();
+            var builder = new AutofacClaptrapBootstrapperBuilder(loggerFactory);
+            var claptrapBootstrapper =(AutofacClaptrapBootstrapper) builder.Build();
+            claptrapBootstrapper.Builder = containerBuilder;
             claptrapBootstrapper.Should().NotBeNull();
         }
     }

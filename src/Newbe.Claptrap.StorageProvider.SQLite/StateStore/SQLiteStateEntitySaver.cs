@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
         private readonly string _stateTableName;
 
         public SQLiteStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteStateStoreOptions options,
@@ -112,7 +112,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             var sb = new StringBuilder(upsertManySqlHeader);
             sb.Append(string.Join(",", valuesSql));
 
-            sb.Append(" ON CONFLICT (claptrap_type_code,claptrap_id) DO UPDATE SET version = excluded.version, state_data = excluded.state_data, updated_time = excluded.updated_time WHERE excluded.version > version");
+            sb.Append(
+                " ON CONFLICT (claptrap_type_code,claptrap_id) DO UPDATE SET version = excluded.version, state_data = excluded.state_data, updated_time = excluded.updated_time WHERE excluded.version > version");
             return sb.ToString();
         }
 
@@ -125,7 +126,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)

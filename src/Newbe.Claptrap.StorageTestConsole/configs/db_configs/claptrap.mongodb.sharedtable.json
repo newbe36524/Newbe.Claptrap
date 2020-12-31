@@ -1,0 +1,14 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MongoDB",
+      "InsertManyWindowCount": 1500
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MongoDB",
+      "InsertManyWindowCount": 2000
+    }
+  }
+}

@@ -6,8 +6,6 @@ namespace Newbe.Claptrap.Box
     {
         private readonly IClaptrapAccessor _claptrapAccessor;
 
-        public delegate NormalClaptrapBox Factory(IClaptrapIdentity identity);
-
         private readonly Lazy<IClaptrap> _createFromFactory;
 
         protected NormalClaptrapBox(

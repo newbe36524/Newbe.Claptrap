@@ -28,7 +28,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
             IConnection connection,
             IEventStringSerializer eventStringSerializer,
             IMessageSerializer messageSerializer,
-            BatchOperator<IEvent>.Factory batchOperatorFactory,
+            ChannelBatchOperator<IEvent>.Factory batchOperatorFactory,
             IBatchOperatorContainer batchOperatorContainer,
             ILogger<MqSender> logger,
             IOptions<ClaptrapServerOptions> options)
@@ -126,7 +126,7 @@ namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 
         public Task SendTopicAsync(IEvent @event)
         {
-            return _batchOperator.CreateTask(@event);
+            return _batchOperator.CreateTask(@event).AsTask();
         }
     }
 }

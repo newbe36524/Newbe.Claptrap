@@ -7,17 +7,21 @@ namespace Newbe.Claptrap.Bootstrapper
     {
         public static IClaptrapBootstrapperBuilder UseDeepClonerStateHolder(
             this IClaptrapBootstrapperBuilder builder)
-            => builder.ConfigureClaptrapDesign(
+        {
+            return builder.ConfigureClaptrapDesign(
                 x => true,
                 x =>
                     x.StateHolderFactoryType = typeof(DesignBaseEventHandlerFactory));
+        }
 
         public static IClaptrapBootstrapperBuilder UseDeepClonerStateHolder(
             this IClaptrapBootstrapperBuilder builder,
             Func<IClaptrapDesign, bool> predicate)
-            => builder.ConfigureClaptrapDesign(
+        {
+            return builder.ConfigureClaptrapDesign(
                 predicate,
                 x =>
                     x.StateHolderFactoryType = typeof(DesignBaseEventHandlerFactory));
+        }
     }
 }

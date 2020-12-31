@@ -65,7 +65,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Module
 
                 if (options.EventSaverOptions is IMySqlEventSaverOptions)
                 {
-                    builder.RegisterType<MySqlEventEntitySaver>()
+                    builder.RegisterType<InsertValuesMySqlEventEntitySaver>()
                         .AsImplementedInterfaces()
                         .InstancePerLifetimeScope();
                     RegisterIfAutoMigrationEnabled(

@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Newbe.Claptrap.DevTools
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             try
             {

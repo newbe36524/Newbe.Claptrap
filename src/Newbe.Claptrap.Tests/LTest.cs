@@ -55,7 +55,8 @@ namespace Newbe.Claptrap.Tests
             var container = builder.Build();
             var l = container.Resolve<IL>();
             var result = l[LK.failed_to_build_claptrap_bootstrapper];
-            result.Should().Be("无法构建 claptrap 启动器","it does not matter that registering LocalizationModule before AddLocalization or not");
+            result.Should().Be("无法构建 claptrap 启动器",
+                "it does not matter that registering LocalizationModule before AddLocalization or not");
         }
     }
 }

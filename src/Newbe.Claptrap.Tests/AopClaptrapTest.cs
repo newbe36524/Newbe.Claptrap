@@ -113,7 +113,7 @@ namespace Newbe.Claptrap.Tests
             var claptrap = mocker.Create<AopClaptrap>();
             Assert.ThrowsAsync<Exception>(() => claptrap.HandleEventAsync(testEvent));
         }
-        
+
         [Test]
         public async Task HandleEventAsyncWithInterceptorException()
         {

@@ -1,26 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "91_Demo", "91_Demo", "{B16E99D1-98B2-4FBF-A5FA-DAB45C1D8CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Benchmarks", "Newbe.Claptrap.Benchmarks\Newbe.Claptrap.Benchmarks.csproj", "{7067F9F7-0633-43ED-BD69-427F9211C433}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Benchmarks", "Newbe.Claptrap.Benchmarks\Newbe.Claptrap.Benchmarks.csproj", "{7067F9F7-0633-43ED-BD69-427F9211C433}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Tests", "Newbe.Claptrap.Tests\Newbe.Claptrap.Tests.csproj", "{C4B16DF2-6321-47EA-A61B-8DCF463B5755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Tests", "Newbe.Claptrap.Tests\Newbe.Claptrap.Tests.csproj", "{C4B16DF2-6321-47EA-A61B-8DCF463B5755}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "80_Tools", "80_Tools", "{B22E7AD3-A4C5-4304-8AF7-6D42625E9C0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20_Tests", "20_Tests", "{9BD92EE4-32D2-48E6-B999-1DA5C814B696}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Demo", "Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj", "{5C53AAA1-6BD5-4196-A652-E6031E78067A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Demo", "Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj", "{5C53AAA1-6BD5-4196-A652-E6031E78067A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Demo.Client", "Newbe.Claptrap.Demo.Client\Newbe.Claptrap.Demo.Client.csproj", "{11BF34E3-0D8D-4F6C-89FF-2FE306987323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Demo.Client", "Newbe.Claptrap.Demo.Client\Newbe.Claptrap.Demo.Client.csproj", "{11BF34E3-0D8D-4F6C-89FF-2FE306987323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Demo.Interfaces", "Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj", "{0CA4A83E-C693-4EFC-93F0-8CA1325174D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Demo.Interfaces", "Newbe.Claptrap.Demo.Interfaces\Newbe.Claptrap.Demo.Interfaces.csproj", "{0CA4A83E-C693-4EFC-93F0-8CA1325174D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Demo.Models", "Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj", "{E569B9B6-8C25-46DE-8079-6B9993C73807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Demo.Models", "Newbe.Claptrap.Demo.Models\Newbe.Claptrap.Demo.Models.csproj", "{E569B9B6-8C25-46DE-8079-6B9993C73807}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Demo.Server", "Newbe.Claptrap.Demo.Server\Newbe.Claptrap.Demo.Server.csproj", "{3E66E812-7883-4400-BE8E-A6BE259FD316}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Demo.Server", "Newbe.Claptrap.Demo.Server\Newbe.Claptrap.Demo.Server.csproj", "{3E66E812-7883-4400-BE8E-A6BE259FD316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.DevTools", "Newbe.Claptrap.DevTools\Newbe.Claptrap.DevTools.csproj", "{8A266924-4ABA-4650-942E-FEF3AB8FF249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.DevTools", "Newbe.Claptrap.DevTools\Newbe.Claptrap.DevTools.csproj", "{8A266924-4ABA-4650-942E-FEF3AB8FF249}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06_EventNotifier", "06_EventNotifier", "{1D69419C-3123-43D1-9E1F-C7892E260B06}"
 EndProject
@@ -32,51 +35,88 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_StorageProvider", "01_St
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03_Localization", "03_Localization", "{CE06DAE1-853B-492F-8EB1-1896911A41F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Abstractions", "Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj", "{D44D5552-ACFE-403A-9B2A-58203CAE311F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Abstractions", "Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj", "{D44D5552-ACFE-403A-9B2A-58203CAE311F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap", "Newbe.Claptrap\Newbe.Claptrap.csproj", "{06B916AC-13C6-41D0-AFAC-3ECC3F668939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap", "Newbe.Claptrap\Newbe.Claptrap.csproj", "{06B916AC-13C6-41D0-AFAC-3ECC3F668939}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Attributes", "Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj", "{6FB7E932-0EC6-4290-8A52-8E83BB9C27DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Attributes", "Newbe.Claptrap.Attributes\Newbe.Claptrap.Attributes.csproj", "{6FB7E932-0EC6-4290-8A52-8E83BB9C27DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Localization", "Newbe.Claptrap.Localization\Newbe.Claptrap.Localization.csproj", "{B3D7ADFF-8B6A-41C6-A339-39F1C109E743}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Localization", "Newbe.Claptrap.Localization\Newbe.Claptrap.Localization.csproj", "{B3D7ADFF-8B6A-41C6-A339-39F1C109E743}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans", "Newbe.Claptrap.Orleans\Newbe.Claptrap.Orleans.csproj", "{DBE780E3-BE8D-4159-A1A3-356BA0E0A653}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.SQLite", "Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj", "{122FCC59-A324-488F-9F9D-B48C3531B521}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.SQLite", "Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj", "{122FCC59-A324-488F-9F9D-B48C3531B521}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_StateHolder", "02_StateHolder", "{612386B9-66C4-4721-BD6B-2E3459ADF123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StateHolder.DeepCopy", "Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj", "{B86FF4F4-D9C0-4FD2-9B18-BA8ED00E169D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StateHolder.DeepCopy", "Newbe.Claptrap.StateHolder.DeepCopy\Newbe.Claptrap.StateHolder.DeepCopy.csproj", "{B86FF4F4-D9C0-4FD2-9B18-BA8ED00E169D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_DataSerializer", "04_DataSerializer", "{D3A78049-C52A-46EF-A788-3466C4DBEE22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.DataSerializer.Json", "Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj", "{12067EB6-46EE-43D6-BD59-39D566AFD70F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.DataSerializer.JsonNet", "Newbe.Claptrap.DataSerializer.JsonNet\Newbe.Claptrap.DataSerializer.JsonNet.csproj", "{12067EB6-46EE-43D6-BD59-39D566AFD70F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans.Core", "Newbe.Claptrap.Orleans.Core\Newbe.Claptrap.Orleans.Core.csproj", "{E2299ABA-6326-40EB-BCD2-3238D9F9363A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.MySql", "Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj", "{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.MySql", "Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj", "{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.Relational", "Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj", "{74345BB4-E437-46D4-A93A-09CCA2980219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.Relational", "Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj", "{74345BB4-E437-46D4-A93A-09CCA2980219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.PostgreSQL", "Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj", "{0E1FEC29-B3D2-43E8-B6B9-6A904DC5BA8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.PostgreSQL", "Newbe.Claptrap.StorageProvider.PostgreSQL\Newbe.Claptrap.StorageProvider.PostgreSQL.csproj", "{0E1FEC29-B3D2-43E8-B6B9-6A904DC5BA8B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.MongoDB", "Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj", "{506E3D27-EF16-48A1-A61F-00347C71546A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.MongoDB", "Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj", "{506E3D27-EF16-48A1-A61F-00347C71546A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07_Monitor", "07_Monitor", "{09CAE040-79A2-4D36-B1C8-A88FE1FB116E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.AppMetrics", "Newbe.Claptrap.AppMetrics\Newbe.Claptrap.AppMetrics.csproj", "{47305051-2F64-4AF5-A96B-744F407445FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.AppMetrics", "Newbe.Claptrap.AppMetrics\Newbe.Claptrap.AppMetrics.csproj", "{47305051-2F64-4AF5-A96B-744F407445FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "92_Burn", "92_Burn", "{379EE8F5-3980-48DB-ACB5-E599EF811C86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.CapacityBurning", "Newbe.Claptrap.CapacityBurning\Newbe.Claptrap.CapacityBurning.csproj", "{17853A98-272C-4A5C-9138-DA0EA3D95F13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.Configuration", "Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj", "{DB054157-41C4-46E9-9A7B-CA205AA80DB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Orleans.Hosting", "Newbe.Claptrap.Orleans.Hosting\Newbe.Claptrap.Orleans.Hosting.csproj", "{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.EventCenter", "Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj", "{327348E5-9415-49EE-A93F-A4454E56D1C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Configuration", "Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj", "{DB054157-41C4-46E9-9A7B-CA205AA80DB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.EventCenter.RabbitMQ", "Newbe.Claptrap.EventCenter.RabbitMQ\Newbe.Claptrap.EventCenter.RabbitMQ.csproj", "{58D2F147-2940-426A-8C99-A18530EB8CCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.EventCenter", "Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj", "{327348E5-9415-49EE-A93F-A4454E56D1C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.SQLite.Tests", "Newbe.Claptrap.StorageProvider.SQLite.Tests\Newbe.Claptrap.StorageProvider.SQLite.Tests.csproj", "{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.EventCenter.RabbitMQ", "Newbe.Claptrap.EventCenter.RabbitMQ\Newbe.Claptrap.EventCenter.RabbitMQ.csproj", "{58D2F147-2940-426A-8C99-A18530EB8CCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.TestSuit", "Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj", "{37120A77-4927-449E-98C0-DF65D5DB2470}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.MySql.Tests", "Newbe.Claptrap.StorageProvider.MySql.Tests\Newbe.Claptrap.StorageProvider.MySql.Tests.csproj", "{75EEA62B-6C24-4E65-8311-AB9C14CA4179}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.MongoDB.Tests", "Newbe.Claptrap.StorageProvider.MongoDB.Tests\Newbe.Claptrap.StorageProvider.MongoDB.Tests.csproj", "{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.PostgreSQL.Tests", "Newbe.Claptrap.StorageProvider.PostgreSQL.Tests\Newbe.Claptrap.StorageProvider.PostgreSQL.Tests.csproj", "{92ECB897-92B6-4F23-A387-6B6051A696A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StateHolder.DeepCopy.Tests", "Newbe.Claptrap.StateHolder.DeepCopy.Tests\Newbe.Claptrap.StateHolder.DeepCopy.Tests.csproj", "{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.EventCenter.RabbitMQ.Tests", "Newbe.Claptrap.EventCenter.RabbitMQ.Tests\Newbe.Claptrap.EventCenter.RabbitMQ.Tests.csproj", "{DD7AE693-AC78-47C9-80B8-CE1940B10E2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8BC14299-9F83-4F7C-8E85-3B0A4962BB39}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageTestConsole", "Newbe.Claptrap.StorageTestConsole\Newbe.Claptrap.StorageTestConsole.csproj", "{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageSetup", "Newbe.Claptrap.StorageSetup\Newbe.Claptrap.StorageSetup.csproj", "{22997D45-2366-4768-92C7-F7883A046E4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageProvider.Faster", "Newbe.Claptrap.StorageProvider.Faster\Newbe.Claptrap.StorageProvider.Faster.csproj", "{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.StorageTestWebApi", "Newbe.Claptrap.StorageTestWebApi\Newbe.Claptrap.StorageTestWebApi.csproj", "{196E2219-1192-4AC7-87F5-B8F394344DA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr", "Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj", "{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Core", "Newbe.Claptrap.Dapr.Core\Newbe.Claptrap.Dapr.Core.csproj", "{C58CA7D3-D258-4349-A458-E9704086EB30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Hosting", "Newbe.Claptrap.Dapr.Hosting\Newbe.Claptrap.Dapr.Hosting.csproj", "{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Hosting", "Newbe.Claptrap.Hosting\Newbe.Claptrap.Hosting.csproj", "{AD273E29-5A5B-4084-8C0E-6C8B72739FAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5A10B604-8215-4F72-A381-992C2AC4A6AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{E8C0A6E4-6328-4B71-B6E6-E8F34829BE65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Hosting.Tests", "Newbe.Claptrap.Dapr.Hosting.Tests\Newbe.Claptrap.Dapr.Hosting.Tests.csproj", "{7E357374-4E57-475C-83D1-16874D8A19D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Tests", "Newbe.Claptrap.Dapr.Tests\Newbe.Claptrap.Dapr.Tests.csproj", "{21BB3E18-FF76-491C-BF30-6F25A81B562B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.DataSerializer.TextJson", "Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj", "{80B5CD4C-BABD-4620-AC05-D35DF3291306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,10 +172,6 @@ Global
 		{B3D7ADFF-8B6A-41C6-A339-39F1C109E743}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3D7ADFF-8B6A-41C6-A339-39F1C109E743}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3D7ADFF-8B6A-41C6-A339-39F1C109E743}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DBE780E3-BE8D-4159-A1A3-356BA0E0A653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DBE780E3-BE8D-4159-A1A3-356BA0E0A653}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DBE780E3-BE8D-4159-A1A3-356BA0E0A653}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DBE780E3-BE8D-4159-A1A3-356BA0E0A653}.Release|Any CPU.Build.0 = Release|Any CPU
 		{122FCC59-A324-488F-9F9D-B48C3531B521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{122FCC59-A324-488F-9F9D-B48C3531B521}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122FCC59-A324-488F-9F9D-B48C3531B521}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -148,10 +184,6 @@ Global
 		{12067EB6-46EE-43D6-BD59-39D566AFD70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12067EB6-46EE-43D6-BD59-39D566AFD70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12067EB6-46EE-43D6-BD59-39D566AFD70F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2299ABA-6326-40EB-BCD2-3238D9F9363A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2299ABA-6326-40EB-BCD2-3238D9F9363A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2299ABA-6326-40EB-BCD2-3238D9F9363A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2299ABA-6326-40EB-BCD2-3238D9F9363A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -172,14 +204,6 @@ Global
 		{47305051-2F64-4AF5-A96B-744F407445FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47305051-2F64-4AF5-A96B-744F407445FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47305051-2F64-4AF5-A96B-744F407445FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17853A98-272C-4A5C-9138-DA0EA3D95F13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB054157-41C4-46E9-9A7B-CA205AA80DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB054157-41C4-46E9-9A7B-CA205AA80DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB054157-41C4-46E9-9A7B-CA205AA80DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -192,6 +216,81 @@ Global
 		{58D2F147-2940-426A-8C99-A18530EB8CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58D2F147-2940-426A-8C99-A18530EB8CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58D2F147-2940-426A-8C99-A18530EB8CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37120A77-4927-449E-98C0-DF65D5DB2470}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37120A77-4927-449E-98C0-DF65D5DB2470}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37120A77-4927-449E-98C0-DF65D5DB2470}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37120A77-4927-449E-98C0-DF65D5DB2470}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75EEA62B-6C24-4E65-8311-AB9C14CA4179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75EEA62B-6C24-4E65-8311-AB9C14CA4179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75EEA62B-6C24-4E65-8311-AB9C14CA4179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75EEA62B-6C24-4E65-8311-AB9C14CA4179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92ECB897-92B6-4F23-A387-6B6051A696A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92ECB897-92B6-4F23-A387-6B6051A696A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92ECB897-92B6-4F23-A387-6B6051A696A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92ECB897-92B6-4F23-A387-6B6051A696A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7AE693-AC78-47C9-80B8-CE1940B10E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7AE693-AC78-47C9-80B8-CE1940B10E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7AE693-AC78-47C9-80B8-CE1940B10E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7AE693-AC78-47C9-80B8-CE1940B10E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22997D45-2366-4768-92C7-F7883A046E4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22997D45-2366-4768-92C7-F7883A046E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22997D45-2366-4768-92C7-F7883A046E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22997D45-2366-4768-92C7-F7883A046E4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196E2219-1192-4AC7-87F5-B8F394344DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C58CA7D3-D258-4349-A458-E9704086EB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C58CA7D3-D258-4349-A458-E9704086EB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C58CA7D3-D258-4349-A458-E9704086EB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C58CA7D3-D258-4349-A458-E9704086EB30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD273E29-5A5B-4084-8C0E-6C8B72739FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD273E29-5A5B-4084-8C0E-6C8B72739FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD273E29-5A5B-4084-8C0E-6C8B72739FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD273E29-5A5B-4084-8C0E-6C8B72739FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E357374-4E57-475C-83D1-16874D8A19D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E357374-4E57-475C-83D1-16874D8A19D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E357374-4E57-475C-83D1-16874D8A19D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E357374-4E57-475C-83D1-16874D8A19D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7067F9F7-0633-43ED-BD69-427F9211C433} = {B22E7AD3-A4C5-4304-8AF7-6D42625E9C0D}
@@ -206,20 +305,39 @@ Global
 		{06B916AC-13C6-41D0-AFAC-3ECC3F668939} = {B026ED50-528D-4180-9D54-1113588EEE9C}
 		{6FB7E932-0EC6-4290-8A52-8E83BB9C27DE} = {B026ED50-528D-4180-9D54-1113588EEE9C}
 		{B3D7ADFF-8B6A-41C6-A339-39F1C109E743} = {CE06DAE1-853B-492F-8EB1-1896911A41F8}
-		{DBE780E3-BE8D-4159-A1A3-356BA0E0A653} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
 		{122FCC59-A324-488F-9F9D-B48C3531B521} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{B86FF4F4-D9C0-4FD2-9B18-BA8ED00E169D} = {612386B9-66C4-4721-BD6B-2E3459ADF123}
 		{12067EB6-46EE-43D6-BD59-39D566AFD70F} = {D3A78049-C52A-46EF-A788-3466C4DBEE22}
-		{E2299ABA-6326-40EB-BCD2-3238D9F9363A} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
 		{B86BFE12-76DB-4B9F-A333-1ACA9B554F47} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{74345BB4-E437-46D4-A93A-09CCA2980219} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{0E1FEC29-B3D2-43E8-B6B9-6A904DC5BA8B} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{506E3D27-EF16-48A1-A61F-00347C71546A} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
 		{47305051-2F64-4AF5-A96B-744F407445FB} = {09CAE040-79A2-4D36-B1C8-A88FE1FB116E}
-		{17853A98-272C-4A5C-9138-DA0EA3D95F13} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
-		{DA337C2D-9A38-4B1C-AA9A-DBB27B1282C8} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
-		{DB054157-41C4-46E9-9A7B-CA205AA80DB8} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
 		{327348E5-9415-49EE-A93F-A4454E56D1C4} = {1D69419C-3123-43D1-9E1F-C7892E260B06}
 		{58D2F147-2940-426A-8C99-A18530EB8CCB} = {1D69419C-3123-43D1-9E1F-C7892E260B06}
+		{CB430D8C-0CEF-4DF8-9025-32EC5FBF0078} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{37120A77-4927-449E-98C0-DF65D5DB2470} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{75EEA62B-6C24-4E65-8311-AB9C14CA4179} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{EB3AE117-930B-4A0C-AD7D-1F6B54856D1E} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{92ECB897-92B6-4F23-A387-6B6051A696A5} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{DE7C1BCC-81EC-40C5-BF19-48E189BDEBC3} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{DD7AE693-AC78-47C9-80B8-CE1940B10E2F} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{7E13D61F-1D25-4DF1-B74A-2A67104CDE9F} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
+		{22997D45-2366-4768-92C7-F7883A046E4A} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
+		{3BB4F1B0-E5C4-4E18-955C-6DE457779FBC} = {7D0B4BE1-2973-4555-A87E-5C54634C1B31}
+		{196E2219-1192-4AC7-87F5-B8F394344DA9} = {379EE8F5-3980-48DB-ACB5-E599EF811C86}
+		{5A10B604-8215-4F72-A381-992C2AC4A6AD} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
+		{DB054157-41C4-46E9-9A7B-CA205AA80DB8} = {5A10B604-8215-4F72-A381-992C2AC4A6AD}
+		{AD273E29-5A5B-4084-8C0E-6C8B72739FAB} = {5A10B604-8215-4F72-A381-992C2AC4A6AD}
+		{E8C0A6E4-6328-4B71-B6E6-E8F34829BE65} = {397E9ECF-01CE-4B2A-97EF-07A47AE561C2}
+		{92F9F81F-0BB4-42BA-9661-7BFE5C88F5C6} = {E8C0A6E4-6328-4B71-B6E6-E8F34829BE65}
+		{C58CA7D3-D258-4349-A458-E9704086EB30} = {E8C0A6E4-6328-4B71-B6E6-E8F34829BE65}
+		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926} = {E8C0A6E4-6328-4B71-B6E6-E8F34829BE65}
+		{7E357374-4E57-475C-83D1-16874D8A19D3} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{21BB3E18-FF76-491C-BF30-6F25A81B562B} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306} = {D3A78049-C52A-46EF-A788-3466C4DBEE22}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {594E59AF-14B6-4BA7-A33F-5F202BC03640}
 	EndGlobalSection
 EndGlobal

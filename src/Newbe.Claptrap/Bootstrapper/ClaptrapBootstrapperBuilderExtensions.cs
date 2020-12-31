@@ -76,7 +76,9 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder ScanClaptrapDesigns(
             this IClaptrapBootstrapperBuilder builder,
             IEnumerable<Assembly> assemblies)
-            => builder.ScanClaptrapDesigns(assemblies.SelectMany(x => x.GetTypes()));
+        {
+            return builder.ScanClaptrapDesigns(assemblies.SelectMany(x => x.GetTypes()));
+        }
 
         /// <summary>
         /// Add assemblies for scanning claptrap module
@@ -87,7 +89,9 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder ScanClaptrapModule(
             this IClaptrapBootstrapperBuilder builder,
             IEnumerable<Assembly> assemblies)
-            => builder.ScanClaptrapModule(assemblies.SelectMany(x => x.GetTypes()));
+        {
+            return builder.ScanClaptrapModule(assemblies.SelectMany(x => x.GetTypes()));
+        }
 
         /// <summary>
         /// Add types for scanning claptrap modules

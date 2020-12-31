@@ -1,4 +1,5 @@
 using App.Metrics;
+using App.Metrics.Gauge;
 using App.Metrics.Timer;
 
 namespace Newbe.Claptrap.AppMetrics
@@ -36,7 +37,7 @@ namespace Newbe.Claptrap.AppMetrics
             var values = new[]
             {
                 identity.TypeCode,
-                @event.EventTypeCode,
+                @event.EventTypeCode
             };
             var metricTags = new MetricTags(EventHandlingKeys, values);
             return MetricsRoot.Measure.Timer.Time(EventHandlerTimer, metricTags);
@@ -56,7 +57,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         private static readonly string[] ActivationKeys =
         {
-            "ClaptrapTypeCode",
+            "ClaptrapTypeCode"
         };
 
         public static TimerContext MeasureActivation(
@@ -64,7 +65,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(ActivationKeys, values);
             return MetricsRoot.Measure.Timer.Time(ActivationTimer, metricTags);
@@ -84,7 +85,7 @@ namespace Newbe.Claptrap.AppMetrics
 
         private static readonly string[] DeactivationKeys =
         {
-            "ClaptrapTypeCode",
+            "ClaptrapTypeCode"
         };
 
         public static TimerContext MeasureDeactivation(
@@ -92,7 +93,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(DeactivationKeys, values);
             return MetricsRoot.Measure.Timer.Time(DeactivationTimer, metricTags);
@@ -120,7 +121,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(EventSaverKeys, values);
             return MetricsRoot.Measure.Timer.Time(EventSaverTimer, metricTags);
@@ -148,7 +149,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(EventLoaderKeys, values);
             return MetricsRoot.Measure.Timer.Time(EventLoaderTimer, metricTags);
@@ -176,7 +177,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(StateSaverKeys, values);
             return MetricsRoot.Measure.Timer.Time(StateSaverTimer, metricTags);
@@ -204,7 +205,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(StateLoaderKeys, values);
             return MetricsRoot.Measure.Timer.Time(StateLoaderTimer, metricTags);
@@ -232,7 +233,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(EventLoaderMigrationKeys, values);
             return MetricsRoot.Measure.Timer.Time(EventLoaderMigrationTimer, metricTags);
@@ -260,7 +261,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(EventSaverMigrationKeys, values);
             return MetricsRoot.Measure.Timer.Time(EventSaverMigrationTimer, metricTags);
@@ -288,7 +289,7 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(StateLoaderMigrationKeys, values);
             return MetricsRoot.Measure.Timer.Time(StateLoaderMigrationTimer, metricTags);
@@ -316,10 +317,88 @@ namespace Newbe.Claptrap.AppMetrics
         {
             var values = new[]
             {
-                identity.TypeCode,
+                identity.TypeCode
             };
             var metricTags = new MetricTags(StateSaverMigrationKeys, values);
             return MetricsRoot.Measure.Timer.Time(StateSaverMigrationTimer, metricTags);
+        }
+
+        #endregion
+
+        #region BatchOperator
+
+        private static readonly TimerOptions BatchOperatorTimer = new TimerOptions
+        {
+            Name = "Batch Operator Handling Timer",
+            MeasurementUnit = Unit.Events,
+            DurationUnit = TimeUnit.Milliseconds,
+            RateUnit = TimeUnit.Milliseconds,
+            ResetOnReporting = true
+        };
+
+        private static readonly string[] BatchOperatorKeys =
+        {
+            "DoManyFunc",
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static TimerContext MeasureBatchOperatorTime(
+            string doManyFuncName)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            return MetricsRoot.Measure.Timer.Time(BatchOperatorTimer, metricTags);
+        }
+        
+        private static readonly GaugeOptions BatchOperatorMaxCountGauge = new GaugeOptions
+        {
+            Name = "Batch Operator Max Batch Count",
+            MeasurementUnit = Unit.Events,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static void MeasureBatchOperatorMaxCountGauge(
+            string doManyFuncName,
+            int count)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            MetricsRoot.Measure.Gauge.SetValue(BatchOperatorMaxCountGauge, metricTags, count);
+        }
+
+        private static readonly GaugeOptions BatchOperatorGauge = new GaugeOptions
+        {
+            Name = "Batch Operator Handling Count",
+            MeasurementUnit = Unit.Events,
+            ResetOnReporting = true,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static void MeasureBatchOperatorGauge(
+            string doManyFuncName,
+            int count)
+        {
+            var values = new[]
+            {
+                doManyFuncName
+            };
+            var metricTags = new MetricTags(BatchOperatorKeys, values);
+            MetricsRoot.Measure.Gauge.SetValue(BatchOperatorGauge, metricTags, count);
         }
 
         #endregion

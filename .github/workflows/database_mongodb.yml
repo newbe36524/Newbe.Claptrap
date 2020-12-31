@@ -9,7 +9,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/dotnet/core/sdk:3.1.301-bionic
+    container: mcr.microsoft.com/dotnet/sdk:5.0
     services:
       mongo:
         image: mongo

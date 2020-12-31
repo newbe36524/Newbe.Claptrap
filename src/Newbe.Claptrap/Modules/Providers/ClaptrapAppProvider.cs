@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
-using Newbe.Claptrap.Saga;
 
 namespace Newbe.Claptrap.Modules
 {
@@ -27,14 +26,11 @@ namespace Newbe.Claptrap.Modules
             yield return new ClaptrapFactoryModule();
             yield return new NoChangeStateHolderModule();
             yield return new CompoundEventNotifierModule();
-            yield return new SagaClaptrapModule();
         }
 
         public IEnumerable<IClaptrapDesignStoreConfigurator> GetClaptrapDesignStoreConfigurators()
         {
             yield return new DefaultClaptrapDesignConfigurator();
-            // TODO remove to sub module maybe
-            yield return new SageClaptrapDesignStoreConfigurator();
         }
     }
 }

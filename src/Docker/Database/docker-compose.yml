@@ -18,8 +18,9 @@ services:
             - 3306:3306
         environment:
             MYSQL_ROOT_PASSWORD: claptrap
+        command: --local-infile=1
         volumes:
-            - ./mysql:/docker-entrypoint-initdb.d
+            - ./mysql/init:/docker-entrypoint-initdb.d
 
     adminer:
         image: adminer

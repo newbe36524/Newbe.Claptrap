@@ -9,6 +9,5 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Options
         IMongoDBStateStoreLocatorOptions,
         IBatchSaverOptions
     {
-    
     }
 }

@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                 new Dictionary<string, string>
                 {
                     {"SchemaName", schemaName},
-                    {"EventTableName", eventTableName},
+                    {"EventTableName", eventTableName}
                 },
                 () =>
                     (DeployChanges

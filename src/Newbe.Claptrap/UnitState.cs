@@ -32,7 +32,7 @@ namespace Newbe.Claptrap
                     Item2 = Guid.NewGuid().ToString("N"),
                     Item3 = Guid.NewGuid().ToString("N"),
                     Item4 = Guid.NewGuid().ToString("N"),
-                    Item5 = Guid.NewGuid().ToString("N"),
+                    Item5 = Guid.NewGuid().ToString("N")
                 };
             }
         }

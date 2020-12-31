@@ -4,5 +4,6 @@ namespace Newbe.Claptrap
     {
         int? InsertManyWindowTimeInMilliseconds { get; }
         int? InsertManyWindowCount { get; }
+        int? WorkerCount { get; }
     }
 }

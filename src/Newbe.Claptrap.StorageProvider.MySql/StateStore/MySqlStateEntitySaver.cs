@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
             new ConcurrentDictionary<int, string>();
 
         public MySqlStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
             IRelationalStateStoreLocatorOptions options,
@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
                     new BatchOperatorOptions<StateEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
-                            SaveManyCoreMany(dbFactory, entities),
+                            SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 
@@ -110,7 +110,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
         public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)

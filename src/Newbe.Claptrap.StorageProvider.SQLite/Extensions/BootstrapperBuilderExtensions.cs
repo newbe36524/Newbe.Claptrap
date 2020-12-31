@@ -21,7 +21,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseSQLiteAsEventStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseSQLite(sqlite =>
+        {
+            return builder.UseSQLite(sqlite =>
                 sqlite.AsEventStore(eventStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -41,7 +42,7 @@ namespace Newbe.Claptrap.Bootstrapper
                             {
                                 ConnectionName = storageOptions.ConnectionName,
                                 SchemaName = Consts.SQLiteSchemaName,
-                                EventTableName = storageOptions.TableName,
+                                EventTableName = storageOptions.TableName
                             }, ConfigMore);
                             break;
                     }
@@ -51,6 +52,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         sqliteOptions.IsAutoMigrationEnabled = storageOptions.IsAutoMigrationEnabled;
                     }
                 }));
+        }
 
         /// <summary>
         /// it will be invoked form HostExtensions
@@ -61,7 +63,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseSQLiteAsStateStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseSQLite(sqlite =>
+        {
+            return builder.UseSQLite(sqlite =>
                 sqlite.AsStateStore(stateStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -92,6 +95,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.IsAutoMigrationEnabled = storageOptions.IsAutoMigrationEnabled;
                     }
                 }));
+        }
 
         public static IClaptrapBootstrapperBuilder UseSQLite(
             this IClaptrapBootstrapperBuilder builder,
@@ -116,10 +120,12 @@ namespace Newbe.Claptrap.Bootstrapper
         /// <param name="builder"></param>
         /// <returns></returns>
         public static IClaptrapBootstrapperBuilder UseSQLiteAsTestingStorage(
-            this IClaptrapBootstrapperBuilder builder) =>
-            builder.UseSQLite(sqlite =>
+            this IClaptrapBootstrapperBuilder builder)
+        {
+            return builder.UseSQLite(sqlite =>
                 sqlite
                     .AsEventStore(evenStore => evenStore.SharedTable())
                     .AsStateStore(stateStore => stateStore.SharedTable()));
+        }
     }
 }

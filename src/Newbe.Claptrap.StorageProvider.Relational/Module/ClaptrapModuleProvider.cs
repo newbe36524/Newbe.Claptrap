@@ -36,7 +36,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
         {
             yield break;
         }
-        
+
         private class AppMetricsModule : Autofac.Module, IClaptrapSharedModule
         {
             public string Name { get; } = "Claptrap Metrics module";

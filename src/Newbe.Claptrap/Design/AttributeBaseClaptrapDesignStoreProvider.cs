@@ -55,7 +55,7 @@ namespace Newbe.Claptrap.Design
                         EventLoadingOptionsAttribute =
                             implType.GetCustomAttribute<ClaptrapEventLoadingOptionsAttribute>(),
                         StateRecoveryOptionsAttribute =
-                            implType.GetCustomAttribute<ClaptrapStateRecoveryOptionsAttribute>(),
+                            implType.GetCustomAttribute<ClaptrapStateRecoveryOptionsAttribute>()
                     };
                 })
                 .ToArray();
@@ -107,7 +107,7 @@ namespace Newbe.Claptrap.Design
                         ? null!
                         : new EventLoadingOptions
                         {
-                            LoadingCountInOneBatch = m.EventLoadingOptionsAttribute.LoadingCountInOneBatch,
+                            LoadingCountInOneBatch = m.EventLoadingOptionsAttribute.LoadingCountInOneBatch
                         },
                     StateRecoveryOptions = m.StateRecoveryOptionsAttribute == null
                         ? null!
@@ -127,7 +127,7 @@ namespace Newbe.Claptrap.Design
                             SavingWindowVersionLimit = m.StateSavingOptionsAttribute.SavingWindowVersionLimit > 0
                                 ? m.StateSavingOptionsAttribute.SavingWindowVersionLimit
                                 : 100,
-                            SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync,
+                            SaveWhenDeactivateAsync = m.StateSavingOptionsAttribute.SaveWhenDeactivateAsync
                         }
                 };
                 // TODO EventHandlerFactoryFactoryType from attribute
@@ -158,7 +158,7 @@ namespace Newbe.Claptrap.Design
 
             return re;
 
-            static string GetActorTypeCode(ClaptrapStateAttribute attr)
+            static string? GetActorTypeCode(ClaptrapStateAttribute attr)
             {
                 return attr.ClaptrapTypeCode ??
                        attr.StateDataType.FullName;

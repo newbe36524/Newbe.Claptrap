@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Newbe.Claptrap
 {
-    public class ClaptrapDesign : IClaptrapDesign
+    public record ClaptrapDesign : IClaptrapDesign
     {
         public ClaptrapDesign()
         {

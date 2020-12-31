@@ -16,16 +16,13 @@ namespace Newbe.Claptrap.Bootstrapper
     public class AutofacClaptrapBootstrapperBuilder : IClaptrapBootstrapperBuilder
     {
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ContainerBuilder _applicationBuilder;
         private readonly ILogger<AutofacClaptrapBootstrapperBuilder> _logger;
         private readonly Lazy<IL> _l;
 
         public AutofacClaptrapBootstrapperBuilder(
-            ILoggerFactory loggerFactory,
-            ContainerBuilder applicationBuilder)
+            ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
-            _applicationBuilder = applicationBuilder;
             LoggerFactoryHolder.Instance = loggerFactory;
             _logger = loggerFactory.CreateLogger<AutofacClaptrapBootstrapperBuilder>();
             _l = new Lazy<IL>(CreateL);
@@ -35,7 +32,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 ModuleTypes = Enumerable.Empty<Type>(),
                 ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
-                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
+                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>()
             };
         }
 
@@ -121,11 +118,9 @@ namespace Newbe.Claptrap.Bootstrapper
 
                 var providers = ScanClaptrapModuleProviders();
 
-                _applicationBuilder.RegisterTypes(providers)
-                    .As<IClaptrapModuleProvider>();
-
                 var claptrapBootstrapper =
-                    new AutofacClaptrapBootstrapper(_applicationBuilder,
+                    new AutofacClaptrapBootstrapper(
+                        providers,
                         appAutofacModules
                             .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
                         store);

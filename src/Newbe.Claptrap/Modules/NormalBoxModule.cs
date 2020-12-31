@@ -12,10 +12,6 @@ namespace Newbe.Claptrap.Modules
         {
             base.Load(builder);
 
-            builder.RegisterType<NormalClaptrapBox>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            
             builder.RegisterType<ClaptrapAccessor>()
                 .As<IClaptrapAccessor>()
                 .InstancePerLifetimeScope();

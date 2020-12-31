@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
                 new Dictionary<string, string>
                 {
                     {"SchemaName", schemaName},
-                    {"StateTableName", stateTableName},
+                    {"StateTableName", stateTableName}
                 },
                 () =>
                     (DeployChanges

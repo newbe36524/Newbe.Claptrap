@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
                 StateData = stateData,
                 UpdatedTime = _clock.UtcNow,
                 ClaptrapId = stateEntity.Identity.Id,
-                ClaptrapTypeCode = stateEntity.Identity.TypeCode,
+                ClaptrapTypeCode = stateEntity.Identity.TypeCode
             };
             return re;
         }

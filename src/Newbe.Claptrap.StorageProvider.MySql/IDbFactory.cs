@@ -1,4 +1,4 @@
-using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace Newbe.Claptrap.StorageProvider.MySql
 {
@@ -16,6 +16,6 @@ namespace Newbe.Claptrap.StorageProvider.MySql
         /// </summary>
         /// <param name="connectionName"></param>
         /// <returns></returns>
-        IDbConnection GetConnection(string connectionName);
+        MySqlConnection GetConnection(string connectionName);
     }
 }

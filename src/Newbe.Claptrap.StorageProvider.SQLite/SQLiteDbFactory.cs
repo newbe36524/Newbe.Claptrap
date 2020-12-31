@@ -1,5 +1,5 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using Microsoft.Extensions.Logging;
@@ -23,10 +23,24 @@ namespace Newbe.Claptrap.StorageProvider.SQLite
             return re;
         }
 
-        public IDbConnection GetConnection(string connectionName)
+        private readonly Dictionary<string, SQLiteConnection> _keepOpenedConnections =
+            new Dictionary<string, SQLiteConnection>();
+
+        public SQLiteConnection GetConnection(string connectionName, bool keepOpen = false)
         {
+            if (keepOpen && _keepOpenedConnections.TryGetValue(connectionName, out var conn))
+            {
+                return conn;
+            }
+
             var fileName = EnsureDirectoryCreated(connectionName);
-            var conn = new SQLiteConnection(GetConnectionString(fileName));
+            conn = new SQLiteConnection(GetConnectionString(fileName));
+            if (keepOpen)
+            {
+                _keepOpenedConnections[connectionName] = conn;
+                conn.Open();
+            }
+
             return conn;
         }
 

@@ -1,0 +1,56 @@
+name: benchmark_db_event_saving_mysql
+
+on:
+  push:
+    branches:
+      - feature/benchmark_mysql
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        total_count:
+          - 1000
+          - 100000
+          - 5000000
+        batch_size:
+          - 100
+          - 200
+          - 500
+          - 1000
+        worker_count:
+          - 1
+          - 3
+          - 5
+    container: mcr.microsoft.com/dotnet/sdk:5.0
+    services:
+      mysql:
+        image: mysql
+        ports:
+          - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: claptrap
+          MYSQL_DATABASE: claptrap
+          MYSQL_USER: claptrap
+          MYSQL_PASSWORD: claptrap
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: Run Benchmark
+        env:
+          TestConsoleOptions__DatabaseType: mysql
+          TestConsoleOptions__TotalCount: ${{ matrix.total_count }}
+          TestConsoleOptions__BatchSize: ${{ matrix.batch_size }}
+          TestConsoleOptions__WorkerCount: ${{ matrix.worker_count }}
+          TestConsoleOptions__SetupLocalDatabase: false
+          Claptrap__DefaultConnectionString: "Server=claptrap;Port=3306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
+        run: |
+          dotnet run --project $GITHUB_WORKSPACE/src/Newbe.Claptrap.StorageTestConsole/Newbe.Claptrap.StorageTestConsole.csproj --configuration Release
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            src/Newbe.Claptrap.StorageTestConsole/bin/Release/net5.0/TestResults/*.json

@@ -11,18 +11,20 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
 {
     public class PostgreSQLEventEntitySaver : IEventEntitySaver<EventEntity>
     {
+        private readonly IDbFactory _dbFactory;
         private readonly IBatchOperator<EventEntity> _batchOperator;
         private readonly string _connectionName;
         private readonly string _schemaName;
         private readonly string _eventTableName;
 
         public PostgreSQLEventEntitySaver(
-            BatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IMasterOrSelfIdentity identity,
             IDbFactory dbFactory,
             IPostgreSQLEventStoreOptions options,
             IBatchOperatorContainer batchOperatorContainer)
         {
+            _dbFactory = dbFactory;
             var (connectionName, schemaName, eventTableName) =
                 options.RelationalEventStoreLocator.GetNames(identity.Identity);
             _connectionName = connectionName;
@@ -38,21 +40,19 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                 operatorKey, () => batchOperatorFactory.Invoke(
                     new BatchOperatorOptions<EventEntity>(options)
                     {
-                        DoManyFunc = (entities, cacheData) => SaveManyCoreMany(dbFactory, entities)
+                        DoManyFunc = (entities, cacheData) => SaveManyAsync(entities),
+                        DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
         }
 
         public Task SaveAsync(EventEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
 
-        private async Task SaveManyCoreMany(
-            IDbFactory factory,
-            IEnumerable<EventEntity> entities)
+        public async Task SaveManyAsync(IEnumerable<EventEntity> entities)
         {
-            var array = entities as EventEntity[] ?? entities.ToArray();
-            var items = array
+            var items = entities
                 .Select(x => new RelationalEventEntity
                 {
                     claptrap_id = x.ClaptrapId,
@@ -61,10 +61,9 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
                     event_data = x.EventData,
                     event_type_code = x.EventTypeCode,
                     version = x.Version
-                })
-                .ToArray();
+                });
 
-            await using var db = (NpgsqlConnection) factory.GetConnection(_connectionName);
+            await using var db = (NpgsqlConnection) _dbFactory.GetConnection(_connectionName);
             await db.OpenAsync();
             await using var importer =
                 db.BeginBinaryImport(
@@ -72,15 +71,15 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
             foreach (var entity in items)
             {
                 await importer.StartRowAsync();
-                await importer.WriteAsync(entity.claptrap_type_code);
-                await importer.WriteAsync(entity.claptrap_id);
+                await importer.WriteAsync(entity.claptrap_type_code, NpgsqlDbType.Text);
+                await importer.WriteAsync(entity.claptrap_id, NpgsqlDbType.Text);
                 await importer.WriteAsync(entity.version, NpgsqlDbType.Bigint);
-                await importer.WriteAsync(entity.event_type_code);
-                await importer.WriteAsync(entity.event_data);
+                await importer.WriteAsync(entity.event_type_code, NpgsqlDbType.Text);
+                await importer.WriteAsync(entity.event_data, NpgsqlDbType.Text);
                 await importer.WriteAsync(entity.created_time, NpgsqlDbType.Date);
             }
 
-            importer.Complete();
+            await importer.CompleteAsync();
         }
     }
 }
