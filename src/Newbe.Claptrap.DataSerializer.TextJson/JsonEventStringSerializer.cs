@@ -1,9 +1,16 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Newbe.Claptrap.DataSerializer.Json
+namespace Newbe.Claptrap.DataSerializer.TextJson
 {
     public class JsonEventStringSerializer : IEventStringSerializer
     {
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static JsonSerializerOptions JsonSerializerOptions { get; set; } = new()
+        {
+            WriteIndented = false
+        };
+
         private readonly IEventDataStringSerializer _eventDataStringSerializer;
 
         public JsonEventStringSerializer(
@@ -24,13 +31,13 @@ namespace Newbe.Claptrap.DataSerializer.Json
                 EventTypeCode = evt.EventTypeCode,
                 DataJson = eventData
             };
-            var result = JsonConvert.SerializeObject(model);
+            var result = JsonSerializer.Serialize(model, JsonSerializerOptions);
             return result;
         }
 
         public IEvent Deserialize(string source)
         {
-            var jsonModel = JsonConvert.DeserializeObject<EventJsonModel>(source);
+            var jsonModel = JsonSerializer.Deserialize<EventJsonModel>(source, JsonSerializerOptions)!;
             var id = new ClaptrapIdentity(jsonModel.ClaptrapId, jsonModel.ClaptrapTypeCode);
             var eventData = _eventDataStringSerializer.Deserialize(
                 id,
@@ -46,10 +53,14 @@ namespace Newbe.Claptrap.DataSerializer.Json
 
     public class EventJsonModel
     {
-        [JsonProperty("ctc")] public string ClaptrapTypeCode { get; set; }
-        [JsonProperty("cid")] public string ClaptrapId { get; set; }
-        [JsonProperty("v")] public long Version { get; set; }
-        [JsonProperty("etc")] public string EventTypeCode { get; set; }
-        [JsonProperty("d")] public string DataJson { get; set; }
+        [JsonPropertyName("ctc")] public string ClaptrapTypeCode { get; set; }
+
+        [JsonPropertyName("cid")] public string ClaptrapId { get; set; }
+
+        [JsonPropertyName("v")] public long Version { get; set; }
+
+        [JsonPropertyName("etc")] public string EventTypeCode { get; set; }
+
+        [JsonPropertyName("d")] public string DataJson { get; set; }
     }
 }

@@ -19,9 +19,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Hosting\Newbe.Claptrap.Hosting.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap\Newbe.Claptrap.csproj" />
-    <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
   </ItemGroup>
 
 </Project>

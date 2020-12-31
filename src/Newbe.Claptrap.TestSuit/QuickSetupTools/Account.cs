@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
     [ClaptrapEventHandler(typeof(UnitEventHandler), UnitEvent.TypeCode)]
     public class Account : NormalClaptrapBox<AccountState>, IAccount
     {
-        public new delegate Account Factory(IClaptrapIdentity identity);
+        public delegate Account Factory(IClaptrapIdentity identity);
 
         public Account(IClaptrapIdentity identity,
             IClaptrapFactory claptrapFactory,
@@ -30,8 +30,8 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
             {
                 Diff = diff
             };
-            return Claptrap.HandleEventAsync(new DataEvent(Claptrap.State.Identity, Codes.AccountBalanceChangeEvent,
-                evt));
+            var dataEvent = new DataEvent(Claptrap.State.Identity, Codes.AccountBalanceChangeEvent, evt);
+            return Claptrap.HandleEventAsync(dataEvent);
         }
 
         public Task ActivateAsync()

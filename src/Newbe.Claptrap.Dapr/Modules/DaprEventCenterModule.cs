@@ -18,6 +18,9 @@ namespace Newbe.Claptrap.Dapr.Modules
             builder.RegisterType<DaprEventCenter>()
                 .As<IEventCenter>()
                 .SingleInstance();
+            builder.RegisterType<RpcMinionProxy>()
+                .AsSelf()
+                .InstancePerDependency();
         }
     }
 }

@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StateHolder.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_DataSerializer", "04_DataSerializer", "{D3A78049-C52A-46EF-A788-3466C4DBEE22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.DataSerializer.Json", "Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj", "{12067EB6-46EE-43D6-BD59-39D566AFD70F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.DataSerializer.JsonNet", "Newbe.Claptrap.DataSerializer.JsonNet\Newbe.Claptrap.DataSerializer.JsonNet.csproj", "{12067EB6-46EE-43D6-BD59-39D566AFD70F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Newbe.Claptrap.StorageProvider.MySql", "Newbe.Claptrap.StorageProvider.MySql\Newbe.Claptrap.StorageProvider.MySql.csproj", "{B86BFE12-76DB-4B9F-A333-1ACA9B554F47}"
 EndProject
@@ -115,6 +115,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Hosting.Tests", "Newbe.Claptrap.Dapr.Hosting.Tests\Newbe.Claptrap.Dapr.Hosting.Tests.csproj", "{7E357374-4E57-475C-83D1-16874D8A19D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Tests", "Newbe.Claptrap.Dapr.Tests\Newbe.Claptrap.Dapr.Tests.csproj", "{21BB3E18-FF76-491C-BF30-6F25A81B562B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.DataSerializer.TextJson", "Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj", "{80B5CD4C-BABD-4620-AC05-D35DF3291306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -282,6 +284,10 @@ Global
 		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21BB3E18-FF76-491C-BF30-6F25A81B562B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -329,6 +335,7 @@ Global
 		{0CBBAA5F-0EE6-427E-8457-E2D7C19CE926} = {E8C0A6E4-6328-4B71-B6E6-E8F34829BE65}
 		{7E357374-4E57-475C-83D1-16874D8A19D3} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
 		{21BB3E18-FF76-491C-BF30-6F25A81B562B} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
+		{80B5CD4C-BABD-4620-AC05-D35DF3291306} = {D3A78049-C52A-46EF-A788-3466C4DBEE22}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {594E59AF-14B6-4BA7-A33F-5F202BC03640}

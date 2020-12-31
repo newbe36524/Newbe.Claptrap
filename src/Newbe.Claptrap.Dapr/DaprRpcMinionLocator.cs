@@ -7,17 +7,21 @@ namespace Newbe.Claptrap.Dapr
     public class DaprRpcMinionLocator : IMinionLocator
     {
         private readonly IActorProxyFactory _actorProxyFactory;
+        private readonly RpcMinionProxy.Factory _factory;
 
         public DaprRpcMinionLocator(
-            IActorProxyFactory actorProxyFactory)
+            IActorProxyFactory actorProxyFactory,
+            RpcMinionProxy.Factory factory)
         {
             _actorProxyFactory = actorProxyFactory;
+            _factory = factory;
         }
 
         public IMinionProxy CreateProxy(IClaptrapIdentity minionId)
         {
             var actorProxy = _actorProxyFactory.Create(new ActorId(minionId.Id), minionId.TypeCode);
-            return new RpcMinionProxy(actorProxy);
+            var proxy = _factory.Invoke(actorProxy);
+            return proxy;
         }
     }
 }

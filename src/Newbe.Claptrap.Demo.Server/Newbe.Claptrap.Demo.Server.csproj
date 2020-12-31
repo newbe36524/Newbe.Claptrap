@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Newbe.Claptrap.Dapr.Hosting\Newbe.Claptrap.Dapr.Hosting.csproj" />
-    <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.Json\Newbe.Claptrap.DataSerializer.Json.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Demo\Newbe.Claptrap.Demo.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.EventCenter.RabbitMQ\Newbe.Claptrap.EventCenter.RabbitMQ.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.MongoDB\Newbe.Claptrap.StorageProvider.MongoDB.csproj" />

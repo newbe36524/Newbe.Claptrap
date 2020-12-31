@@ -116,7 +116,7 @@ namespace Newbe.Claptrap.TestSuit
                     var saver = scope.Resolve<IEventSaver>();
                     var sourceEvent = UnitEvent.Create(id);
                     var unitEvents = Enumerable.Range(Defaults.EventStartingVersion, count)
-                        .Select(x => sourceEvent with{Version = x})
+                        .Select(x => sourceEvent with {Version = x})
                         .ToArray();
                     var sw = Stopwatch.StartNew();
                     foreach (var unitEvent in unitEvents)
@@ -157,12 +157,10 @@ namespace Newbe.Claptrap.TestSuit
             await using var buildClaptrapLifetimeScope = factory.BuildClaptrapLifetimeScope(id);
             var saver = buildClaptrapLifetimeScope.Resolve<IStateSaver>();
             var states = Enumerable.Range(Defaults.StateStartingVersion, times)
-                .Select(x => new UnitState
+                .Select(x => new DataState(id, new AccountState
                 {
-                    Data = UnitState.UnitStateData.Create(),
-                    Identity = id,
-                    Version = x
-                })
+                    Balance = 666M
+                }, x))
                 .ToArray();
             await states
                 .Select(x => saver.SaveAsync(x))
@@ -195,12 +193,10 @@ namespace Newbe.Claptrap.TestSuit
                     return new
                     {
                         id = claptrapIdentity,
-                        state = new UnitState
+                        state = new DataState(claptrapIdentity, new AccountState
                         {
-                            Data = UnitState.UnitStateData.Create(),
-                            Identity = claptrapIdentity,
-                            Version = stateVersion
-                        }
+                            Balance = 666M
+                        }, stateVersion)
                     };
                 })
                 .AsParallel()

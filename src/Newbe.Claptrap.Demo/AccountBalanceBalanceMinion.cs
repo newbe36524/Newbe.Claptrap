@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
 using Microsoft.Extensions.Logging;
@@ -15,12 +16,16 @@ namespace Newbe.Claptrap.Demo
         IAccountBalanceMinion
     {
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
+        private readonly IEventStringSerializer _eventStringSerializer;
 
         public AccountBalanceBalanceMinion(ActorHost actorService,
-            IClaptrapActorCommonService claptrapActorCommonService, ILogger<AccountBalanceBalanceMinion> logger) : base(
+            IClaptrapActorCommonService claptrapActorCommonService,
+            ILogger<AccountBalanceBalanceMinion> logger,
+            IEventStringSerializer eventStringSerializer) : base(
             actorService, claptrapActorCommonService)
         {
             _logger = logger;
+            _eventStringSerializer = eventStringSerializer;
         }
 
         public Task<decimal> GetBalance()
@@ -32,6 +37,15 @@ namespace Newbe.Claptrap.Demo
         public async Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
         {
             foreach (var @event in events)
+            {
+                await Claptrap.HandleEventAsync(@event);
+            }
+        }
+
+        public async Task MasterEventReceivedJsonAsync(IEnumerable<string> events)
+        {
+            var items = events.Select(_eventStringSerializer.Deserialize);
+            foreach (var @event in items)
             {
                 await Claptrap.HandleEventAsync(@event);
             }

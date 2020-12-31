@@ -7,19 +7,25 @@ using Newbe.Claptrap.EventCenter;
 
 namespace Newbe.Claptrap.Dapr
 {
-    internal class RpcMinionProxy : IMinionProxy
+    public class RpcMinionProxy : IMinionProxy
     {
+        public delegate RpcMinionProxy Factory(ActorProxy actorProxy);
+
         private readonly ActorProxy _actorProxy;
+        private readonly IEventStringSerializer _eventStringSerializer;
 
         public RpcMinionProxy(
-            ActorProxy actorProxy)
+            ActorProxy actorProxy,
+            IEventStringSerializer eventStringSerializer)
         {
             _actorProxy = actorProxy;
+            _eventStringSerializer = eventStringSerializer;
         }
 
         public Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
         {
-            return _actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedAsync), events.Cast<DataEvent>());
+            return _actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedJsonAsync),
+                events.Select(_eventStringSerializer.Serialize));
         }
     }
 }

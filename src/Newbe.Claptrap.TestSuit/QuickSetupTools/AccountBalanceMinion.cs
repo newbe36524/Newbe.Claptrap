@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
     public class AccountBalanceMinion :
         NormalClaptrapBox<AccountState>, IAccountBalanceMinion
     {
-        public new delegate AccountBalanceMinion Factory(IClaptrapIdentity identity);
+        public delegate AccountBalanceMinion Factory(IClaptrapIdentity identity);
 
         public AccountBalanceMinion(IClaptrapIdentity identity,
             IClaptrapFactory claptrapFactory,
