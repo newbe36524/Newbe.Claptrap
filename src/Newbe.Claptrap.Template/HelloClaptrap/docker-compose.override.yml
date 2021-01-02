@@ -1,0 +1,57 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "5379:6379"
+
+  zipkin:
+    ports:
+      - "5411:9411"
+  actorhost:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    #      - DAPR_HTTP_PORT=50001
+    ports:
+      - "5103:80"
+
+  actorhost-dapr:
+    command: [ "./daprd",
+               "-app-id", "actorhost",
+               "-app-port", "80",
+               "-dapr-http-port","3500",
+               "-placement-host-address", "dapr-placement:50000",
+               "-components-path", "/components"
+      #               "-log-level", "debug"
+    ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
+
+  webapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    #      - DAPR_HTTP_PORT=50001
+    ports:
+      - "5104:80"
+
+  webapi-dapr:
+    command: [ "./daprd",
+               "-app-id", "webapi",
+               "-app-port", "80",
+               "-dapr-http-port","3500",
+               "-placement-host-address", "dapr-placement:50000",
+               "-components-path", "/components"
+      #               "-log-level", "debug"
+    ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
+
+  dapr-placement:
+    command: [ "./placement", "-port", "50000", "-log-level", "debug" ]
+    ports:
+      - "50000:50000"

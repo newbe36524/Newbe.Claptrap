@@ -49,5 +49,5 @@ indent_style=space
 indent_size=4
 tab_width=4
 
-[*.json]
+[*.{json,yml,yaml}]
 indent_size=2

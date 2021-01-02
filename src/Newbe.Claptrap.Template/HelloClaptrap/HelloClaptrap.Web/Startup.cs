@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapr.Actors.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Orleans;
 
 namespace HelloClaptrap.Web
 {
@@ -24,24 +24,7 @@ namespace HelloClaptrap.Web
         {
             services.AddControllers();
             services.AddSwaggerGen(c => { });
-
-            AddOrleansClient(services);
-        }
-
-        private static void AddOrleansClient(IServiceCollection services)
-        {
-            var clientBuilder = new ClientBuilder();
-            var client = clientBuilder
-                .UseLocalhostClustering()
-                .Build();
-            client.Connect(exception =>
-            {
-                Console.WriteLine(exception);
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-                return Task.FromResult(true);
-            }).Wait();
-            services.AddSingleton(client);
-            services.AddSingleton<IGrainFactory>(client);
+            services.AddSingleton<IActorProxyFactory, MyActorProxyFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
