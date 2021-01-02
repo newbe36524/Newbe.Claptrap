@@ -1,0 +1,14 @@
+
+# Create this "restore-solution" section by running ./Create-DockerfileSolutionRestore.ps1, to optimize build cache reuse
+COPY ["HelloClaptrap.Actors.Tests/HelloClaptrap.Actors.Tests.csproj", "HelloClaptrap.Actors.Tests/"]
+COPY ["HelloClaptrap.Actors/HelloClaptrap.Actors.csproj", "HelloClaptrap.Actors/"]
+COPY ["HelloClaptrap.BackendServer/HelloClaptrap.BackendServer.csproj", "HelloClaptrap.BackendServer/"]
+COPY ["HelloClaptrap.IActor/HelloClaptrap.IActor.csproj", "HelloClaptrap.IActor/"]
+COPY ["HelloClaptrap.Models/HelloClaptrap.Models.csproj", "HelloClaptrap.Models/"]
+COPY ["HelloClaptrap.Web/HelloClaptrap.Web.csproj", "HelloClaptrap.Web/"]
+COPY ["docker-compose.dcproj", "./"]
+COPY ["Directory.Build.props", "./"]
+COPY ["NuGet.config", "./"]
+COPY ["HelloClaptrap.sln", "./"]
+RUN dotnet restore "HelloClaptrap.sln"
+
