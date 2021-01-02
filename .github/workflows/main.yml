@@ -57,15 +57,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 2
-      # Speed-up analysis by caching the scanner workspace
-      - name: Cache SonarCloud workspace
+          fetch-depth: 0
+      - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
-          path: ~\.sonar\cache
-          key: ${{ runner.os }}-sonar-cache
-          restore-keys: ${{ runner.os }}-sonar-cache
-      # Speed-up analysis by caching the scanner installation
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: Cache SonarCloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@v1
@@ -73,24 +71,24 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-     - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v1
         with:
-          java-version: '11' # The JDK version to make available on the path.
+          java-version: "11" # The JDK version to make available on the path.
           java-package: jdk # (jre, jdk, or jdk+fx) - defaults to jdk
           architecture: x64 # (x64 or x86) - defaults to x64
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        # The --version argument is optional. If it is omitted the latest version will be installed.
         run: |
           mkdir .\.sonar\scanner
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 5.0.4
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
       - name: Install dependencies
         run: |
           cd $GITHUB_WORKSPACE/src
           dotnet restore
       - name: build and test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"newbe36524_Newbe.Claptrap" /o:"newbe36524" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths='"src/*.Tests/TestResults/*/coverage.opencover.xml"'
           dotnet build $GITHUB_WORKSPACE/src --configuration Release
