@@ -9,11 +9,11 @@ namespace Newbe.Claptrap
     {
         public delegate AutoFlushList<T> Factory(IAutoFlushListOptions autoFlushListOptions,
             IConcurrentListPool<T> concurrentListPool,
-            Func<ConcurrentList<T>, Task> flushFunc);
+            Action<ConcurrentList<T>> flushFunc);
 
         private readonly IAutoFlushListOptions _autoFlushListOptions;
         private readonly IConcurrentListPool<T> _concurrentListPool;
-        private readonly Func<ConcurrentList<T>, Task> _flushFunc;
+        private readonly Action<ConcurrentList<T>> _flushFunc;
         private readonly ILogger<AutoFlushList<T>> _logger;
         private volatile ConcurrentList<T> _currentBuffer;
         private readonly ManualResetEventSlim _bufferLock;
@@ -21,16 +21,19 @@ namespace Newbe.Claptrap
         private readonly ManualResetEventSlim _fullLock;
 
         // ReSharper disable once NotAccessedField.Local
-        private readonly Task _task;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly Thread _switchBufferIfFullThread;
 
         // ReSharper disable once NotAccessedField.Local
-        private readonly Task _task2;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly Thread _switchBufferWhileTimeoutThread;
+
         private int _size;
 
         public AutoFlushList(
             IAutoFlushListOptions autoFlushListOptions,
             IConcurrentListPool<T> concurrentListPool,
-            Func<ConcurrentList<T>, Task> flushFunc,
+            Action<ConcurrentList<T>> flushFunc,
             ILogger<AutoFlushList<T>> logger)
         {
             _autoFlushListOptions = autoFlushListOptions;
@@ -42,8 +45,16 @@ namespace Newbe.Claptrap
             _bufferLock = new ManualResetEventSlim(false);
             _writeLock = new ManualResetEventSlim(true);
             _fullLock = new ManualResetEventSlim(false);
-            _task = Task.Factory.StartNew(SwitchBufferIfFull, TaskCreationOptions.LongRunning).Unwrap();
-            _task2 = Task.Factory.StartNew(SwitchBufferWhileTimeout, TaskCreationOptions.LongRunning).Unwrap();
+            _switchBufferIfFullThread = new Thread(SwitchBufferIfFull)
+            {
+                IsBackground = true
+            };
+            _switchBufferIfFullThread.Start();
+            _switchBufferWhileTimeoutThread = new Thread(SwitchBufferWhileTimeout)
+            {
+                IsBackground = true
+            };
+            _switchBufferWhileTimeoutThread.Start();
         }
 
         public async ValueTask Push(T item)
@@ -69,7 +80,7 @@ namespace Newbe.Claptrap
             }
         }
 
-        private async Task SwitchBufferIfFull()
+        private void SwitchBufferIfFull()
         {
             while (true)
             {
@@ -79,7 +90,7 @@ namespace Newbe.Claptrap
                     if (_currentBuffer.IsFull)
                     {
                         _writeLock.Reset();
-                        await SwitchBufferCore();
+                        SwitchBufferCore();
                     }
                 }
                 catch (Exception e)
@@ -94,7 +105,7 @@ namespace Newbe.Claptrap
             }
         }
 
-        private async Task SwitchBufferWhileTimeout()
+        private void SwitchBufferWhileTimeout()
         {
             while (true)
             {
@@ -102,9 +113,9 @@ namespace Newbe.Claptrap
                 _fullLock.Set();
                 try
                 {
-                    await Task.Delay(_autoFlushListOptions.GetDebounceTime());
+                    Thread.Sleep(_autoFlushListOptions.GetDebounceTime());
                     _writeLock.Reset();
-                    await SwitchBufferCore();
+                    SwitchBufferCore();
                 }
                 catch (Exception e)
                 {
@@ -120,7 +131,7 @@ namespace Newbe.Claptrap
 
         private int _bufferLocker = 0;
 
-        private async Task SwitchBufferCore()
+        private void SwitchBufferCore()
         {
             const int locked = 1;
             const int unlocked = 0;
@@ -132,7 +143,7 @@ namespace Newbe.Claptrap
                     _autoFlushListOptions.SetLastFlushCount(now.Count);
                     _size = _autoFlushListOptions.GetSize();
                     _currentBuffer = _concurrentListPool.Get(_size);
-                    await _flushFunc.Invoke(now);
+                    _flushFunc.Invoke(now);
                 }
                 finally
                 {

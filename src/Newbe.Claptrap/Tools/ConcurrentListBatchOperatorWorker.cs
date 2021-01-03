@@ -163,10 +163,9 @@ namespace Newbe.Claptrap
             }
         }
 
-        private Task Func(ConcurrentList<BatchItem> arg)
+        private void Func(ConcurrentList<BatchItem> arg)
         {
             _tasksCollection.Add(new ExceptionConcurrentList<BatchItem>(arg));
-            return Task.CompletedTask;
         }
 
         public async ValueTask CreateTask(T input)

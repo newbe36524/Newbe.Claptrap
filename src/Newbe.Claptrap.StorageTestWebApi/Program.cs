@@ -80,6 +80,7 @@ namespace Newbe.Claptrap.StorageTestWebApi
                         builder.RegisterModule<StorageSetupModule>();
                         builder.RegisterModule<StorageTestWebApiModule>();
                     })
+                .UseClaptrapHostCommon()
                 .UseClaptrapDaprHost()
                 .ConfigureServices((host, services) =>
                 {
