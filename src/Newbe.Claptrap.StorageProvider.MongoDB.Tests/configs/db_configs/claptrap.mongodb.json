@@ -1,5 +1,5 @@
 {
   "Claptrap": {
-    "DefaultConnectionString": "mongodb://root:claptrap@localhost:27017/claptrap?authSource=admin"
+    "DefaultConnectionString": "mongodb://root:claptrap@mongo:27017/claptrap?authSource=admin"
   }
 }

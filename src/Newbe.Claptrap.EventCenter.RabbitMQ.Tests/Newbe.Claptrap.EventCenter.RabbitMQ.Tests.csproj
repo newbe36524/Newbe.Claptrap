@@ -8,28 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.EventCenter.RabbitMQ\Newbe.Claptrap.EventCenter.RabbitMQ.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="configs\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.deflate.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.gzip.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.none.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
 </Project>
