@@ -14,22 +14,5 @@
     <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="configs\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.deflate.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.gzip.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="configs\rabbitmq\appsettings.none.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 
 </Project>
