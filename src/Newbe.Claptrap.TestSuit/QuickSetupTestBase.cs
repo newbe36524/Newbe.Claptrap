@@ -141,7 +141,6 @@ namespace Newbe.Claptrap.TestSuit
                 });
             await tasks.WhenAllComplete(actorCount);
 
-
             await OnStopHost(Host);
             await Host.StopAsync();
         }
@@ -170,7 +169,6 @@ namespace Newbe.Claptrap.TestSuit
             var state = await loader.GetStateSnapshotAsync();
             Debug.Assert(state != null, nameof(state) + " != null");
             state.Should().NotBeNull();
-            state.Version.Should().Be(times - 1);
             await OnStopHost(Host);
             await Host.StopAsync();
         }
