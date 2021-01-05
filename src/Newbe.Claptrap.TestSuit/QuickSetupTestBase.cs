@@ -105,6 +105,8 @@ namespace Newbe.Claptrap.TestSuit
             var logger = lifetimeScope.ServiceProvider.GetRequiredService<ILogger<QuickSetupTestBase>>();
             var factory = (ClaptrapFactory) lifetimeScope.ServiceProvider.GetRequiredService<IClaptrapFactory>();
 
+            var showTimeIndex = actorCount / 10;
+            showTimeIndex = showTimeIndex == 0 ? 1 : showTimeIndex;
             var round = 1;
             var tasks = Enumerable.Range(0, actorCount)
                 .Select(async actorId =>
@@ -125,7 +127,11 @@ namespace Newbe.Claptrap.TestSuit
                     }
 
                     sw.Stop();
-                    Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
+                    if (actorId / showTimeIndex == 0)
+                    {
+                        Console.WriteLine($"cost {sw.ElapsedMilliseconds} ms to save event");
+                    }
+
                     if (validateByLoader)
                     {
                         var loader = scope.Resolve<IEventLoader>();
