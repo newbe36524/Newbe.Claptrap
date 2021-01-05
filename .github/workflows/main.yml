@@ -97,7 +97,7 @@ jobs:
           ~/.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       - name: Codecov
         uses: codecov/codecov-action@v1.0.13
-        # with:
+        # with: 
         #   # User defined upload name. Visible in Codecov UI
         #   name: # optional
         #   # Repository upload token - get it from codecov.io. Required only for private repositories
