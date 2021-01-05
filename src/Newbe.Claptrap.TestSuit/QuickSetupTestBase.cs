@@ -97,7 +97,8 @@ namespace Newbe.Claptrap.TestSuit
         }
 
         [TestCase(10, 10, true)]
-        [TestCase(100, 10, true)]
+        [TestCase(100, 10, false)]
+        [TestCase(1000, 10, false)]
         public async Task SaveEventAsync(int actorCount, int count, bool validateByLoader)
         {
             using var lifetimeScope = BuildService().CreateScope();
