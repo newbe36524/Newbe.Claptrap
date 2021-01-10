@@ -16,6 +16,8 @@
     <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.17.0/build/netcoreapp2.1/nunit.engine.api.dll" />
     <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.17.0/build/netcoreapp2.1/nunit.engine.core.dll" />
     <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.17.0/build/netcoreapp2.1/nunit.engine.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/nunitxml.testlogger/2.1.80/build/_common/Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/nunitxml.testlogger/2.1.80/build/_common/Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

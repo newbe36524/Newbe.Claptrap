@@ -4,6 +4,7 @@ namespace Newbe.Claptrap
     {
         None = 0,
         DaprClient = 1,
-        RabbitMQ = 2
+        RabbitMQ = 2,
+        DaprPubsub = 3,
     }
 }

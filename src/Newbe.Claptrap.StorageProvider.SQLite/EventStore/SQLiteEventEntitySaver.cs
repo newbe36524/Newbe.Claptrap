@@ -20,7 +20,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
         private readonly string _eventTableName;
 
         public SQLiteEventEntitySaver(
-            ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteEventStoreOptions options,
@@ -45,7 +45,6 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                             SaveManyAsync(entities),
                         DoManyFuncName = $"event batch saver for {operatorKey.AsStringKey()}"
                     }));
-            RegisterSql();
         }
 
         private int GetCommandHashCode()
@@ -92,7 +91,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
                 .AsParallel();
 
             var key = GetCommandHashCode();
-            var sql = _sqlTemplateCache.GetSql(key);
+            var sql = GetInsertSql();
             var cmd = new SQLiteCommand
             {
                 CommandText = sql,
@@ -120,10 +119,10 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.EventStore
             }
         }
 
-        private void RegisterSql()
+        private string GetInsertSql()
         {
             var key = GetCommandHashCode();
-            _sqlTemplateCache.AddSql(key, () => InitRelationalInsertManySql(_eventTableName));
+            return _sqlTemplateCache.GetOrAddSql(key, k => InitRelationalInsertManySql(_eventTableName));
 
             static string InitRelationalInsertManySql(
                 string eventTableName)

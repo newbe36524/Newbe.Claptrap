@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.Dapr.Core
     {
         Task MasterEventReceivedAsync(IEnumerable<IEvent> events);
 
-        Task MasterEventReceivedJsonAsync(IEnumerable<string> events);
+        Task MasterEventReceivedJsonAsync(IEnumerable<EventJsonModel> events);
 
         Task WakeAsync();
     }

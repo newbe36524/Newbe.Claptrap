@@ -1,4 +1,5 @@
 using Autofac;
+using Newbe.Claptrap.Dapr.Core;
 
 namespace Newbe.Claptrap.DataSerializer.TextJson.Modules
 {
@@ -22,6 +23,7 @@ namespace Newbe.Claptrap.DataSerializer.TextJson.Modules
 
             builder.RegisterType<JsonEventStringSerializer>()
                 .As<IEventStringSerializer>()
+                .As<IEventSerializer<EventJsonModel>>()
                 .SingleInstance();
         }
     }

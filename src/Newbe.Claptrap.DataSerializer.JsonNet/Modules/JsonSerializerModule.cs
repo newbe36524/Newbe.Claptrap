@@ -22,6 +22,7 @@ namespace Newbe.Claptrap.DataSerializer.JsonNet.Modules
 
             builder.RegisterType<JsonEventStringSerializer>()
                 .As<IEventStringSerializer>()
+                .As<IEventSerializer<EventJsonModel>>()
                 .SingleInstance();
         }
     }

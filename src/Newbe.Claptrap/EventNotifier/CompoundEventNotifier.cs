@@ -35,7 +35,7 @@ namespace Newbe.Claptrap.EventNotifier
             {
                 if (t.IsFaulted)
                 {
-                    _logger.LogError("failed to notify event, {@context}", context);
+                    _logger.LogError(t.Exception, "failed to notify event, {@context}", context);
                 }
                 else
                 {

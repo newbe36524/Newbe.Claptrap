@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Dapr;
+using Newbe.Claptrap.Dapr.Core;
 using Newbe.Claptrap.Demo.Interfaces.Domain.Account;
 using Newbe.Claptrap.Demo.Models;
 using static Newbe.Claptrap.Demo.Interfaces.Domain.Account.ClaptrapCodes.AccountCodes;
@@ -16,16 +17,16 @@ namespace Newbe.Claptrap.Demo
         IAccountBalanceMinion
     {
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
-        private readonly IEventStringSerializer _eventStringSerializer;
+        private readonly IEventSerializer<EventJsonModel> _eventSerializer;
 
         public AccountBalanceBalanceMinion(ActorHost actorService,
             IClaptrapActorCommonService claptrapActorCommonService,
             ILogger<AccountBalanceBalanceMinion> logger,
-            IEventStringSerializer eventStringSerializer) : base(
+            IEventSerializer<EventJsonModel> eventSerializer) : base(
             actorService, claptrapActorCommonService)
         {
             _logger = logger;
-            _eventStringSerializer = eventStringSerializer;
+            _eventSerializer = eventSerializer;
         }
 
         public Task<decimal> GetBalance()
@@ -42,9 +43,9 @@ namespace Newbe.Claptrap.Demo
             }
         }
 
-        public async Task MasterEventReceivedJsonAsync(IEnumerable<string> events)
+        public async Task MasterEventReceivedJsonAsync(IEnumerable<EventJsonModel> events)
         {
-            var items = events.Select(_eventStringSerializer.Deserialize);
+            var items = events.Select(_eventSerializer.Deserialize);
             foreach (var @event in items)
             {
                 await Claptrap.HandleEventAsync(@event);

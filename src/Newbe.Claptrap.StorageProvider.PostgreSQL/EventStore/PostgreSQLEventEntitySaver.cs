@@ -18,7 +18,7 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.EventStore
         private readonly string _eventTableName;
 
         public PostgreSQLEventEntitySaver(
-            ConcurrentListBatchOperator<EventEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<EventEntity>.Factory batchOperatorFactory,
             IMasterOrSelfIdentity identity,
             IDbFactory dbFactory,
             IPostgreSQLEventStoreOptions options,

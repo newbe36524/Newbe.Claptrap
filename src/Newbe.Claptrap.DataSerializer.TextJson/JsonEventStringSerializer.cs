@@ -1,9 +1,9 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newbe.Claptrap.Dapr.Core;
 
 namespace Newbe.Claptrap.DataSerializer.TextJson
 {
-    public class JsonEventStringSerializer : IEventStringSerializer
+    public class JsonEventStringSerializer : IEventStringSerializer, IEventSerializer<EventJsonModel>
     {
         // ReSharper disable once MemberCanBePrivate.Global
         public static JsonSerializerOptions JsonSerializerOptions { get; set; } = new()
@@ -21,46 +21,44 @@ namespace Newbe.Claptrap.DataSerializer.TextJson
 
         public string Serialize(IEvent evt)
         {
-            var id = evt.ClaptrapIdentity;
-            var eventData = _eventDataStringSerializer.Serialize(id, evt.EventTypeCode, evt.Data);
-            var model = new EventJsonModel
-            {
-                Version = evt.Version,
-                ClaptrapId = id.Id,
-                ClaptrapTypeCode = id.TypeCode,
-                EventTypeCode = evt.EventTypeCode,
-                DataJson = eventData
-            };
+            var model = (this as IEventSerializer<EventJsonModel>).Serialize(evt);
             var result = JsonSerializer.Serialize(model, JsonSerializerOptions);
             return result;
+        }
+
+        public IEvent Deserialize(EventJsonModel source)
+        {
+            var id = new ClaptrapIdentity(source.cid, source.ctc);
+            var eventData = _eventDataStringSerializer.Deserialize(
+                id,
+                source.etc,
+                source.d);
+            var re = new DataEvent(id, source.etc, eventData)
+            {
+                Version = source.v
+            };
+            return re;
         }
 
         public IEvent Deserialize(string source)
         {
             var jsonModel = JsonSerializer.Deserialize<EventJsonModel>(source, JsonSerializerOptions)!;
-            var id = new ClaptrapIdentity(jsonModel.ClaptrapId, jsonModel.ClaptrapTypeCode);
-            var eventData = _eventDataStringSerializer.Deserialize(
-                id,
-                jsonModel.EventTypeCode,
-                jsonModel.DataJson);
-            var re = new DataEvent(id, jsonModel.EventTypeCode, eventData)
-            {
-                Version = jsonModel.Version
-            };
-            return re;
+            return Deserialize(jsonModel);
         }
-    }
 
-    public class EventJsonModel
-    {
-        [JsonPropertyName("ctc")] public string ClaptrapTypeCode { get; set; }
-
-        [JsonPropertyName("cid")] public string ClaptrapId { get; set; }
-
-        [JsonPropertyName("v")] public long Version { get; set; }
-
-        [JsonPropertyName("etc")] public string EventTypeCode { get; set; }
-
-        [JsonPropertyName("d")] public string DataJson { get; set; }
+        EventJsonModel IEventSerializer<EventJsonModel>.Serialize(IEvent evt)
+        {
+            var id = evt.ClaptrapIdentity;
+            var eventData = _eventDataStringSerializer.Serialize(id, evt.EventTypeCode, evt.Data);
+            var model = new EventJsonModel
+            {
+                v = evt.Version,
+                cid = id.Id,
+                ctc = id.TypeCode,
+                etc = evt.EventTypeCode,
+                d = eventData
+            };
+            return model;
+        }
     }
 }

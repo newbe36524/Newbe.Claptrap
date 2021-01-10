@@ -4,9 +4,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
 {
     public interface ISqlTemplateCache
     {
-        string GetParameterName(string name, int index);
-        void AddParameterName(string name, int index);
-        void AddSql(int key, Func<string> sqlFunc);
-        string GetSql(int key);
+        string GetOrAddGetParameterName(string name, int index);
+        string GetOrAddSql(int key, Func<int, string> factory);
     }
 }

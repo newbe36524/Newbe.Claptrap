@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Newbe.Claptrap.DataSerializer.JsonNet
 {
-    public class JsonEventStringSerializer : IEventStringSerializer
+    public class JsonEventStringSerializer : IEventStringSerializer, IEventSerializer<EventJsonModel>
     {
         private readonly IEventDataStringSerializer _eventDataStringSerializer;
 
@@ -14,23 +14,14 @@ namespace Newbe.Claptrap.DataSerializer.JsonNet
 
         public string Serialize(IEvent evt)
         {
-            var id = evt.ClaptrapIdentity;
-            var eventData = _eventDataStringSerializer.Serialize(id, evt.EventTypeCode, evt.Data);
-            var model = new EventJsonModel
-            {
-                Version = evt.Version,
-                ClaptrapId = id.Id,
-                ClaptrapTypeCode = id.TypeCode,
-                EventTypeCode = evt.EventTypeCode,
-                DataJson = eventData
-            };
+            var model = (this as IEventSerializer<EventJsonModel>).Serialize(evt);
             var result = JsonConvert.SerializeObject(model);
             return result;
         }
 
-        public IEvent Deserialize(string source)
+        public IEvent Deserialize(EventJsonModel source)
         {
-            var jsonModel = JsonConvert.DeserializeObject<EventJsonModel>(source);
+            var jsonModel = source;
             var id = new ClaptrapIdentity(jsonModel.ClaptrapId, jsonModel.ClaptrapTypeCode);
             var eventData = _eventDataStringSerializer.Deserialize(
                 id,
@@ -42,23 +33,39 @@ namespace Newbe.Claptrap.DataSerializer.JsonNet
             };
             return re;
         }
+
+        public IEvent Deserialize(string source)
+        {
+            var jsonModel = JsonConvert.DeserializeObject<EventJsonModel>(source);
+            return Deserialize(jsonModel);
+        }
+
+        EventJsonModel IEventSerializer<EventJsonModel>.Serialize(IEvent evt)
+        {
+            var id = evt.ClaptrapIdentity;
+            var eventData = _eventDataStringSerializer.Serialize(id, evt.EventTypeCode, evt.Data);
+            var model = new EventJsonModel
+            {
+                Version = evt.Version,
+                ClaptrapId = id.Id,
+                ClaptrapTypeCode = id.TypeCode,
+                EventTypeCode = evt.EventTypeCode,
+                DataJson = eventData
+            };
+            return model;
+        }
     }
 
     public class EventJsonModel
     {
-        [JsonProperty("ctc")]
-        public string ClaptrapTypeCode { get; set; }
+        [JsonProperty("ctc")] public string ClaptrapTypeCode { get; set; }
 
-        [JsonProperty("cid")]
-        public string ClaptrapId { get; set; }
+        [JsonProperty("cid")] public string ClaptrapId { get; set; }
 
-        [JsonProperty("v")]
-        public long Version { get; set; }
+        [JsonProperty("v")] public long Version { get; set; }
 
-        [JsonProperty("etc")]
-        public string EventTypeCode { get; set; }
+        [JsonProperty("etc")] public string EventTypeCode { get; set; }
 
-        [JsonProperty("d")]
-        public string DataJson { get; set; }
+        [JsonProperty("d")] public string DataJson { get; set; }
     }
 }

@@ -16,11 +16,7 @@ namespace Newbe.Claptrap.Core.Impl
 
         public IState State
         {
-            get
-            {
-                _logger.LogTrace("Get state");
-                return _state;
-            }
+            get => _state;
             set
             {
                 _logger.LogTrace("Update state, old state: {oldState} new state: {newState}",

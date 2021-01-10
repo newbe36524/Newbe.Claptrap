@@ -53,7 +53,12 @@ namespace Newbe.Claptrap.Demo.Server
                         .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
                     configurationBuilder.AddEnvironmentVariables();
                 })
-                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly}); })
+                .UseClaptrap(builder =>
+                {
+                    builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly})
+                        .UseDaprPubsub(pubsub => pubsub.AsEventCenter())
+                        ;
+                })
                 .UseClaptrapHostCommon()
                 .UseClaptrapDaprHost()
                 .ConfigureWebHostDefaults(webBuilder =>
