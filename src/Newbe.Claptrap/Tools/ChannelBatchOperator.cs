@@ -92,7 +92,7 @@ namespace Newbe.Claptrap
             }
         }
 
-        private async Task DoManyAsync(List<BatchItem> items)
+        private async Task DoManyAsync(IReadOnlyCollection<BatchItem> items)
         {
             try
             {

@@ -1,50 +1,25 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Newbe.Claptrap.StorageProvider.Relational
 {
     public class SqlTemplateCache : ISqlTemplateCache
     {
-        private readonly object _locker = new();
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<int, string>> _ps = new();
 
-        private readonly Dictionary<string, Dictionary<int, string>>
-            _parameterNames = new();
-
-        public string GetParameterName(string name, int index)
+        public string GetOrAddGetParameterName(string name, int index)
         {
-            return _parameterNames[name][index];
+            var innerDic = _ps.GetOrAdd(name, n => new ConcurrentDictionary<int, string>());
+            var result = innerDic.GetOrAdd(index, i => $"@{name}{i}");
+            return result;
         }
 
-        public void AddParameterName(string name, int index)
+        private readonly ConcurrentDictionary<int, string> _sqlDic = new();
+
+        public string GetOrAddSql(int key, Func<int, string> factory)
         {
-            lock (_locker)
-            {
-                if (!_parameterNames.TryGetValue(name, out var dic))
-                {
-                    dic = new Dictionary<int, string>();
-                    _parameterNames.Add(name, dic);
-                }
-
-                if (!dic.TryGetValue(index, out _))
-                {
-                    dic[index] = $"@{name}{index}";
-                }
-            }
-        }
-
-        private readonly Dictionary<int, Lazy<string>> _sqlDic = new();
-
-        public void AddSql(int key, Func<string> sqlFunc)
-        {
-            lock (_locker)
-            {
-                _sqlDic[key] = new Lazy<string>(sqlFunc);
-            }
-        }
-
-        public string GetSql(int key)
-        {
-            return _sqlDic[key].Value;
+            var re = _sqlDic.GetOrAdd(key, factory.Invoke);
+            return re;
         }
     }
 }

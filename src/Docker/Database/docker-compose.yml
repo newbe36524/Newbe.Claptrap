@@ -1,46 +1,48 @@
-version: '3.3'
+version: "3.3"
 
 services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: claptrap
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgresql:/docker-entrypoint-initdb.d
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: claptrap
+      MYSQL_DATABASE: claptrap
+      MYSQL_USER: claptrap
+      MYSQL_PASSWORD: claptrap
+    command: --local-infile=1
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
 
-    postgres:
-        image: postgres
-        restart: always
-        environment:
-            POSTGRES_PASSWORD: claptrap
-        ports:
-            - 5432:5432
-        volumes:
-            - ./postgresql:/docker-entrypoint-initdb.d
-    mysql:
-        image: mysql
-        restart: always
-        ports:
-            - 3306:3306
-        environment:
-            MYSQL_ROOT_PASSWORD: claptrap
-        command: --local-infile=1
-        volumes:
-            - ./mysql/init:/docker-entrypoint-initdb.d
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 38080:8080
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: claptrap
 
-    adminer:
-        image: adminer
-        restart: always
-        ports:
-            - 38080:8080
-    mongo:
-        image: mongo
-        restart: always
-        ports:
-            - 27017:27017
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: claptrap
-
-    mongo-express:
-        image: mongo-express
-        restart: always
-        ports:
-            - 38081:8081
-        environment:
-            ME_CONFIG_MONGODB_ADMINUSERNAME: root
-            ME_CONFIG_MONGODB_ADMINPASSWORD: claptrap
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 38081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: claptrap
