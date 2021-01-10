@@ -31,5 +31,5 @@ jobs:
       - uses: MirrorNG/nunit-reporter@v1.0.11
         if: always()
         with:
-          path: src/*.Tests/TestResults/*/coverage.opencover.xml
+          path: src/*.Tests/TestResults/*.xml
           access-token: ${{ secrets.GITHUB_TOKEN }}
