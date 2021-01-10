@@ -118,6 +118,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.Dapr.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.DataSerializer.TextJson", "Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj", "{80B5CD4C-BABD-4620-AC05-D35DF3291306}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newbe.Claptrap.EventCenter.Dapr", "Newbe.Claptrap.EventCenter.Dapr\Newbe.Claptrap.EventCenter.Dapr.csproj", "{726898FE-C197-4DA7-821C-0D328F5A1895}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -288,6 +290,10 @@ Global
 		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80B5CD4C-BABD-4620-AC05-D35DF3291306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726898FE-C197-4DA7-821C-0D328F5A1895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726898FE-C197-4DA7-821C-0D328F5A1895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726898FE-C197-4DA7-821C-0D328F5A1895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726898FE-C197-4DA7-821C-0D328F5A1895}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -336,6 +342,7 @@ Global
 		{7E357374-4E57-475C-83D1-16874D8A19D3} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
 		{21BB3E18-FF76-491C-BF30-6F25A81B562B} = {9BD92EE4-32D2-48E6-B999-1DA5C814B696}
 		{80B5CD4C-BABD-4620-AC05-D35DF3291306} = {D3A78049-C52A-46EF-A788-3466C4DBEE22}
+		{726898FE-C197-4DA7-821C-0D328F5A1895} = {1D69419C-3123-43D1-9E1F-C7892E260B06}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {594E59AF-14B6-4BA7-A33F-5F202BC03640}

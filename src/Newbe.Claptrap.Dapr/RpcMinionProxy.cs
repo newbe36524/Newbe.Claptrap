@@ -12,11 +12,11 @@ namespace Newbe.Claptrap.Dapr
         public delegate RpcMinionProxy Factory(ActorProxy actorProxy);
 
         private readonly ActorProxy _actorProxy;
-        private readonly IEventStringSerializer _eventStringSerializer;
+        private readonly IEventSerializer<EventJsonModel> _eventStringSerializer;
 
         public RpcMinionProxy(
             ActorProxy actorProxy,
-            IEventStringSerializer eventStringSerializer)
+            IEventSerializer<EventJsonModel> eventStringSerializer)
         {
             _actorProxy = actorProxy;
             _eventStringSerializer = eventStringSerializer;

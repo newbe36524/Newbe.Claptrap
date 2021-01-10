@@ -5,7 +5,7 @@ using RabbitMQ.Client;
 
 namespace Newbe.Claptrap.EventCenter.RabbitMQ.Impl
 {
-    public class ConnectionManager : IConnectionManager, IDisposable
+    public class ConnectionManager : IConnectionManager
     {
         private readonly IOptions<ClaptrapServerOptions> _options;
         private readonly ILogger<ConnectionManager> _logger;

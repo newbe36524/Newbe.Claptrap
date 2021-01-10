@@ -1,3 +1,4 @@
+using App.Metrics;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Demo.Server.Services;
 using Newbe.Claptrap.StorageSetup;
 
@@ -25,6 +27,7 @@ namespace Newbe.Claptrap.Demo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDaprClient();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Newbe.Claptrap.Demo.Server", Version = "v1"});
@@ -32,8 +35,6 @@ namespace Newbe.Claptrap.Demo.Server
             services.AddOptions<TestConsoleOptions>()
                 .Configure(
                     consoleOptions => Configuration.Bind(nameof(TestConsoleOptions), consoleOptions));
-
-            // services.AddHostedService<DaprHost>();
         }
         
         // ConfigureContainer is where you can register things directly
@@ -53,6 +54,9 @@ namespace Newbe.Claptrap.Demo.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var metricsRoot = app.ApplicationServices.GetRequiredService<IMetricsRoot>();
+            ClaptrapMetrics.MetricsRoot = metricsRoot;
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -63,12 +67,14 @@ namespace Newbe.Claptrap.Demo.Server
 
             // app.UseHttpsRedirection();
 
-            
             app.UseRouting();
+            
+            app.UseCloudEvents();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSubscribeHandler();
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
             });
 

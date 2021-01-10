@@ -5,8 +5,8 @@ export let options = {
     // vus: 3000,
     // duration: "5m",
     stages: [
-        { duration: "10s", target: 2000 },
-        { duration: "1m", target: 2000 },
+        { duration: "10s", target: 1000 },
+        { duration: "1m", target: 1000 },
     ],
     insecureSkipTLSVerify: true,
 };
