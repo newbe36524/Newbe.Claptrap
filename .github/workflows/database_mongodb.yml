@@ -27,7 +27,7 @@ jobs:
           dotnet build $GITHUB_WORKSPACE/src --configuration Release
       - name: Test
         run: |
-          dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings -- NUnit.Where="Category == MongoDB"
+          dotnet test $GITHUB_WORKSPACE/src --configuration Release -l "console;verbosity=detailed" --collect:"XPlat Code Coverage" --settings $GITHUB_WORKSPACE/src/coverlet.runsettings --logger:nunit -- NUnit.Where="Category == MongoDB"
       - uses: MirrorNG/nunit-reporter@v1.0.11
         if: always()
         with:
