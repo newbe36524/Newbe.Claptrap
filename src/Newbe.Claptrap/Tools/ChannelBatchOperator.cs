@@ -47,7 +47,7 @@ namespace Newbe.Claptrap
 
             _channel = Channel.CreateUnbounded<BatchItem>();
 
-            _task = Task.Factory.StartNew(ConsumeTasks, TaskCreationOptions.LongRunning).Unwrap();
+            _task = Task.Run(ConsumeTasks);
         }
 
         private async Task ConsumeTasks()
@@ -73,7 +73,8 @@ namespace Newbe.Claptrap
                             try
                             {
                                 ClaptrapMetrics.MeasureBatchOperatorGauge(_doManyFuncName, items.Count);
-                                ClaptrapMetrics.MeasureBatchOperatorMaxCountGauge(_doManyFuncName, _options.BufferCount!.Value);
+                                ClaptrapMetrics.MeasureBatchOperatorMaxCountGauge(_doManyFuncName,
+                                    _options.BufferCount!.Value);
                                 using var _ = ClaptrapMetrics.MeasureBatchOperatorTime(_doManyFuncName);
                                 await DoManyAsync(items);
                             }
@@ -101,18 +102,12 @@ namespace Newbe.Claptrap
                 await _options.DoManyFunc.Invoke(input, _cacheData).ConfigureAwait(false);
                 _logger.LogDebug("one batch done with {count} items", input.Length);
 
-                Parallel.ForEach(items.Select(x => x.Vts), tcs =>
-                {
-                    tcs.SetResult(0);
-                });
+                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetResult(0); });
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "failed to run batch operation");
-                Parallel.ForEach(items.Select(x => x.Vts), tcs =>
-                {
-                    tcs.SetException(e);
-                });
+                Parallel.ForEach(items.Select(x => x.Vts), tcs => { tcs.SetException(e); });
             }
         }
 
@@ -138,10 +133,10 @@ namespace Newbe.Claptrap
             }
         }
 
-        private struct BatchItem
+        private record BatchItem
         {
-            public T Input { get; set; }
-            public ManualResetValueTaskSource<int> Vts { get; set; }
+            public T Input { get; init; }
+            public ManualResetValueTaskSource<int> Vts { get; init; }
         }
     }
 }

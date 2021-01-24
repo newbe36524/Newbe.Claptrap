@@ -19,6 +19,11 @@ namespace Newbe.Claptrap.Core
         {
             return Task.CompletedTask;
         }
+        
+        Task ActivatedFinallyAsync()
+        {
+            return Task.CompletedTask;
+        }
 
         Task DeactivatingAsync()
         {
@@ -34,6 +39,11 @@ namespace Newbe.Claptrap.Core
         {
             return Task.CompletedTask;
         }
+        
+        Task DeactivatedFinallyAsync()
+        {
+            return Task.CompletedTask;
+        }
 
         Task HandlingEventAsync(IEvent @event)
         {
@@ -46,6 +56,11 @@ namespace Newbe.Claptrap.Core
         }
 
         Task HandlingEventThrowExceptionAsync(IEvent @event, Exception ex)
+        {
+            return Task.CompletedTask;
+        }
+        
+        Task HandledEventFinallyAsync(IEvent @event)
         {
             return Task.CompletedTask;
         }

@@ -20,8 +20,11 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "50001",
+        "DAPR_GRPC_PORT": "50002"
+      },
+      "applicationUrl": "http://localhost:5000/"
     }
   }
 }

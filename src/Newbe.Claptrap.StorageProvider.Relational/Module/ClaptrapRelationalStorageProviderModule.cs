@@ -1,5 +1,4 @@
 using Autofac;
-using Microsoft.Extensions.ObjectPool;
 using Newbe.Claptrap.StorageProvider.Relational.EventStore;
 using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
@@ -41,83 +40,6 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterGeneric(typeof(ChannelBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
-            builder.RegisterGeneric(typeof(ConcurrentListBatchOperator<>))
-                .AsSelf()
-                .InstancePerDependency();
-            builder.RegisterGeneric(typeof(ConcurrentListBatchOperatorWorker<>))
-                .AsSelf()
-                .InstancePerDependency();
-            builder.RegisterGeneric(typeof(ConcurrentListPool<>))
-                .As(typeof(IConcurrentListPool<>))
-                .SingleInstance();
-            builder.RegisterGeneric(typeof(AutoFlushList<>))
-                .AsSelf()
-                .InstancePerDependency();
-            builder.RegisterType<StaticAutoFlushListOptions>()
-                .AsSelf()
-                .InstancePerDependency();
-
-            builder.RegisterType<DefaultObjectPoolProvider>()
-                .As<ObjectPoolProvider>()
-                .SingleInstance()
-                .ExternallyOwned();
-            builder.Register(t =>
-                {
-                    var provider = t.Resolve<ObjectPoolProvider>();
-                    var objectPool =
-                        provider.Create(
-                            new BatchItemPooledObjectPolicy());
-                    return objectPool;
-                })
-                .AsSelf()
-                .SingleInstance()
-                .ExternallyOwned();
-
-            builder.Register(t =>
-                {
-                    var provider = t.Resolve<ObjectPoolProvider>();
-                    var objectPool =
-                        provider.Create(
-                            new ConcurrentListPooledObjectPolicy<
-                                ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem>());
-                    return objectPool;
-                })
-                .AsSelf()
-                .SingleInstance()
-                .ExternallyOwned();
-        }
-
-        private class
-            BatchItemPooledObjectPolicy : PooledObjectPolicy<ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem>
-        {
-            public override ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem Create()
-            {
-                return new()
-                {
-                    Vts = new ManualResetValueTaskSource<int>(),
-                };
-            }
-
-            public override bool Return(ConcurrentListBatchOperatorWorker<EventEntity>.BatchItem obj)
-            {
-                obj.Vts.Reset();
-                return true;
-            }
-        }
-
-        private class
-            ConcurrentListPooledObjectPolicy<T> : PooledObjectPolicy<ConcurrentList<T>>
-        {
-            public override ConcurrentList<T> Create()
-            {
-                return new ConcurrentList<T>();
-            }
-
-            public override bool Return(ConcurrentList<T> obj)
-            {
-                obj.ResetIndex();
-                return true;
-            }
         }
     }
 }

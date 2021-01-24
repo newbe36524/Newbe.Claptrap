@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.Demo.Server.Services
             base.Load(builder);
             builder.RegisterType<DaprActorTestService>()
                 .AsImplementedInterfaces()
-                .SingleInstance();
+                .InstancePerLifetimeScope();
         }
     }
 }
