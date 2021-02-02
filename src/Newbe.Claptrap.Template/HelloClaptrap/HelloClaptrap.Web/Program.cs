@@ -1,8 +1,5 @@
 using System;
-using System.Net;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NLog.Web;
 
@@ -35,13 +32,7 @@ namespace HelloClaptrap.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                        .ConfigureKestrel((context, options) =>
-                        {
-                            var httpPort = context.Configuration.GetValue("PORT", 80);
-                            options.Listen(IPAddress.Any, httpPort,
-                                listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2; });
-                        });
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

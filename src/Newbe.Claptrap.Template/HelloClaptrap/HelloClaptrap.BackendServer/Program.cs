@@ -1,14 +1,10 @@
 using System;
-using System.Net;
 using Dapr.Actors.AspNetCore;
 using HelloClaptrap.Actors.Cart;
 using HelloClaptrap.IActor;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Bootstrapper;
 using NLog.Web;
 
 namespace HelloClaptrap.BackendServer
@@ -44,12 +40,6 @@ namespace HelloClaptrap.BackendServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                        .ConfigureKestrel((context, options) =>
-                        {
-                            var httpPort = context.Configuration.GetValue("PORT", 80);
-                            options.Listen(IPAddress.Any, httpPort,
-                                listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2; });
-                        })
                         .UseActors(options => { })
                         ;
                 })

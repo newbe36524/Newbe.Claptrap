@@ -1,0 +1,24 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: helloclaptrap
+extensions:
+  - name: dapr
+    config: config
+    components-path: "./dapr/components/"
+services:
+  - name: helloclaptrap-backendserver
+    project: HelloClaptrap.BackendServer/HelloClaptrap.BackendServer.csproj
+  - name: helloclaptrap-web
+    project: HelloClaptrap.Web/HelloClaptrap.Web.csproj
+  - name: redis
+    image: redis
+    bindings:
+      - containerPort: 16379
+  - name: zipkin
+    image: openzipkin/zipkin
+    bindings:
+      - containerPort: 9411

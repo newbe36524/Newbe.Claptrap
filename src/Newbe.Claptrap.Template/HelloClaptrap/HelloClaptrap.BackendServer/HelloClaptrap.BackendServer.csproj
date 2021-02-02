@@ -33,5 +33,9 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="..\.dockerignore" />
+    </ItemGroup>
     
 </Project>
