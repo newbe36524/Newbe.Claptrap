@@ -26,8 +26,8 @@ namespace Newbe.Claptrap.Demo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddDaprClient();
+            services.AddControllers()
+                .AddDapr();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Newbe.Claptrap.Demo.Server", Version = "v1"});
@@ -71,6 +71,8 @@ namespace Newbe.Claptrap.Demo.Server
             
             app.UseCloudEvents();
 
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

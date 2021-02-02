@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Server.Services;
 using NLog.Web;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Newbe.Claptrap.Demo.Server
 {
@@ -15,6 +20,7 @@ namespace Newbe.Claptrap.Demo.Server
     {
         public static void Main(string[] args)
         {
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
@@ -52,6 +58,20 @@ namespace Newbe.Claptrap.Demo.Server
                         .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.json".ToLower())
                         .AddJsonFile($"configs/db_configs/claptrap.{databaseType:G}.{strategy:G}.json".ToLower());
                     configurationBuilder.AddEnvironmentVariables();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddOpenTelemetryTracing(
+                        builder => builder
+                            .AddAspNetCoreInstrumentation()
+                            .AddGrpcClientInstrumentation()
+                            .AddHttpClientInstrumentation()
+                            .SetSampler(new ParentBasedSampler(new AlwaysOffSampler()))
+                            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("claptrap-host"))
+                            .AddSource(ClaptrapActivitySource.Instance.Name)
+                            .AddZipkinExporter(options =>
+                                options.Endpoint = new Uri("http://localhost:9412/api/v2/spans"))
+                    );
                 })
                 .UseClaptrap(builder =>
                 {

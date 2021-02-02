@@ -37,6 +37,10 @@ namespace Newbe.Claptrap.Core
                 await RunInterceptors(x => x.ActivatingThrowExceptionAsync(e)).ConfigureAwait(false);
                 throw;
             }
+            finally
+            {
+                await RunInterceptors(x => x.ActivatedFinallyAsync()).ConfigureAwait(false);
+            }
         }
 
         public async Task DeactivateAsync()
@@ -53,6 +57,10 @@ namespace Newbe.Claptrap.Core
                 await RunInterceptors(x => x.DeactivatingThrowExceptionAsync(e)).ConfigureAwait(false);
                 throw;
             }
+            finally
+            {
+                await RunInterceptors(x => x.DeactivatedFinallyAsync()).ConfigureAwait(false);
+            }
         }
 
         public async Task HandleEventAsync(IEvent @event)
@@ -68,6 +76,10 @@ namespace Newbe.Claptrap.Core
             {
                 await RunInterceptors(x => x.HandlingEventThrowExceptionAsync(@event, e)).ConfigureAwait(false);
                 throw;
+            }
+            finally
+            {
+                await RunInterceptors(x => x.HandledEventFinallyAsync(@event)).ConfigureAwait(false);
             }
         }
 

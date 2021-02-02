@@ -94,7 +94,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         .SelectMany(x =>
                         {
                             var ms = x.GetClaptrapApplicationModules().ToArray();
-                            _logger.LogDebug("Found {count} claptrap application modules from {type} : {modules}",
+                            _logger.LogDebug("Found {Count} claptrap application modules from {Type} : {Modules}",
                                 ms.Length,
                                 x,
                                 ms.Select(a => a.Name));
@@ -103,7 +103,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         .ToArray();
 
                     _logger.LogInformation(
-                        "Scanned {typesCount}, and found {count} claptrap application modules : {modules}",
+                        "Scanned {TypesCount}, and found {Count} claptrap application modules : {Modules}",
                         Options.ModuleTypes.Count(),
                         appModules.Length,
                         appModules.Select(x => x.Name));
@@ -111,7 +111,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         .OfType<Module>()
                         .ToArray();
                     _logger.LogInformation(
-                        "Filtered and found {count} Autofac modules : {modules}",
+                        "Filtered and found {Count} Autofac modules : {@Modules}",
                         appAutofacModules.Count(),
                         appAutofacModules);
                 }
@@ -137,9 +137,9 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 var providerTypes = Options.ModuleTypes
                     .Where(x => x.IsClass && !x.IsAbstract)
-                    .Where(x => x.GetInterface(typeof(IClaptrapAppProvider).FullName) != null)
+                    .Where(x => x.GetInterface(typeof(IClaptrapAppProvider).FullName!) != null)
                     .ToArray();
-                _logger.LogDebug("Found type {providerTypes} as {name}",
+                _logger.LogDebug("Found type {ProviderTypes} as {Name}",
                     providerTypes,
                     nameof(IClaptrapAppProvider));
                 innerBuilder.RegisterTypes(providerTypes)
@@ -155,10 +155,10 @@ namespace Newbe.Claptrap.Bootstrapper
         {
             var providers = Options.ModuleTypes
                 .Where(x => x.IsClass && !x.IsAbstract)
-                .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName) != null)
+                .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName!) != null)
                 .ToArray();
             _logger.LogInformation(
-                "Scanned {typeCount}, and found {count} claptrap modules providers : {modules}",
+                "Scanned {TypeCount}, and found {Count} claptrap modules providers : {Modules}",
                 Options.ModuleTypes.Count(),
                 providers.Length,
                 providers);

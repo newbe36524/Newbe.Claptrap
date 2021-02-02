@@ -12,6 +12,8 @@ export let options = {
 };
 export default function () {
     const res = http.get("https://localhost:5001/Event");
+    // const res = http.get("http://localhost:50001/v1.0/invoke/newbe_claptrap_demo_server/method/Event");
+    
     // check(res, {
     //     "protocol is HTTP/2": (r) => r.proto === "HTTP/2.0",
     // });

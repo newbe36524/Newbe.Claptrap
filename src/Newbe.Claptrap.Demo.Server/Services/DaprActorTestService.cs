@@ -41,7 +41,7 @@ namespace Newbe.Claptrap.Demo.Server.Services
             _logger.LogInformation("Init done");
         }
 
-        private int _userIndex;
+        private static int _userIndex;
 
         public async Task<int> RunAsync()
         {
