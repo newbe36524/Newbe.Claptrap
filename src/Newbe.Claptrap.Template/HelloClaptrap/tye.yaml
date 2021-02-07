@@ -7,18 +7,42 @@
 name: helloclaptrap
 extensions:
   - name: dapr
+    components-path: "./dapr_components/"
     config: config
-    components-path: "./dapr/components/"
 services:
+  - name: helloclaptrap-webapi
+    project: HelloClaptrap.WebApi/HelloClaptrap.WebApi.csproj
   - name: helloclaptrap-backendserver
     project: HelloClaptrap.BackendServer/HelloClaptrap.BackendServer.csproj
-  - name: helloclaptrap-web
-    project: HelloClaptrap.Web/HelloClaptrap.Web.csproj
-  - name: redis
-    image: redis
+  # - name: mongo
+  #   image: mongo
+  #   bindings:
+  #     - name: mongodb
+  #       containerPort: 27017
+  #       connectionString: mongodb://${env:MONGO_INITDB_ROOT_USERNAME}:${env:MONGO_INITDB_ROOT_PASSWORD}@${host}:${containerPort}/claptrap?authSource=admin
+  #   env:
+  #     - name: MONGO_INITDB_ROOT_USERNAME
+  #       value: root
+  #     - name: MONGO_INITDB_ROOT_PASSWORD
+  #       value: claptrap
+  # - name: mongo-express
+  #   image: mongo-express
+  #   bindings:
+  #     - name: mongodb
+  #       port: 58081
+  #       containerPort: 8081
+  #       protocol: http
+  #   env:
+  #     - name: MONGO_INITDB_ROOT_USERNAME
+  #       value: root
+  #     - name: MONGO_INITDB_ROOT_PASSWORD
+  #       value: claptrap
+ingress:
+  - name: webapi
+    rules:
+      - service: helloclaptrap-webapi
+        path: /
     bindings:
-      - containerPort: 16379
-  - name: zipkin
-    image: openzipkin/zipkin
-    bindings:
-      - containerPort: 9411
+      - name: webapi
+        protocol: https
+        port: 36524
