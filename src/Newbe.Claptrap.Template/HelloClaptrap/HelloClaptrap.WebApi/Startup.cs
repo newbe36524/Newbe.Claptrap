@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapr.Actors.Runtime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,9 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
-namespace HelloClaptrap.BackendServer
+namespace HelloClaptrap.WebApi
 {
     public class Startup
     {
@@ -26,11 +28,11 @@ namespace HelloClaptrap.BackendServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddActors(options => { });
-            services.AddControllers();
+            services.AddControllers()
+                .AddDapr();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "HelloClaptrap.BackendServer", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "HelloClaptrap.WebApi", Version = "v1"});
             });
         }
 
@@ -41,18 +43,22 @@ namespace HelloClaptrap.BackendServer
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HelloClaptrap.BackendServer v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HelloClaptrap.WebApi v1"));
             }
 
-
             app.UseRouting();
+
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapActorsHandlers();
                 endpoints.MapControllers();
+                endpoints.Map("/", c =>
+                {
+                    c.Response.Redirect("/swagger");
+                    return Task.CompletedTask;
+                });
             });
         }
     }

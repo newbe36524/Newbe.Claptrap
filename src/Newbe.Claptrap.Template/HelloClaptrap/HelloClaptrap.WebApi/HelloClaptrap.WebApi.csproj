@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc05" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HelloClaptrap.Actors\HelloClaptrap.Actors.csproj" />
+      <ProjectReference Include="..\HelloClaptrap.IActor\HelloClaptrap.IActor.csproj" />
+    </ItemGroup>
+
+</Project>
