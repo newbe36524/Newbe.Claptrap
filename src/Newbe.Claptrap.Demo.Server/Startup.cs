@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using App.Metrics;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +37,7 @@ namespace Newbe.Claptrap.Demo.Server
                 .Configure(
                     consoleOptions => Configuration.Bind(nameof(TestConsoleOptions), consoleOptions));
         }
-        
+
         // ConfigureContainer is where you can register things directly
         // with Autofac. This runs after ConfigureServices so the things
         // here will override registrations made in ConfigureServices.
@@ -56,7 +57,7 @@ namespace Newbe.Claptrap.Demo.Server
         {
             var metricsRoot = app.ApplicationServices.GetRequiredService<IMetricsRoot>();
             ClaptrapMetrics.MetricsRoot = metricsRoot;
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -68,16 +69,21 @@ namespace Newbe.Claptrap.Demo.Server
             // app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseCloudEvents();
 
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapSubscribeHandler();
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
+                endpoints.MapActorsHandlers();
+                endpoints.MapGet("/", context =>
+                {
+                    context.Response.Redirect("/swagger");
+                    return Task.CompletedTask;
+                });
             });
 
             using var serviceScope = app.ApplicationServices.CreateScope();

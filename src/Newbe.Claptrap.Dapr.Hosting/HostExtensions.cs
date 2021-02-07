@@ -12,12 +12,14 @@ namespace Microsoft.Extensions.Hosting
         {
             return hostBuilder.ConfigureServices((context, collection) =>
             {
-                collection.Configure<ActorRuntimeOptions>(options =>
+                collection.AddActors(options =>
                 {
-                    var store = (IClaptrapDesignStore) context.Properties[ClaptrapHostConst.HostBuilderContextClaptrapDesignStoreKey];
+                    var store = (IClaptrapDesignStore) context.Properties[
+                        ClaptrapHostConst.HostBuilderContextClaptrapDesignStoreKey];
                     foreach (var claptrapDesign in store)
                     {
-                        var actorTypeInformation = ActorTypeInformation.Get(claptrapDesign.ClaptrapBoxImplementationType);
+                        var actorTypeInformation =
+                            ActorTypeInformation.Get(claptrapDesign.ClaptrapBoxImplementationType);
                         options.Actors.Add(
                             new ActorRegistration(
                                 actorTypeInformation));

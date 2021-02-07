@@ -38,7 +38,7 @@ namespace Newbe.Claptrap.Dapr.Tests
             });
 
             mocker.Mock<IActorProxyFactory>()
-                .Setup(x => x.Create(new ActorId(id.Id), minionDesign.ClaptrapTypeCode))
+                .Setup(x => x.Create(new ActorId(id.Id), minionDesign.ClaptrapTypeCode, It.IsAny<ActorProxyOptions>()))
                 .Verifiable();
 
             var daprMinionActivator = mocker.Create<DaprMinionActivator>();
@@ -70,9 +70,10 @@ namespace Newbe.Claptrap.Dapr.Tests
 
             // act
             await daprMinionActivator.WakeAsync(id);
-            
+
             mocker.Mock<IActorProxyFactory>()
-                .Verify(x => x.Create(It.IsAny<ActorId>(), It.IsAny<string>()), Times.Never);
+                .Verify(x => x.Create(It.IsAny<ActorId>(), It.IsAny<string>(), It.IsAny<ActorProxyOptions>()),
+                    Times.Never);
         }
     }
 }

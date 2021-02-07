@@ -1,4 +1,5 @@
-﻿using Dapr.Actors;
+﻿using System;
+using Dapr.Actors;
 using Dapr.Actors.Client;
 
 namespace Newbe.Claptrap.Dapr
@@ -14,6 +15,21 @@ namespace Newbe.Claptrap.Dapr
         public ActorProxy Create(ActorId actorId, string actorType)
         {
             return ActorProxy.Create(actorId, actorType);
+        }
+
+        public TActorInterface CreateActorProxy<TActorInterface>(ActorId actorId, string actorType, ActorProxyOptions options = null) where TActorInterface : IActor
+        {
+            throw new NotImplementedException();
+        }
+
+        public object CreateActorProxy(ActorId actorId, Type actorInterfaceType, string actorType, ActorProxyOptions options = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActorProxy Create(ActorId actorId, string actorType, ActorProxyOptions options = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }
