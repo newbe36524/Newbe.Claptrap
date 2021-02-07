@@ -43,7 +43,7 @@ namespace Newbe.Claptrap.EventCenter.Dapr
             {
                 var minionId = new ClaptrapIdentity(e.ClaptrapIdentity.Id, x);
                 var actorProxy = _actorProxyFactory.Create(new ActorId(minionId.Id), minionId.TypeCode);
-                await actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedJsonAsync),
+                await actorProxy.InvokeMethodAsync(nameof(IClaptrapMinionActor.MasterEventReceivedJsonAsync),
                     new[] {jsonModel});
             });
 

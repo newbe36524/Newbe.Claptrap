@@ -49,7 +49,7 @@ namespace Newbe.Claptrap.Dapr
                 foreach (var minionDesign in minions)
                 {
                     var actorProxy = _actorProxyFactory.Create(new ActorId(identity.Id), minionDesign.ClaptrapTypeCode);
-                    yield return actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.WakeAsync));
+                    yield return actorProxy.InvokeMethodAsync(nameof(IClaptrapMinionActor.WakeAsync));
                 }
             }
         }

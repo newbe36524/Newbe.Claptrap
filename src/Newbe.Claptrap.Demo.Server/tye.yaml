@@ -1,0 +1,27 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: newbe.claptrap.demo.server
+extensions:
+  - name: dapr
+    components-path: "./dapr_components/"
+    config: myconfig
+    log-level: debug
+  # - name: seq
+  #   logPath: ./.logs
+services:
+  - name: newbe-claptrap-demo-server
+    project: Newbe.Claptrap.Demo.Server.csproj
+  # - name: rabbitmq
+  #   image: rabbitmq:3-management
+  #   bindings:
+  #     - name: dashboard
+  #       protocol: http
+  #       port: 15672
+  #     - name: mq
+  #       protocol: tcp
+  #       host: rabbitmq
+  #       containerPort: 5672

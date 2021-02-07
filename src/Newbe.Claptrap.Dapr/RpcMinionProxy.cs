@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.Dapr
 
         public Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
         {
-            return _actorProxy.InvokeAsync(nameof(IClaptrapMinionActor.MasterEventReceivedJsonAsync),
+            return _actorProxy.InvokeMethodAsync(nameof(IClaptrapMinionActor.MasterEventReceivedJsonAsync),
                 events.Select(_eventStringSerializer.Serialize));
         }
     }
