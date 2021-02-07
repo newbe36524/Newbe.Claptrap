@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Dapr.Actors.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,11 +80,7 @@ namespace Newbe.Claptrap.Demo.Server
                 })
                 .UseClaptrapHostCommon()
                 .UseClaptrapDaprHost()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>()
-                        .UseActors(options => { });
-                })
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();

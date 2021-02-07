@@ -14,7 +14,7 @@
     <ItemGroup>
       <PackageReference Include="Autofac" Version="6.1.0" />
       <PackageReference Include="Autofac.Extras.AggregateService" Version="6.0.0" />
-      <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc02" />
+      <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc05" />
     </ItemGroup>
 
 </Project>

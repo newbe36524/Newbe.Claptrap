@@ -18,7 +18,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc1.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc02" />
+    <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc05" />
   </ItemGroup>
 
   <ItemGroup>

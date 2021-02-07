@@ -12,9 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapr.Actors" Version="1.0.0-rc02" />
-      <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc02" />
-      <PackageReference Include="Dapr.Client" Version="1.0.0-rc02" />
+      <PackageReference Include="Dapr.Actors" Version="1.0.0-rc05" />
+      <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc05" />
+      <PackageReference Include="Dapr.Client" Version="1.0.0-rc05" />
     </ItemGroup>
 
 </Project>
