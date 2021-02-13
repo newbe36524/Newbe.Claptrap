@@ -12,10 +12,8 @@
     <Content Include="configs\appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="nlog.config">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    <Content Include="$(SolutionDir)/nlog.config" Link="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <None Remove="Docker\**" />
     <Content Include="configs\db_configs\claptrap.mongodb.json">
@@ -66,14 +64,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MethodTimer.Fody" Version="3.1.2">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Humanizer" Version="2.8.26" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Newbe.ObjectVisitor" Version="0.4.4" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
+    <PackageReference Include="NLog.Targets.Seq" Version="1.2.0" />
   </ItemGroup>
 
 </Project>

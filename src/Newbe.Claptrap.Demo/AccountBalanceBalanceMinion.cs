@@ -19,11 +19,9 @@ namespace Newbe.Claptrap.Demo
         private readonly ILogger<AccountBalanceBalanceMinion> _logger;
         private readonly IEventSerializer<EventJsonModel> _eventSerializer;
 
-        public AccountBalanceBalanceMinion(ActorHost actorService,
-            IClaptrapActorCommonService claptrapActorCommonService,
+        public AccountBalanceBalanceMinion(IClaptrapActorCommonService claptrapActorCommonService,
             ILogger<AccountBalanceBalanceMinion> logger,
-            IEventSerializer<EventJsonModel> eventSerializer) : base(
-            actorService, claptrapActorCommonService)
+            IEventSerializer<EventJsonModel> eventSerializer) : base(claptrapActorCommonService)
         {
             _logger = logger;
             _eventSerializer = eventSerializer;

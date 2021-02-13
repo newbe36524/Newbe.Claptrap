@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr.TestKit\Newbe.Claptrap.Dapr.TestKit.csproj" />
     <ProjectReference Include="..\Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
   </ItemGroup>
 
 </Project>

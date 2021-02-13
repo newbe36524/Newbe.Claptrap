@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj" />
-    <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
-    <ProjectReference Include="..\Newbe.Claptrap.Hosting\Newbe.Claptrap.Hosting.csproj" />
-    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.Hosting\Newbe.Claptrap.Hosting.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.Relational\Newbe.Claptrap.StorageProvider.Relational.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc05" />
-    <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc05" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc05"/>
+    <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.0.0-rc05"/>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
   </ItemGroup>
 
 </Project>

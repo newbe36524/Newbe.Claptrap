@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap
 {
-    public class EventContext : IEventContext
+    public record EventContext : IEventContext
     {
         public EventContext(IEvent @event, IState actorContext)
         {

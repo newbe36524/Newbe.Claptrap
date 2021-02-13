@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.Core
                 await _stateRestorer.RestoreAsync();
                 _stateSavingFlow.Activate();
                 _eventHandlerFLow.Activate();
-                _logger.LogTrace("Activated.");
+                _logger.LogTrace("Activated");
             }
             catch (Exception e)
             {

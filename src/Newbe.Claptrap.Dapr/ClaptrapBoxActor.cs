@@ -7,13 +7,10 @@ namespace Newbe.Claptrap.Dapr
         IClaptrapBoxActor<TStateData>
         where TStateData : IStateData
     {
-        private readonly ActorHost _actorService;
-
         protected ClaptrapBoxActor(
-            ActorHost actorService,
-            IClaptrapActorCommonService claptrapActorCommonService) : base(actorService)
+            IClaptrapActorCommonService claptrapActorCommonService)
+            : base(claptrapActorCommonService.ActorHost)
         {
-            _actorService = actorService;
             ClaptrapActorCommonService = claptrapActorCommonService;
         }
 
@@ -28,7 +25,7 @@ namespace Newbe.Claptrap.Dapr
         protected override async Task OnActivateAsync()
         {
             var actorTypeCode = ClaptrapActorCommonService.ClaptrapTypeCodeFactory.GetClaptrapTypeCode(this);
-            var actorIdentity = new ClaptrapIdentity(_actorService.Id.GetId(), actorTypeCode);
+            var actorIdentity = new ClaptrapIdentity(ClaptrapActorCommonService.ActorHost.Id.GetId(), actorTypeCode);
             var claptrap = ClaptrapActorCommonService.ClaptrapFactory.Create(actorIdentity);
             await claptrap.ActivateAsync();
             ClaptrapActorCommonService.ClaptrapAccessor.Claptrap = claptrap;

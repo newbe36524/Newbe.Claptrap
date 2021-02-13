@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Newbe.Claptrap
 {
-    public class ClaptrapBootstrapperBuilderOptions
+    public record ClaptrapBootstrapperBuilderOptions
     {
         /// <summary>
         /// Assemblies to scan claptrap design.
@@ -43,9 +43,18 @@ namespace Newbe.Claptrap
         /// Localization options
         /// </summary>
         public ClaptrapLocalizationOptions ClaptrapLocalizationOptions { get; set; }
-            = new ClaptrapLocalizationOptions
+            = new()
             {
                 EnableLocalization = true
+            };
+
+        /// <summary>
+        /// To enable validation after claptrap store created and configured
+        /// </summary>
+        public ClaptrapDesignStoreValidationOptions ClaptrapDesignStoreValidationOptions { get; set; }
+            = new()
+            {
+                Enabled = true
             };
     }
 }

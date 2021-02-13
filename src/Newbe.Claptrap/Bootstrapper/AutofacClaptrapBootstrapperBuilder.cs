@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.Extensions;
 using Newbe.Claptrap.Localization;
@@ -20,11 +21,11 @@ namespace Newbe.Claptrap.Bootstrapper
         private readonly Lazy<IL> _l;
 
         public AutofacClaptrapBootstrapperBuilder(
-            ILoggerFactory loggerFactory)
+            ILoggerFactory? loggerFactory = default)
         {
-            _loggerFactory = loggerFactory;
-            LoggerFactoryHolder.Instance = loggerFactory;
-            _logger = loggerFactory.CreateLogger<AutofacClaptrapBootstrapperBuilder>();
+            _loggerFactory = loggerFactory ?? new NullLoggerFactory();
+            LoggerFactoryHolder.Instance = _loggerFactory;
+            _logger = _loggerFactory.CreateLogger<AutofacClaptrapBootstrapperBuilder>();
             _l = new Lazy<IL>(CreateL);
             Options = new ClaptrapBootstrapperBuilderOptions
             {
@@ -221,51 +222,22 @@ namespace Newbe.Claptrap.Bootstrapper
             IClaptrapDesignStore claptrapDesignStore,
             IClaptrapDesignStoreValidator validator)
         {
-            _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
-            var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
-            if (!isOk)
+            if (Options.ClaptrapDesignStoreValidationOptions.Enabled)
             {
-                throw new ClaptrapDesignStoreValidationFailException(errorMessage);
+                _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
+                var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
+                if (!isOk)
+                {
+                    throw new ClaptrapDesignStoreValidationFailException(errorMessage);
+                }
+
+                _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
+            }
+            else
+            {
+                _logger.LogInformation("Validation disabled");
             }
 
-            _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
-            return claptrapDesignStore;
-        }
-
-
-        private IClaptrapDesignStore CreateClaptrapDesignStore(
-            IClaptrapDesignStoreFactory factory,
-            IClaptrapDesignStoreValidator validator,
-            IEnumerable<Type> types)
-        {
-            foreach (var provider in Options.ClaptrapDesignStoreProviders)
-            {
-                _logger.LogDebug(_l.Value[LK.add__provider__as_claptrap_design_provider], provider);
-                factory.AddProvider(provider);
-            }
-
-            var typeArray = types as Type[] ?? types.ToArray();
-            _logger.LogDebug(_l.Value[LK.start_to_scan__assemblyArrayCount__types], typeArray.Length);
-            _logger.LogDebug(_l.Value[LK.start_to_create_claptrap_design]);
-            var claptrapDesignStore = factory.Create(typeArray);
-
-            _logger.LogInformation(_l.Value[LK.claptrap_design_store_created__start_to_configure_it]);
-            _logger.LogDebug(_l.Value[LK.all_designs____designs_],
-                JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
-
-            _logger.LogInformation(_l.Value[LK.found__actorCount__claptrap_designs],
-                claptrapDesignStore.Count());
-            _logger.LogDebug(_l.Value[LK.all_designs_after_configuration___designs_],
-                JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
-
-            _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
-            var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
-            if (!isOk)
-            {
-                throw new ClaptrapDesignStoreValidationFailException(errorMessage);
-            }
-
-            _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
             return claptrapDesignStore;
         }
     }

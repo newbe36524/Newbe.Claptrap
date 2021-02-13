@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using MethodTimer;
 using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Localization;
 
@@ -30,7 +29,6 @@ namespace Newbe.Claptrap
             _claptrapModuleProviders = claptrapModuleProviders;
         }
 
-        [Time]
         public IClaptrap Create(IClaptrapIdentity identity)
         {
             try

@@ -34,7 +34,7 @@ namespace Newbe.Claptrap
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "failed to create handler for {@context}", eventContext);
+                _logger.LogError(e, "failed to create handler for {@Context}", eventContext);
                 throw;
             }
 

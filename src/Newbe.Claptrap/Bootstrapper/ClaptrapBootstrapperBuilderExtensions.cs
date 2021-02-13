@@ -150,5 +150,17 @@ namespace Newbe.Claptrap.Bootstrapper
             configAction(builder.Options);
             return builder;
         }
+
+        /// <summary>
+        /// Set design validation
+        /// </summary>
+        /// <returns></returns>
+        public static IClaptrapBootstrapperBuilder SetDesignValidation(
+            this IClaptrapBootstrapperBuilder builder,
+            bool enabled)
+        {
+            builder.ConfigureOptions(option => { option.ClaptrapDesignStoreValidationOptions.Enabled = enabled; });
+            return builder;
+        }
     }
 }

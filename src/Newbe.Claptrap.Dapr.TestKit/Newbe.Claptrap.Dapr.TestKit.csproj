@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.Actors" Version="1.0.0-rc05"/>
+    <PackageReference Include="Autofac.Extras.Moq" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Newbe.Claptrap.Abstractions\Newbe.Claptrap.Abstractions.csproj"/>
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj" />
   </ItemGroup>
 
 </Project>

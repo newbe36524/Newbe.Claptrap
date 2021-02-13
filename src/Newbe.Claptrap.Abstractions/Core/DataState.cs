@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap
 {
-    public class DataState : IState
+    public record DataState : IState
     {
         public DataState(IClaptrapIdentity identity, IStateData data, long version)
         {
