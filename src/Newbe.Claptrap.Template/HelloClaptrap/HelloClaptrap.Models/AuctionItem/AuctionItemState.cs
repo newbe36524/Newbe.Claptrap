@@ -10,6 +10,12 @@ namespace HelloClaptrap.Models.AuctionItem
         public decimal BasePrice { get; set; }
         public DateTimeOffset StartTime { get; set; }
         public DateTimeOffset EndTime { get; set; }
+
+        public void InitBiddingRecords()
+        {
+            BiddingRecords = new SortedDictionary<decimal, BiddingRecord>(
+                Comparer<decimal>.Create((x, y) => Comparer<decimal>.Default.Compare(y, x)));
+        }
     }
 
     public enum AuctionItemStatus

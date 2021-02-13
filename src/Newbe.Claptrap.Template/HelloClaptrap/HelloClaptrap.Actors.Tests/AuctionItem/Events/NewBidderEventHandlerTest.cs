@@ -5,6 +5,7 @@ using FluentAssertions;
 using HelloClaptrap.Actors.AuctionItem.Events;
 using HelloClaptrap.Models.AuctionItem;
 using HelloClaptrap.Models.AuctionItem.Events;
+using Newbe.Claptrap.Dapr.TestKit;
 using NUnit.Framework;
 
 namespace HelloClaptrap.Actors.Tests.AuctionItem.Events

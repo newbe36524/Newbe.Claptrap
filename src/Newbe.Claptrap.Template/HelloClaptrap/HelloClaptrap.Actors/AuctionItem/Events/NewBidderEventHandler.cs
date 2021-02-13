@@ -21,9 +21,12 @@ namespace HelloClaptrap.Actors.AuctionItem.Events
             NewBidderEvent eventData,
             IEventContext eventContext)
         {
-            var records = stateData.BiddingRecords ??
-                          new SortedDictionary<decimal, BiddingRecord>(
-                              Comparer<decimal>.Create((x, y) => Comparer<decimal>.Default.Compare(y, x)));
+            if (stateData.BiddingRecords == null)
+            {
+                stateData.InitBiddingRecords();
+            }
+
+            var records = stateData.BiddingRecords;
 
             records.Add(eventData.Price, new BiddingRecord
             {
