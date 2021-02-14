@@ -59,21 +59,23 @@ namespace Newbe.Claptrap.TestSuit
                             })
                             .BuildServiceProvider()
                             .GetRequiredService<ILoggerFactory>();
+                        var claptrapBootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory)
+                            .ScanClaptrapModule()
+                            .AddConfiguration(context.Configuration)
+                            .ScanClaptrapDesigns(new[]
+                            {
+                                typeof(IAccount),
+                                typeof(Account),
+                                typeof(IAccountBalanceMinion),
+                                typeof(AccountBalanceMinion),
+                                typeof(IAccountHistoryBalanceMinion),
+                                typeof(AccountHistoryBalanceMinion)
+                            })
+                            .ConfigureClaptrapDesign(x =>
+                                x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None);
+                        bootstrapperAction?.Invoke(claptrapBootstrapperBuilder);
                         var claptrapBootstrapper =
-                            (AutofacClaptrapBootstrapper) new AutofacClaptrapBootstrapperBuilder(loggerFactory)
-                                .ScanClaptrapModule()
-                                .AddConfiguration(context.Configuration)
-                                .ScanClaptrapDesigns(new[]
-                                {
-                                    typeof(IAccount),
-                                    typeof(Account),
-                                    typeof(IAccountBalanceMinion),
-                                    typeof(AccountBalanceMinion),
-                                    typeof(IAccountHistoryBalanceMinion),
-                                    typeof(AccountHistoryBalanceMinion)
-                                })
-                                .ConfigureClaptrapDesign(x =>
-                                    x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None)
+                            (AutofacClaptrapBootstrapper) claptrapBootstrapperBuilder
                                 .Build();
                         claptrapBootstrapper.Boot(builder);
 
@@ -83,6 +85,8 @@ namespace Newbe.Claptrap.TestSuit
                         builder.RegisterType<AccountBalanceMinion>()
                             .AsSelf()
                             .InstancePerDependency();
+
+                        builderAction?.Invoke(builder);
                     });
                 })
                 .ConfigureServices((_, collection) => { collection.AddClaptrapServerOptions(); });
