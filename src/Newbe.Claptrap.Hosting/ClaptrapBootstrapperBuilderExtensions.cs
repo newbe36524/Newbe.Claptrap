@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 // ReSharper disable once CheckNamespace
 namespace Newbe.Claptrap.Bootstrapper
@@ -11,17 +10,12 @@ namespace Newbe.Claptrap.Bootstrapper
     public static class ClaptrapBootstrapperBuilderExtensions
     {
         public static IClaptrapBootstrapperBuilder AddConfiguration(
-            this IClaptrapBootstrapperBuilder builder, HostBuilderContext context)
-        {
-            return AddConfiguration(builder, context.Configuration);
-        }
-
-        public static IClaptrapBootstrapperBuilder AddConfiguration(
             this IClaptrapBootstrapperBuilder builder,
             IConfiguration configuration)
         {
             var config = configuration.GetSection(ClaptrapServerOptions.ConfigurationSectionName);
             var claptrapConfig = new ClaptrapServerOptions();
+
             config.Bind(claptrapConfig);
             builder.AddConnectionString(Defaults.ConnectionName,
                 claptrapConfig.DefaultConnectionString);

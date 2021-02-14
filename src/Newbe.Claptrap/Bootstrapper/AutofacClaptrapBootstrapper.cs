@@ -32,6 +32,12 @@ namespace Newbe.Claptrap.Bootstrapper
             }
         }
 
+        public void Boot(ContainerBuilder builder)
+        {
+            Builder = builder;
+            Boot();
+        }
+
         public IClaptrapDesignStore DumpDesignStore()
         {
             return ClaptrapDesignStore;

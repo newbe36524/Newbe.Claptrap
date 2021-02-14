@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Server.Services;
 using NLog.Web;
 using OpenTelemetry;
@@ -45,7 +45,8 @@ namespace Newbe.Claptrap.Demo.Server
                 .ConfigureAppConfiguration(configurationBuilder =>
                 {
                     var configBuilder = new ConfigurationBuilder();
-                    var config = configBuilder.AddJsonFile(Path.Combine("configs", "appsettings.json"))
+                    var config = configBuilder
+                        .AddJsonFile(Path.Combine("configs", "appsettings.json"))
                         .AddEnvironmentVariables()
                         .Build();
                     var testConsoleOptions = new TestConsoleOptions();
@@ -72,15 +73,9 @@ namespace Newbe.Claptrap.Demo.Server
                                 options.Endpoint = new Uri("http://localhost:9412/api/v2/spans"))
                     );
                 })
-                .UseClaptrap(builder =>
-                {
-                    builder.ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly})
-                        .UseDaprPubsub(pubsub => pubsub.AsEventCenter())
-                        ;
-                })
-                .UseClaptrapHostCommon()
-                .UseClaptrapDaprHost()
+                .UseServiceProviderFactory(_ => new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .UseClaptrapMetrics()
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
