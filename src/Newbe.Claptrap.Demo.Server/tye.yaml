@@ -25,3 +25,12 @@ services:
   #       protocol: tcp
   #       host: rabbitmq
   #       containerPort: 5672
+
+ingress:
+  - name: backend
+    bindings:
+      - name: https
+        protocol: https
+        port: 55443
+    rules:
+      - service: newbe-claptrap-demo-server

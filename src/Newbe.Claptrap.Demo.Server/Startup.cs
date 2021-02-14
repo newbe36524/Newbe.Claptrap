@@ -3,7 +3,6 @@ using App.Metrics;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +28,7 @@ namespace Newbe.Claptrap.Demo.Server
         {
             services.AddControllers()
                 .AddDapr();
+            services.AddActors(_ => { });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Newbe.Claptrap.Demo.Server", Version = "v1"});
@@ -76,9 +76,9 @@ namespace Newbe.Claptrap.Demo.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapSubscribeHandler();
                 endpoints.MapActorsHandlers();
+                endpoints.MapSubscribeHandler();
+                endpoints.MapControllers();
                 endpoints.MapGet("/", context =>
                 {
                     context.Response.Redirect("/swagger");

@@ -12,8 +12,9 @@ namespace Newbe.Claptrap.Demo
     [Actor(TypeName = ClaptrapCode)]
     public class AccountActor : ClaptrapBoxActor<AccountStateData>, IAccount
     {
-        public AccountActor(IClaptrapActorCommonService claptrapActorCommonService)
-            : base(claptrapActorCommonService)
+        public AccountActor(ActorHost actorHost,
+            IClaptrapActorCommonService claptrapActorCommonService)
+            : base(actorHost, claptrapActorCommonService)
         {
         }
 

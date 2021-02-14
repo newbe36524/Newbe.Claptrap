@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Extras.AggregateService;
-using Dapr.Actors.Client;
 
 namespace Newbe.Claptrap.Dapr.Modules
 {
@@ -12,10 +11,6 @@ namespace Newbe.Claptrap.Dapr.Modules
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            builder.RegisterType<ClaptrapActorProxyFactory>()
-                .AsImplementedInterfaces()
-                .SingleInstance()
-                .IfNotRegistered(typeof(IActorProxyFactory));
             
             builder.RegisterType<ClaptrapTypeCodeFactory>()
                 .As<IClaptrapTypeCodeFactory>()
