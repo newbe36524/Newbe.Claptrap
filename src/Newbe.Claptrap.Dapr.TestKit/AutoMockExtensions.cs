@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Autofac.Core;
 using Autofac.Extras.Moq;
 using Dapr.Actors;
@@ -10,30 +11,26 @@ namespace Newbe.Claptrap.Dapr.TestKit
 {
     public static class AutoMockExtensions
     {
-        /// <summary>
-        /// Mock service needed in unit test to run a claptrap in unit test
-        /// </summary>
-        /// <param name="mocker"></param>
-        /// <param name="claptrapDesign"></param>
-        /// <param name="id"></param>
-        /// <param name="stateData"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="EventHandlerNotFoundException"></exception>
-        public static void MockActor(this AutoMock mocker,
-            IClaptrapDesign claptrapDesign,
+        public static AutoMock CreateAutoMock(this IClaptrapDesign claptrapDesign,
             string id,
-            IStateData stateData)
+            IStateData stateData,
+            Action<ContainerBuilder, ActorHost>? builderAction = default,
+            Func<AutoMock>? autoMockFunc = default)
         {
             var claptrapIdentity = new ClaptrapIdentity(id, claptrapDesign.ClaptrapTypeCode);
             var actorTypeInformation = ActorTypeInformation.Get(claptrapDesign.ClaptrapBoxImplementationType);
+            var actorHost = new ActorHost(actorTypeInformation,
+                new ActorId(id),
+                default,
+                new NullLoggerFactory(),
+                default);
+
+            builderAction ??= (builder, host) => { builder.RegisterInstance(host).As<ActorHost>(); };
+            autoMockFunc ??= () => AutoMock.GetStrict(builder => { builderAction.Invoke(builder, actorHost); });
+            var mocker = autoMockFunc.Invoke();
+
+
             var commonService = mocker.Mock<IClaptrapActorCommonService>();
-            commonService
-                .Setup(x => x.ActorHost)
-                .Returns(new ActorHost(actorTypeInformation,
-                    new ActorId(id),
-                    default,
-                    new NullLoggerFactory(),
-                    default));
             commonService
                 .Setup(x => x.ClaptrapAccessor.Claptrap!.State.Data)
                 .Returns(stateData);
@@ -76,6 +73,9 @@ namespace Newbe.Claptrap.Dapr.TestKit
                         (IEventHandler) makeGenericMethod.Invoke(mocker, new object[] {Array.Empty<Parameter>()})!;
                     return handler.HandleEvent(eventContext);
                 });
+
+
+            return mocker;
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Newbe.Claptrap.Dapr
         IClaptrapFactory ClaptrapFactory { get; }
         IClaptrapAccessor ClaptrapAccessor { get; }
         IClaptrapTypeCodeFactory ClaptrapTypeCodeFactory { get; }
-        ActorHost ActorHost { get; }
         ILifetimeScope LifetimeScope { get; }
     }
 }

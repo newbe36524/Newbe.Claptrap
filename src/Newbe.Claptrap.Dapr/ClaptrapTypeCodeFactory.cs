@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Newbe.Claptrap.Dapr
@@ -15,12 +16,16 @@ namespace Newbe.Claptrap.Dapr
 
         public string GetClaptrapTypeCode(IClaptrapBox claptrapBox)
         {
+            return GetClaptrapTypeCode(claptrapBox.GetType());
+        }
+
+        public string GetClaptrapTypeCode(Type interfaceType)
+        {
             // to find type code from attribute as this method is invoke before claptrap activated. Identity is unable to be used.
-            var claptrapStateAttribute = claptrapBox
-                .GetType()
+            var claptrapStateAttribute = interfaceType
                 .GetInterfaces()
                 .Select(x => x.GetCustomAttribute<ClaptrapStateAttribute>())
-                .Single(x => x != null);
+                .Single(x => x != null)!;
             var typeCode = claptrapStateAttribute.ClaptrapTypeCode;
             return typeCode;
         }

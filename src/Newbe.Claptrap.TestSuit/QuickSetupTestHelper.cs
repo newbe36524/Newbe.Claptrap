@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,30 +47,49 @@ namespace Newbe.Claptrap.TestSuit
                         logging.AddNLog();
                     });
                 })
-                .UseClaptrap(bootstrapperBuilder =>
+                .UseServiceProviderFactory(context =>
                 {
-                    bootstrapperBuilder.ScanClaptrapDesigns(new[]
+                    return new AutofacServiceProviderFactory(builder =>
                     {
-                        typeof(IAccount),
-                        typeof(Account),
-                        typeof(IAccountBalanceMinion),
-                        typeof(AccountBalanceMinion),
-                        typeof(IAccountHistoryBalanceMinion),
-                        typeof(AccountHistoryBalanceMinion)
+                        var loggerFactory = new ServiceCollection()
+                            .AddLogging(logging =>
+                            {
+                                logging.SetMinimumLevel(LogLevel.Trace);
+                                logging.AddConsole();
+                            })
+                            .BuildServiceProvider()
+                            .GetRequiredService<ILoggerFactory>();
+                        var claptrapBootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory)
+                            .ScanClaptrapModule()
+                            .AddConfiguration(context.Configuration)
+                            .ScanClaptrapDesigns(new[]
+                            {
+                                typeof(IAccount),
+                                typeof(Account),
+                                typeof(IAccountBalanceMinion),
+                                typeof(AccountBalanceMinion),
+                                typeof(IAccountHistoryBalanceMinion),
+                                typeof(AccountHistoryBalanceMinion)
+                            })
+                            .ConfigureClaptrapDesign(x =>
+                                x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None);
+                        bootstrapperAction?.Invoke(claptrapBootstrapperBuilder);
+                        var claptrapBootstrapper =
+                            (AutofacClaptrapBootstrapper) claptrapBootstrapperBuilder
+                                .Build();
+                        claptrapBootstrapper.Boot(builder);
+
+                        builder.RegisterType<Account>()
+                            .AsSelf()
+                            .InstancePerDependency();
+                        builder.RegisterType<AccountBalanceMinion>()
+                            .AsSelf()
+                            .InstancePerDependency();
+
+                        builderAction?.Invoke(builder);
                     });
-                    bootstrapperBuilder.ConfigureClaptrapDesign(x =>
-                        x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None);
-                    bootstrapperAction?.Invoke(bootstrapperBuilder);
-                }, containerBuilder =>
-                {
-                    builderAction?.Invoke(containerBuilder);
-                    containerBuilder.RegisterType<Account>()
-                        .AsSelf()
-                        .InstancePerDependency();
-                    containerBuilder.RegisterType<AccountBalanceMinion>()
-                        .AsSelf()
-                        .InstancePerDependency();
-                });
+                })
+                .ConfigureServices((_, collection) => { collection.AddClaptrapServerOptions(); });
             configureHostBuilder?.Invoke(hostBuilder);
             var host = hostBuilder.Build();
             return host;

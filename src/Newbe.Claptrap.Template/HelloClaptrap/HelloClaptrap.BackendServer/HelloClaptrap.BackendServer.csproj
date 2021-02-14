@@ -6,9 +6,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.6.0-alpha.21070.5" />
-        <PackageReference Include="Newbe.Claptrap.Dapr" Version="0.8.14-alpha.gf5aa2345f6" />
-        <PackageReference Include="Newbe.Claptrap.Dapr.Hosting" Version="0.8.14-alpha.gf5aa2345f6" />
-        <PackageReference Include="Newbe.Claptrap.StorageProvider.SQLite" Version="0.8.14-alpha.gf5aa2345f6" />
+        <PackageReference Include="Newbe.Claptrap.Dapr" Version="$(ClaptrapPackageVersion)" />
+        <PackageReference Include="Newbe.Claptrap.Dapr.Hosting" Version="$(ClaptrapPackageVersion)" />
+        <PackageReference Include="Newbe.Claptrap.StorageProvider.SQLite" Version="$(ClaptrapPackageVersion)" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 

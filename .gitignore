@@ -289,3 +289,4 @@ __pycache__/
 /src/.idea/config/applicationhost.config
 /src/Newbe.Claptrap.Template/HelloClaptrap/.idea/
 **/.logs/**
+.tye

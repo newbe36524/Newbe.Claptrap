@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.TestSuit.QuickSetupTools;
 using NUnit.Framework;
@@ -22,17 +25,34 @@ namespace Newbe.Claptrap.Dapr.Hosting.Tests
                 {
                     builder.AddJsonFile($"configs/load_db_config/{jsonFileName}.json");
                 })
-                .UseClaptrap(builder =>
+                .UseServiceProviderFactory(context =>
                 {
-                    builder.ScanClaptrapDesigns(new[]
+                    return new AutofacServiceProviderFactory(builder =>
                     {
-                        typeof(IAccount),
-                        typeof(Account),
-                        typeof(IAccountBalanceMinion),
-                        typeof(AccountBalanceMinion)
+                        var loggerFactory = new ServiceCollection()
+                            .AddLogging(logging =>
+                            {
+                                logging.SetMinimumLevel(LogLevel.Trace);
+                                logging.AddConsole();
+                            })
+                            .BuildServiceProvider()
+                            .GetRequiredService<ILoggerFactory>();
+                        var claptrapBootstrapper =
+                            (AutofacClaptrapBootstrapper) new AutofacClaptrapBootstrapperBuilder(loggerFactory)
+                                .ScanClaptrapModule()
+                                .AddConfiguration(context.Configuration)
+                                .ScanClaptrapDesigns(new[]
+                                {
+                                    typeof(IAccount),
+                                    typeof(Account),
+                                    typeof(IAccountBalanceMinion),
+                                    typeof(AccountBalanceMinion)
+                                })
+                                .Build();
+                        claptrapBootstrapper.Boot(builder);
                     });
                 })
-                .UseClaptrapDaprHost()
+                .ConfigureServices((_, collection) => { collection.AddClaptrapServerOptions(); })
                 .Build();
             await host.StartAsync();
             await host.StopAsync();

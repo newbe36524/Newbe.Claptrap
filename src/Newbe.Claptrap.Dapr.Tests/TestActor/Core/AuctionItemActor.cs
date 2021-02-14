@@ -10,9 +10,10 @@ namespace Newbe.Claptrap.Dapr.Tests.TestActor.Core
     {
         private readonly IClock _clock;
 
-        public AuctionItemActor(
+        public AuctionItemActor(ActorHost actorHost,
             IClaptrapActorCommonService claptrapActorCommonService,
-            IClock clock) : base(claptrapActorCommonService)
+            IClock clock) :
+            base(actorHost, claptrapActorCommonService)
         {
             _clock = clock;
         }

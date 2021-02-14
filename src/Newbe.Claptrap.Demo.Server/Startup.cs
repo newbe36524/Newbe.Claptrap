@@ -3,12 +3,13 @@ using App.Metrics;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newbe.Claptrap.AppMetrics;
+using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Server.Services;
 using Newbe.Claptrap.StorageSetup;
 
@@ -16,9 +17,25 @@ namespace Newbe.Claptrap.Demo.Server
 {
     public class Startup
     {
+        private readonly AutofacClaptrapBootstrapper _claptrapBootstrapper;
+        private readonly IClaptrapDesignStore _claptrapDesignStore;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var loggerFactory = new ServiceCollection()
+                .AddLogging(logging => logging.AddConsole())
+                .BuildServiceProvider()
+                .GetRequiredService<ILoggerFactory>();
+
+            var bootstrapperBuilder = new AutofacClaptrapBootstrapperBuilder(loggerFactory);
+            _claptrapBootstrapper = (AutofacClaptrapBootstrapper) bootstrapperBuilder
+                .ScanClaptrapModule()
+                .AddConfiguration(configuration)
+                .ScanClaptrapDesigns(new[] {typeof(AccountActor).Assembly})
+                .UseDaprPubsub(pubsub => pubsub.AsEventCenter())
+                .Build();
+            _claptrapDesignStore = _claptrapBootstrapper.DumpDesignStore();
         }
 
         public IConfiguration Configuration { get; }
@@ -27,8 +44,11 @@ namespace Newbe.Claptrap.Demo.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddClaptrapServerOptions();
+
             services.AddControllers()
                 .AddDapr();
+            services.AddActors(options => { options.AddClaptrapDesign(_claptrapDesignStore); });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Newbe.Claptrap.Demo.Server", Version = "v1"});
@@ -49,6 +69,7 @@ namespace Newbe.Claptrap.Demo.Server
             // for you.
             builder.RegisterModule<StorageSetupModule>();
             builder.RegisterModule<DemoServerModule>();
+            _claptrapBootstrapper.Boot(builder);
         }
 
 
@@ -76,9 +97,9 @@ namespace Newbe.Claptrap.Demo.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapSubscribeHandler();
                 endpoints.MapActorsHandlers();
+                endpoints.MapSubscribeHandler();
+                endpoints.MapControllers();
                 endpoints.MapGet("/", context =>
                 {
                     context.Response.Redirect("/swagger");
