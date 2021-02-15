@@ -28,7 +28,7 @@ jobs:
           dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
           dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
 
-      - name: Push nuget package to MyGet registry
+      - name: Push nuget package to nuget.org
         run: |
           cd $GITHUB_WORKSPACE/src
           dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --no-symbols --skip-duplicate --source https://api.nuget.org/v3/index.json
