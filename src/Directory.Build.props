@@ -4,7 +4,7 @@
     <Authors>newbe36524</Authors>
     <Company>newbe36524</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://www.newbe.pro</PackageProjectUrl>
+    <PackageProjectUrl>https://claptrap.newbe.pro</PackageProjectUrl>
     <RepositoryUrl>https://github.com/newbe36524/Newbe.Claptrap</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <NoWarn>1701;1702;1705;1591</NoWarn>
