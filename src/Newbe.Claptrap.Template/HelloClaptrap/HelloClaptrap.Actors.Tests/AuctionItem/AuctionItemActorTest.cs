@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac.Extras.Moq;
 using FluentAssertions;
 using HelloClaptrap.Actors.AuctionItem;
 using HelloClaptrap.IActor;
@@ -19,15 +18,13 @@ namespace HelloClaptrap.Actors.Tests.AuctionItem
         [TestCase(21, AuctionItemStatus.UnSold)]
         public async Task StatusWithNoBidder(int hour, AuctionItemStatus expectedStatus)
         {
-            using var mocker = AutoMock.GetLoose(_ => { });
-
             var state = new AuctionItemState
             {
                 StartTime = DateTimeOffset.Parse("2020-01-01 19:30:00"),
                 EndTime = DateTimeOffset.Parse("2020-01-01 20:30:00")
             };
             var claptrapDesign = ActorTestHelper.GetDesign(typeof(AuctionItemActor));
-            mocker.MockActor(claptrapDesign, "1", state);
+            using var mocker = claptrapDesign.CreateAutoMock("1", state);
 
             mocker.Mock<IClock>()
                 .Setup(x => x.UtcNow)
@@ -44,11 +41,6 @@ namespace HelloClaptrap.Actors.Tests.AuctionItem
         [Test]
         public async Task Sold()
         {
-            using var mocker = AutoMock.GetLoose(_ => { });
-            mocker.Mock<IClock>()
-                .Setup(x => x.UtcNow)
-                .Returns(new DateTime(2020, 01, 01, 21, 0, 0));
-            
             var state = new AuctionItemState
             {
                 StartTime = DateTimeOffset.Parse("2020-01-01 19:30:00"),
@@ -60,7 +52,10 @@ namespace HelloClaptrap.Actors.Tests.AuctionItem
                 Price = 1
             };
             var design = ActorTestHelper.GetDesign(typeof(AuctionItemActor));
-            mocker.MockActor(design, "11", state);
+            using var mocker = design.CreateAutoMock("11", state);
+            mocker.Mock<IClock>()
+                .Setup(x => x.UtcNow)
+                .Returns(new DateTime(2020, 01, 01, 21, 0, 0));
 
             var auctionItemActor = mocker.Create<AuctionItemActor>();
             // act
@@ -80,7 +75,6 @@ namespace HelloClaptrap.Actors.Tests.AuctionItem
         [TestCase(10, 11, 11, false)]
         public async Task TryBidding(decimal basePrice, decimal? topPrice, decimal biddingPrice, bool success)
         {
-            using var mocker = AutoMock.GetLoose();
             var state = new AuctionItemState
             {
                 StartTime = DateTimeOffset.Parse("2020-01-01 19:30:00"),
@@ -88,7 +82,7 @@ namespace HelloClaptrap.Actors.Tests.AuctionItem
                 BasePrice = basePrice,
             };
             var design = ActorTestHelper.GetDesign(typeof(AuctionItemActor));
-            mocker.MockActor(design, "1", state);
+            using var mocker = design.CreateAutoMock("1", state);
             mocker.Mock<IClock>()
                 .Setup(x => x.UtcNow)
                 .Returns(new DateTime(2020, 01, 01, 20, 0, 0));

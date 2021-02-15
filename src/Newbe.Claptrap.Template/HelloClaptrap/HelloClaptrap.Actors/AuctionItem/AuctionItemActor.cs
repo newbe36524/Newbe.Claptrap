@@ -19,8 +19,9 @@ namespace HelloClaptrap.Actors.AuctionItem
         private readonly IClock _clock;
 
         public AuctionItemActor(
+            ActorHost actorHost,
             IClaptrapActorCommonService claptrapActorCommonService,
-            IClock clock) : base(claptrapActorCommonService)
+            IClock clock) : base(actorHost, claptrapActorCommonService)
         {
             _clock = clock;
         }
