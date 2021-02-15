@@ -4,6 +4,8 @@ using Dapr.Actors.Client;
 using HelloClaptrap.IActor;
 using HelloClaptrap.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newbe.Claptrap;
+using Newbe.Claptrap.Dapr;
 
 namespace HelloClaptrap.WebApi.Controllers
 {
@@ -11,16 +13,20 @@ namespace HelloClaptrap.WebApi.Controllers
     [Route("[controller]")]
     public class AuctionItemsController : ControllerBase
     {
-        public AuctionItemsController()
+        private readonly IActorProxyFactory _actorProxyFactory;
+
+        public AuctionItemsController(
+            IActorProxyFactory actorProxyFactory)
         {
+            _actorProxyFactory = actorProxyFactory;
         }
 
         [HttpGet("{itemId}/status")]
         public async Task<IActionResult> GetStatus(int itemId = 1)
         {
-            var auctionItemActor =
-                ActorProxy.Create<IAuctionItemActor>(new ActorId(itemId.ToString()),
-                    ClaptrapCodes.AuctionItemActor);
+            var id = new ClaptrapIdentity(itemId.ToString(),
+                ClaptrapCodes.AuctionItemActor);
+            var auctionItemActor = _actorProxyFactory.GetClaptrap<IAuctionItemActor>(id);
             var status = await auctionItemActor.GetStatusAsync();
             var result = new
             {
@@ -32,9 +38,9 @@ namespace HelloClaptrap.WebApi.Controllers
         [HttpGet("{itemId}")]
         public async Task<IActionResult> GetState(int itemId = 1)
         {
-            var auctionItemActor =
-                ActorProxy.Create<IAuctionItemActor>(new ActorId(itemId.ToString()),
-                    ClaptrapCodes.AuctionItemActor);
+            var id = new ClaptrapIdentity(itemId.ToString(),
+                ClaptrapCodes.AuctionItemActor);
+            var auctionItemActor = _actorProxyFactory.GetClaptrap<IAuctionItemActor>(id);
             var state = await auctionItemActor.GetStateAsync();
             var result = new
             {
@@ -52,9 +58,9 @@ namespace HelloClaptrap.WebApi.Controllers
                 UserId = webApiInput.UserId,
             };
             var itemId = webApiInput.ItemId;
-            var auctionItemActor =
-                ActorProxy.Create<IAuctionItemActor>(new ActorId(itemId.ToString()),
-                    ClaptrapCodes.AuctionItemActor);
+            var id = new ClaptrapIdentity(itemId.ToString(),
+                ClaptrapCodes.AuctionItemActor);
+            var auctionItemActor = _actorProxyFactory.GetClaptrap<IAuctionItemActor>(id);
             var result = await auctionItemActor.TryBidding(input);
             return Ok(result);
         }
