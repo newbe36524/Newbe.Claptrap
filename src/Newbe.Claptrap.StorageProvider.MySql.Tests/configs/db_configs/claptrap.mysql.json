@@ -1,0 +1,5 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "Server=mysql;Port=3306;Database=claptrap;Uid=claptrap;Pwd=claptrap;Pooling=True;MinimumPoolSize=10;maximumpoolsize=50;"
+  }
+}

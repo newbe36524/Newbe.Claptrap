@@ -1,0 +1,14 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "OneTypeOneTable",
+      "DatabaseType": "SQLite",
+      "InsertManyWindowCount": 100
+    },
+    "StateStore": {
+      "Strategy": "OneTypeOneTable",
+      "DatabaseType": "SQLite",
+      "InsertManyWindowCount": 100
+    }
+  }
+}

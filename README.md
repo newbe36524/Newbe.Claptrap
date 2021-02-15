@@ -3,7 +3,7 @@
 - [简体中文](https://claptrap.newbe.pro/zh_Hans)
 - [粤语](https://claptrap.newbe.pro/zh_HK)
 - [繁體中文](https://claptrap.newbe.pro/zh_TW)
-- [English](https://claptrap.newbe.pro/en_US)
+- [English](https://claptrap.newbe.pro/)
 - [русский язык](https://claptrap.newbe.pro/ru_RU)
 - [Deutsche](https://claptrap.newbe.pro/de_DE)
 - [Español](https://claptrap.newbe.pro/es_ES)
@@ -20,7 +20,6 @@
 [![Codecov](https://img.shields.io/codecov/c/github/newbe36524/Newbe.Claptrap)](https://codecov.io/gh/newbe36524/Newbe.Claptrap)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=coverage)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=newbe36524_Newbe.Claptrap&metric=alert_status)](https://sonarcloud.io/dashboard?id=newbe36524_Newbe.Claptrap)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1fd0e7443364414ca0003dab27f9f9b8)](https://www.codacy.com/manual/472158246/Newbe.Claptrap?utm_source=github.com&utm_medium=referral&utm_content=newbe36524/Newbe.Claptrap&utm_campaign=Badge_Grade)
 [![Newbe.Claptrap](https://img.shields.io/nuget/v/Newbe.Claptrap?label=Newbe.Claptrap%20nuget&logo=Newbe.Claptrap&style=flat-square)](https://www.nuget.org/packages/Newbe.Claptrap/)
 
 This is a set of server-side development frameworks with `reactive`, `event sourcing` and `Actor pattern` as basic theories. On top of this, developers can develop "distributed", "scale out", and "easy to test" application more simply.

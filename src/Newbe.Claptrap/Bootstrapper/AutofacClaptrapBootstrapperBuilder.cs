@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newbe.Claptrap.Design;
 using Newbe.Claptrap.Extensions;
 using Newbe.Claptrap.Localization;
@@ -16,18 +17,15 @@ namespace Newbe.Claptrap.Bootstrapper
     public class AutofacClaptrapBootstrapperBuilder : IClaptrapBootstrapperBuilder
     {
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ContainerBuilder _applicationBuilder;
         private readonly ILogger<AutofacClaptrapBootstrapperBuilder> _logger;
         private readonly Lazy<IL> _l;
 
         public AutofacClaptrapBootstrapperBuilder(
-            ILoggerFactory loggerFactory,
-            ContainerBuilder applicationBuilder)
+            ILoggerFactory? loggerFactory = default)
         {
-            _loggerFactory = loggerFactory;
-            _applicationBuilder = applicationBuilder;
-            LoggerFactoryHolder.Instance = loggerFactory;
-            _logger = loggerFactory.CreateLogger<AutofacClaptrapBootstrapperBuilder>();
+            _loggerFactory = loggerFactory ?? new NullLoggerFactory();
+            LoggerFactoryHolder.Instance = _loggerFactory;
+            _logger = _loggerFactory.CreateLogger<AutofacClaptrapBootstrapperBuilder>();
             _l = new Lazy<IL>(CreateL);
             Options = new ClaptrapBootstrapperBuilderOptions
             {
@@ -35,7 +33,7 @@ namespace Newbe.Claptrap.Bootstrapper
                 ModuleTypes = Enumerable.Empty<Type>(),
                 ClaptrapDesignStoreConfigurators = new List<IClaptrapDesignStoreConfigurator>(),
                 ClaptrapDesignStoreProviders = new List<IClaptrapDesignStoreProvider>(),
-                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>(),
+                ClaptrapModuleProviders = new List<IClaptrapModuleProvider>()
             };
         }
 
@@ -97,7 +95,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         .SelectMany(x =>
                         {
                             var ms = x.GetClaptrapApplicationModules().ToArray();
-                            _logger.LogDebug("Found {count} claptrap application modules from {type} : {modules}",
+                            _logger.LogDebug("Found {Count} claptrap application modules from {Type} : {Modules}",
                                 ms.Length,
                                 x,
                                 ms.Select(a => a.Name));
@@ -106,7 +104,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         .ToArray();
 
                     _logger.LogInformation(
-                        "Scanned {typesCount}, and found {count} claptrap application modules : {modules}",
+                        "Scanned {TypesCount}, and found {Count} claptrap application modules : {Modules}",
                         Options.ModuleTypes.Count(),
                         appModules.Length,
                         appModules.Select(x => x.Name));
@@ -114,18 +112,16 @@ namespace Newbe.Claptrap.Bootstrapper
                         .OfType<Module>()
                         .ToArray();
                     _logger.LogInformation(
-                        "Filtered and found {count} Autofac modules : {modules}",
+                        "Filtered and found {Count} Autofac modules : {@Modules}",
                         appAutofacModules.Count(),
                         appAutofacModules);
                 }
 
                 var providers = ScanClaptrapModuleProviders();
 
-                _applicationBuilder.RegisterTypes(providers)
-                    .As<IClaptrapModuleProvider>();
-
                 var claptrapBootstrapper =
-                    new AutofacClaptrapBootstrapper(_applicationBuilder,
+                    new AutofacClaptrapBootstrapper(
+                        providers,
                         appAutofacModules
                             .Concat(new[] {new ClaptrapBootstrapperBuilderOptionsModule(Options)}),
                         store);
@@ -142,9 +138,9 @@ namespace Newbe.Claptrap.Bootstrapper
             {
                 var providerTypes = Options.ModuleTypes
                     .Where(x => x.IsClass && !x.IsAbstract)
-                    .Where(x => x.GetInterface(typeof(IClaptrapAppProvider).FullName) != null)
+                    .Where(x => x.GetInterface(typeof(IClaptrapAppProvider).FullName!) != null)
                     .ToArray();
-                _logger.LogDebug("Found type {providerTypes} as {name}",
+                _logger.LogDebug("Found type {ProviderTypes} as {Name}",
                     providerTypes,
                     nameof(IClaptrapAppProvider));
                 innerBuilder.RegisterTypes(providerTypes)
@@ -160,10 +156,10 @@ namespace Newbe.Claptrap.Bootstrapper
         {
             var providers = Options.ModuleTypes
                 .Where(x => x.IsClass && !x.IsAbstract)
-                .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName) != null)
+                .Where(x => x.GetInterface(typeof(IClaptrapModuleProvider).FullName!) != null)
                 .ToArray();
             _logger.LogInformation(
-                "Scanned {typeCount}, and found {count} claptrap modules providers : {modules}",
+                "Scanned {TypeCount}, and found {Count} claptrap modules providers : {Modules}",
                 Options.ModuleTypes.Count(),
                 providers.Length,
                 providers);
@@ -226,51 +222,22 @@ namespace Newbe.Claptrap.Bootstrapper
             IClaptrapDesignStore claptrapDesignStore,
             IClaptrapDesignStoreValidator validator)
         {
-            _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
-            var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
-            if (!isOk)
+            if (Options.ClaptrapDesignStoreValidationOptions.Enabled)
             {
-                throw new ClaptrapDesignStoreValidationFailException(errorMessage);
+                _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
+                var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
+                if (!isOk)
+                {
+                    throw new ClaptrapDesignStoreValidationFailException(errorMessage);
+                }
+
+                _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
+            }
+            else
+            {
+                _logger.LogInformation("Validation disabled");
             }
 
-            _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
-            return claptrapDesignStore;
-        }
-
-
-        private IClaptrapDesignStore CreateClaptrapDesignStore(
-            IClaptrapDesignStoreFactory factory,
-            IClaptrapDesignStoreValidator validator,
-            IEnumerable<Type> types)
-        {
-            foreach (var provider in Options.ClaptrapDesignStoreProviders)
-            {
-                _logger.LogDebug(_l.Value[LK.add__provider__as_claptrap_design_provider], provider);
-                factory.AddProvider(provider);
-            }
-
-            var typeArray = types as Type[] ?? types.ToArray();
-            _logger.LogDebug(_l.Value[LK.start_to_scan__assemblyArrayCount__types], typeArray.Length);
-            _logger.LogDebug(_l.Value[LK.start_to_create_claptrap_design]);
-            var claptrapDesignStore = factory.Create(typeArray);
-
-            _logger.LogInformation(_l.Value[LK.claptrap_design_store_created__start_to_configure_it]);
-            _logger.LogDebug(_l.Value[LK.all_designs____designs_],
-                JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
-
-            _logger.LogInformation(_l.Value[LK.found__actorCount__claptrap_designs],
-                claptrapDesignStore.Count());
-            _logger.LogDebug(_l.Value[LK.all_designs_after_configuration___designs_],
-                JsonConvert.SerializeObject(claptrapDesignStore.ToArray()));
-
-            _logger.LogDebug(_l.Value[LK.start_to_validate_all_design_in_claptrap_design_store]);
-            var (isOk, errorMessage) = validator.Validate(claptrapDesignStore);
-            if (!isOk)
-            {
-                throw new ClaptrapDesignStoreValidationFailException(errorMessage);
-            }
-
-            _logger.LogInformation(_l.Value[LK.all_design_validated_ok]);
             return claptrapDesignStore;
         }
     }

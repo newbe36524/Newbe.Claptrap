@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        
         <RootNamespace>Newbe.Claptrap</RootNamespace>
         <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="5.2.0" />
+        <PackageReference Include="Autofac" Version="6.1.0" />
         <PackageReference Include="DeepCloner" Version="0.10.2" />
     </ItemGroup>
 

@@ -45,10 +45,12 @@ namespace Newbe.Claptrap.Core
         {
             try
             {
+                _logger.LogTrace("Start to activate async");
                 _eventHandledNotificationFlow.Activate();
                 await _stateRestorer.RestoreAsync();
                 _stateSavingFlow.Activate();
                 _eventHandlerFLow.Activate();
+                _logger.LogTrace("Activated");
             }
             catch (Exception e)
             {

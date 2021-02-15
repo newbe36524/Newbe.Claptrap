@@ -5,15 +5,11 @@ namespace Newbe.Claptrap
         public const string ConfigurationSectionName = "Claptrap";
         public string DefaultConnectionString { get; set; } = null!;
 
-        public ClaptrapOrleansOptions Orleans { get; set; }
-            = new ClaptrapOrleansOptions();
-
-        public ClaptrapAppMetricsInfluxDbOptions MetricsInfluxDb { get; set; } =
-            new ClaptrapAppMetricsInfluxDbOptions();
-
-        public ConnectionStrings ConnectionStrings { get; set; } = new ConnectionStrings();
-        public StorageOptions EventStore { get; set; } = new StorageOptions();
-        public StorageOptions StateStore { get; set; } = new StorageOptions();
-        public RabbitMQOptions RabbitMQ { get; set; } = new RabbitMQOptions();
+        public ClaptrapAppMetricsInfluxDbOptions MetricsInfluxDb { get; set; } = new();
+        public ConnectionStrings ConnectionStrings { get; set; } = new();
+        public StorageOptions EventStore { get; set; } = new();
+        public StorageOptions StateStore { get; set; } = new();
+        public RabbitMQOptions RabbitMQ { get; set; } = new();
+        public DaprOptions Dapr { get; set; } = new();
     }
 }

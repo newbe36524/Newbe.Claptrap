@@ -17,34 +17,37 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
 
         public SQLiteStateStoreConfigurator SharedTable(
             Action<SQLiteStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionName = "shared/claptrap.states.db",
-                    StateTableName = Defaults.StateTableName,
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Consts.SQLiteSchemaName,
+                ConnectionName = "shared/claptrap.states.db",
+                StateTableName = Defaults.StateTableName
+            }, action);
+        }
 
         public SQLiteStateStoreConfigurator OneIdOneFile(
             Action<SQLiteStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionName = $"[TypeCode]_[Id]/stateDb.db",
-                    StateTableName = Defaults.StateTableName,
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Consts.SQLiteSchemaName,
+                ConnectionName = $"[TypeCode]_[Id]/stateDb.db",
+                StateTableName = Defaults.StateTableName
+            }, action);
+        }
 
 
         public SQLiteStateStoreConfigurator OneTypeOneFile(
             Action<SQLiteStateStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalStateStoreLocator
-                {
-                    SchemaName = Consts.SQLiteSchemaName,
-                    ConnectionName = $"[TypeCode]/stateDb.db",
-                    StateTableName = Defaults.StateTableName,
-                }, action);
+        {
+            return UseLocator(new RelationalStateStoreLocator
+            {
+                SchemaName = Consts.SQLiteSchemaName,
+                ConnectionName = $"[TypeCode]/stateDb.db",
+                StateTableName = Defaults.StateTableName
+            }, action);
+        }
 
         private SQLiteStateStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
@@ -62,7 +65,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             {
                 var stateOptions = new SQLiteStateStoreOptions
                 {
-                    RelationalStateStoreLocator = relationalEventStoreLocator,
+                    RelationalStateStoreLocator = relationalEventStoreLocator
                 };
                 action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;

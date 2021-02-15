@@ -13,6 +13,19 @@ csharp_preferred_modifier_order=public, private, protected, internal, new, abstr
 csharp_style_var_elsewhere=true:suggestion
 csharp_style_var_for_built_in_types=true:suggestion
 csharp_style_var_when_type_is_apparent=true:suggestion
+dotnet_naming_rule.private_constants_rule.severity=warning
+dotnet_naming_rule.private_constants_rule.style=upper_camel_case_style
+dotnet_naming_rule.private_constants_rule.symbols=private_constants_symbols
+dotnet_naming_rule.private_static_readonly_rule.severity=warning
+dotnet_naming_rule.private_static_readonly_rule.style=upper_camel_case_style
+dotnet_naming_rule.private_static_readonly_rule.symbols=private_static_readonly_symbols
+dotnet_naming_style.upper_camel_case_style.capitalization=pascal_case
+dotnet_naming_symbols.private_constants_symbols.applicable_accessibilities=private
+dotnet_naming_symbols.private_constants_symbols.applicable_kinds=field
+dotnet_naming_symbols.private_constants_symbols.required_modifiers=const
+dotnet_naming_symbols.private_static_readonly_symbols.applicable_accessibilities=private
+dotnet_naming_symbols.private_static_readonly_symbols.applicable_kinds=field
+dotnet_naming_symbols.private_static_readonly_symbols.required_modifiers=static,readonly
 dotnet_style_parentheses_in_arithmetic_binary_operators=never_if_unnecessary:none
 dotnet_style_parentheses_in_other_binary_operators=never_if_unnecessary:none
 dotnet_style_parentheses_in_relational_binary_operators=never_if_unnecessary:none
@@ -26,6 +39,12 @@ dotnet_style_require_accessibility_modifiers=for_non_interface_members:suggestio
 
 # ReSharper properties
 resharper_autodetect_indent_settings=true
+resharper_braces_for_for=required
+resharper_braces_for_foreach=required
+resharper_braces_for_ifelse=required
+resharper_braces_for_while=required
+resharper_csharp_naming_rule.private_static_readonly=AaBb, Event + AaBb
+resharper_enforce_line_ending_style=true
 resharper_use_indent_from_vs=false
 
 # ReSharper inspection severities
@@ -51,3 +70,19 @@ tab_width=4
 
 [*.json]
 indent_size=2
+
+[{*.csproj,*.props}]
+indent_size=2
+
+[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
+indent_style=space
+indent_size=2
+
+[{*.yaml,*.yml}]
+indent_style=space
+indent_size=2
+
+[*.{appxmanifest,asax,ascx,aspx,build,cg,cginc,compute,cs,cshtml,dtd,fs,fsi,fsscript,fsx,hlsl,hlsli,hlslinc,master,ml,mli,nuspec,razor,resw,resx,skin,usf,ush,vb,xaml,xamlx,xoml,xsd}]
+indent_style=space
+indent_size=4
+tab_width=4

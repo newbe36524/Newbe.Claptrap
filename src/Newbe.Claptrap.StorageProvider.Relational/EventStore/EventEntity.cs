@@ -2,7 +2,7 @@ using System;
 
 namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
 {
-    public class EventEntity : IEventEntity
+    public record EventEntity : IEventEntity
     {
         public string ClaptrapTypeCode { get; set; } = null!;
         public string ClaptrapId { get; set; } = null!;

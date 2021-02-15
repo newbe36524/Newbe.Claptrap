@@ -1,0 +1,11 @@
+﻿apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: daprConfig
+  namespace: default
+spec:
+  tracing:
+    #    samplingRate: "1"
+    samplingRate: "0.0001"
+    zipkin:
+      endpointAddress: http://zipkin:9412/api/v2/spans

@@ -1,6 +1,7 @@
 using System.Linq;
 using FluentAssertions;
 using Newbe.Claptrap.Design;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests

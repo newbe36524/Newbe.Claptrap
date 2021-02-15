@@ -24,7 +24,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
                 EventData = eventData,
                 EventTypeCode = @event.EventTypeCode,
                 ClaptrapId = @event.ClaptrapIdentity.Id,
-                ClaptrapTypeCode = @event.ClaptrapIdentity.TypeCode,
+                ClaptrapTypeCode = @event.ClaptrapIdentity.TypeCode
             };
             return eventEntity;
         }

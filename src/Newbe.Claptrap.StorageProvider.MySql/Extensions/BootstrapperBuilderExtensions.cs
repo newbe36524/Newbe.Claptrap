@@ -18,7 +18,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseMySqlAsEventStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseMySql(sqlite =>
+        {
+            return builder.UseMySql(sqlite =>
                 sqlite.AsEventStore(eventStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -38,7 +39,7 @@ namespace Newbe.Claptrap.Bootstrapper
                             {
                                 ConnectionName = storageOptions.ConnectionName,
                                 SchemaName = storageOptions.SchemaName,
-                                EventTableName = storageOptions.TableName,
+                                EventTableName = storageOptions.TableName
                             }, ConfigMore);
                             break;
                     }
@@ -51,6 +52,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
                     }
                 }));
+        }
 
         /// <summary>
         /// it will be invoked form HostExtensions
@@ -61,7 +63,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseMySqlAsStateStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseMySql(sqlite =>
+        {
+            return builder.UseMySql(sqlite =>
                 sqlite.AsStateStore(stateStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -94,7 +97,8 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
                     }
                 }));
-        
+        }
+
         public static IClaptrapBootstrapperBuilder UseMySql(
             this IClaptrapBootstrapperBuilder builder,
             Action<MySqlProviderConfigurator> mysql)

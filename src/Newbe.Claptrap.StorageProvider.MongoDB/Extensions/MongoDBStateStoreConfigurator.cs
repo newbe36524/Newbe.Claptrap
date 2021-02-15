@@ -23,49 +23,54 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.Extensions
 
         public MongoDBStateStoreConfigurator SharedCollection(
             Action<MongoDBStateStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBStateStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateCollectionName = Defaults.StateTableName
-                }, action);
+        {
+            return UseLocator(new MongoDBStateStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateCollectionName = Defaults.StateTableName
+            }, action);
+        }
 
 
         public MongoDBStateStoreConfigurator OneIdOneCollection(
             Action<MongoDBStateStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBStateStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateCollectionName = $"[TypeCode]_[Id]_{Defaults.StateTableName}",
-                }, action);
+        {
+            return UseLocator(new MongoDBStateStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateCollectionName = $"[TypeCode]_[Id]_{Defaults.StateTableName}"
+            }, action);
+        }
 
 
         public MongoDBStateStoreConfigurator OneTypeOneCollection(
             Action<MongoDBStateStoreOptions>? action = null)
-            =>
-                UseLocator(new MongoDBStateStoreLocator
-                {
-                    DatabaseName = Defaults.SchemaName,
-                    ConnectionName = Defaults.ConnectionName,
-                    StateCollectionName = $"[TypeCode]_{Defaults.StateTableName}",
-                }, action);
+        {
+            return UseLocator(new MongoDBStateStoreLocator
+            {
+                DatabaseName = Defaults.SchemaName,
+                ConnectionName = Defaults.ConnectionName,
+                StateCollectionName = $"[TypeCode]_{Defaults.StateTableName}"
+            }, action);
+        }
 
         public MongoDBStateStoreConfigurator UseLocator(
             IMongoDBStateStoreLocator locator,
             Action<MongoDBStateStoreOptions>? action = null
         )
-            => ConfigureOptions(providerOptions =>
+        {
+            return ConfigureOptions(providerOptions =>
             {
                 var stateOptions = new MongoDBStateStoreOptions
                 {
-                    MongoDBStateStoreLocator = locator,
+                    MongoDBStateStoreLocator = locator
                 };
                 action?.Invoke(stateOptions);
                 providerOptions.StateLoaderOptions = stateOptions;
                 providerOptions.StateSaverOptions = stateOptions;
             });
+        }
     }
 }

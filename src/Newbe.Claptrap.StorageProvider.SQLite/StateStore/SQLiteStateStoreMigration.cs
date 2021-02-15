@@ -33,7 +33,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                 fileName => fileName.EndsWith("-state.sql"),
                 new Dictionary<string, string>
                 {
-                    {"StateTableName", stateTableName},
+                    {"StateTableName", stateTableName}
                 },
                 () =>
                 {

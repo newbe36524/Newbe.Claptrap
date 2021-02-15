@@ -23,7 +23,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
             new ConcurrentDictionary<int, string>();
 
         public MySqlStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             IDbFactory dbFactory,
             IRelationalStateStoreLocatorOptions options,
@@ -45,7 +45,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
                     new BatchOperatorOptions<StateEntity>(options)
                     {
                         DoManyFunc = (entities, cacheData) =>
-                            SaveManyCoreMany(dbFactory, entities),
+                            SaveManyCoreMany(dbFactory, entities)
                     }));
         }
 
@@ -66,14 +66,14 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
                 .ToArray();
 
             var sql = GetUpsertSql(_schemaName, _tableName, items.Length);
-            using var db = dbFactory.GetConnection(_connectionName);
+            await using var db = dbFactory.GetConnection(_connectionName);
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
             {
                 foreach (var (parameterName, valueFunc) in RelationalStateEntity.ValueFactories())
                 {
                     var entity = items[i];
-                    var name = _sqlTemplateCache.GetParameterName(parameterName, i);
+                    var name = _sqlTemplateCache.GetOrAddGetParameterName(parameterName, i);
                     ps.Add(name, valueFunc(entity));
                 }
             }
@@ -101,7 +101,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 
                 string ValuePartFactory(IEnumerable<string> parameters, int index)
                 {
-                    var values = string.Join(",", parameters.Select(x => _sqlTemplateCache.GetParameterName(x, index)));
+                    var values = string.Join(",", parameters.Select(x => _sqlTemplateCache.GetOrAddGetParameterName(x, index)));
                     var re = $" ({values}) ";
                     return re;
                 }
@@ -110,18 +110,7 @@ namespace Newbe.Claptrap.StorageProvider.MySql.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
-        }
-
-        public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)
-        {
-            foreach (var name in RelationalStateEntity.ParameterNames())
-            {
-                for (var i = 0; i < maxCount; i++)
-                {
-                    sqlTemplateCache.AddParameterName(name, i);
-                }
-            }
+            return _batchOperator.CreateTask(entity).AsTask();
         }
     }
 }

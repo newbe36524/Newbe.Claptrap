@@ -18,7 +18,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseMongoDBAsEventStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseMongoDB(sqlite =>
+        {
+            return builder.UseMongoDB(sqlite =>
                 sqlite.AsEventStore(eventStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -38,7 +39,7 @@ namespace Newbe.Claptrap.Bootstrapper
                             {
                                 ConnectionName = storageOptions.ConnectionName,
                                 DatabaseName = storageOptions.SchemaName,
-                                EventCollectionName = storageOptions.TableName,
+                                EventCollectionName = storageOptions.TableName
                             }, ConfigMore);
                             break;
                     }
@@ -51,6 +52,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
                     }
                 }));
+        }
 
         /// <summary>
         /// it will be invoked form HostExtensions
@@ -61,7 +63,8 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseMongoDBAsStateStore(
             this IClaptrapBootstrapperBuilder builder,
             StorageOptions storageOptions)
-            => builder.UseMongoDB(sqlite =>
+        {
+            return builder.UseMongoDB(sqlite =>
                 sqlite.AsStateStore(stateStore =>
                 {
                     switch (storageOptions.Strategy)
@@ -93,6 +96,7 @@ namespace Newbe.Claptrap.Bootstrapper
                         options.InsertManyWindowCount = storageOptions.InsertManyWindowCount;
                     }
                 }));
+        }
 
         public static IClaptrapBootstrapperBuilder UseMongoDB(
             this IClaptrapBootstrapperBuilder builder,

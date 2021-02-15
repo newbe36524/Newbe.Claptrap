@@ -1,9 +1,9 @@
 namespace Newbe.Claptrap
 {
-    public class EventNotifierContext : IEventNotifierContext
+    public record EventNotifierContext : IEventNotifierContext
     {
-        public IEvent Event { get; set; } = null!;
-        public IState CurrentState { get; set; } = null!;
-        public IState OldState { get; set; } = null!;
+        public IEvent Event { get; init; }
+        public IState CurrentState { get; init; }
+        public IState OldState { get; init; }
     }
 }

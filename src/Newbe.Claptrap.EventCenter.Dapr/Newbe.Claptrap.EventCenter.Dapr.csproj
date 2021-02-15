@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.DataSerializer.TextJson\Newbe.Claptrap.DataSerializer.TextJson.csproj" />
+      <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapr.Actors" Version="1.0.0-rc06" />
+      <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc06" />
+      <PackageReference Include="Dapr.Client" Version="1.0.0-rc06" />
+    </ItemGroup>
+
+</Project>

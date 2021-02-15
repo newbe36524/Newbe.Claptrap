@@ -5,6 +5,6 @@ namespace Newbe.Claptrap
         Known = 0,
         SharedTable = 1,
         OneTypeOneTable = 2,
-        OneIdOneTable = 3,
+        OneIdOneTable = 3
     }
 }

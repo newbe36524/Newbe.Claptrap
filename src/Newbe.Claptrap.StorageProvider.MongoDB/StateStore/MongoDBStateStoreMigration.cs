@@ -71,7 +71,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
                 return collection.Indexes.CreateOneAsync(new CreateIndexModel<MongoStateEntity>(
                     indexKeysDefinition, new CreateIndexOptions
                     {
-                        Unique = true,
+                        Unique = true
                     }));
             }
         }

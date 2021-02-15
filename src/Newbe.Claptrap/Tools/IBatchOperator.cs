@@ -5,7 +5,7 @@ namespace Newbe.Claptrap
     public interface IBatchOperator<in T> :
         IBatchOperator
     {
-        Task CreateTask(T input);
+        ValueTask CreateTask(T input);
     }
 
     public interface IBatchOperator

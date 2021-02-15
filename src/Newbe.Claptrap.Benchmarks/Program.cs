@@ -61,9 +61,13 @@ namespace Newbe.Claptrap.Benchmarks
         public IEnumerable<ILogger> GetLoggers()
         {
             if (LinqPadLogger.IsAvailable)
+            {
                 yield return LinqPadLogger.Instance;
+            }
             else
+            {
                 yield return ConsoleLogger.Default;
+            }
         }
 
         public IEnumerable<IAnalyser> GetAnalysers()
@@ -86,10 +90,7 @@ namespace Newbe.Claptrap.Benchmarks
             yield return DeferredExecutionValidator.FailOnError;
         }
 
-        public IOrderer Orderer
-        {
-            get { return null; }
-        }
+        public IOrderer Orderer => null;
 
         public ConfigUnionRule UnionRule => ConfigUnionRule.Union;
 

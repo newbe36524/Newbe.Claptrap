@@ -16,6 +16,7 @@ namespace Newbe.Claptrap.Tests
             {
                 data.Counter++;
             }
+
             return Task.FromResult(eventContext.State);
         }
 

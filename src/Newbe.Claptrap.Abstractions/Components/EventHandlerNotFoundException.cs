@@ -8,7 +8,8 @@ namespace Newbe.Claptrap
         public string EventTypeCode { get; set; }
 
         public EventHandlerNotFoundException(string claptrapTypeCode, string eventTypeCode)
-            : this($"EventHandler not found for {claptrapTypeCode} {eventTypeCode}. please make sure you have registered",
+            : this(
+                $"EventHandler not found for {claptrapTypeCode} {eventTypeCode}. please make sure you have registered",
                 claptrapTypeCode,
                 eventTypeCode)
         {

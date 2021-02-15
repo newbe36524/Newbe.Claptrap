@@ -1,0 +1,1 @@
+GET https://localhost:50001/v1.0/invoke/newbe_claptrap_demo_server/method/Event

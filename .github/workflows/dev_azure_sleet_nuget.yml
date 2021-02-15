@@ -2,48 +2,41 @@ name: Publish dev nuget package to azure
 
 on:
   push:
-    branches: 
+    branches:
       - develop
       - feature/ci
       - feature/ut
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    container: mcr.microsoft.com/dotnet/sdk:5.0
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        source-url: https://nuget.pkg.github.com/newbe36524/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - uses: aarnott/nbgv@v0.3
+        with:
+          setAllVars: true
 
-    - uses: aarnott/nbgv@v0.3
-      with:
-        setAllVars: true
+      - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
 
-    - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
+      - name: pack
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          mkdir pkgs
+          dotnet pack --configuration Release -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
+          dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
 
-    - name: pack
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        mkdir pkgs
-        dotnet pack --configuration Release -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
-        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o ./pkgs -p:PackageVersion=$NBGV_SemVer2
-
-    - name: Push nuget package to Azure storage
-      env: 
-        SLEET_FEED_TYPE: azure
-        SLEET_FEED_CONTAINER: feed
-        SLEET_FEED_CONNECTIONSTRING: ${{secrets.SLEET_CONNECTIONSTRING}}
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet tool install -g sleet
-        sleet push ./pkgs --skip-existing
+      - name: Push nuget package to Azure storage
+        env:
+          SLEET_FEED_TYPE: azure
+          SLEET_FEED_CONTAINER: feed
+          SLEET_FEED_CONNECTIONSTRING: ${{secrets.SLEET_CONNECTIONSTRING}}
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          dotnet tool install -g sleet
+          sleet push ./pkgs --skip-existing

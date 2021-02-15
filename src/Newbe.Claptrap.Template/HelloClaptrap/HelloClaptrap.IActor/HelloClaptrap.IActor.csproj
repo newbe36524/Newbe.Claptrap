@@ -1,16 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newbe.Claptrap.Attributes" Version="0.3.16-alpha.g1517ff130a" />
-        <PackageReference Include="Microsoft.Orleans.CodeGenerator.Msbuild" Version="3.2.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Newbe.Claptrap.Orleans.Core" Version="0.3.16-alpha.g1517ff130a" />
+        <PackageReference Include="Newbe.Claptrap.Attributes" Version="$(ClaptrapPackageVersion)" />
+        <PackageReference Include="Newbe.Claptrap.Dapr.Core" Version="$(ClaptrapPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,5 +1,6 @@
 using System;
 using Newbe.Claptrap.EventCenter.RabbitMQ.Extensions;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 // ReSharper disable once CheckNamespace
@@ -10,7 +11,9 @@ namespace Newbe.Claptrap.Bootstrapper
         public static IClaptrapBootstrapperBuilder UseRabbitMQ(
             this IClaptrapBootstrapperBuilder builder,
             Action<RabbitMQConfigurator> rabbitmq)
-            => builder.UseRabbitMQ(x => true, rabbitmq);
+        {
+            return builder.UseRabbitMQ(x => true, rabbitmq);
+        }
 
         public static IClaptrapBootstrapperBuilder UseRabbitMQ(
             this IClaptrapBootstrapperBuilder builder,

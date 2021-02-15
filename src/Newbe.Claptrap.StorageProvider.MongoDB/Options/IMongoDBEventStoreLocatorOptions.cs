@@ -1,4 +1,3 @@
-
 using Newbe.Claptrap.StorageProvider.MongoDB.EventStore;
 
 namespace Newbe.Claptrap.StorageProvider.MongoDB.Options

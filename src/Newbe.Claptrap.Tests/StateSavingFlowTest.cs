@@ -12,7 +12,7 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void WindowVersionLimit1()
         {
-            using var mocker = AutoMockHelper.Create( builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -32,7 +32,7 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void WindowVersionLimitTime1Seconds()
         {
-            using var mocker = AutoMockHelper.Create( builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -50,7 +50,7 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void WindowVersionLimit2()
         {
-            using var mocker = AutoMockHelper.Create( builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {
@@ -78,7 +78,7 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void NotSave()
         {
-            using var mocker = AutoMockHelper.Create( builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 // there is no saving windows set, it will save nothing
                 builder.RegisterInstance(new StateSavingOptions());
@@ -93,7 +93,7 @@ namespace Newbe.Claptrap.Tests
         [Test]
         public void ExceptionAdnContinue()
         {
-            using var mocker = AutoMockHelper.Create( builderAction: builder =>
+            using var mocker = AutoMockHelper.Create(builderAction: builder =>
             {
                 builder.RegisterInstance(new StateSavingOptions
                 {

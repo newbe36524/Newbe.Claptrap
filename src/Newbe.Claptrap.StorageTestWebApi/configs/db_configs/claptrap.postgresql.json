@@ -1,0 +1,5 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "Server=localhost;Port=35432;Database=claptrap;User Id=postgres;Password=claptrap;CommandTimeout=20;Timeout=15;Pooling=true;MinPoolSize=1;MaxPoolSize=20;"
+  }
+}

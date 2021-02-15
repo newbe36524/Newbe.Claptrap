@@ -1,6 +1,6 @@
 namespace Newbe.Claptrap
 {
-    public class DataEvent : IEvent
+    public record DataEvent : IEvent
     {
         public DataEvent(IClaptrapIdentity claptrapIdentity, string eventTypeCode, IEventData data)
         {
@@ -16,7 +16,7 @@ namespace Newbe.Claptrap
 
         public static DataEvent Populate(IEvent @event, IEventData eventData)
         {
-            return new DataEvent(@event.ClaptrapIdentity, @event.EventTypeCode, eventData)
+            return new(@event.ClaptrapIdentity, @event.EventTypeCode, eventData)
             {
                 Version = @event.Version
             };

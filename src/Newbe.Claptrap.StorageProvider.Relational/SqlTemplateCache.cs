@@ -1,29 +1,25 @@
-using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
 
 namespace Newbe.Claptrap.StorageProvider.Relational
 {
     public class SqlTemplateCache : ISqlTemplateCache
     {
-        private readonly Dictionary<string, Dictionary<int, string>>
-            _parameterNames = new Dictionary<string, Dictionary<int, string>>();
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<int, string>> _ps = new();
 
-        public string GetParameterName(string name, int index)
+        public string GetOrAddGetParameterName(string name, int index)
         {
-            return _parameterNames[name][index];
+            var innerDic = _ps.GetOrAdd(name, n => new ConcurrentDictionary<int, string>());
+            var result = innerDic.GetOrAdd(index, i => $"@{name}{i}");
+            return result;
         }
 
-        public void AddParameterName(string name, int index)
-        {
-            if (!_parameterNames.TryGetValue(name, out var dic))
-            {
-                dic = new Dictionary<int, string>();
-                _parameterNames.Add(name, dic);
-            }
+        private readonly ConcurrentDictionary<int, string> _sqlDic = new();
 
-            if (!dic.TryGetValue(index, out _))
-            {
-                dic[index] = $"@{name}{index}";
-            }
+        public string GetOrAddSql(int key, Func<int, string> factory)
+        {
+            var re = _sqlDic.GetOrAdd(key, factory.Invoke);
+            return re;
         }
     }
 }

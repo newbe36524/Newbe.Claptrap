@@ -9,6 +9,5 @@ namespace Newbe.Claptrap.StorageProvider.PostgreSQL.Options
         IRelationalStateStoreLocatorOptions,
         IPostgreSQLMigrationOptions
     {
-
     }
 }

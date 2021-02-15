@@ -1,30 +1,45 @@
 <Project>
-    <PropertyGroup>
-        <Authors>newbe36524</Authors>
-        <Company>newbe36524</Company>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://www.newbe.pro</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/newbe36524/Newbe.Claptrap</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <NoWarn>1701;1702;1705;1591</NoWarn>
-        <PackageReleaseNotes>
-        </PackageReleaseNotes>
-        <LangVersion>latest</LangVersion>
-        <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern. It could help you to build a distributed, scalable, and testable server application.
-        This package is one part of that project. Please check the source repository for more details.
-    https://github.com/newbe36524/Newbe.Claptrap </Description>
-        <PackageIcon>icon.png</PackageIcon>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
-        <None Include="icon.png" Pack="true" PackagePath=""/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Fody" Version="6.2.4">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Visualize.Fody" Version="1.2.0">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>  
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>newbe36524</Authors>
+    <Company>newbe36524</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://claptrap.newbe.pro</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/newbe36524/Newbe.Claptrap</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <LangVersion>9.0</LangVersion>
+    <Description>Newbe.Claptrap is a framework for server development. It take advantage to Actor Pattern and Event Sourcing Pattern. It could help you to build a distributed, scalable, and testable server application.
+      This package is one part of that project. Please check the source repository for more details.
+      Docs: https://claptrap.newbe.pro
+      Github: https://github.com/newbe36524/Newbe.Claptrap
+      Gitee: https://gitee.com/yks/Newbe.Claptrap
+    </Description>
+    <PackageIcon>icon.png</PackageIcon>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(IsPackable)' != 'false' ">
+    <None Include="$(SolutionDir)/icon.png" Link="icon.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsUnitTest)' == 'true' ">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3"/>
+    <PackageReference Include="NLog.Targets.Seq" Version="1.2.0" />
+    <PackageReference Include="NUnit" Version="3.13.1"/>
+    <PackageReference Include="NunitXml.TestLogger" Version="2.1.80"/>
+    <PackageReference Include="NUnit.Analyzers" Version="3.0.0"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
+    <PackageReference Include="coverlet.collector" Version="3.0.2"/>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0"/>
+    <PackageReference Include="Autofac.Extras.Moq" Version="6.0.0"/>
+    <PackageReference Include="FluentAssertions" Version="5.10.3"/>
+    <None Remove="configs\**\*.json"/>
+    <Content Include="configs\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(SolutionDir)/nlog.config" Link="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

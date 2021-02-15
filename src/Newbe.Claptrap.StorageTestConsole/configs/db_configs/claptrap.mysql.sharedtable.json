@@ -1,0 +1,14 @@
+{
+  "Claptrap": {
+    "EventStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MySql",
+      "InsertManyWindowCount": 1000
+    },
+    "StateStore": {
+      "Strategy": "SharedTable",
+      "DatabaseType": "MySql",
+      "InsertManyWindowCount": 1500
+    }
+  }
+}

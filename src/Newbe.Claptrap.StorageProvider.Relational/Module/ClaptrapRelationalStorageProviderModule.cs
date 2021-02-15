@@ -37,7 +37,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.Module
             builder.RegisterType<BatchOperatorContainer>()
                 .As<IBatchOperatorContainer>()
                 .SingleInstance();
-            builder.RegisterGeneric(typeof(BatchOperator<>))
+            builder.RegisterGeneric(typeof(ChannelBatchOperator<>))
                 .AsSelf()
                 .InstancePerDependency();
         }

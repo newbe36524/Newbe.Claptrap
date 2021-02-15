@@ -17,7 +17,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
 
         public MongoDBStateEntitySaver(
             IClaptrapIdentity identity,
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IDbFactory dbFactory,
             IMongoDBStateStoreLocatorOptions options,
             IBatchOperatorContainer batchOperatorContainer)
@@ -51,7 +51,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
                     claptrap_type_code = x.ClaptrapTypeCode,
                     version = x.Version,
                     state_data = x.StateData,
-                    updated_time = x.UpdatedTime,
+                    updated_time = x.UpdatedTime
                 })
                 .ToArray();
 
@@ -65,7 +65,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
                     entity.claptrap_id == x.claptrap_id && entity.claptrap_type_code == x.claptrap_type_code);
                 return new ReplaceOneModel<MongoStateEntity>(filter, x)
                 {
-                    IsUpsert = true,
+                    IsUpsert = true
                 };
             });
             await collection.BulkWriteAsync(upsertModels);
@@ -73,7 +73,7 @@ namespace Newbe.Claptrap.StorageProvider.MongoDB.StateStore
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
+            return _batchOperator.CreateTask(entity).AsTask();
         }
     }
 }

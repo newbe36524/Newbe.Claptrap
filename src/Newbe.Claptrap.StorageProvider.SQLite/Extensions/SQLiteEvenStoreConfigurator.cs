@@ -16,33 +16,36 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
         }
 
         public SQLiteEvenStoreConfigurator SharedTable(Action<SQLiteEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = SQLiteSchemaName,
-                    ConnectionName = "shared/claptrap.events.db",
-                    EventTableName = Defaults.EventTableName
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = SQLiteSchemaName,
+                ConnectionName = "shared/claptrap.events.db",
+                EventTableName = Defaults.EventTableName
+            }, action);
+        }
 
 
         public SQLiteEvenStoreConfigurator OneIdOneFile(Action<SQLiteEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = SQLiteSchemaName,
-                    ConnectionName = $"[TypeCode]_[Id]/eventDb.db",
-                    EventTableName = Defaults.EventTableName
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = SQLiteSchemaName,
+                ConnectionName = $"[TypeCode]_[Id]/eventDb.db",
+                EventTableName = Defaults.EventTableName
+            }, action);
+        }
 
 
         public SQLiteEvenStoreConfigurator OneTypeOneFile(Action<SQLiteEventStoreOptions>? action = null)
-            =>
-                UseLocator(new RelationalEventStoreLocator
-                {
-                    SchemaName = SQLiteSchemaName,
-                    ConnectionName = $"[TypeCode]/eventDb.db",
-                    EventTableName = Defaults.EventTableName
-                }, action);
+        {
+            return UseLocator(new RelationalEventStoreLocator
+            {
+                SchemaName = SQLiteSchemaName,
+                ConnectionName = $"[TypeCode]/eventDb.db",
+                EventTableName = Defaults.EventTableName
+            }, action);
+        }
 
         private SQLiteEvenStoreConfigurator ConfigureOptions(
             Action<ClaptrapStorageProviderOptions> optionsAction)
@@ -60,7 +63,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
             {
                 var eventOptions = new SQLiteEventStoreOptions
                 {
-                    RelationalEventStoreLocator = relationalEventStoreLocator,
+                    RelationalEventStoreLocator = relationalEventStoreLocator
                 };
                 action?.Invoke(eventOptions);
                 providerOptions.EventLoaderOptions = eventOptions;

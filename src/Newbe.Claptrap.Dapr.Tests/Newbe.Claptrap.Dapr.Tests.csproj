@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr.TestKit\Newbe.Claptrap.Dapr.TestKit.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.Dapr\Newbe.Claptrap.Dapr.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
+  </ItemGroup>
+
+</Project>

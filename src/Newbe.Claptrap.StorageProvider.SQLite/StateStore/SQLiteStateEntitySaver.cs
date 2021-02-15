@@ -19,7 +19,7 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
         private readonly string _stateTableName;
 
         public SQLiteStateEntitySaver(
-            BatchOperator<StateEntity>.Factory batchOperatorFactory,
+            ChannelBatchOperator<StateEntity>.Factory batchOperatorFactory,
             IClaptrapIdentity identity,
             ISQLiteDbFactory sqLiteDbFactory,
             ISQLiteStateStoreOptions options,
@@ -83,14 +83,14 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
                 .ToArray();
 
             var sql = upsertSql[items.Length - 1];
-            using var db = sqLiteDbFactory.GetConnection(_connectionName);
+            await using var db = sqLiteDbFactory.GetConnection(_connectionName);
             var ps = new DynamicParameters();
             for (var i = 0; i < array.Length; i++)
             {
                 foreach (var (parameterName, valueFunc) in RelationalStateEntity.ValueFactories())
                 {
                     var entity = items[i];
-                    var name = _sqlTemplateCache.GetParameterName(parameterName, i);
+                    var name = _sqlTemplateCache.GetOrAddGetParameterName(parameterName, i);
                     ps.Add(name, valueFunc(entity));
                 }
             }
@@ -112,31 +112,21 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.StateStore
             var sb = new StringBuilder(upsertManySqlHeader);
             sb.Append(string.Join(",", valuesSql));
 
-            sb.Append(" ON CONFLICT (claptrap_type_code,claptrap_id) DO UPDATE SET version = excluded.version, state_data = excluded.state_data, updated_time = excluded.updated_time WHERE excluded.version > version");
+            sb.Append(
+                " ON CONFLICT (claptrap_type_code,claptrap_id) DO UPDATE SET version = excluded.version, state_data = excluded.state_data, updated_time = excluded.updated_time WHERE excluded.version > version");
             return sb.ToString();
         }
 
         private string ValuePartFactory(IEnumerable<string> parameters, int index)
         {
-            var values = string.Join(",", parameters.Select(x => _sqlTemplateCache.GetParameterName(x, index)));
+            var values = string.Join(",", parameters.Select(x => _sqlTemplateCache.GetOrAddGetParameterName(x, index)));
             var re = $" ({values}) ";
             return re;
         }
 
         public Task SaveAsync(StateEntity entity)
         {
-            return _batchOperator.CreateTask(entity);
-        }
-
-        public static void RegisterParameters(ISqlTemplateCache sqlTemplateCache, int maxCount)
-        {
-            foreach (var name in RelationalStateEntity.ParameterNames())
-            {
-                for (var i = 0; i < maxCount; i++)
-                {
-                    sqlTemplateCache.AddParameterName(name, i);
-                }
-            }
+            return _batchOperator.CreateTask(entity).AsTask();
         }
     }
 }

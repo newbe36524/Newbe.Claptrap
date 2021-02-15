@@ -1,0 +1,5 @@
+{
+  "Claptrap": {
+    "DefaultConnectionString": "Server=localhost;Port=33306;Database=claptrap;Uid=root;Pwd=claptrap;Pooling=True;"
+  }
+}

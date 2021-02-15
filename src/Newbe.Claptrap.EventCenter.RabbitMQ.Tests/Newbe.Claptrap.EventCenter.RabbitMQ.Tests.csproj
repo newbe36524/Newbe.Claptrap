@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <IsUnitTest>true</IsUnitTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Newbe.Claptrap.StorageProvider.SQLite\Newbe.Claptrap.StorageProvider.SQLite.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.Configuration\Newbe.Claptrap.Configuration.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.EventCenter.RabbitMQ\Newbe.Claptrap.EventCenter.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.EventCenter\Newbe.Claptrap.EventCenter.csproj" />
+    <ProjectReference Include="..\Newbe.Claptrap.TestSuit\Newbe.Claptrap.TestSuit.csproj" />
+  </ItemGroup>
+
+
+</Project>

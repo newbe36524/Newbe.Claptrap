@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Newbe.Claptrap.TestSuit;
 using NUnit.Framework;
 
 namespace Newbe.Claptrap.Tests

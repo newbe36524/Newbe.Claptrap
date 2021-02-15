@@ -15,7 +15,7 @@ namespace Newbe.Claptrap
         /// Not null if this claptrap is a minion of other one claptrap.
         /// Null is this is a master claptrap.
         /// </summary>
-        IClaptrapDesign ClaptrapMasterDesign { get; }
+        IClaptrapDesign? ClaptrapMasterDesign { get; }
 
         /// <summary>
         /// State data type of this claptrap
