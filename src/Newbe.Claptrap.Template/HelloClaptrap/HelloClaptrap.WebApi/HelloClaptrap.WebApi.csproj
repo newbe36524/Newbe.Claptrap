@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc05" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.5" />
     </ItemGroup>
 
     <ItemGroup>

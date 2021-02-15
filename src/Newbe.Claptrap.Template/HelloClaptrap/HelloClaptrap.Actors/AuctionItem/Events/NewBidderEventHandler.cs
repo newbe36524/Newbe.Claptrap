@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using HelloClaptrap.Models.AuctionItem;
 using HelloClaptrap.Models.AuctionItem.Events;

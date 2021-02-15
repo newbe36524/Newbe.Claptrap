@@ -1,7 +1,6 @@
-using HelloClaptrap.Actors.AuctionItem;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Newbe.Claptrap.Bootstrapper;
 
 namespace HelloClaptrap.BackendServer
 {
@@ -14,11 +13,7 @@ namespace HelloClaptrap.BackendServer
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseClaptrap(builder => { builder.ScanClaptrapDesigns(new[] {typeof(AuctionItemActor).Assembly}); },
-                    builder => { })
-                .ConfigureServices((context, collection) => { })
-                .UseClaptrapHostCommon()
-                .UseClaptrapDaprHost()
+                .UseServiceProviderFactory(_ => new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }
