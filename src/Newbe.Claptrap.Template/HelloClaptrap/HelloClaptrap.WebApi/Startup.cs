@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newbe.Claptrap;
+using OpenTelemetry.Trace;
 
 namespace HelloClaptrap.WebApi
 {
@@ -20,6 +23,19 @@ namespace HelloClaptrap.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOpenTelemetryTracing(
+                builder => builder
+                    .AddSource(ClaptrapActivitySource.Instance.Name)
+                    .SetSampler(new ParentBasedSampler(new AlwaysOnSampler()))
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddZipkinExporter(options =>
+                    {
+                        var zipkinBaseUri = Configuration.GetServiceUri("zipkin", "http");
+                        options.Endpoint = new Uri(zipkinBaseUri!, "/api/v2/spans");
+                    })
+            );
             services.AddControllers();
             services.AddActors(_ => { });
             services.AddSwaggerGen(c =>

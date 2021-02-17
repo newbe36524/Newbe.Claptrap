@@ -8,7 +8,11 @@ name: helloclaptrap
 extensions:
   - name: dapr
     components-path: "./dapr_components/"
-    config: config
+    config: claptrap_config
+    exclude-placement-container: true
+    placement-port: 6050
+  - name: zipkin
+  - name: seq
 services:
   - name: helloclaptrap-webapi
     project: HelloClaptrap.WebApi/HelloClaptrap.WebApi.csproj
@@ -37,6 +41,16 @@ services:
   #       value: root
   #     - name: MONGO_INITDB_ROOT_PASSWORD
   #       value: claptrap
+  - name: zipkin
+    external: true
+    bindings:
+      - name: http
+        port: 9411
+  - name: seq
+    external: true
+    bindings:
+      - name: http
+        port: 5341
 ingress:
   - name: webapi
     rules:

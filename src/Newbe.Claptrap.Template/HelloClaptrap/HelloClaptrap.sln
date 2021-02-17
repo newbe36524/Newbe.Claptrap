@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		NuGet.config = NuGet.config
+		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0_Infrastructure", "0_Infrastructure", "{2A129827-5C4E-4B8E-9E41-3A39908692F8}"

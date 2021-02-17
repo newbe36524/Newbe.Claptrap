@@ -2,37 +2,33 @@ name: Publish dev nuget package to nuget.org
 
 on:
   push:
-    branches: 
+    branches:
       - v*
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    container: mcr.microsoft.com/dotnet/sdk:5.0
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0
+      - uses: aarnott/nbgv@v0.3
+        with:
+          setAllVars: true
 
-    - uses: aarnott/nbgv@v0.3
-      with:
-        setAllVars: true
+      - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
 
-    - run: echo "NBGV_SemVer2 $NBGV_SemVer2"
+      - name: pack
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
+          dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
 
-    - name: pack
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet pack --configuration Release -o . -p:PackageVersion=$NBGV_SemVer2
-        dotnet pack Newbe.Claptrap.Template/Newbe.Claptrap.Template.csproj -o . -p:PackageVersion=$NBGV_SemVer2
-
-    - name: Push nuget package to MyGet registry
-      run: |
-        cd $GITHUB_WORKSPACE/src
-        dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --no-symbols --skip-duplicate --source https://api.nuget.org/v3/index.json
+      - name: Push nuget package to nuget.org
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --no-symbols --skip-duplicate --source https://api.nuget.org/v3/index.json
