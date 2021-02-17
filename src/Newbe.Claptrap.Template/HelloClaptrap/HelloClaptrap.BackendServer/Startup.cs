@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using HelloClaptrap.Actors.AuctionItem;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Bootstrapper;
+using OpenTelemetry.Trace;
 
 namespace HelloClaptrap.BackendServer
 {
@@ -33,23 +35,34 @@ namespace HelloClaptrap.BackendServer
                 .Build();
             _claptrapDesignStore = _claptrapBootstrapper.DumpDesignStore();
         }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOpenTelemetryTracing(
+                builder => builder
+                    .AddSource(ClaptrapActivitySource.Instance.Name)
+                    .SetSampler(new ParentBasedSampler(new AlwaysOnSampler()))
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddZipkinExporter(options =>
+                    {
+                        var zipkinBaseUri = Configuration.GetServiceUri("zipkin", "http");
+                        options.Endpoint = new Uri(zipkinBaseUri!, "/api/v2/spans");
+                    })
+            );
             services.AddClaptrapServerOptions();
-            services.AddActors(options =>
-            {
-                options.AddClaptrapDesign(_claptrapDesignStore);
-            });
+            services.AddActors(options => { options.AddClaptrapDesign(_claptrapDesignStore); });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "HelloClaptrap.BackendServer", Version = "v1"});
             });
         }
-        
+
         // ConfigureContainer is where you can register things directly
         // with Autofac. This runs after ConfigureServices so the things
         // here will override registrations made in ConfigureServices.
