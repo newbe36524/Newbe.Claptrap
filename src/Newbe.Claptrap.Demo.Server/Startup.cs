@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using App.Metrics;
 using Autofac;
@@ -12,6 +13,7 @@ using Newbe.Claptrap.AppMetrics;
 using Newbe.Claptrap.Bootstrapper;
 using Newbe.Claptrap.Demo.Server.Services;
 using Newbe.Claptrap.StorageSetup;
+using OpenTelemetry.Trace;
 
 namespace Newbe.Claptrap.Demo.Server
 {
@@ -45,7 +47,19 @@ namespace Newbe.Claptrap.Demo.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddClaptrapServerOptions();
-
+            services.AddOpenTelemetryTracing(
+                builder => builder
+                    .AddSource(ClaptrapActivitySource.Instance.Name)
+                    .SetSampler(new AlwaysOnSampler())
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddZipkinExporter(options =>
+                    {
+                        var zipkinBaseUri = Configuration.GetServiceUri("zipkin", "http");
+                        options.Endpoint = new Uri(zipkinBaseUri!, "/api/v2/spans");
+                    })
+            );
             services.AddControllers()
                 .AddDapr();
             services.AddActors(options => { options.AddClaptrapDesign(_claptrapDesignStore); });
