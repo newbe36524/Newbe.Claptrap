@@ -8,10 +8,11 @@ name: newbe.claptrap.demo.server
 extensions:
   - name: dapr
     components-path: "./dapr_components/"
-    config: myconfig
-    log-level: debug
-  # - name: seq
-  #   logPath: ./.logs
+    config: claptrap_config
+    exclude-placement-container: true
+    placement-port: 6050
+  - name: zipkin
+  - name: seq
 services:
   - name: newbe-claptrap-demo-server
     project: Newbe.Claptrap.Demo.Server.csproj
@@ -25,7 +26,16 @@ services:
   #       protocol: tcp
   #       host: rabbitmq
   #       containerPort: 5672
-
+  - name: zipkin
+    external: true
+    bindings:
+      - name: http
+        port: 9411
+  - name: seq
+    external: true
+    bindings:
+      - name: http
+        port: 5341
 ingress:
   - name: backend
     bindings:
