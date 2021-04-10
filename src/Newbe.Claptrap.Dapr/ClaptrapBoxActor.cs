@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
+using Newbe.Claptrap.Dapr.Core;
 
 namespace Newbe.Claptrap.Dapr
 {
@@ -24,6 +25,9 @@ namespace Newbe.Claptrap.Dapr
 
         public TStateData StateData =>
             (TStateData) ClaptrapActorCommonService.ClaptrapAccessor.Claptrap!.State.Data;
+
+        public IEventSerializer<EventJsonModel> EventSerializer =>
+            ClaptrapActorCommonService.EventSerializer;
 
         protected override async Task OnActivateAsync()
         {

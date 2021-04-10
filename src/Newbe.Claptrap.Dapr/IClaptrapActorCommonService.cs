@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Autofac.Core.Lifetime;
 using Dapr.Actors.Runtime;
+using Newbe.Claptrap.Dapr.Core;
 
 namespace Newbe.Claptrap.Dapr
 {
@@ -8,6 +10,7 @@ namespace Newbe.Claptrap.Dapr
         IClaptrapFactory ClaptrapFactory { get; }
         IClaptrapAccessor ClaptrapAccessor { get; }
         IClaptrapTypeCodeFactory ClaptrapTypeCodeFactory { get; }
+        IEventSerializer<EventJsonModel> EventSerializer { get; }
         ILifetimeScope LifetimeScope { get; }
     }
 }
