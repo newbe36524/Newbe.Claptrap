@@ -100,7 +100,7 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
     {
         public double SleepInSeconds { get; set; } = 1;
         public int OnSellingItemId { get; set; }
-        public Dictionary<int, int> UserBiddingCount { get; set; } = new();
+        public Dictionary<string, int> UserBiddingCount { get; set; } = new();
         public Stack<BiddingRecord> Records { get; set; } = new();
         public List<LogItem> Logs { get; set; } = new();
     }

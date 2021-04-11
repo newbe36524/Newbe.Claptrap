@@ -7,12 +7,12 @@ using HelloClaptrap.Models;
 using HelloClaptrap.Models.AuctionItemUserCountMinion;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Dapr;
-using Newbe.Claptrap.Dapr.Core;
 
 namespace HelloClaptrap.Actors.AuctionItemUserCountMinion
 {
+    [Actor(TypeName = ClaptrapCodes.AuctionItemUserCountMinionActor)]
     [ClaptrapEventHandler(typeof(NewBidderEventHandler), ClaptrapCodes.NewBidderEvent)]
-    public class AuctionItemUserCountMinionActor : ClaptrapBoxActor<AuctionItemUserCountState>,
+    public class AuctionItemUserCountMinionActor : ClaptrapBoxMinionActor<AuctionItemUserCountState>,
         IAuctionItemUserCountMinionActor
     {
         public AuctionItemUserCountMinionActor(ActorHost actorHost,

@@ -6,6 +6,6 @@ namespace HelloClaptrap.Models.AuctionItemUserCountMinion
 {
     public class AuctionItemUserCountState : IStateData
     {
-        public Dictionary<int, int> UserBiddingCount { get; set; }
+        public Dictionary<int, int> UserBiddingCount { get; set; } = new();
     }
 }

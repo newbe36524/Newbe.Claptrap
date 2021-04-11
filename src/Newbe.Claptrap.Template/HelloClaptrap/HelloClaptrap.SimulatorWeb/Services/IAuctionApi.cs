@@ -18,7 +18,7 @@ namespace HelloClaptrap.SimulatorWeb.Services
         Task<StateModel> GetStateAsync(int itemId);
 
         [Get("/api/AuctionItems/{itemId}/biddingcount")]
-        Task<Dictionary<int, int>> GetBiddingCount(int itemId);
+        Task<Dictionary<string, int>> GetBiddingCount(int itemId);
 
         [Post("/api/AuctionItems")]
         Task<TryBiddingResult> TryBiddingResultAsync(TryBiddingWebApiInput input);
@@ -38,7 +38,6 @@ namespace HelloClaptrap.SimulatorWeb.Services
     {
         public decimal TopPrice { get; set; }
     }
-
 
     public record TryBiddingWebApiInput
     {
