@@ -7,29 +7,10 @@ namespace Newbe.Claptrap.Dapr.Core
 {
     public interface IClaptrapMinionActor : IActor
     {
-        IEventSerializer<EventJsonModel> EventSerializer { get; }
-        IClaptrap Claptrap { get; }
+        Task MasterEventReceivedAsync(IEnumerable<IEvent> events);
 
-        async Task MasterEventReceivedAsync(IEnumerable<IEvent> events)
-        {
-            foreach (var @event in events)
-            {
-                await Claptrap.HandleEventAsync(@event);
-            }
-        }
+        Task MasterEventReceivedJsonAsync(IEnumerable<EventJsonModel> events);
 
-        async Task MasterEventReceivedJsonAsync(IEnumerable<EventJsonModel> events)
-        {
-            var items = events.Select(EventSerializer.Deserialize);
-            foreach (var @event in items)
-            {
-                await Claptrap.HandleEventAsync(@event);
-            }
-        }
-
-        Task WakeAsync()
-        {
-            return Task.CompletedTask;
-        }
+        Task WakeAsync();
     }
 }
