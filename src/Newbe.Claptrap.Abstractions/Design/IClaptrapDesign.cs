@@ -25,27 +25,27 @@ namespace Newbe.Claptrap
         /// <summary>
         /// Factory type for <see cref="IEventLoader"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>
         /// </summary>
-        Type EventLoaderFactoryType { get; set; }
+        Type? EventLoaderFactoryType { get; set; }
 
         /// <summary>
         /// Factory type for <see cref="IEventSaver"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>
         /// </summary>
-        Type EventSaverFactoryType { get; set; }
+        Type? EventSaverFactoryType { get; set; }
 
         /// <summary>
         /// Factory type for <see cref="IStateLoader"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>
         /// </summary>
-        Type StateLoaderFactoryType { get; set; }
+        Type? StateLoaderFactoryType { get; set; }
 
         /// <summary>
         /// Factory type for <see cref="IStateSaver"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>
         /// </summary>
-        Type StateSaverFactoryType { get; set; }
+        Type? StateSaverFactoryType { get; set; }
 
         /// <summary>
         /// Factory type for initial state data. It must implement <see cref="IInitialStateDataFactory"/>
         /// </summary>
-        Type InitialStateDataFactoryType { get; set; }
+        Type? InitialStateDataFactoryType { get; set; }
 
         /// <summary>
         /// Factory type for <see cref="IStateHolder"/>. It must implement <see cref="IClaptrapComponentFactory{T}"/>

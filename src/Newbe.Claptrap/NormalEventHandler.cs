@@ -10,7 +10,7 @@ namespace Newbe.Claptrap
         public virtual ValueTask DisposeAsync()
         {
             Dispose();
-            return new ValueTask();
+            return ValueTask.CompletedTask;
         }
 
         public async Task<IState> HandleEvent(IEventContext eventContext)

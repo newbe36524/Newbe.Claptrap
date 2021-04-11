@@ -21,10 +21,5 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
         {
             throw new System.NotImplementedException();
         }
-
-        public Task ActivateAsync()
-        {
-            return Claptrap.ActivateAsync();
-        }
     }
 }

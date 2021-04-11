@@ -57,6 +57,28 @@ namespace Newbe.Claptrap.TestSuit
         }
 
         [Test]
+        public async Task CustomFactory()
+        {
+            using var root = BuildService().CreateScope();
+            var factory =
+                (ClaptrapFactory) root.ServiceProvider.GetRequiredService<IClaptrapFactory>();
+            var claptrapIdentity = new ClaptrapIdentity("testId", Codes.CustomFactoryClaptrap);
+            await using var claptrapScope = factory.BuildClaptrapLifetimeScope(claptrapIdentity);
+            // Configuration files do not override custom factories that use Attribute
+            await claptrapScope.Resolve<IEventSaver>().SaveEventAsync(default!);
+            MyEventSaver.Touched.Should().BeTrue();
+
+            await claptrapScope.Resolve<IEventLoader>().GetEventsAsync(default, default);
+            MyEventLoader.Touched.Should().BeTrue();
+
+            await claptrapScope.Resolve<IStateSaver>().SaveAsync(default!);
+            MyStateSaver.Touched.Should().BeTrue();
+
+            await claptrapScope.Resolve<IStateLoader>().GetStateSnapshotAsync();
+            MyStateLoader.Touched.Should().BeTrue();
+        }
+
+        [Test]
         public async Task HandleEventAsync()
         {
             decimal oldBalance;

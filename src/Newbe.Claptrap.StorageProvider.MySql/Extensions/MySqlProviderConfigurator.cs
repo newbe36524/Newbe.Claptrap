@@ -24,8 +24,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                     _designFilter,
                     x =>
                     {
-                        x.EventLoaderFactoryType = typeof(RelationalStoreFactory);
-                        x.EventSaverFactoryType = typeof(RelationalStoreFactory);
+                        x.EventLoaderFactoryType ??= typeof(RelationalStoreFactory);
+                        x.EventSaverFactoryType ??= typeof(RelationalStoreFactory);
                         var configurator = new MySqlEvenStoreConfigurator(x.ClaptrapStorageProviderOptions);
                         eventStore(configurator);
                     });
@@ -39,8 +39,8 @@ namespace Newbe.Claptrap.StorageProvider.MySql.Extensions
                     _designFilter,
                     x =>
                     {
-                        x.StateLoaderFactoryType = typeof(RelationalStoreFactory);
-                        x.StateSaverFactoryType = typeof(RelationalStoreFactory);
+                        x.StateLoaderFactoryType ??= typeof(RelationalStoreFactory);
+                        x.StateSaverFactoryType ??= typeof(RelationalStoreFactory);
                         var configurator = new MySqlStateStoreConfigurator(x.ClaptrapStorageProviderOptions);
                         stateStore(configurator);
                     });

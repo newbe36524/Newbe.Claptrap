@@ -16,7 +16,7 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
                 queue.Dequeue();
             }
 
-            return new ValueTask();
+            return ValueTask.CompletedTask;
         }
     }
 }

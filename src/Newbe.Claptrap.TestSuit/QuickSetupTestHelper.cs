@@ -69,7 +69,9 @@ namespace Newbe.Claptrap.TestSuit
                                 typeof(IAccountBalanceMinion),
                                 typeof(AccountBalanceMinion),
                                 typeof(IAccountHistoryBalanceMinion),
-                                typeof(AccountHistoryBalanceMinion)
+                                typeof(AccountHistoryBalanceMinion),
+                                typeof(ICustomFactoryClaptrap),
+                                typeof(CustomFactoryClaptrap)
                             })
                             .ConfigureClaptrapDesign(x =>
                                 x.ClaptrapOptions.EventCenterOptions.EventCenterType = EventCenterType.None);
@@ -83,6 +85,9 @@ namespace Newbe.Claptrap.TestSuit
                             .AsSelf()
                             .InstancePerDependency();
                         builder.RegisterType<AccountBalanceMinion>()
+                            .AsSelf()
+                            .InstancePerDependency();
+                        builder.RegisterType<CustomFactoryClaptrap>()
                             .AsSelf()
                             .InstancePerDependency();
 

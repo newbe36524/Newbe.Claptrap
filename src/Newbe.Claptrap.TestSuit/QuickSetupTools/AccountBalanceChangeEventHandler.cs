@@ -9,7 +9,7 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
             IEventContext eventContext)
         {
             stateData.Balance += eventData.Diff;
-            return new ValueTask();
+            return ValueTask.CompletedTask;
         }
     }
 }

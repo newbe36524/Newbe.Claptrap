@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.Tests
         public ValueTask DisposeAsync()
         {
             Dispose();
-            return new ValueTask();
+            return ValueTask.CompletedTask;
         }
 
         public Task<IState> HandleEvent(IEventContext eventContext)

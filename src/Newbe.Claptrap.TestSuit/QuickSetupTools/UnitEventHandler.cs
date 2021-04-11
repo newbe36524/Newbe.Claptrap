@@ -8,7 +8,7 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
         public override ValueTask HandleEvent(AccountState stateData, UnitEvent.UnitEventData eventData,
             IEventContext eventContext)
         {
-            return new ValueTask();
+            return ValueTask.CompletedTask;
         }
     }
 }

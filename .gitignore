@@ -290,3 +290,4 @@ __pycache__/
 /src/Newbe.Claptrap.Template/HelloClaptrap/.idea/
 **/.logs/**
 .tye
+csv-plugin.xml

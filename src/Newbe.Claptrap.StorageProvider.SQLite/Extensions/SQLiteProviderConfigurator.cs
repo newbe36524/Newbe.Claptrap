@@ -24,8 +24,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                     _designFilter,
                     x =>
                     {
-                        x.EventLoaderFactoryType = typeof(RelationalStoreFactory);
-                        x.EventSaverFactoryType = typeof(RelationalStoreFactory);
+                        x.EventLoaderFactoryType ??= typeof(RelationalStoreFactory);
+                        x.EventSaverFactoryType ??= typeof(RelationalStoreFactory);
                         var configurator = new SQLiteEvenStoreConfigurator(x.ClaptrapStorageProviderOptions);
                         eventStore(configurator);
                     });
@@ -39,8 +39,8 @@ namespace Newbe.Claptrap.StorageProvider.SQLite.Extensions
                     _designFilter,
                     x =>
                     {
-                        x.StateLoaderFactoryType = typeof(RelationalStoreFactory);
-                        x.StateSaverFactoryType = typeof(RelationalStoreFactory);
+                        x.StateLoaderFactoryType ??= typeof(RelationalStoreFactory);
+                        x.StateSaverFactoryType ??= typeof(RelationalStoreFactory);
                         var configurator = new SQLiteStateStoreConfigurator(x.ClaptrapStorageProviderOptions);
                         stateStore(configurator);
                     });
