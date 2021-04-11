@@ -22,8 +22,4 @@
       <ProjectReference Include="..\HelloClaptrap.Actors\HelloClaptrap.Actors.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers" />
-    </ItemGroup>
-
 </Project>

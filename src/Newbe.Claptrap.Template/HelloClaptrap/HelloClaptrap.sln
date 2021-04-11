@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.WebApi", "Hel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.BackendServer", "HelloClaptrap.BackendServer\HelloClaptrap.BackendServer.csproj", "{E058903F-FBBA-430D-9294-91E94DE8B51B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloClaptrap.SimulatorWeb", "HelloClaptrap.SimulatorWeb\HelloClaptrap.SimulatorWeb.csproj", "{C4F1B4E6-325E-4703-99AB-690C662CD52A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{E058903F-FBBA-430D-9294-91E94DE8B51B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E058903F-FBBA-430D-9294-91E94DE8B51B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E058903F-FBBA-430D-9294-91E94DE8B51B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F1B4E6-325E-4703-99AB-690C662CD52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F1B4E6-325E-4703-99AB-690C662CD52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F1B4E6-325E-4703-99AB-690C662CD52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F1B4E6-325E-4703-99AB-690C662CD52A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +78,6 @@ Global
 		{6AE15739-FAD7-4604-884A-39FAB6525E63} = {6297D173-E3B1-4948-B8D3-E7346584FCB6}
 		{42AD2438-D8D2-4281-9186-73135A0C4488} = {75014925-E70B-4A96-8F99-E90596F92299}
 		{E058903F-FBBA-430D-9294-91E94DE8B51B} = {75014925-E70B-4A96-8F99-E90596F92299}
+		{C4F1B4E6-325E-4703-99AB-690C662CD52A} = {75014925-E70B-4A96-8F99-E90596F92299}
 	EndGlobalSection
 EndGlobal

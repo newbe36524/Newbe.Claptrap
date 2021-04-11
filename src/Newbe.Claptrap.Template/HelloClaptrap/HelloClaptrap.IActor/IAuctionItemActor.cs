@@ -14,6 +14,7 @@ namespace HelloClaptrap.IActor
         Task<AuctionItemStatus> GetStatusAsync();
         Task<TryBiddingResult> TryBidding(TryBiddingInput input);
         Task<AuctionItemState> GetStateAsync();
+        Task<decimal> GetTopPriceAsync();
     }
 
     public record TryBiddingResult

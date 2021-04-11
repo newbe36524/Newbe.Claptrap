@@ -8,6 +8,7 @@
         <PackageReference Include="Newbe.Claptrap" Version="$(ClaptrapPackageVersion)" />
         <PackageReference Include="Newbe.Claptrap.DataSerializer.TextJson" Version="$(ClaptrapPackageVersion)" />
         <PackageReference Include="Newbe.Claptrap.Dapr" Version="$(ClaptrapPackageVersion)" />
+        <PackageReference Include="Newbe.Claptrap.StorageProvider.Relational" Version="$(ClaptrapPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>

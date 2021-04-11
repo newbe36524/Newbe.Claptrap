@@ -10,7 +10,7 @@ using Newbe.Claptrap.Dapr;
 namespace HelloClaptrap.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuctionItemsController : ControllerBase
     {
         private readonly IActorProxyFactory _actorProxyFactory;
@@ -21,7 +21,7 @@ namespace HelloClaptrap.WebApi.Controllers
             _actorProxyFactory = actorProxyFactory;
         }
 
-        [HttpGet("{itemId}/status")]
+        [HttpGet("{itemId:int}/status")]
         public async Task<IActionResult> GetStatus(int itemId = 1)
         {
             var id = new ClaptrapIdentity(itemId.ToString(),
@@ -35,7 +35,21 @@ namespace HelloClaptrap.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{itemId}")]
+        [HttpGet("{itemId:int}/topPrice")]
+        public async Task<IActionResult> GetTopPrice(int itemId = 1)
+        {
+            var id = new ClaptrapIdentity(itemId.ToString(),
+                ClaptrapCodes.AuctionItemActor);
+            var auctionItemActor = _actorProxyFactory.GetClaptrap<IAuctionItemActor>(id);
+            var topPrice = await auctionItemActor.GetTopPriceAsync();
+            var result = new
+            {
+                topPrice
+            };
+            return Ok(result);
+        }
+
+        [HttpGet("{itemId:int}")]
         public async Task<IActionResult> GetState(int itemId = 1)
         {
             var id = new ClaptrapIdentity(itemId.ToString(),

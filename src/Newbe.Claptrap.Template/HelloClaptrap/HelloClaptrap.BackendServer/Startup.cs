@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using HelloClaptrap.Actors;
 using HelloClaptrap.Actors.AuctionItem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -72,6 +73,7 @@ namespace HelloClaptrap.BackendServer
             // Register your own things directly with Autofac here. Don't
             // call builder.Populate(), that happens in AutofacServiceProviderFactory
             // for you.
+            builder.RegisterModule<ActorsModule>();
             _claptrapBootstrapper.Boot(builder);
         }
 

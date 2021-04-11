@@ -9,15 +9,29 @@ extensions:
   - name: dapr
     components-path: "./dapr_components/"
     config: claptrap_config
-    exclude-placement-container: true
-    placement-port: 6050
+  #    exclude-placement-container: true
+  #    placement-port: 6050
   - name: zipkin
   - name: seq
 services:
   - name: helloclaptrap-webapi
     project: HelloClaptrap.WebApi/HelloClaptrap.WebApi.csproj
+    bindings:
+      - port: 38000
+        name: http
+      - port: 38433
+        protocol: https
+        name: https
   - name: helloclaptrap-backendserver
     project: HelloClaptrap.BackendServer/HelloClaptrap.BackendServer.csproj
+  - name: helloclaptrap-simulatorweb
+    project: HelloClaptrap.SimulatorWeb/HelloClaptrap.SimulatorWeb.csproj
+    bindings:
+      - port: 18000
+        name: http
+      - port: 18433
+        protocol: https
+        name: https
   # - name: mongo
   #   image: mongo
   #   bindings:
@@ -51,12 +65,14 @@ services:
     bindings:
       - name: http
         port: 5341
-ingress:
-  - name: webapi
-    rules:
-      - service: helloclaptrap-webapi
-        path: /
-    bindings:
-      - name: webapi
-        protocol: https
-        port: 36524
+#ingress:
+#  - name: webapi
+#    rules:
+#      - service: helloclaptrap-webapi
+#        path: /api
+#      - service: helloclaptrap-simulatorweb
+#        path: /
+#    bindings:
+#      - name: webapi
+#        protocol: http
+#        port: 36524

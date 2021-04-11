@@ -8,11 +8,13 @@ using HelloClaptrap.Models.AuctionItem;
 using HelloClaptrap.Models.AuctionItem.Events;
 using Newbe.Claptrap;
 using Newbe.Claptrap.Dapr;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace HelloClaptrap.Actors.AuctionItem
 {
     [Actor(TypeName = ClaptrapCodes.AuctionItemActor)]
     [ClaptrapStateInitialFactoryHandler(typeof(AuctionItemActorInitialStateDataFactory))]
+    [ClaptrapStateStore(null, typeof(DecoratedStateLoaderFactory<AuctionItemActorStateLoader>))]
     [ClaptrapEventHandler(typeof(NewBidderEventHandler), ClaptrapCodes.NewBidderEvent)]
     public class AuctionItemActor : ClaptrapBoxActor<AuctionItemState>, IAuctionItemActor
     {
@@ -84,18 +86,23 @@ namespace HelloClaptrap.Actors.AuctionItem
                     AuctionItemStatus = status
                 };
             }
+        }
 
-            decimal GetTopPrice()
-            {
-                return StateData.BiddingRecords?.Any() == true
-                    ? StateData.BiddingRecords.First().Key
-                    : StateData.BasePrice;
-            }
+        private decimal GetTopPrice()
+        {
+            return StateData.BiddingRecords?.Any() == true
+                ? StateData.BiddingRecords.First().Key
+                : StateData.BasePrice;
         }
 
         public Task<AuctionItemState> GetStateAsync()
         {
             return Task.FromResult(StateData);
+        }
+
+        public Task<decimal> GetTopPriceAsync()
+        {
+            return Task.FromResult(GetTopPrice());
         }
     }
 }
