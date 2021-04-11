@@ -13,12 +13,7 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
     {
         [Inject] public IAuctionApi AuctionApi { get; set; }
 
-        public AuctionItemsModel _model { get; set; } = new();
-
-        protected override Task OnInitializedAsync()
-        {
-            return base.OnInitializedAsync();
-        }
+        public AuctionItemsModel Model { get; set; } = new();
 
         public async Task StartAsync()
         {
@@ -31,32 +26,32 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
                     var status = await AuctionApi.GetStatusAsync(id);
                     if (status.Status == AuctionItemStatus.OnSell)
                     {
-                        _model.OnSellingItemId = id;
+                        Model.OnSellingItemId = id;
                         break;
                     }
                 }
 
-                AppendLog($"ItemId : {_model.OnSellingItemId} is OnSell.");
+                AppendLog($"ItemId : {Model.OnSellingItemId} is OnSell.");
 
                 var rd = new Random();
 
                 while (true)
                 {
-                    var topPriceModel = await AuctionApi.GetTopPriceAsync(_model.OnSellingItemId);
+                    var topPriceModel = await AuctionApi.GetTopPriceAsync(Model.OnSellingItemId);
                     var userId = rd.Next(0, 10);
                     var diff = rd.NextDouble() > 0.5 ? 2.1M : -1.1M;
                     var biddingPrice = topPriceModel.TopPrice + diff;
                     var tryBiddingResult = await AuctionApi.TryBiddingResultAsync(new TryBiddingWebApiInput
                     {
                         Price = biddingPrice,
-                        ItemId = _model.OnSellingItemId,
+                        ItemId = Model.OnSellingItemId,
                         UserId = userId
                     });
                     var nowPrice = tryBiddingResult.NowPrice;
                     AppendLog($"Try bidding with {biddingPrice}");
                     if (tryBiddingResult.Success)
                     {
-                        _model.Records.Push(new BiddingRecord
+                        Model.Records.Push(new BiddingRecord
                         {
                             Price = biddingPrice,
                             UserId = userId,
@@ -69,7 +64,11 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
                         AppendLog($"Try bidding failed by UserId {userId}, now price: {nowPrice}", AlertType.Error);
                     }
 
-                    await Task.Delay(TimeSpan.FromSeconds(_model.SleepInSeconds));
+                    var biddingCount = await AuctionApi.GetBiddingCount(Model.OnSellingItemId);
+                    Model.UserBiddingCount = biddingCount;
+                    StateHasChanged();
+
+                    await Task.Delay(TimeSpan.FromSeconds(Model.SleepInSeconds));
                 }
             }).ContinueWith(t =>
             {
@@ -87,10 +86,10 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
                 Message = log,
                 Level = level
             };
-            _model.Logs.Insert(0, item);
-            if (_model.Records.Count > 10)
+            Model.Logs.Insert(0, item);
+            if (Model.Records.Count > 10)
             {
-                _model.Logs.RemoveAt(_model.Logs.Count - 1);
+                Model.Logs.RemoveAt(Model.Logs.Count - 1);
             }
 
             StateHasChanged();
@@ -101,6 +100,7 @@ namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
     {
         public double SleepInSeconds { get; set; } = 1;
         public int OnSellingItemId { get; set; }
+        public Dictionary<int, int> UserBiddingCount { get; set; } = new();
         public Stack<BiddingRecord> Records { get; set; } = new();
         public List<LogItem> Logs { get; set; } = new();
     }

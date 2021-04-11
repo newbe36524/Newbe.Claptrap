@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using HelloClaptrap.IActor;
 using HelloClaptrap.Models.AuctionItem;
 using Refit;
@@ -15,6 +16,9 @@ namespace HelloClaptrap.SimulatorWeb.Services
 
         [Get("/api/AuctionItems/{itemId}")]
         Task<StateModel> GetStateAsync(int itemId);
+
+        [Get("/api/AuctionItems/{itemId}/biddingcount")]
+        Task<Dictionary<int, int>> GetBiddingCount(int itemId);
 
         [Post("/api/AuctionItems")]
         Task<TryBiddingResult> TryBiddingResultAsync(TryBiddingWebApiInput input);

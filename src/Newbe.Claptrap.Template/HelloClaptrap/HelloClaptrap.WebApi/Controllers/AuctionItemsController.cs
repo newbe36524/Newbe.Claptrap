@@ -78,6 +78,16 @@ namespace HelloClaptrap.WebApi.Controllers
             var result = await auctionItemActor.TryBidding(input);
             return Ok(result);
         }
+
+        [HttpGet("{itemId:int}/biddingcount")]
+        public async Task<IActionResult> GetBiddingCount(int itemId = 1)
+        {
+            var id = new ClaptrapIdentity(itemId.ToString(),
+                ClaptrapCodes.AuctionItemActor);
+            var auctionItemActor = _actorProxyFactory.GetClaptrap<IAuctionItemUserCountMinionActor>(id);
+            var result = await auctionItemActor.GetUserBiddingCountAsync();
+            return Ok(result);
+        }
     }
 
     public record TryBiddingWebApiInput

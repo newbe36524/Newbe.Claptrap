@@ -18,13 +18,13 @@
                 <Card>
                     <Row Gutter="24">
                         <AntDesign.Col Sm="8" Xs="24">
-                            @Info("Record Count", _model?.Records?.Count.ToString() ?? "0", true)
+                            @Info("Record Count", Model?.Records?.Count.ToString() ?? "0", true)
                         </AntDesign.Col>
                         <AntDesign.Col Sm="8" Xs="24">
-                            @Info("Top Price", _model?.Records?.FirstOrDefault()?.Price.ToString("F1") ?? "", true)
+                            @Info("Top Price", Model?.Records?.FirstOrDefault()?.Price.ToString("F1") ?? "", true)
                         </AntDesign.Col>
                         <AntDesign.Col Sm="8" Xs="24">
-                            @Info("Latest Bidding Time", _model?.Records.FirstOrDefault()?.BiddingTime.ToString() ?? string.Empty, true)
+                            @Info("Latest Bidding Time", Model?.Records.FirstOrDefault()?.BiddingTime.ToString() ?? string.Empty, true)
                         </AntDesign.Col>
                     </Row>
                 </Card>
@@ -35,7 +35,7 @@
                       BodyStyle="padding: 0 32px 40px 32px">
                     <Extra>
                         <div class="extraContent">
-                            Interval time(sec):<Slider TValue="double" Min="0.1" Max="5" Step="0.1" @bind-Value="@_model.SleepInSeconds"/>
+                            Interval time(sec):<Slider TValue="double" Min="0.1" Max="5" Step="0.1" @bind-Value="@Model.SleepInSeconds"/>
                             <Button Type="button"
                                     Style="width: 100%; margin-bottom: 8px;"
                                     OnClick="StartAsync">
@@ -46,18 +46,33 @@
                     </Extra>
                     <ChildContent>
                         <Row>
-                            <AntDesign.Col Xl="16" Lg="12" Md="12" Sm="24" Xs="24">
-                                @foreach (var log in _model.Logs)
-                                {
-                                    <Alert Type="@log.Level"
-                                           Message="@log.Message"
-                                           ShowIcon/>
-                                }
+                            <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Logs") Style="width: 300px">
+                                    <Body>
+                                    @foreach (var log in Model.Logs)
+                                    {
+                                        <Alert Type="@log.Level"
+                                               Message="@log.Message"
+                                               ShowIcon />
+                                        <br>
+                                    }
+                                    </Body>
+                                </Card>
+                            </AntDesign.Col>
+                            <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Count of user bidding success") Style="width: 300px">
+                                    <Body>
+                                    @foreach (var (k,v) in Model.UserBiddingCount)
+                                    {
+                                        <p>User: @k Count: @v</p>
+                                    }
+                                    </Body>
+                                </Card>
                             </AntDesign.Col>
                             <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
                                 <Card Bordered="false" Title=@("Auction Records") Style="width: 300px">
                                     <Body>
-                                    @foreach (var item in _model.Records)
+                                    @foreach (var item in Model.Records)
                                     {
                                         <p>User: @item.UserId Price: @item.Price</p>
                                     }

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(SolutionDir)'==''">
-    <SolutionDir>../</SolutionDir>
+    <SolutionDir>./</SolutionDir>
   </PropertyGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
