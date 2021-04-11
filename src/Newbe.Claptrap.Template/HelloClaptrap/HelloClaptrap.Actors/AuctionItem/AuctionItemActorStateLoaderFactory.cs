@@ -22,9 +22,12 @@ namespace HelloClaptrap.Actors.AuctionItem
             var itemState = (AuctionItemState) state.Data;
             var records = itemState.BiddingRecords;
             itemState.InitBiddingRecords();
-            foreach (var (key, value) in records)
+            if (records != null)
             {
-                itemState.BiddingRecords.Add(key, value);
+                foreach (var (key, value) in records)
+                {
+                    itemState.BiddingRecords.Add(key, value);
+                }
             }
 
             return state;

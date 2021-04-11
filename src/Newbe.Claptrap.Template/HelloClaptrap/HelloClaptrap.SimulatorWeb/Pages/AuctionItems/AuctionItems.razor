@@ -46,7 +46,7 @@
                     </Extra>
                     <ChildContent>
                         <Row>
-                            <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
+                            <AntDesign.Col Xl="12" Lg="12" Md="12" Sm="24" Xs="24">
                                 <Card Bordered="false" Title=@("Logs") Style="width: 300px">
                                     <Body>
                                     @foreach (var log in Model.Logs)
@@ -54,12 +54,11 @@
                                         <Alert Type="@log.Level"
                                                Message="@log.Message"
                                                ShowIcon />
-                                        <br>
                                     }
                                     </Body>
                                 </Card>
                             </AntDesign.Col>
-                            <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
+                            <AntDesign.Col Xl="6" Lg="12" Md="12" Sm="24" Xs="24">
                                 <Card Bordered="false" Title=@("Count of user bidding success") Style="width: 300px">
                                     <Body>
                                     @foreach (var (k,v) in Model.UserBiddingCount)
@@ -69,7 +68,7 @@
                                     </Body>
                                 </Card>
                             </AntDesign.Col>
-                            <AntDesign.Col Xl="8" Lg="12" Md="12" Sm="24" Xs="24">
+                            <AntDesign.Col Xl="6" Lg="12" Md="12" Sm="24" Xs="24">
                                 <Card Bordered="false" Title=@("Auction Records") Style="width: 300px">
                                     <Body>
                                     @foreach (var item in Model.Records)
