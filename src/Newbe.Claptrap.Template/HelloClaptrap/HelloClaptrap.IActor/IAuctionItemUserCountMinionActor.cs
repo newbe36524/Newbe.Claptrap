@@ -7,6 +7,7 @@ using Newbe.Claptrap.Dapr.Core;
 
 namespace HelloClaptrap.IActor
 {
+    [ClaptrapMinion(ClaptrapCodes.AuctionItemActor)]
     [ClaptrapState(typeof(AuctionItemUserCountState), ClaptrapCodes.AuctionItemUserCountMinionActor)]
     public interface IAuctionItemUserCountMinionActor : IClaptrapMinionActor
     {

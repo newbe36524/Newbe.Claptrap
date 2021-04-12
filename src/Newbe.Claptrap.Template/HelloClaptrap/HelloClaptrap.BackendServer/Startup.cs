@@ -33,6 +33,7 @@ namespace HelloClaptrap.BackendServer
                 .ScanClaptrapModule()
                 .AddConfiguration(configuration)
                 .ScanClaptrapDesigns(new[] {typeof(AuctionItemActor).Assembly})
+                .UseDaprPubsub(pubsub => pubsub.AsEventCenter())
                 .Build();
             _claptrapDesignStore = _claptrapBootstrapper.DumpDesignStore();
         }
@@ -42,6 +43,7 @@ namespace HelloClaptrap.BackendServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddClaptrapServerOptions();
             services.AddOpenTelemetryTracing(
                 builder => builder
                     .AddSource(ClaptrapActivitySource.Instance.Name)
@@ -57,7 +59,8 @@ namespace HelloClaptrap.BackendServer
             );
             services.AddClaptrapServerOptions();
             services.AddActors(options => { options.AddClaptrapDesign(_claptrapDesignStore); });
-            services.AddControllers();
+            services.AddControllers()
+                .AddDapr();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "HelloClaptrap.BackendServer", Version = "v1"});
@@ -90,12 +93,15 @@ namespace HelloClaptrap.BackendServer
 
 
             app.UseRouting();
+            
+            app.UseCloudEvents();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapActorsHandlers();
+                endpoints.MapSubscribeHandler();
                 endpoints.MapControllers();
             });
         }

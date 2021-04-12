@@ -12,7 +12,7 @@ namespace HelloClaptrap.Actors.AuctionItemUserCountMinion
 {
     [Actor(TypeName = ClaptrapCodes.AuctionItemUserCountMinionActor)]
     [ClaptrapEventHandler(typeof(NewBidderEventHandler), ClaptrapCodes.NewBidderEvent)]
-    public class AuctionItemUserCountMinionActor : ClaptrapBoxMinionActor<AuctionItemUserCountState>,
+    public class AuctionItemUserCountMinionActor : ClaptrapBoxActor<AuctionItemUserCountState>,
         IAuctionItemUserCountMinionActor
     {
         public AuctionItemUserCountMinionActor(ActorHost actorHost,

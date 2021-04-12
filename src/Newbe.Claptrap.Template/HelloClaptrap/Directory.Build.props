@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
-        <ClaptrapPackageVersion>0.9.9-g946242596e</ClaptrapPackageVersion>
+        <ClaptrapPackageVersion>0.9.10-g7b4f3cd013</ClaptrapPackageVersion>
     </PropertyGroup>
 </Project>
