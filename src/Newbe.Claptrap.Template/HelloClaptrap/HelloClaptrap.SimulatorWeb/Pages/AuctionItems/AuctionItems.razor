@@ -47,19 +47,19 @@
                     <ChildContent>
                         <Row>
                             <AntDesign.Col Xl="12" Lg="12" Md="12" Sm="24" Xs="24">
-                                <Card Bordered="false" Title=@("Logs") Style="width: 300px">
+                                <Card Bordered="false" Title=@("Logs")>
                                     <Body>
                                     @foreach (var log in Model.Logs)
                                     {
                                         <Alert Type="@log.Level"
                                                Message="@log.Message"
-                                               ShowIcon />
+                                               ShowIcon/>
                                     }
                                     </Body>
                                 </Card>
                             </AntDesign.Col>
-                            <AntDesign.Col Xl="6" Lg="12" Md="12" Sm="24" Xs="24">
-                                <Card Bordered="false" Title=@("Count of user bidding success") Style="width: 300px">
+                            <AntDesign.Col Xl="6" Lg="6" Md="6" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Count of user bidding success")>
                                     <Body>
                                     @foreach (var (k,v) in Model.UserBiddingCount)
                                     {
@@ -68,8 +68,8 @@
                                     </Body>
                                 </Card>
                             </AntDesign.Col>
-                            <AntDesign.Col Xl="6" Lg="12" Md="12" Sm="24" Xs="24">
-                                <Card Bordered="false" Title=@("Auction Records") Style="width: 300px">
+                            <AntDesign.Col Xl="6" Lg="6" Md="6" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Auction Records")>
                                     <Body>
                                     @foreach (var item in Model.Records)
                                     {

@@ -91,7 +91,6 @@ namespace HelloClaptrap.BackendServer
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HelloClaptrap.BackendServer v1"));
             }
 
-
             app.UseRouting();
             
             app.UseCloudEvents();
