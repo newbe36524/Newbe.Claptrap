@@ -6,11 +6,11 @@ namespace Newbe.Claptrap.StorageProvider.Relational
         where TInterface : class, IClaptrapComponent
         where TImpl : TInterface
     {
-        private readonly Func<IStateLoader, TImpl> _func;
+        private readonly Func<TInterface, TImpl> _func;
         private readonly IClaptrapComponentFactory<IStateLoader> _relationalStoreFactory;
 
         protected DecoratedClaptrapComponentFactory(
-            Func<IStateLoader, TImpl> func,
+            Func<TInterface, TImpl> func,
             RelationalStoreFactory relationalStoreFactory)
         {
             _func = func;
