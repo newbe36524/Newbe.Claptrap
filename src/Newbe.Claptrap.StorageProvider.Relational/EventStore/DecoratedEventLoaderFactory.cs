@@ -6,7 +6,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.EventStore
         : DecoratedClaptrapComponentFactory<TImpl, IEventLoader>
         where TImpl : IEventLoader
     {
-        public DecoratedEventLoaderFactory(Func<IStateLoader, TImpl> func,
+        public DecoratedEventLoaderFactory(Func<IEventLoader, TImpl> func,
             RelationalStoreFactory relationalStoreFactory) : base(func,
             relationalStoreFactory)
         {

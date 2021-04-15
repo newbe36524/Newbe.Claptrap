@@ -14,7 +14,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational
             RelationalStoreFactory relationalStoreFactory)
         {
             _func = func;
-            _relationalStoreFactory = relationalStoreFactory;
+            _relationalStoreFactory = (IClaptrapComponentFactory<TInterface>) relationalStoreFactory;
         }
 
         public TInterface Create(IClaptrapIdentity claptrapIdentity)

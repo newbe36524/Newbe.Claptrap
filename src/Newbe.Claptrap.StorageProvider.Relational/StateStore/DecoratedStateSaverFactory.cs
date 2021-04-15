@@ -6,7 +6,7 @@ namespace Newbe.Claptrap.StorageProvider.Relational.StateStore
         : DecoratedClaptrapComponentFactory<TImpl, IStateSaver>
         where TImpl : IStateSaver
     {
-        public DecoratedStateSaverFactory(Func<IStateLoader, TImpl> func,
+        public DecoratedStateSaverFactory(Func<IStateSaver, TImpl> func,
             RelationalStoreFactory relationalStoreFactory) : base(func,
             relationalStoreFactory)
         {

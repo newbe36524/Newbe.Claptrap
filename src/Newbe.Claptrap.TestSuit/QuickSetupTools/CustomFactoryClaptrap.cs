@@ -1,16 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Newbe.Claptrap.Box;
+using Newbe.Claptrap.StorageProvider.Relational.EventStore;
+using Newbe.Claptrap.StorageProvider.Relational.StateStore;
 
 namespace Newbe.Claptrap.TestSuit.QuickSetupTools
 {
-    [ClaptrapStateStore(typeof(StateSaverFactory), typeof(StateLoaderFactory))]
-    [ClaptrapEventStore(typeof(EventSaverFactory), typeof(EventLoaderFactory))]
+    [ClaptrapStateStore(
+        typeof(DecoratedStateSaverFactory<MyStateSaver>),
+        typeof(DecoratedStateLoaderFactory<MyStateLoader>))]
+    [ClaptrapEventStore(
+        typeof(DecoratedEventSaverFactory<MyEventSaver>),
+        typeof(DecoratedEventLoaderFactory<MyEventLoader>))]
     public class CustomFactoryClaptrap : NormalClaptrapBox<AccountState>, ICustomFactoryClaptrap
     {
-        public delegate CustomFactoryClaptrap Factory(IClaptrapIdentity identity);
-
         public CustomFactoryClaptrap(IClaptrapIdentity identity,
             IClaptrapFactory claptrapFactory,
             IClaptrapAccessor claptrapAccessor) : base(identity,
@@ -29,103 +34,75 @@ namespace Newbe.Claptrap.TestSuit.QuickSetupTools
     {
     }
 
-    public class StateLoaderFactory : IClaptrapComponentFactory<IStateLoader>
-    {
-        public IStateLoader Create(IClaptrapIdentity claptrapIdentity)
-        {
-            return new MyStateLoader(claptrapIdentity);
-        }
-    }
-
-    public class MyStateLoader : IStateLoader
+    public class MyStateLoader : DecoratedStateLoader
     {
         public static bool Touched { get; private set; }
-        public MyStateLoader(IClaptrapIdentity identity)
+
+        public MyStateLoader(IStateLoader stateLoader) : base(stateLoader)
         {
-            Identity = identity;
         }
 
-        public IClaptrapIdentity Identity { get; }
-
-        public Task<IState?> GetStateSnapshotAsync()
+        public override Task<IState?> GetStateSnapshotAsync()
         {
             Touched = true;
             return Task.FromResult((IState) new UnitState());
         }
     }
 
-    public class StateSaverFactory : IClaptrapComponentFactory<IStateSaver>
-    {
-        public IStateSaver Create(IClaptrapIdentity claptrapIdentity)
-        {
-            return new MyStateSaver(claptrapIdentity);
-        }
-    }
-
-    public class MyStateSaver : IStateSaver
+    public class MyStateSaver : DecoratedStateSaver
     {
         public static bool Touched { get; private set; }
-        public MyStateSaver(IClaptrapIdentity identity)
+
+        public MyStateSaver(IStateSaver stateSaver) : base(stateSaver)
         {
-            Identity = identity;
         }
 
-        public IClaptrapIdentity Identity { get; }
-
-        public Task SaveAsync(IState state)
+        public override Task SaveAsync(IState state)
         {
             Touched = true;
             return Task.CompletedTask;
         }
     }
 
-    public class EventLoaderFactory : IClaptrapComponentFactory<IEventLoader>
-    {
-        public IEventLoader Create(IClaptrapIdentity claptrapIdentity)
-        {
-            return new MyEventLoader(claptrapIdentity);
-        }
-    }
-
-    public class MyEventLoader : IEventLoader
+    public class MyEventLoader : DecoratedEventLoader
     {
         public static bool Touched { get; private set; }
-        public MyEventLoader(IClaptrapIdentity identity)
+
+        public MyEventLoader(IEventLoader loader) : base(loader)
         {
-            Identity = identity;
         }
 
-        public IClaptrapIdentity Identity { get; }
-
-        public Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
+        public override Task<IEnumerable<IEvent>> GetEventsAsync(long startVersion, long endVersion)
         {
             Touched = true;
             return Task.FromResult(Enumerable.Empty<IEvent>());
         }
     }
 
-    public class EventSaverFactory : IClaptrapComponentFactory<IEventSaver>
-    {
-        public IEventSaver Create(IClaptrapIdentity claptrapIdentity)
-        {
-            return new MyEventSaver(claptrapIdentity);
-        }
-    }
-
-    public class MyEventSaver : IEventSaver
+    public class MyEventSaver : DecoratedEventSaver
     {
         public static bool Touched { get; private set; }
-        public MyEventSaver(IClaptrapIdentity identity)
+
+        public MyEventSaver(IEventSaver stateSaver) : base(stateSaver)
         {
-            Identity = identity;
         }
 
-        public IClaptrapIdentity Identity { get; }
-
-        public Task SaveEventAsync(IEvent @event)
+        public override Task SaveEventAsync(IEvent @event)
         {
             Touched = true;
             return Task.CompletedTask;
+        }
+    }
+
+    public class CustomLoaderAndSaverModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            base.Load(builder);
+            builder.RegisterType<MyStateLoader>().AsSelf();
+            builder.RegisterType<MyStateSaver>().AsSelf();
+            builder.RegisterType<MyEventLoader>().AsSelf();
+            builder.RegisterType<MyEventSaver>().AsSelf();
         }
     }
 }

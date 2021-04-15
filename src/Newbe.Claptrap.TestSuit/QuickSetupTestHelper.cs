@@ -91,6 +91,8 @@ namespace Newbe.Claptrap.TestSuit
                             .AsSelf()
                             .InstancePerDependency();
 
+                        builder.RegisterModule<CustomLoaderAndSaverModule>();
+
                         builderAction?.Invoke(builder);
                     });
                 })
