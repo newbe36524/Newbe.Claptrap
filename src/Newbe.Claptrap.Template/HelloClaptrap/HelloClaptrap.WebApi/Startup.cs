@@ -55,8 +55,11 @@ namespace HelloClaptrap.WebApi
             }
 
             app.UseRouting();
-
-
+            app.UseCors(builder => builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .SetIsOriginAllowed(x => true));
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

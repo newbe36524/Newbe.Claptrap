@@ -1,0 +1,39 @@
+﻿@namespace HelloClaptrap.SimulatorWeb
+@inherits LayoutComponentBase
+
+<AntDesign.Pro.Layout.BasicLayout 
+    Logo="@("https://www.newbe.pro/images/logo/main-logo-without-background.png")"
+    Title="Newbe.Claptrap"
+    MenuData="_menuData">
+    <RightContentRender>
+        <HelloClaptrap.SimulatorWeb.Components.RightContent />
+    </RightContentRender>
+    <ChildContent>
+        @Body
+    </ChildContent>
+    <FooterRender>
+        
+    </FooterRender>
+</AntDesign.Pro.Layout.BasicLayout>
+<SettingDrawer />
+
+@code
+{
+    private readonly MenuDataItem[] _menuData = 
+    {
+        new()
+        {
+            Path = "/",
+            Name = "welcome",
+            Key = "welcome",
+            Icon = "smile",
+        },
+        new()
+        {
+            Path = "/auction_items",
+            Name = "Auction Simulator",
+            Key = "auction_items",
+            Icon = "smile",
+        }
+    };
+}

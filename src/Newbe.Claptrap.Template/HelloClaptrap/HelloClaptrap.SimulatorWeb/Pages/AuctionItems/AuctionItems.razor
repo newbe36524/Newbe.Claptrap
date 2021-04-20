@@ -1,0 +1,102 @@
+﻿@namespace HelloClaptrap.SimulatorWeb.Pages.AuctionItems
+@using HelloClaptrap.Models.AuctionItem
+@page "/auction_items"
+
+<div>
+    <PageContainer Title="Auction Simulator">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>Home</BreadcrumbItem>
+                <BreadcrumbItem>Auction Simulator</BreadcrumbItem>
+            </Breadcrumb>
+        </Breadcrumb>
+        <ChildContent>
+            <Card>
+                <Alert Message="Click 'Start Simulator' button to run this demo"></Alert>
+            </Card>
+            <div class="standardList">
+                <Card>
+                    <Row Gutter="24">
+                        <AntDesign.Col Sm="8" Xs="24">
+                            @Info("Record Count", Model?.Records?.Count.ToString() ?? "0", true)
+                        </AntDesign.Col>
+                        <AntDesign.Col Sm="8" Xs="24">
+                            @Info("Top Price", Model?.Records?.FirstOrDefault()?.Price.ToString("F1") ?? "", true)
+                        </AntDesign.Col>
+                        <AntDesign.Col Sm="8" Xs="24">
+                            @Info("Latest Bidding Time", Model?.Records.FirstOrDefault()?.BiddingTime.ToString() ?? string.Empty, true)
+                        </AntDesign.Col>
+                    </Row>
+                </Card>
+
+                <Card Class="listCard"
+                      Title="Auction Records"
+                      Style="margin-top: 24px;"
+                      BodyStyle="padding: 0 32px 40px 32px">
+                    <Extra>
+                        <div class="extraContent">
+                            Interval time(sec):<Slider TValue="double" Min="0.1" Max="5" Step="0.1" @bind-Value="@Model.SleepInSeconds"/>
+                            <Button Type="button"
+                                    Style="width: 100%; margin-bottom: 8px;"
+                                    OnClick="StartAsync">
+                                <Icon Theme="outline"/>
+                                Start Simulator
+                            </Button>
+                        </div>
+                    </Extra>
+                    <ChildContent>
+                        <Row>
+                            <AntDesign.Col Xl="12" Lg="12" Md="12" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Logs")>
+                                    <Body>
+                                    @foreach (var log in Model.Logs)
+                                    {
+                                        <Alert Type="@log.Level"
+                                               Message="@log.Message"
+                                               ShowIcon/>
+                                    }
+                                    </Body>
+                                </Card>
+                            </AntDesign.Col>
+                            <AntDesign.Col Xl="6" Lg="6" Md="6" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Count of user bidding success")>
+                                    <Body>
+                                    @foreach (var (k,v) in Model.UserBiddingCount)
+                                    {
+                                        <p>User: @k Count: @v</p>
+                                    }
+                                    </Body>
+                                </Card>
+                            </AntDesign.Col>
+                            <AntDesign.Col Xl="6" Lg="6" Md="6" Sm="24" Xs="24">
+                                <Card Bordered="false" Title=@("Auction Records")>
+                                    <Body>
+                                    @foreach (var item in Model.Records)
+                                    {
+                                        <p>User: @item.UserId Price: @item.Price</p>
+                                    }
+                                    </Body>
+                                </Card>
+                            </AntDesign.Col>
+                        </Row>
+                    </ChildContent>
+                </Card>
+            </div>
+        </ChildContent>
+    </PageContainer>
+</div>
+
+@code
+{
+    private RenderFragment Info(string title, string value, bool bordered = false)
+    {
+        return @<div class="headerInfo">
+                   <span >@title</span>
+                   <p>@value</p>
+                   @if (bordered)
+                   {
+                       <em/>
+                   }
+               </div>;
+    }
+}
