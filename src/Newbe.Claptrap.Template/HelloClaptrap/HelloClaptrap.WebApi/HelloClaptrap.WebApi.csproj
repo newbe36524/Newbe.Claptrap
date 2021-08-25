@@ -7,12 +7,12 @@
     <ItemGroup>
         <PackageReference Include="Dapr.Actors" Version="1.1.0" />
         <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.6.0-alpha.21070.5" />
-        <PackageReference Include="OpenTelemetry" Version="1.0.1" />
-        <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.0.1" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc2" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc2" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc2" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc2" />
+        <PackageReference Include="OpenTelemetry" Version="1.1.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.1.0" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc7" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc7" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc7" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
     </ItemGroup>
 
