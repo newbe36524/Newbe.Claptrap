@@ -25,9 +25,9 @@
     <None Include="$(SolutionDir)/icon.png" Link="icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
   <ItemGroup Condition=" '$(IsUnitTest)' == 'true' ">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0"/>
     <PackageReference Include="NLog.Targets.Seq" Version="2.0.0"/>
-    <PackageReference Include="NUnit" Version="3.13.1"/>
+    <PackageReference Include="NUnit" Version="3.13.2"/>
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.107"/>
     <PackageReference Include="NUnit.Analyzers" Version="3.2.0"/>
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
