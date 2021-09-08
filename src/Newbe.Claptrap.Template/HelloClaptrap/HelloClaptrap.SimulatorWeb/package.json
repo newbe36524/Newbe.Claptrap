@@ -15,7 +15,7 @@
         "gulp": "4.0.2",
         "gulp-clean-css": "4.3.0",
         "gulp-concat-css": "3.1.0",
-        "gulp-less": "4.0.1",
+        "gulp-less": "5.0.0",
         "gulp-rename": "2.0.0",
         "gulp-sourcemaps": "2.6.5",
         "gulp-uglify": "3.0.2",
