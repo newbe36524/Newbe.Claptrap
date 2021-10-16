@@ -16,7 +16,7 @@
         <PackageReference Include="Newbe.Claptrap.Dapr.Hosting" Version="$(ClaptrapPackageVersion)" />
         <PackageReference Include="Newbe.Claptrap.StorageProvider.SQLite" Version="$(ClaptrapPackageVersion)" />
         <PackageReference Include="Newbe.Claptrap.EventCenter.Dapr" Version="$(ClaptrapPackageVersion)" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
