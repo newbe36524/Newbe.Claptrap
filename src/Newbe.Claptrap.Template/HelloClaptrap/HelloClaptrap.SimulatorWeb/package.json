@@ -19,7 +19,7 @@
         "gulp-rename": "2.0.0",
         "gulp-sourcemaps": "3.0.0",
         "gulp-uglify": "3.0.2",
-        "husky": "7.0.2",
+        "husky": "7.0.4",
         "less-plugin-npm-import": "2.1.0",
         "vinyl-buffer": "1.0.1",
         "vinyl-source-stream": "2.0.0"
