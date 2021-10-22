@@ -164,7 +164,9 @@ namespace Newbe.Claptrap.TestSuit
                         logger.LogInformation("version from event loader : {version}", versions);
                         versions.Should().BeInAscendingOrder()
                             .And.OnlyHaveUniqueItems()
-                            .And.ContainInOrder(Enumerable.Range(Defaults.EventStartingVersion, count));
+                            .And.ContainInOrder(Enumerable
+                                .Range(Defaults.EventStartingVersion, count)
+                                .Select(x => (long)x));
                     }
                 });
             await tasks.WhenAllComplete(actorCount);
