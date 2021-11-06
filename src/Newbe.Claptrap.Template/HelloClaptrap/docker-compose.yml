@@ -12,7 +12,7 @@ services:
     volumes:
       - ./.seqlogs:/data
   jaeger:
-    image: jaegertracing/all-in-one:1.27
+    image: jaegertracing/all-in-one:1.28
     restart: always
     ports:
       - 9411:9411
