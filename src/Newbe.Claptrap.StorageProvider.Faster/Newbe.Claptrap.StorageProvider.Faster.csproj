@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.FASTER.Core" Version="1.9.7" />
+    <PackageReference Include="Microsoft.FASTER.Core" Version="1.9.8" />
   </ItemGroup>
 
   <ItemGroup>
