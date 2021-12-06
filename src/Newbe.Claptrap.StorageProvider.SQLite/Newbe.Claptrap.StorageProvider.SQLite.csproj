@@ -8,7 +8,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
         <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" />
-        <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+        <PackageReference Include="System.Linq.Async" Version="5.1.0" />
         <PackageReference Include="System.Reactive" Version="5.0.0" />
         <PackageReference Include="Dapper" Version="2.0.123" />
         <PackageReference Include="dbup-sqlite" Version="4.5.0" />
