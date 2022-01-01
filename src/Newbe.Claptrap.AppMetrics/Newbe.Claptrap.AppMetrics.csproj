@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="App.Metrics" Version="4.2.0" />
+      <PackageReference Include="App.Metrics" Version="4.3.0" />
       <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.3.0" />
     </ItemGroup>
 
