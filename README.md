@@ -1,14 +1,8 @@
 ![Newbe.Claptrap](/docs/main_banner.png)
 
 - [简体中文](https://claptrap.newbe.pro/zh_Hans)
-- [粤语](https://claptrap.newbe.pro/zh_HK)
 - [繁體中文](https://claptrap.newbe.pro/zh_TW)
 - [English](https://claptrap.newbe.pro/)
-- [русский язык](https://claptrap.newbe.pro/ru_RU)
-- [Deutsche](https://claptrap.newbe.pro/de_DE)
-- [Español](https://claptrap.newbe.pro/es_ES)
-- [français](https://claptrap.newbe.pro/fr_FR)
-- [日本語](https://claptrap.newbe.pro/ja_JP)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
