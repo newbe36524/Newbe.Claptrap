@@ -1,7 +1,7 @@
 ![Newbe.Claptrap](/docs/main_banner.png)
 
-- [简体中文](https://claptrap.newbe.pro/zh_Hans)
-- [繁體中文](https://claptrap.newbe.pro/zh_TW)
+- [简体中文](https://claptrap.newbe.pro/zh-Hans/)
+- [繁體中文](https://claptrap.newbe.pro/zh_TW/)
 - [English](https://claptrap.newbe.pro/)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
