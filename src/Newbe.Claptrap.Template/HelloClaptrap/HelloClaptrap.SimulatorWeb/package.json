@@ -9,7 +9,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-        "antd": "4.18.2"
+        "antd": "4.24.8"
     },
     "devDependencies": {
         "gulp": "4.0.2",
