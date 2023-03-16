@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="6.3.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="5.0.12" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="5.0.17" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     </ItemGroup>
 
