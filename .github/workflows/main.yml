@@ -117,7 +117,7 @@ jobs:
         #   fail_ci_if_error: # optional
 
       - name: Codacy Coverage Reporter
-        uses: codacy/codacy-coverage-reporter-action@v1.1.0
+        uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           # Project token for the Codacy project you want to send coverage information
           project-token: ${{ secrets.CODACY_TOKEN }}
